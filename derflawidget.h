@@ -6,6 +6,7 @@
 #include <QPoint>
 #include <QPixmap>
 #include <QTimer>
+#include <QSystemTrayIcon>
 
 class CharLineEdit;
 
@@ -28,6 +29,7 @@ private:
     QPixmap pic;
     QTimer* timer;
     CharLineEdit* input;
+    QSystemTrayIcon* trayicon;
 };
 
 #endif // DerflaWidget_H

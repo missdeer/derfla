@@ -39,3 +39,6 @@ win32: {
         POST_TARGETDEPS += copy_skins
     }
 }
+
+RESOURCES += \
+    derfla.qrc

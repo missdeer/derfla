@@ -8,6 +8,8 @@
 #include <QPainter>
 #include <QDateTime>
 #include <QAction>
+#include <QMenu>
+#include <QIcon>
 #include "CharLineEdit.h"
 #include "derflawidget.h"
 
@@ -64,6 +66,15 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     addAction(clearAction);
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
+
+
+    QMenu* trayiconMenu = new QMenu(this);
+    trayiconMenu->addAction(quitAction);
+    trayicon = new QSystemTrayIcon(this);
+    trayicon->setContextMenu(trayiconMenu);
+    trayicon->setIcon(QIcon(":/derfla.png"));
+    trayicon->setToolTip(tr("Derfla - Accelerate your keyboard!"));
+    trayicon->show();
 }
 
 DerflaWidget::~DerflaWidget()
