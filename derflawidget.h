@@ -22,16 +22,12 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *event);
 private slots:
-    void focusInEvent(QFocusEvent* event);
-    void focusOutEvent(QFocusEvent* event);
-    void inputMethodEvent(QInputMethodEvent* event);
-    void inputKeyPressEvent(QKeyEvent* event);
+    void inputChanged(const QString& text);
 private:
     QPoint mouseMovePos;
     QPixmap pic;
     QTimer* timer;
     CharLineEdit* input;
-    void processKey();
 };
 
 #endif // DerflaWidget_H

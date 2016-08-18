@@ -42,21 +42,26 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 //    timer->start(100);
 
     input = new CharLineEdit(this);
-    input->move(56,96);
+    input->setGeometry(46, 62, 150, 68);
+    QFont f = input->font();
+    f.setPixelSize(48);
+    f.setFamily("Menlo");
+    input->setFont(f);
 #ifdef Q_WS_MAC
     QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
 #endif
     input->setObjectName("input");
-    connect(input, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(inputKeyPressEvent(QKeyEvent*)));
-    connect(input, SIGNAL(focusIn(QFocusEvent*)), this, SLOT(focusInEvent(QFocusEvent*)));
-    connect(input, SIGNAL(focusOut(QFocusEvent*)), this, SLOT(focusOutEvent(QFocusEvent*)));
-    connect(input, SIGNAL(inputMethod(QInputMethodEvent*)), this, SLOT(inputMethodEvent(QInputMethodEvent*)));
-
+    connect(input, &QLineEdit::textChanged, this, &DerflaWidget::inputChanged);
 
     QAction *quitAction = new QAction(tr("E&xit"), this);
     quitAction->setShortcut(tr("Ctrl+Q"));
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     addAction(quitAction);
+
+    QAction *clearAction = new QAction(tr("Clear Input"), this);
+    clearAction->setShortcut(tr("Ctrl+U"));
+    connect(clearAction, SIGNAL(triggered()), input, SLOT(clear()));
+    addAction(clearAction);
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
 }
@@ -90,48 +95,12 @@ void DerflaWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.drawPixmap(0, 0, pic);
     painter.setRenderHint(QPainter::Antialiasing);
-//    painter.drawText(56, 76, QDateTime::currentDateTime().toString("hh:mm:ss"));
+    //    painter.drawText(56, 76, QDateTime::currentDateTime().toString("hh:mm:ss"));
 }
 
-void DerflaWidget::focusInEvent(QFocusEvent *event)
+void DerflaWidget::inputChanged(const QString &text)
 {
-//    if (event->gotFocus() && fader->isFading())
-//        fader->fadeIn(false);
-
-
-    QWidget::focusInEvent(event);
+    qDebug() << input->text();
 }
 
-void DerflaWidget::focusOutEvent(QFocusEvent *event)
-{
-//    if (event->reason() == Qt::ActiveWindowFocusReason)
-//    {
-//        if (gSettings->value("GenOps/hideiflostfocus", false).toBool() &&
-//                !isActiveWindow() && !alternatives->isActiveWindow() && !optionsOpen && !fader->isFading())
-//        {
-//            hideLaunchy();
-//        }
-//    }
-}
 
-void DerflaWidget::inputMethodEvent(QInputMethodEvent *event)
-{
-    processKey();
-}
-
-void DerflaWidget::inputKeyPressEvent(QKeyEvent *event)
-{
-    if (event->key() == Qt::Key_Tab)
-    {
-        keyPressEvent(event);
-    }
-    else
-    {
-        event->ignore();
-    }
-}
-
-void DerflaWidget::processKey()
-{
-
-}
