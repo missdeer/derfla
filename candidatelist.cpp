@@ -60,11 +60,11 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
             setActiveWindowFlag(false);
             ui->list->setCurrentRow(1);
         }
-        qDebug() << __PRETTY_FUNCTION__;
+        qDebug() << __FUNCTION__;
     }
     else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
-        qDebug() << "enter" << __PRETTY_FUNCTION__;
+        qDebug() << "enter" << __FUNCTION__;
         onEnter();
     }
     else
@@ -81,13 +81,13 @@ void CandidateList::showEvent(QShowEvent *event)
 
 void CandidateList::on_listWidget_pressed(const QModelIndex &index)
 {
-    qDebug() << __PRETTY_FUNCTION__;
+    qDebug() << __FUNCTION__;
     onEnter();
 }
 
 void CandidateList::onEnter()
 {
-    qDebug() << __PRETTY_FUNCTION__;
+    qDebug() << __FUNCTION__;
     close();
 }
 

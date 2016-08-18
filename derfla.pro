@@ -2,7 +2,7 @@ QT       += core gui widgets
 
 TARGET = Derfla
 TEMPLATE = app
-
+CONFIG += c++11
 
 SOURCES += main.cpp\
         derflawidget.cpp \

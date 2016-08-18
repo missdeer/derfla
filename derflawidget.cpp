@@ -216,21 +216,21 @@ void DerflaWidget::ShowCandidateList()
 
 void DerflaWidget::processKey()
 {
-    qDebug() << __PRETTY_FUNCTION__;
+    qDebug() << __FUNCTION__;
 }
 
 void DerflaWidget::doEnter()
 {
-    qDebug() << __PRETTY_FUNCTION__;
+    qDebug() << __FUNCTION__;
     candidatelist->onEnter();
 }
 
 void DerflaWidget::doTab()
 {
-    qDebug() << __PRETTY_FUNCTION__;
+    qDebug() << __FUNCTION__;
 }
 
 void DerflaWidget::doBackTab()
 {
-    qDebug() << __PRETTY_FUNCTION__;
+    qDebug() << __FUNCTION__;
 }
