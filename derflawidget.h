@@ -33,6 +33,7 @@ private slots:
     void loadSkin();
     void onTimer();
     void showInFront();
+    void candidateListDone();
 private:
     QPoint mouseMovePos;
     QPixmap backgroundImage;

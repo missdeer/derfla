@@ -23,7 +23,8 @@ public:
 protected:
     void keyPressEvent(QKeyEvent* event);
     void showEvent(QShowEvent *event);
-
+signals:
+    void done();
 private slots:
     void on_listWidget_pressed(const QModelIndex &index);
 

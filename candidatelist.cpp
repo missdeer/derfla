@@ -92,9 +92,10 @@ void CandidateList::on_listWidget_pressed(const QModelIndex &index)
 
 void CandidateList::onEnter()
 {
-    qDebug() << __FUNCTION__;
     int index = ui->list->currentRow();
+    qDebug() << __FUNCTION__ << index;
     close();
+    emit done();
 }
 
 bool CandidateList::getActiveWindowFlag() const

@@ -283,10 +283,20 @@ void DerflaWidget::showInFront()
     raise();
 }
 
+void DerflaWidget::candidateListDone()
+{
+    if (candidatelist->isVisible())
+        candidatelist->hide();
+    input->setText("");
+}
+
 void DerflaWidget::ShowCandidateList()
 {
     if (!candidatelist)
+    {
         candidatelist = new CandidateList();
+        connect(candidatelist, &CandidateList::done, this, &DerflaWidget::candidateListDone);
+    }
     candidatelist->show();
     candidatelist->move(mapToGlobal(QPoint(input->x(), input->y() + input->height())));
     candidatelist->update(input->text());
