@@ -73,6 +73,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     QMenu* trayiconMenu = new QMenu(this);
     trayiconMenu->addAction(quitAction);
     trayicon = new QSystemTrayIcon(this);
+    connect(trayicon, &QSystemTrayIcon::activated, this, &DerflaWidget::trayIconActivated);
     trayicon->setContextMenu(trayiconMenu);
     trayicon->setIcon(QIcon(":/derfla.ico"));
     trayicon->setToolTip(tr("Derfla - Accelerate your keyboard!"));
@@ -203,6 +204,21 @@ void DerflaWidget::inputChanged(const QString &text)
 void DerflaWidget::keyPressed(QKeyEvent *e)
 {
     keyPressEvent(e);
+}
+
+void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch(reason)
+    {
+    case QSystemTrayIcon::DoubleClick:
+        if (!isVisible())
+            show();
+        activateWindow();
+        raise();
+        break;
+    default:
+        break;
+    }
 }
 
 void DerflaWidget::ShowCandidateList()

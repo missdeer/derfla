@@ -29,6 +29,8 @@ protected:
 private slots:
     void inputChanged(const QString& text);
     void keyPressed(QKeyEvent* e);
+    void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
+
 private:
     QPoint mouseMovePos;
     QPixmap pic;
