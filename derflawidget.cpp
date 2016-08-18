@@ -7,6 +7,7 @@
 #include <QRect>
 #include <QPainter>
 #include <QDateTime>
+#include "CharLineEdit.h"
 #include "derflawidget.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent) :
@@ -17,15 +18,19 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 #elif defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
 #endif
+    setAttribute(Qt::WA_InputMethodEnabled);
     setAttribute(Qt::WA_TranslucentBackground);
+
+    setFocusPolicy(Qt::ClickFocus);
+
     QString s = QApplication::applicationDirPath();
 #if defined(Q_OS_MAC)
     QDir d(s);
     d.cdUp();
     d.cd("Resources");
-    s = d.absolutePath() + "/01.png";
+    s = d.absolutePath() + "/skins/derfla.png";
 #else
-    s = s + "/01.png";
+    s = s + "/skins/derfla.png";
 #endif
     if (!pic.load(s))
         qDebug() << "can't load picture";
@@ -34,6 +39,18 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(repaint()));
     timer->start(100);
+
+    input = new CharLineEdit(this);
+    input->setGeometry(86,96, pic.width(), pic.height());
+#ifdef Q_WS_MAC
+    QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
+#endif
+    input->setObjectName("input");
+    connect(input, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(inputKeyPressEvent(QKeyEvent*)));
+    connect(input, SIGNAL(focusIn(QFocusEvent*)), this, SLOT(focusInEvent(QFocusEvent*)));
+    connect(input, SIGNAL(focusOut(QFocusEvent*)), this, SLOT(focusOutEvent(QFocusEvent*)));
+    connect(input, SIGNAL(inputMethod(QInputMethodEvent*)), this, SLOT(inputMethodEvent(QInputMethodEvent*)));
+
 }
 
 DerflaWidget::~DerflaWidget()
@@ -66,4 +83,47 @@ void DerflaWidget::paintEvent(QPaintEvent *event)
     painter.drawPixmap(0, 0, pic);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawText(66, 76, QDateTime::currentDateTime().toString("hh:mm:ss"));
+}
+
+void DerflaWidget::focusInEvent(QFocusEvent *event)
+{
+//    if (event->gotFocus() && fader->isFading())
+//        fader->fadeIn(false);
+
+
+    QWidget::focusInEvent(event);
+}
+
+void DerflaWidget::focusOutEvent(QFocusEvent *event)
+{
+//    if (event->reason() == Qt::ActiveWindowFocusReason)
+//    {
+//        if (gSettings->value("GenOps/hideiflostfocus", false).toBool() &&
+//                !isActiveWindow() && !alternatives->isActiveWindow() && !optionsOpen && !fader->isFading())
+//        {
+//            hideLaunchy();
+//        }
+//    }
+}
+
+void DerflaWidget::inputMethodEvent(QInputMethodEvent *event)
+{
+    processKey();
+}
+
+void DerflaWidget::inputKeyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Tab)
+    {
+        keyPressEvent(event);
+    }
+    else
+    {
+        event->ignore();
+    }
+}
+
+void DerflaWidget::processKey()
+{
+
 }
