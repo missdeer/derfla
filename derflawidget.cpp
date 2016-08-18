@@ -33,7 +33,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     s = s + "/skins/derfla.png";
 #endif
     if (!pic.load(s))
-        qDebug() << "can't load picture";
+        qDebug() << "can't load picture from " << s;
     resize(pic.size());
     mouseMovePos = QPoint(0, 0);
     timer = new QTimer(this);
@@ -41,7 +41,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     timer->start(100);
 
     input = new CharLineEdit(this);
-    input->setGeometry(86,96, pic.width(), pic.height());
+    input->move(56,96);
 #ifdef Q_WS_MAC
     QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
 #endif
@@ -82,7 +82,7 @@ void DerflaWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.drawPixmap(0, 0, pic);
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.drawText(66, 76, QDateTime::currentDateTime().toString("hh:mm:ss"));
+    painter.drawText(56, 76, QDateTime::currentDateTime().toString("hh:mm:ss"));
 }
 
 void DerflaWidget::focusInEvent(QFocusEvent *event)

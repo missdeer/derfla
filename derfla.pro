@@ -15,24 +15,19 @@ FORMS    +=
 
 
 macx: {
-    OBJECTIVE_SOURCES += \
-        mdfindwrapper.mm
-
     QMAKE_MAC_SDK = macosx10.11
-    ICON = cjlv.icns
+    ICON = derfla.icns
     icon.path = $$PWD
     #icon.files += cjlv.png
     INSTALLS += icon
-    INCLUDEPATH += /usr/local/include
-    LIBS+=-L$$PWD/3rdparty/zlib-1.2.8 -lz -framework CoreServices -lobjc
 
     CONFIG(release, debug|release) : {
-        QMAKE_INFO_PLIST = osxInfo.plist
-        copy_skins.commands = 'cp -R \"$$PWD/extensions\" \"$${TARGET}.app/Contents/PlugIns\"'
-        QMAKE_EXTRA_TARGETS +=  copy_skins
-        POST_TARGETDEPS += copy_skins
-        QMAKE_POST_LINK += $$quote(cp -R \"$$PWD/extensions\" \"$${TARGET}.app/Contents/PlugIns\")
     }
+    QMAKE_INFO_PLIST = osxInfo.plist
+    copy_skins.commands = 'cp -R \"$$PWD/skins\" \"$${TARGET}.app/Contents/Resources\"'
+    QMAKE_EXTRA_TARGETS +=  copy_skins
+    POST_TARGETDEPS += copy_skins
+    QMAKE_POST_LINK += $$quote(cp -R \"$$PWD/skins\" \"$${TARGET}.app/Contents/Resources\")
 }
 
 win32: {
