@@ -30,10 +30,10 @@ private slots:
     void inputChanged(const QString& text);
     void keyPressed(QKeyEvent* e);
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
-
+    void loadSkin();
 private:
     QPoint mouseMovePos;
-    QPixmap pic;
+    QPixmap backgroundImage;
     QTimer* timer;
     CharLineEdit* input;
     QSystemTrayIcon* trayicon;
@@ -43,6 +43,7 @@ private:
     void doEnter();
     void doTab();
     void doBackTab();
+    bool applySkin(const QString& skin);
 };
 
 #endif // DerflaWidget_H

@@ -10,12 +10,16 @@
 #include <QAction>
 #include <QMenu>
 #include <QIcon>
+#include <QDomDocument>
+#include <QFileDialog>
 #include "CharLineEdit.h"
 #include "candidatelist.h"
 #include "derflawidget.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent) :
     QWidget(parent),
+    mouseMovePos(0, 0),
+    input(new CharLineEdit(this)),
     candidatelist(nullptr)
 {
 #if defined(Q_OS_MAC)
@@ -28,29 +32,15 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     setFocusPolicy(Qt::ClickFocus);
 
-    QString s = QApplication::applicationDirPath();
-#if defined(Q_OS_MAC)
-    QDir d(s);
-    d.cdUp();
-    d.cd("Resources");
-    s = d.absolutePath() + "/skins/derfla.png";
-#else
-    s = s + "/skins/derfla.png";
-#endif
-    if (!pic.load(s))
-        qDebug() << "can't load picture from " << s;
-    resize(pic.size());
-    mouseMovePos = QPoint(0, 0);
 //    timer = new QTimer(this);
 //    connect(timer, SIGNAL(timeout()), this, SLOT(repaint()));
 //    timer->start(100);
 
-    input = new CharLineEdit(this);
-    input->setGeometry(46, 62, 150, 68);
-    QFont f = input->font();
-    f.setPixelSize(48);
-    f.setFamily("Menlo");
-    input->setFont(f);
+    if (!applySkin("black_glass"))
+    {
+        qDebug() << "loading skin failed";
+        return;
+    }
 #ifdef Q_WS_MAC
     QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
 #endif
@@ -68,9 +58,14 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     connect(clearAction, SIGNAL(triggered()), input, SLOT(clear()));
     addAction(clearAction);
 
+    QAction *loadSkinAction = new QAction(tr("Load Skin"), this);
+    connect(loadSkinAction, SIGNAL(triggered()), this, SLOT(loadSkin()));
+    addAction(loadSkinAction);
+
     setContextMenuPolicy(Qt::ActionsContextMenu);
 
     QMenu* trayiconMenu = new QMenu(this);
+    trayiconMenu->addAction(loadSkinAction);
     trayiconMenu->addAction(quitAction);
     trayicon = new QSystemTrayIcon(this);
     connect(trayicon, &QSystemTrayIcon::activated, this, &DerflaWidget::trayIconActivated);
@@ -107,7 +102,7 @@ void DerflaWidget::mouseReleaseEvent(QMouseEvent *event)
 void DerflaWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
-    painter.drawPixmap(0, 0, pic);
+    painter.drawPixmap(0, 0, backgroundImage);
     painter.setRenderHint(QPainter::Antialiasing);
     //    painter.drawText(56, 76, QDateTime::currentDateTime().toString("hh:mm:ss"));
 }
@@ -239,6 +234,18 @@ void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
+void DerflaWidget::loadSkin()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                        tr("Load Derfla Skin"),
+                                                        "",
+                                                        tr("Derfla Skin Configuration (*.xml);;All files (*.*)"));
+    if (fileName.isEmpty())
+            return;
+    QFileInfo f(fileName);
+    applySkin(f.baseName());
+}
+
 void DerflaWidget::ShowCandidateList()
 {
     if (!candidatelist)
@@ -267,4 +274,81 @@ void DerflaWidget::doTab()
 void DerflaWidget::doBackTab()
 {
     qDebug() << __FUNCTION__;
+}
+
+bool DerflaWidget::applySkin(const QString& skin)
+{
+    QString s = QApplication::applicationDirPath();
+    const QString skinPath = QString("/skins/%1.xml").arg(skin);
+#if defined(Q_OS_MAC)
+    QDir d(s);
+    d.cdUp();
+    d.cd("Resources");
+    s = d.absolutePath() +skinPath ;
+#else
+    s += skinPath;
+#endif
+
+    QDomDocument doc;
+    QFile file(s);
+    if (!file.open(QIODevice::ReadOnly))
+        return false;
+    if (!doc.setContent(&file))
+    {
+        file.close();
+        return false;
+    }
+    file.close();
+
+    QDomElement docElem = doc.documentElement();
+    QDomElement imageElem = docElem.firstChildElement("image");
+    if (imageElem.isNull())
+        return false;
+
+    s = QApplication::applicationDirPath();
+#if defined(Q_OS_MAC)
+    QDir d(s);
+    d.cdUp();
+    d.cd("Resources");
+    s = d.absolutePath();
+#endif
+    QString imagePath = QString("%1/skins/%2").arg(s).arg(imageElem.text());
+
+    if (!backgroundImage.load(imagePath))
+    {
+        qDebug() << "can't load picture from " << imagePath;
+        return false;
+    }
+    resize(backgroundImage.size());
+
+    QDomElement xElem = docElem.firstChildElement("x");
+    if (xElem.isNull())
+        return false;
+    QDomElement yElem = docElem.firstChildElement("y");
+    if (yElem.isNull())
+        return false;
+    QDomElement wElem = docElem.firstChildElement("width");
+    if (wElem.isNull())
+        return false;
+    QDomElement hElem = docElem.firstChildElement("height");
+    if (hElem.isNull())
+        return false;
+
+    input->setGeometry(xElem.text().toInt(), yElem.text().toInt(), wElem.text().toInt(), hElem.text().toInt());
+    QFont f = input->font();
+    QDomElement fzElem = docElem.firstChildElement("pixelsize");
+    if (fzElem.isNull())
+        return false;
+    f.setPixelSize(fzElem.text().toInt());
+#if defined(Q_OS_WIN)
+    const QString fontFamily = "Microsoft YaHei";
+#elif defined(Q_OS_MAC)
+    const QString fontFamily = "PingFangCS";
+#else
+    const QString fontFamily = "Menlo";
+#endif
+    f.setFamily(fontFamily);
+    input->setFont(f);
+
+    return true;
 }
