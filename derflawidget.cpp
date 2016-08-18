@@ -110,6 +110,12 @@ void DerflaWidget::paintEvent(QPaintEvent *event)
     //    painter.drawText(56, 76, QDateTime::currentDateTime().toString("hh:mm:ss"));
 }
 
+void DerflaWidget::moveEvent(QMoveEvent *event)
+{
+    if (candidatelist && candidatelist->isVisible())
+        candidatelist->move(mapToGlobal(QPoint(input->x(), input->y() + input->height())));
+}
+
 void DerflaWidget::inputChanged(const QString &text)
 {
     qDebug() << input->text();
@@ -119,12 +125,8 @@ void DerflaWidget::inputChanged(const QString &text)
 void DerflaWidget::ShowCandidateList()
 {
     if (!candidatelist)
-        candidatelist = new CandidateList(this);
-    candidatelist->update(input->text());
+        candidatelist = new CandidateList();
     candidatelist->show();
-    QPoint pt = QPoint(input->x(), input->y() + input->height());
-    qDebug() << pt;
-    pt = mapToGlobal(pt);
-    qDebug() << pt;
-    candidatelist->move(pt);
+    candidatelist->move(mapToGlobal(QPoint(input->x(), input->y() + input->height())));
+    candidatelist->update(input->text());
 }

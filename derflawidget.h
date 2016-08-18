@@ -22,7 +22,9 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event);    
+    void moveEvent(QMoveEvent *event);
+
 private slots:
     void inputChanged(const QString& text);
 private:
