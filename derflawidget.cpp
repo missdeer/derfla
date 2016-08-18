@@ -19,6 +19,7 @@
 DerflaWidget::DerflaWidget(QWidget *parent) :
     QWidget(parent),
     mouseMovePos(0, 0),
+    timer(new QTimer(this)),
     input(new CharLineEdit(this)),
     candidatelist(nullptr)
 {
@@ -32,9 +33,6 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     setFocusPolicy(Qt::ClickFocus);
 
-//    timer = new QTimer(this);
-//    connect(timer, SIGNAL(timeout()), this, SLOT(repaint()));
-//    timer->start(100);
 
     if (!applySkin("derfla"))
     {
@@ -68,7 +66,11 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
 
+    QAction *showAction = new QAction(tr("Show"), this);
+    connect(showAction, SIGNAL(triggered()), this, SLOT(showInFront()));
+
     QMenu* trayiconMenu = new QMenu(this);
+    trayiconMenu->addAction(showAction);
     trayiconMenu->addAction(loadSkinAction);
     trayiconMenu->addAction(quitAction);
     trayicon = new QSystemTrayIcon(this);
@@ -77,6 +79,8 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     trayicon->setIcon(QIcon(":/derfla.ico"));
     trayicon->setToolTip(tr("Derfla - Accelerate your keyboard!"));
     trayicon->show();
+
+    connect(timer, SIGNAL(timeout()), this, SLOT(onTimer()));
 }
 
 DerflaWidget::~DerflaWidget()
@@ -216,6 +220,10 @@ void DerflaWidget::inputChanged(const QString &text)
 {
     qDebug() << input->text();
     ShowCandidateList();
+    if (input->text().isEmpty())
+        stopWaiting();
+    else
+        waiting();
 }
 
 void DerflaWidget::keyPressed(QKeyEvent *e)
@@ -248,6 +256,31 @@ void DerflaWidget::loadSkin()
             return;
     QFileInfo f(fileName);
     applySkin(f.baseName());
+}
+
+void DerflaWidget::onTimer()
+{
+    static int degree = 0;
+    degree += 36;
+    if (degree > 360)
+        degree -= 360;
+    QList<QAction*> actions = input->actions();
+    if (actions.isEmpty())
+        return;
+    QAction* logoAction = actions.at(0);
+    QPixmap icon(":/loading.png");
+    QMatrix rm;
+    rm.rotate(degree);
+    icon = icon.transformed(rm);
+    logoAction->setIcon(icon);
+}
+
+void DerflaWidget::showInFront()
+{
+    if (!isVisible())
+        show();
+    activateWindow();
+    raise();
 }
 
 void DerflaWidget::ShowCandidateList()
@@ -311,7 +344,7 @@ bool DerflaWidget::applySkin(const QString& skin)
 
     s = QApplication::applicationDirPath();
 #if defined(Q_OS_MAC)
-    QDir d(s);
+    d.setPath(s);
     d.cdUp();
     d.cd("Resources");
     s = d.absolutePath();
@@ -355,4 +388,20 @@ bool DerflaWidget::applySkin(const QString& skin)
     input->setFont(f);
 
     return true;
+}
+
+void DerflaWidget::waiting()
+{
+    timer->start(100);
+}
+
+void DerflaWidget::stopWaiting()
+{
+    timer->stop();
+
+    QList<QAction*> actions = input->actions();
+    if (actions.isEmpty())
+        return;
+    QAction* logoAction = actions.at(0);
+    logoAction->setIcon(QIcon(":/derfla.ico"));
 }

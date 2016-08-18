@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>derfla.png</file>
         <file>derfla.ico</file>
+        <file>loading.png</file>
     </qresource>
 </RCC>

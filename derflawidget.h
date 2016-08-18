@@ -31,6 +31,8 @@ private slots:
     void keyPressed(QKeyEvent* e);
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
     void loadSkin();
+    void onTimer();
+    void showInFront();
 private:
     QPoint mouseMovePos;
     QPixmap backgroundImage;
@@ -44,6 +46,8 @@ private:
     void doTab();
     void doBackTab();
     bool applySkin(const QString& skin);
+    void waiting();
+    void stopWaiting();
 };
 
 #endif // DerflaWidget_H
