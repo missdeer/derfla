@@ -7,6 +7,7 @@
 #include <QRect>
 #include <QPainter>
 #include <QDateTime>
+#include <QAction>
 #include "CharLineEdit.h"
 #include "derflawidget.h"
 
@@ -36,9 +37,9 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
         qDebug() << "can't load picture from " << s;
     resize(pic.size());
     mouseMovePos = QPoint(0, 0);
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(repaint()));
-    timer->start(100);
+//    timer = new QTimer(this);
+//    connect(timer, SIGNAL(timeout()), this, SLOT(repaint()));
+//    timer->start(100);
 
     input = new CharLineEdit(this);
     input->move(56,96);
@@ -51,6 +52,13 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     connect(input, SIGNAL(focusOut(QFocusEvent*)), this, SLOT(focusOutEvent(QFocusEvent*)));
     connect(input, SIGNAL(inputMethod(QInputMethodEvent*)), this, SLOT(inputMethodEvent(QInputMethodEvent*)));
 
+
+    QAction *quitAction = new QAction(tr("E&xit"), this);
+    quitAction->setShortcut(tr("Ctrl+Q"));
+    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    addAction(quitAction);
+
+    setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
 DerflaWidget::~DerflaWidget()
@@ -82,7 +90,7 @@ void DerflaWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.drawPixmap(0, 0, pic);
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.drawText(56, 76, QDateTime::currentDateTime().toString("hh:mm:ss"));
+//    painter.drawText(56, 76, QDateTime::currentDateTime().toString("hh:mm:ss"));
 }
 
 void DerflaWidget::focusInEvent(QFocusEvent *event)
