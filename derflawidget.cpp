@@ -11,10 +11,12 @@
 #include <QMenu>
 #include <QIcon>
 #include "CharLineEdit.h"
+#include "candidatelist.h"
 #include "derflawidget.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    candidatelist(nullptr)
 {
 #if defined(Q_OS_MAC)
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -67,12 +69,11 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
 
-
     QMenu* trayiconMenu = new QMenu(this);
     trayiconMenu->addAction(quitAction);
     trayicon = new QSystemTrayIcon(this);
     trayicon->setContextMenu(trayiconMenu);
-    trayicon->setIcon(QIcon(":/derfla.png"));
+    trayicon->setIcon(QIcon(":/derfla.ico"));
     trayicon->setToolTip(tr("Derfla - Accelerate your keyboard!"));
     trayicon->show();
 }
@@ -112,6 +113,18 @@ void DerflaWidget::paintEvent(QPaintEvent *event)
 void DerflaWidget::inputChanged(const QString &text)
 {
     qDebug() << input->text();
+    ShowCandidateList();
 }
 
-
+void DerflaWidget::ShowCandidateList()
+{
+    if (!candidatelist)
+        candidatelist = new CandidateList(this);
+    candidatelist->update(input->text());
+    candidatelist->show();
+    QPoint pt = QPoint(input->x(), input->y() + input->height());
+    qDebug() << pt;
+    pt = mapToGlobal(pt);
+    qDebug() << pt;
+    candidatelist->move(pt);
+}

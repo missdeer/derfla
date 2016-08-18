@@ -9,6 +9,7 @@
 #include <QSystemTrayIcon>
 
 class CharLineEdit;
+class CandidateList;
 
 class DerflaWidget : public QWidget
 {
@@ -30,6 +31,8 @@ private:
     QTimer* timer;
     CharLineEdit* input;
     QSystemTrayIcon* trayicon;
+    CandidateList* candidatelist;
+    void ShowCandidateList();
 };
 
 #endif // DerflaWidget_H

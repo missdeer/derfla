@@ -6,12 +6,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         derflawidget.cpp \
-    CharLineEdit.cpp
+    CharLineEdit.cpp \
+    candidatelist.cpp
 
 HEADERS  += derflawidget.h \
-    CharLineEdit.h
+    CharLineEdit.h \
+    candidatelist.h
 
-FORMS    +=
+FORMS    += \
+    candidatelist.ui
 
 
 macx: {

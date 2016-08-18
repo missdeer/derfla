@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>derfla.png</file>
+        <file>derfla.ico</file>
     </qresource>
 </RCC>
