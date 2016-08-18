@@ -82,7 +82,7 @@ void CandidateList::showEvent(QShowEvent *event)
         ui->list->setCurrentRow(0);
 #if !defined(Q_OS_WIN)
     QSize s = size();
-    resize(s.width(), qMin(10, ui->list->count()) * 50);
+    resize(s.width(), qMin(10, ui->list->count()) * 60);
 #endif
 
     qDebug() << __FUNCTION__ << ui->list->height() << height();

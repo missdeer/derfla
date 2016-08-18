@@ -72,14 +72,14 @@ void CandidateListDelegate::paint ( QPainter * painter, const QStyleOptionViewIt
     painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignBottom|Qt::AlignLeft, title, &r);
 
     //DESCRIPTION
-    r = option.rect.adjusted(imageSpace, 30, -10, 0);
+    r = option.rect.adjusted(imageSpace, 35, -10, 5);
     painter->setFont( QFont( "Menlo", 10, QFont::Normal ) );
     painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignLeft, description, &r);
 }
 
 QSize CandidateListDelegate::sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
-    return QSize(200, 50); // very dumb value
+    return QSize(300, 60); // very dumb value
 }
 
 CandidateListDelegate::~CandidateListDelegate()
