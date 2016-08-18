@@ -7,7 +7,7 @@
 #include <QRect>
 #include <QPainter>
 #include <QDateTime>
-#include "clockwidget.h"
+#include "derflawidget.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent) :
     QWidget(parent)
