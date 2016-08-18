@@ -55,6 +55,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
 #endif
     input->setObjectName("input");
+    connect(input, &CharLineEdit::keyPressed, this, &DerflaWidget::keyPressEvent);
     connect(input, &QLineEdit::textChanged, this, &DerflaWidget::inputChanged);
 
     QAction *quitAction = new QAction(tr("E&xit"), this);
@@ -116,10 +117,92 @@ void DerflaWidget::moveEvent(QMoveEvent *event)
         candidatelist->move(mapToGlobal(QPoint(input->x(), input->y() + input->height())));
 }
 
+void DerflaWidget::keyPressEvent(QKeyEvent *event)
+{
+    qDebug() << "0:" << event->key();
+    if (event->key() == Qt::Key_Escape)
+    {
+        if (candidatelist->isVisible())
+            candidatelist->hide();
+    }
+    else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+    {
+        doEnter();
+    }
+    else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_PageDown ||
+             event->key() == Qt::Key_Up || event->key() == Qt::Key_PageUp)
+    {
+        qDebug() << "1:" << event->key();
+        if (candidatelist->isVisible())
+        {
+            //if (!candidatelist->isActiveWindow())
+            {
+                // Don't refactor the activateWindow outside the if, it won't work properly any other way!
+//                if (candidatelist->currentRow() < 0 && candidatelist->count() > 0)
+//                {
+//                    candidatelist->activateWindow();
+//                    candidatelist->setCurrentRow(0);
+//                }
+//                else
+                {
+                    qDebug() << "2:" << event->key();
+                    candidatelist->activateWindow();
+                    candidatelist->setActiveWindowFlag(true);
+                    qApp->sendEvent(candidatelist, event);
+                }
+            }
+        }
+        else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_PageDown)
+        {
+            // do a search and show the results, selecting the first one
+//            searchOnInput();
+//            if (searchResults.count() > 0)
+//            {
+//                updatecandidatelist();
+//                showcandidatelist();
+//            }
+        }
+    }
+    else if ((event->key() == Qt::Key_Tab || event->key() == Qt::Key_Backspace) && event->modifiers() == Qt::ShiftModifier)
+    {
+        doBackTab();
+        processKey();
+    }
+    else if (event->key() == Qt::Key_Tab)
+    {
+        doTab();
+        processKey();
+    }
+    else if (event->key() == Qt::Key_Slash || event->key() == Qt::Key_Backslash)
+    {
+//        if (inputData.count() > 0 && inputData.last().hasLabel(LABEL_FILE) &&
+//                searchResults.count() > 0 && searchResults[0].id == HASH_LAUNCHYFILE)
+//            doTab();
+        processKey();
+    }
+    else if (event->key()== Qt::Key_Insert && event->modifiers() == Qt::ShiftModifier)
+    {
+        // ensure pasting text with Shift+Insert also parses input
+        // longer term parsing should be done using the TextChanged event
+        processKey();
+    }
+    else if (event->text().length() > 0)
+    {
+        // process any other key with character output
+        event->ignore();
+        processKey();
+    }
+}
+
 void DerflaWidget::inputChanged(const QString &text)
 {
     qDebug() << input->text();
     ShowCandidateList();
+}
+
+void DerflaWidget::keyPressed(QKeyEvent *e)
+{
+    keyPressEvent(e);
 }
 
 void DerflaWidget::ShowCandidateList()
@@ -129,4 +212,25 @@ void DerflaWidget::ShowCandidateList()
     candidatelist->show();
     candidatelist->move(mapToGlobal(QPoint(input->x(), input->y() + input->height())));
     candidatelist->update(input->text());
+}
+
+void DerflaWidget::processKey()
+{
+    qDebug() << __PRETTY_FUNCTION__;
+}
+
+void DerflaWidget::doEnter()
+{
+    qDebug() << __PRETTY_FUNCTION__;
+    candidatelist->onEnter();
+}
+
+void DerflaWidget::doTab()
+{
+    qDebug() << __PRETTY_FUNCTION__;
+}
+
+void DerflaWidget::doBackTab()
+{
+    qDebug() << __PRETTY_FUNCTION__;
 }

@@ -7,11 +7,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         derflawidget.cpp \
     CharLineEdit.cpp \
-    candidatelist.cpp
+    candidatelist.cpp \
+    candidatelistdelegate.cpp
 
 HEADERS  += derflawidget.h \
     CharLineEdit.h \
-    candidatelist.h
+    candidatelist.h \
+    candidatelistdelegate.h
 
 FORMS    += \
     candidatelist.ui

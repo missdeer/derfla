@@ -25,8 +25,10 @@ protected:
     void paintEvent(QPaintEvent *event);    
     void moveEvent(QMoveEvent *event);
 
+    void keyPressEvent(QKeyEvent* event);
 private slots:
     void inputChanged(const QString& text);
+    void keyPressed(QKeyEvent* e);
 private:
     QPoint mouseMovePos;
     QPixmap pic;
@@ -35,6 +37,10 @@ private:
     QSystemTrayIcon* trayicon;
     CandidateList* candidatelist;
     void ShowCandidateList();
+    void processKey();
+    void doEnter();
+    void doTab();
+    void doBackTab();
 };
 
 #endif // DerflaWidget_H
