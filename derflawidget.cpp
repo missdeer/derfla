@@ -36,7 +36,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 //    connect(timer, SIGNAL(timeout()), this, SLOT(repaint()));
 //    timer->start(100);
 
-    if (!applySkin("black_glass"))
+    if (!applySkin("derfla"))
     {
         qDebug() << "loading skin failed";
         return;
@@ -44,7 +44,11 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 #ifdef Q_WS_MAC
     QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
 #endif
+    QAction *logoAction = new QAction(tr("Input"), this);
+    logoAction->setIcon(QIcon(":/derfla.ico"));
+    input->addAction(logoAction, QLineEdit::ActionPosition::TrailingPosition);
     input->setObjectName("input");
+    input->setClearButtonEnabled(false);
     connect(input, &CharLineEdit::keyPressed, this, &DerflaWidget::keyPressEvent);
     connect(input, &QLineEdit::textChanged, this, &DerflaWidget::inputChanged);
 
@@ -53,12 +57,12 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     addAction(quitAction);
 
-    QAction *clearAction = new QAction(tr("Clear Input"), this);
+    QAction *clearAction = new QAction(tr("&Clear Input"), this);
     clearAction->setShortcut(tr("Ctrl+U"));
     connect(clearAction, SIGNAL(triggered()), input, SLOT(clear()));
     addAction(clearAction);
 
-    QAction *loadSkinAction = new QAction(tr("Load Skin"), this);
+    QAction *loadSkinAction = new QAction(tr("Load &Skin"), this);
     connect(loadSkinAction, SIGNAL(triggered()), this, SLOT(loadSkin()));
     addAction(loadSkinAction);
 
