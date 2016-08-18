@@ -189,6 +189,11 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
     }
     else if (event->text().length() > 0)
     {
+        if (!input->hasFocus())
+        {
+            input->setFocus();
+            qApp->sendEvent(input, event);
+        }
         // process any other key with character output
         event->ignore();
         processKey();

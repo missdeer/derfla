@@ -80,12 +80,8 @@ void CandidateList::showEvent(QShowEvent *event)
 {
     if (ui->list->count() > 0)
         ui->list->setCurrentRow(0);
-#if !defined(Q_OS_WIN)
     QSize s = size();
     resize(s.width(), qMin(10, ui->list->count()) * 60);
-#endif
-
-    qDebug() << __FUNCTION__ << ui->list->height() << height();
 }
 
 void CandidateList::on_listWidget_pressed(const QModelIndex &index)

@@ -39,10 +39,11 @@ win32: {
     QMAKE_LFLAGS += "/LTCG"
     CONFIG(release, debug|release): {
         copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Release/skins/)'
-
-        QMAKE_EXTRA_TARGETS +=  copy_skins
-        POST_TARGETDEPS += copy_skins
+    } else {
+        copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Debug/skins/)'
     }
+    QMAKE_EXTRA_TARGETS +=  copy_skins
+    POST_TARGETDEPS += copy_skins
 }
 
 RESOURCES += \
