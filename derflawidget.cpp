@@ -19,9 +19,9 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     candidatelist(nullptr)
 {
 #if defined(Q_OS_MAC)
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint );
 #elif defined(Q_OS_WIN)
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
 #endif
     setAttribute(Qt::WA_InputMethodEnabled);
     setAttribute(Qt::WA_TranslucentBackground);
