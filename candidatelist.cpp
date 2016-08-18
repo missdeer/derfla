@@ -20,14 +20,17 @@ CandidateList::CandidateList(QWidget *parent) :
     QListWidgetItem *item = new QListWidgetItem();
     item->setData(Qt::DisplayRole, "Title 1");
     item->setData(Qt::UserRole + 1, "Description 1");
+    item->setData(Qt::DecorationRole, QIcon(":/derfla.ico"));
     ui->list->addItem(item);
     item = new QListWidgetItem();
     item->setData(Qt::DisplayRole, "Title 2");
     item->setData(Qt::UserRole + 1, "Description 2");
+    item->setData(Qt::DecorationRole, QIcon(":/derfla.ico"));
     ui->list->addItem(item);
     item = new QListWidgetItem();
     item->setData(Qt::DisplayRole, "Title 3");
     item->setData(Qt::UserRole + 1, "Description 3");
+    item->setData(Qt::DecorationRole, QIcon(":/derfla.ico"));
     ui->list->addItem(item);
 }
 
@@ -77,6 +80,12 @@ void CandidateList::showEvent(QShowEvent *event)
 {
     if (ui->list->count() > 0)
         ui->list->setCurrentRow(0);
+#if !defined(Q_OS_WIN)
+    QSize s = size();
+    resize(s.width(), qMin(10, ui->list->count()) * 50);
+#endif
+
+    qDebug() << __FUNCTION__ << ui->list->height() << height();
 }
 
 void CandidateList::on_listWidget_pressed(const QModelIndex &index)
