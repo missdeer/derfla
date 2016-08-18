@@ -66,14 +66,21 @@ void CandidateListDelegate::paint ( QPainter * painter, const QStyleOptionViewIt
         imageSpace = 55;
     }
 
+#if defined(Q_OS_WIN)
+    const QString fontFamily = "Microsoft YaHei";
+#elif defined(Q_OS_MAC)
+    const QString fontFamily = "PingFangCS";
+#else
+    const QString fontFamily = "Menlo";
+#endif
     //TITLE
     r = option.rect.adjusted(imageSpace, 0, -10, -30);
-    painter->setFont( QFont( "Menlo", 16, QFont::Normal ) );
+    painter->setFont( QFont( fontFamily, 16, QFont::Normal ) );
     painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignBottom|Qt::AlignLeft, title, &r);
 
     //DESCRIPTION
     r = option.rect.adjusted(imageSpace, 35, -10, 5);
-    painter->setFont( QFont( "Menlo", 10, QFont::Normal ) );
+    painter->setFont( QFont( fontFamily, 10, QFont::Normal ) );
     painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignLeft, description, &r);
 }
 

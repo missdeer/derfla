@@ -121,10 +121,22 @@ void DerflaWidget::moveEvent(QMoveEvent *event)
 void DerflaWidget::keyPressEvent(QKeyEvent *event)
 {
     qDebug() << "0:" << event->key();
+    static QDateTime lastTime = QDateTime::currentDateTime();
+    QDateTime now = QDateTime::currentDateTime();
     if (event->key() == Qt::Key_Escape)
-    {
+    {        
         if (candidatelist->isVisible())
             candidatelist->hide();
+        else
+        {
+            if (lastTime.msecsTo(now) > 10)
+            {
+                if (input->text().isEmpty())
+                    hide();
+                else
+                    input->setText("");
+            }
+        }
     }
     else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
@@ -198,6 +210,7 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
         event->ignore();
         processKey();
     }
+    lastTime = now;
 }
 
 void DerflaWidget::inputChanged(const QString &text)

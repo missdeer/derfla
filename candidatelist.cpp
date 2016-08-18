@@ -93,6 +93,7 @@ void CandidateList::on_listWidget_pressed(const QModelIndex &index)
 void CandidateList::onEnter()
 {
     qDebug() << __FUNCTION__;
+    int index = ui->list->currentRow();
     close();
 }
 
