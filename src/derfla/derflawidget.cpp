@@ -22,7 +22,8 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     mouseMovePos(0, 0),
     timer(new QTimer(this)),
     input(new CharLineEdit(this)),
-    candidatelist(nullptr)
+    candidatelist(nullptr),
+    hotkeyManager(new UGlobalHotkeys)
 {
 #if defined(Q_OS_MAC)
     setWindowFlags(Qt::FramelessWindowHint );
@@ -69,6 +70,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     setContextMenuPolicy(Qt::ActionsContextMenu);
 
     QAction *showAction = new QAction(tr("Show"), this);
+    showAction->setShortcut(tr("Alt+Space"));
     connect(showAction, SIGNAL(triggered()), this, SLOT(showInFront()));
 
     QMenu* trayiconMenu = new QMenu(this);
@@ -83,11 +85,18 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     trayicon->show();
 
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimer()));
+
+    hotkeyManager->registerHotkey("Alt+Space");
+    connect(hotkeyManager, &UGlobalHotkeys::activated, [this](size_t id)
+    {
+        qDebug() << "Activated: " << QString::number(id);
+        this->showInFront();
+    });
 }
 
 DerflaWidget::~DerflaWidget()
 {
-
+    hotkeyManager->unregisterHotkey();
 }
 
 void DerflaWidget::mouseMoveEvent(QMouseEvent *event)

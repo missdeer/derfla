@@ -10,6 +10,7 @@
 
 class CharLineEdit;
 class CandidateList;
+class UGlobalHotkeys;
 
 class DerflaWidget : public QWidget
 {
@@ -41,6 +42,7 @@ private:
     CharLineEdit* input;
     QSystemTrayIcon* trayicon;
     CandidateList* candidatelist;
+    UGlobalHotkeys *hotkeyManager;
     void ShowCandidateList();
     void processKey();
     void doEnter();
