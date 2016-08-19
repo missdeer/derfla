@@ -120,6 +120,7 @@ static std::unordered_map<uint32_t, uint32_t> KEY_MAP = {
     {Qt::Key_F12, kVK_F12},
     {Qt::Key_F13, kVK_F13},
     {Qt::Key_F14, kVK_F14},
+    {Qt::Key_Space, kVK_Space},
 };
 
 static std::unordered_map<uint32_t, uint32_t> MOD_MAP = {
