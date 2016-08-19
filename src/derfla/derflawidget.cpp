@@ -134,16 +134,16 @@ void DerflaWidget::moveEvent(QMoveEvent *event)
 
 void DerflaWidget::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << "0:" << event->key();
     static QDateTime lastTime = QDateTime::currentDateTime();
     QDateTime now = QDateTime::currentDateTime();
+    qDebug() << "0:" << event->key() << now;
     if (event->key() == Qt::Key_Escape)
-    {        
-        if (candidatelist->isVisible())
-            candidatelist->hide();
-        else
+    {
+        if (lastTime.msecsTo(now) > 50)
         {
-            if (lastTime.msecsTo(now) > 10)
+            if (candidatelist->isVisible())
+                candidatelist->hide();
+            else
             {
                 if (input->text().isEmpty())
                     hide();
