@@ -2,6 +2,7 @@
 #define CANDIDATELIST_H
 
 #include <QFrame>
+#include "candidatelistwidget.h"
 
 namespace Ui {
 class CandidateList;
@@ -25,6 +26,7 @@ protected:
     void showEvent(QShowEvent *event);
 signals:
     void done();
+    void keyPressedEvent(QKeyEvent* event);
 private slots:
     void on_listWidget_pressed(const QModelIndex &index);
 

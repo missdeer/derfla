@@ -32,6 +32,8 @@ CandidateList::CandidateList(QWidget *parent) :
     item->setData(Qt::UserRole + 1, "Description 3");
     item->setData(Qt::DecorationRole, QIcon(":/derfla.ico"));
     ui->list->addItem(item);
+
+    connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
 }
 
 CandidateList::~CandidateList()
@@ -63,15 +65,21 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
             setActiveWindowFlag(false);
             ui->list->setCurrentRow(1);
         }
-        qDebug() << __FUNCTION__;
+        qDebug() << "event->key() == Qt::Key_Down" << __FUNCTION__;
     }
     else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
         qDebug() << "enter" << __FUNCTION__;
         onEnter();
     }
+//    else if (event->text().length() > 0)
+//    {
+//        qDebug() << "event->text().length() > 0" << __FUNCTION__;
+//        emit keyPressedEvent(event);
+//    }
     else
     {
+        qDebug() << "ignore" << __FUNCTION__ << event;
         event->ignore();
     }
 }

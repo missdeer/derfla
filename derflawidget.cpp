@@ -229,7 +229,12 @@ void DerflaWidget::inputChanged(const QString &text)
 
 void DerflaWidget::keyPressed(QKeyEvent *e)
 {
-    keyPressEvent(e);
+    qDebug() << __FUNCTION__;
+    if (candidatelist->isVisible())
+        candidatelist->hide();
+    activateWindow();
+    raise();
+    qApp->sendEvent(this, e);
 }
 
 void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -297,6 +302,7 @@ void DerflaWidget::ShowCandidateList()
     {
         candidatelist = new CandidateList();
         connect(candidatelist, &CandidateList::done, this, &DerflaWidget::candidateListDone);
+        connect(candidatelist, &CandidateList::keyPressedEvent, this, &DerflaWidget::keyPressed);
     }
     candidatelist->show();
     candidatelist->move(mapToGlobal(QPoint(input->x(), input->y() + input->height())));

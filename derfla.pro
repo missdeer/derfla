@@ -8,12 +8,14 @@ SOURCES += main.cpp\
         derflawidget.cpp \
     CharLineEdit.cpp \
     candidatelist.cpp \
-    candidatelistdelegate.cpp
+    candidatelistdelegate.cpp \
+    candidatelistwidget.cpp
 
 HEADERS  += derflawidget.h \
     CharLineEdit.h \
     candidatelist.h \
-    candidatelistdelegate.h
+    candidatelistdelegate.h \
+    candidatelistwidget.h
 
 FORMS    += \
     candidatelist.ui

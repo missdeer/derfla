@@ -39,7 +39,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QListWidget" name="list">
+    <widget class="CandidateListWidget" name="list">
      <property name="contextMenuPolicy">
       <enum>Qt::NoContextMenu</enum>
      </property>
@@ -65,6 +65,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CandidateListWidget</class>
+   <extends>QListWidget</extends>
+   <header>candidatelistwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
