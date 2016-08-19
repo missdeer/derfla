@@ -61,6 +61,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     addAction(clearAction);
 
     QAction *loadSkinAction = new QAction(tr("Load &Skin"), this);
+    loadSkinAction->setShortcut(tr("Ctrl+O"));
     connect(loadSkinAction, SIGNAL(triggered()), this, SLOT(loadSkin()));
     addAction(loadSkinAction);
 

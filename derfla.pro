@@ -23,7 +23,7 @@ macx: {
     QMAKE_MAC_SDK = macosx10.11
     ICON = derfla.icns
     icon.path = $$PWD
-    #icon.files += cjlv.png
+    icon.files += derfla.png
     INSTALLS += icon
 
     CONFIG(release, debug|release) : {
