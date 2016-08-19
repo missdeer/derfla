@@ -4,6 +4,8 @@ TARGET = Derfla
 TEMPLATE = app
 CONFIG += c++11
 
+include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
+
 SOURCES += main.cpp\
         derflawidget.cpp \
     CharLineEdit.cpp \

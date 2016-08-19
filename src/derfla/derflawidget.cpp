@@ -12,6 +12,7 @@
 #include <QIcon>
 #include <QDomDocument>
 #include <QFileDialog>
+#include "uglobalhotkeys.h"
 #include "CharLineEdit.h"
 #include "candidatelist.h"
 #include "derflawidget.h"
