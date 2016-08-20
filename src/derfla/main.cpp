@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setApplicationName("Derfla");
     QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setOrganizationDomain("dfordsoft.com");
+    QCoreApplication::setOrganizationName("DForD Software");
 
     if (a.isRunning())
     {
