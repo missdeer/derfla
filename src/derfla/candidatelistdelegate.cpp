@@ -70,9 +70,9 @@ void CandidateListDelegate::paint ( QPainter * painter, const QStyleOptionViewIt
 #if defined(Q_OS_WIN)
     const QString fontFamily = "Microsoft YaHei";
 #elif defined(Q_OS_MAC)
-    const QString fontFamily = "PingFangCS";
+    const QString fontFamily = "PingFang CS";
 #else
-    const QString fontFamily = "Menlo";
+    const QString fontFamily = "Droid Sans";
 #endif
     //TITLE
     r = option.rect.adjusted(imageSpace, 0, -10, -30);
