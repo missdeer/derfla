@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "candidatelistdelegate.h"
 
 CandidateListDelegate::CandidateListDelegate(QObject *parent)

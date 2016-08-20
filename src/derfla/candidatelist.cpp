@@ -1,5 +1,4 @@
-#include <QtCore>
-#include <QKeyEvent>
+#include "stdafx.h"
 #include "candidatelistdelegate.h"
 #include "candidatelist.h"
 #include "ui_candidatelist.h"

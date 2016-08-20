@@ -1,5 +1,4 @@
-#include <QtCore>
-#include <QKeyEvent>
+#include "stdafx.h"
 #include "candidatelistwidget.h"
 
 CandidateListWidget::CandidateListWidget(QWidget *parent)
