@@ -9,6 +9,7 @@ include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
 include($$PWD/../../3rdparty/quazip-0.7.2/quazip.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
+include($$PWD/../../3rdparty/sqlite3/sqlite3.pri)
 
 SOURCES += main.cpp\
         derflawidget.cpp \
