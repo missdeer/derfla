@@ -12,22 +12,23 @@ include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../../3rdparty/sqlite3/sqlite3.pri)
 
 SOURCES += main.cpp\
-        derflawidget.cpp \
-    CharLineEdit.cpp \
-    candidatelist.cpp \
-    candidatelistdelegate.cpp \
-    candidatelistwidget.cpp
+        gui/derflawidget.cpp \
+    gui/CharLineEdit.cpp \
+    gui/candidatelist.cpp \
+    gui/candidatelistdelegate.cpp \
+    gui/candidatelistwidget.cpp
 
-HEADERS  += derflawidget.h \
-    CharLineEdit.h \
-    candidatelist.h \
-    candidatelistdelegate.h \
-    candidatelistwidget.h \
+HEADERS  += gui/derflawidget.h \
+    gui/CharLineEdit.h \
+    gui/candidatelist.h \
+    gui/candidatelistdelegate.h \
+    gui/candidatelistwidget.h \
     stdafx.h
 
 FORMS    += \
-    candidatelist.ui
+    gui/candidatelist.ui
 
+INCLUDEPATH += $$PWD $$PWD/gui
 
 macx: {
     QMAKE_MAC_SDK = macosx10.11
