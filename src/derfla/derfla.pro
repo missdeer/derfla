@@ -5,6 +5,9 @@ TEMPLATE = app
 CONFIG += c++11
 
 include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
+include($$PWD/../../3rdparty/quazip-0.7.2/quazip.pri)
+include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
+include($$PWD/../../3rdparty/Boost.pri)
 
 SOURCES += main.cpp\
         derflawidget.cpp \
@@ -29,6 +32,7 @@ macx: {
     icon.path = $$PWD
     icon.files += derfla.png
     INSTALLS += icon
+    LIBS+=-L$$PWD/../../3rdparty/zlib-1.2.8 -lz
 
     CONFIG(release, debug|release) : {
     }
@@ -40,6 +44,10 @@ macx: {
 }
 
 win32: {
+    LIBS+=-L$$PWD/../../3rdparty/zlib-1.2.8 \
+        -L$$PWD/../../3rdparty/Everything-SDK/lib \
+        -lzlib
+
     QMAKE_LFLAGS += "/LTCG"
     CONFIG(release, debug|release): {
         copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Release/skins/)'
