@@ -6,6 +6,9 @@
 #include <QPainter>
 #include <QStyleOptionViewItem>
 
+#define CandidateListItemHeight 60
+#define CandidateListItemWidth 300
+
 class CandidateListDelegate : public QAbstractItemDelegate
 {
 public:

@@ -54,11 +54,11 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
             setActiveWindowFlag(false);
             ui->list->setCurrentRow(1);
         }
-        qDebug() << "event->key() == Qt::Key_Down" << __FUNCTION__;
+        qDebug() << "CandidateList::keyPressEvent: event->key() == Qt::Key_Down";
     }
     else
     {
-        qDebug() << "ignore" << __FUNCTION__ << event;
+        qDebug() << "CandidateList::keyPressEvent: ignore" << event;
         event->ignore();
     }
 }
@@ -68,12 +68,12 @@ void CandidateList::showEvent(QShowEvent *event)
     if (ui->list->count() > 0)
         ui->list->setCurrentRow(0);
     QSize s = size();
-    resize(s.width(), qMin(10, ui->list->count()) * 60);
+    resize(s.width(), qMin(10, ui->list->count()) * CandidateListItemHeight);
 }
 
 void CandidateList::on_listWidget_pressed(const QModelIndex &index)
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "CandidateList::on_listWidget_pressed";
     onEnter();
 }
 
@@ -81,7 +81,7 @@ void CandidateList::onEnter()
 {
     check_expiration;
     int index = ui->list->currentRow();
-    qDebug() << __FUNCTION__ << index;
+    qDebug() << "CandidateList::onEnter:" << index;
     close();
     emit done();
 }

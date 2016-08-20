@@ -299,20 +299,20 @@ void DerflaWidget::ShowCandidateList()
 void DerflaWidget::processKey()
 {
     check_expiration;
-    qDebug() << __FUNCTION__;
+    qDebug() << "DerflaWidget::processKey";
 }
 
 void DerflaWidget::doEnter()
 {
     check_expiration;
-    qDebug() << __FUNCTION__;
+    qDebug() << "DerflaWidget::doEnter";
     candidatelist->onEnter();
 }
 
 void DerflaWidget::doTab()
 {
     check_expiration;
-    qDebug() << __FUNCTION__;
+    qDebug() << "DerflaWidget::doTab";
 }
 
 void DerflaWidget::doBackTab()

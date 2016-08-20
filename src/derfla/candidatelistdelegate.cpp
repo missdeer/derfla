@@ -80,7 +80,7 @@ void CandidateListDelegate::paint ( QPainter * painter, const QStyleOptionViewIt
 
 QSize CandidateListDelegate::sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
-    return QSize(300, 60); // very dumb value
+    return QSize(CandidateListItemWidth, CandidateListItemHeight); // very dumb value
 }
 
 CandidateListDelegate::~CandidateListDelegate()
