@@ -1,0 +1,10 @@
+*.pdb
+*.lib
+*.obj
+*.o
+*.a
+*.exe
+*.exp
+*.dll
+*.res
+*.user
