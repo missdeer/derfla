@@ -51,6 +51,7 @@ private:
     bool applySkin(const QString& skin);
     void waiting();
     void stopWaiting();
+    void HideCandidateList();
 };
 
 #endif // DerflaWidget_H

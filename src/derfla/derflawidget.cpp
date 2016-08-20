@@ -123,7 +123,6 @@ void DerflaWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.drawPixmap(0, 0, backgroundImage);
     painter.setRenderHint(QPainter::Antialiasing);
-    //    painter.drawText(56, 76, QDateTime::currentDateTime().toString("hh:mm:ss"));
 }
 
 void DerflaWidget::moveEvent(QMoveEvent *event)
@@ -136,11 +135,12 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
 {
     static QDateTime lastTime = QDateTime::currentDateTime();
     QDateTime now = QDateTime::currentDateTime();
-    qDebug() << "0:" << event->key() << now;
+    qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key() << now;
     if (event->key() == Qt::Key_Escape)
     {
         if (lastTime.msecsTo(now) > 50)
         {
+            qDebug() << "DerflaWidget::keyPressEvent escape" << candidatelist->isVisible();
             if (candidatelist->isVisible())
                 candidatelist->hide();
             else
@@ -159,35 +159,13 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
     else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_PageDown ||
              event->key() == Qt::Key_Up || event->key() == Qt::Key_PageUp)
     {
-        qDebug() << "1:" << event->key();
+        qDebug() << "DerflaWidget::keyPressEvent 1:" << event->key();
         if (candidatelist->isVisible())
         {
-            //if (!candidatelist->isActiveWindow())
-            {
-                // Don't refactor the activateWindow outside the if, it won't work properly any other way!
-//                if (candidatelist->currentRow() < 0 && candidatelist->count() > 0)
-//                {
-//                    candidatelist->activateWindow();
-//                    candidatelist->setCurrentRow(0);
-//                }
-//                else
-                {
-                    qDebug() << "2:" << event->key();
-                    candidatelist->activateWindow();
-                    candidatelist->setActiveWindowFlag(true);
-                    qApp->sendEvent(candidatelist, event);
-                }
-            }
-        }
-        else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_PageDown)
-        {
-            // do a search and show the results, selecting the first one
-//            searchOnInput();
-//            if (searchResults.count() > 0)
-//            {
-//                updatecandidatelist();
-//                showcandidatelist();
-//            }
+            qDebug() << "DerflaWidget::keyPressEvent 2:" << event->key();
+            candidatelist->activateWindow();
+            candidatelist->setActiveWindowFlag(true);
+            qApp->sendEvent(candidatelist, event);
         }
     }
     else if ((event->key() == Qt::Key_Tab || event->key() == Qt::Key_Backspace) && event->modifiers() == Qt::ShiftModifier)
@@ -229,19 +207,24 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
 
 void DerflaWidget::inputChanged(const QString &text)
 {
-    qDebug() << input->text();
-    ShowCandidateList();
+    qDebug() <<  "DerflaWidget::inputChanged:" << input->text();
     if (input->text().isEmpty())
+    {
+        HideCandidateList();
         stopWaiting();
+    }
     else
+    {
+        ShowCandidateList();
         waiting();
+    }
 }
 
 void DerflaWidget::keyPressed(QKeyEvent *e)
 {
-    qDebug() << __FUNCTION__;
-    if (candidatelist->isVisible())
-        candidatelist->hide();
+    qDebug() << "DerflaWidget::keyPressed" << e;
+    if ( e->key() != Qt::Key_Escape)
+        HideCandidateList();
     activateWindow();
     raise();
     qApp->sendEvent(this, e);
@@ -301,8 +284,7 @@ void DerflaWidget::showInFront()
 
 void DerflaWidget::candidateListDone()
 {
-    if (candidatelist->isVisible())
-        candidatelist->hide();
+    HideCandidateList();
     input->setText("");
 }
 
@@ -420,6 +402,12 @@ bool DerflaWidget::applySkin(const QString& skin)
 void DerflaWidget::waiting()
 {
     timer->start(100);
+}
+
+void DerflaWidget::HideCandidateList()
+{
+    if (candidatelist->isVisible())
+        candidatelist->hide();
 }
 
 void DerflaWidget::stopWaiting()

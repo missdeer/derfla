@@ -17,21 +17,14 @@ CandidateList::CandidateList(QWidget *parent) :
 #endif
 
     ui->list->setItemDelegate(new CandidateListDelegate(ui->list));
-    QListWidgetItem *item = new QListWidgetItem();
-    item->setData(Qt::DisplayRole, "Title 1");
-    item->setData(Qt::UserRole + 1, "Description 1");
-    item->setData(Qt::DecorationRole, QIcon(":/derfla.ico"));
-    ui->list->addItem(item);
-    item = new QListWidgetItem();
-    item->setData(Qt::DisplayRole, "Title 2");
-    item->setData(Qt::UserRole + 1, "Description 2");
-    item->setData(Qt::DecorationRole, QIcon(":/derfla.ico"));
-    ui->list->addItem(item);
-    item = new QListWidgetItem();
-    item->setData(Qt::DisplayRole, "Title 3");
-    item->setData(Qt::UserRole + 1, "Description 3");
-    item->setData(Qt::DecorationRole, QIcon(":/derfla.ico"));
-    ui->list->addItem(item);
+    for (int i = 0; i < 12; i++)
+    {
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(Qt::DisplayRole, QString( "Title %1").arg(i));
+        item->setData(Qt::UserRole + 1, QString("Description %1").arg(i));
+        item->setData(Qt::DecorationRole, QIcon(":/derfla.ico"));
+        ui->list->addItem(item);
+    }
 
     connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
 }
@@ -54,11 +47,7 @@ int CandidateList::count() const
 
 void CandidateList::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape)
-    {
-        close();
-    }
-    else if (event->key() == Qt::Key_Down)
+    if (event->key() == Qt::Key_Down)
     {
         if (count() > 1 && getActiveWindowFlag())
         {
@@ -67,16 +56,6 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
         }
         qDebug() << "event->key() == Qt::Key_Down" << __FUNCTION__;
     }
-    else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
-    {
-        qDebug() << "enter" << __FUNCTION__;
-        onEnter();
-    }
-//    else if (event->text().length() > 0)
-//    {
-//        qDebug() << "event->text().length() > 0" << __FUNCTION__;
-//        emit keyPressedEvent(event);
-//    }
     else
     {
         qDebug() << "ignore" << __FUNCTION__ << event;
