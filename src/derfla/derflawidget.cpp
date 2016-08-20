@@ -386,14 +386,7 @@ bool DerflaWidget::applySkin(const QString& skin)
     if (fzElem.isNull())
         return false;
     f.setPixelSize(fzElem.text().toInt());
-#if defined(Q_OS_WIN)
-    const QString fontFamily = "Microsoft YaHei";
-#elif defined(Q_OS_MAC)
-    const QString fontFamily = "PingFang CS";
-#else
-    const QString fontFamily = "Droid Sans";
-#endif
-    f.setFamily(fontFamily);
+    f.setFamily(globalDefaultFontFamily);
     input->setFont(f);
 
     return true;
