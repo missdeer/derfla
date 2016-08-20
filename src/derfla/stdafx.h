@@ -69,6 +69,14 @@
 #include <QDragEnterEvent>
 #include <QHBoxLayout>
 
+#define check_expiration do { \
+    QDate d =  QLocale(QLocale::C).toDate(QString(__DATE__).simplified(), QLatin1String("MMM d yyyy")); \
+    if (d.daysTo(QDate::currentDate()) > 30) { \
+        QMessageBox::critical(NULL, tr("Expired"), tr("This application has been expired, please visit http://www.getderfla.com for a new build."), QMessageBox::Ok ); \
+        qApp->quit(); \
+    } \
+}while(0)
+
 #endif
 
 #endif // STDAFX_H

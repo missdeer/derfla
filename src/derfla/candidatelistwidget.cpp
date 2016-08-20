@@ -9,6 +9,7 @@ CandidateListWidget::CandidateListWidget(QWidget *parent)
 
 void CandidateListWidget::keyPressEvent(QKeyEvent *event)
 {
+    check_expiration;
     QListWidget::keyPressEvent(event);
     qDebug() << "CandidateListWidget::keyPressEvent" << event;
     if (event->text().length() > 0)

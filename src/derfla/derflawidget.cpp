@@ -120,6 +120,7 @@ void DerflaWidget::moveEvent(QMoveEvent *event)
 
 void DerflaWidget::keyPressEvent(QKeyEvent *event)
 {
+    check_expiration;
     static QDateTime lastTime = QDateTime::currentDateTime();
     QDateTime now = QDateTime::currentDateTime();
     qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key() << now;
@@ -194,6 +195,7 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
 
 void DerflaWidget::inputChanged(const QString &text)
 {
+    check_expiration;
     qDebug() <<  "DerflaWidget::inputChanged:" << input->text();
     if (input->text().isEmpty())
     {
@@ -209,6 +211,7 @@ void DerflaWidget::inputChanged(const QString &text)
 
 void DerflaWidget::keyPressed(QKeyEvent *e)
 {
+    check_expiration;
     qDebug() << "DerflaWidget::keyPressed" << e;
     if ( e->key() != Qt::Key_Escape)
         HideCandidateList();
@@ -219,6 +222,7 @@ void DerflaWidget::keyPressed(QKeyEvent *e)
 
 void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
+    check_expiration;
     switch(reason)
     {
     case QSystemTrayIcon::DoubleClick:
@@ -234,6 +238,7 @@ void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void DerflaWidget::loadSkin()
 {
+    check_expiration;
     QString fileName = QFileDialog::getOpenFileName(this,
                                                         tr("Load Derfla Skin"),
                                                         "",
@@ -263,6 +268,7 @@ void DerflaWidget::onTimer()
 
 void DerflaWidget::showInFront()
 {
+    check_expiration;
     if (!isVisible())
         show();
     activateWindow();
@@ -271,12 +277,14 @@ void DerflaWidget::showInFront()
 
 void DerflaWidget::candidateListDone()
 {
+    check_expiration;
     HideCandidateList();
     input->setText("");
 }
 
 void DerflaWidget::ShowCandidateList()
 {
+    check_expiration;
     if (!candidatelist)
     {
         candidatelist = new CandidateList();
@@ -290,27 +298,32 @@ void DerflaWidget::ShowCandidateList()
 
 void DerflaWidget::processKey()
 {
+    check_expiration;
     qDebug() << __FUNCTION__;
 }
 
 void DerflaWidget::doEnter()
 {
+    check_expiration;
     qDebug() << __FUNCTION__;
     candidatelist->onEnter();
 }
 
 void DerflaWidget::doTab()
 {
+    check_expiration;
     qDebug() << __FUNCTION__;
 }
 
 void DerflaWidget::doBackTab()
 {
+    check_expiration;
     qDebug() << __FUNCTION__;
 }
 
 bool DerflaWidget::applySkin(const QString& skin)
 {
+    check_expiration;
     QString s = QApplication::applicationDirPath();
     const QString skinPath = QString("/skins/%1.xml").arg(skin);
 #if defined(Q_OS_MAC)
@@ -388,17 +401,20 @@ bool DerflaWidget::applySkin(const QString& skin)
 
 void DerflaWidget::waiting()
 {
+    check_expiration;
     timer->start(100);
 }
 
 void DerflaWidget::HideCandidateList()
 {
+    check_expiration;
     if (candidatelist->isVisible())
         candidatelist->hide();
 }
 
 void DerflaWidget::stopWaiting()
 {
+    check_expiration;
     timer->stop();
 
     QList<QAction*> actions = input->actions();

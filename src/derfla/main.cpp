@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     }
 
     QDate d =  QLocale(QLocale::C).toDate(QString(__DATE__).simplified(), QLatin1String("MMM d yyyy"));
-    if (d.daysTo(QDate::currentDate()) > 365)
+    if (d.daysTo(QDate::currentDate()) > 30)
     {
         QMessageBox::critical(NULL, "Expired", "This application has been expired, please contact fyang3@cisco.com for a new build.", QMessageBox::Ok );
         return 1;

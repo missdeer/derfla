@@ -46,6 +46,7 @@ int CandidateList::count() const
 
 void CandidateList::keyPressEvent(QKeyEvent *event)
 {
+    check_expiration;
     if (event->key() == Qt::Key_Down)
     {
         if (count() > 1 && getActiveWindowFlag())
@@ -78,6 +79,7 @@ void CandidateList::on_listWidget_pressed(const QModelIndex &index)
 
 void CandidateList::onEnter()
 {
+    check_expiration;
     int index = ui->list->currentRow();
     qDebug() << __FUNCTION__ << index;
     close();

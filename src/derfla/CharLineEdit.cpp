@@ -12,6 +12,7 @@ CharLineEdit::CharLineEdit(QWidget* parent) :
 
 void CharLineEdit::keyPressEvent(QKeyEvent* event)
 {
+    check_expiration;
 	bool handled = false;
 
 	if (selectionStart() == -1)
