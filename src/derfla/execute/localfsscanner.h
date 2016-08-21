@@ -16,6 +16,10 @@ public slots:
     void scan();
 private:
     QThread workerThread;
+    QStringList scanDirectories;
+    void getDirectoriesFromEnvironmentVariable();
+    void getBuiltinDirectories();
+    void scanDirectory(const QString& d);
 };
 
 #endif // LOCALFSSCANNER_H
