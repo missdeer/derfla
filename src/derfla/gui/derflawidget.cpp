@@ -2,6 +2,7 @@
 #include "uglobalhotkeys.h"
 #include "CharLineEdit.h"
 #include "candidatelist.h"
+#include "localfsscanner.h"
 #include "derflawidget.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent) :
@@ -10,7 +11,8 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     timer(new QTimer(this)),
     input(new CharLineEdit(this)),
     candidatelist(nullptr),
-    hotkeyManager(new UGlobalHotkeys)
+    hotkeyManager(new UGlobalHotkeys),
+    localFSScanner(new LocalFSScanner())
 {
 #if defined(Q_OS_MAC)
     setWindowFlags(Qt::FramelessWindowHint );
@@ -74,11 +76,10 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimer()));
 
     hotkeyManager->registerHotkey("Alt+Space");
-    connect(hotkeyManager, &UGlobalHotkeys::activated, [this](size_t id)
-    {
-        qDebug() << "Activated: " << QString::number(id);
-        this->showInFront();
-    });
+    connect(hotkeyManager, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
+
+    localFSScanner->start();
+    qDebug() << "main thread id:" << QThread::currentThreadId();
 }
 
 DerflaWidget::~DerflaWidget()

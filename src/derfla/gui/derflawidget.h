@@ -11,6 +11,7 @@
 class CharLineEdit;
 class CandidateList;
 class UGlobalHotkeys;
+class LocalFSScanner;
 
 class DerflaWidget : public QWidget
 {
@@ -36,6 +37,7 @@ private slots:
     void showInFront();
     void candidateListDone();
 private:
+    QThread scanThread;
     QPoint mouseMovePos;
     QPixmap backgroundImage;
     QTimer* timer;
@@ -43,6 +45,7 @@ private:
     QSystemTrayIcon* trayicon;
     CandidateList* candidatelist;
     UGlobalHotkeys *hotkeyManager;
+    LocalFSScanner* localFSScanner;
     void ShowCandidateList();
     void processKey();
     void doEnter();

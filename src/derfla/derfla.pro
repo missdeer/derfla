@@ -16,19 +16,21 @@ SOURCES += main.cpp\
     gui/CharLineEdit.cpp \
     gui/candidatelist.cpp \
     gui/candidatelistdelegate.cpp \
-    gui/candidatelistwidget.cpp
+    gui/candidatelistwidget.cpp \
+    execute/localfsscanner.cpp
 
 HEADERS  += gui/derflawidget.h \
     gui/CharLineEdit.h \
     gui/candidatelist.h \
     gui/candidatelistdelegate.h \
     gui/candidatelistwidget.h \
-    stdafx.h
+    stdafx.h \
+    execute/localfsscanner.h
 
 FORMS    += \
     gui/candidatelist.ui
 
-INCLUDEPATH += $$PWD $$PWD/gui
+INCLUDEPATH += $$PWD $$PWD/gui $$PWD/execute
 
 macx: {
     QMAKE_MAC_SDK = macosx10.11
