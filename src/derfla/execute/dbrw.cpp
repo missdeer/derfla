@@ -6,8 +6,8 @@ DBRW *DBRW::instance_ = nullptr;
 DBRW* DBRW::instance()
 {
     if (!instance_)
-        new DBRW;
-    return instance();
+        instance_ = new DBRW;
+    return instance_;
 }
 
 void DBRW::destroy()
