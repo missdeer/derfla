@@ -275,24 +275,60 @@ void LocalFSScanner::getBuiltinDirectories()
 {
     auto homePath = qgetenv("HOME");
     scanDirectories << Directory("/Applications", false)
-        << Directory(homePath + "/Applications", false)
-        << Directory(homePath, false)
-        << Directory("/System/Library/CoreServices", false)
-        << Directory("/System/Library/CoreServices/Applications", false);
+                    << Directory(homePath + "/Applications", false)
+                    << Directory(homePath, false)
+                    << Directory("/System/Library/CoreServices", false)
+                    << Directory("/System/Library/CoreServices/Applications", false);
 }
 
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
     QDir dir(d.directory);
     qDebug() << "scanning" << dir.absolutePath();
+
+    QFileInfoList list = dir.entryInfoList(QStringList() << "*.app", QDir::AllDirs | QDir::NoDotAndDotDot);
+    list << dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
+
+    std::for_each(list.begin(), list.end(),
+                  [&](const QFileInfo& fileInfo) {
+        if (fileInfo.permission(QFile::ExeGroup) && fileInfo.isFile() || fileInfo.isDir() && fileInfo.suffix() == "app")
+        {
+            QString f(d.directory + QDir::separator() + fileInfo.fileName());
+            qDebug() << "find" <<  f;
+        }
+    });
 }
 #else
 void LocalFSScanner::getBuiltinDirectories()
 {
+    auto homePath = qgetenv("HOME");
+    scanDirectories << Directory("/usr/share/applications/",false)
+                    << Directory("/usr/local/share/applications/", false)
+                    << Directory("/usr/share/gdm/applications/", false)
+                    << Directory("/usr/share/applications/kde/", false)
+                    << Directory(homePath + "/.local/share/applications/", false);
 }
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
     QDir dir(d.directory);
     qDebug() << "scanning" << dir.absolutePath();
+
+    QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
+
+    std::for_each(list.begin(), list.end(),
+                  [&](const QFileInfo& fileInfo) {
+        if (fileInfo.permission(QFile::ExeGroup) && fileInfo.isFile())
+        {
+            QString f(d.directory + QDir::separator() + fileInfo.fileName());
+            qDebug() << "find" <<  f;
+        }
+    });
+
+    list = dir.entryInfoList(QStringList() << "*.desktop", QDir::Files | QDir::Readable);
+    std::for_each(list.begin(), list.end(),
+                  [&](const QFileInfo& fileInfo) {
+            QString f(d.directory + QDir::separator() + fileInfo.fileName());
+            qDebug() << "find" <<  f;
+    });
 }
 #endif
