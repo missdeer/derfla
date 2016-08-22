@@ -55,6 +55,7 @@
 #include <QMainWindow>
 #include <QPoint>
 #include <QTableView>
+#include <QFileIconProvider>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>

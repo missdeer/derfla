@@ -52,15 +52,21 @@ macx: {
 }
 
 win32: {
-    SOURCES += execute/win_util.cpp
-    HEADERS += execute/win_util.h
+
+    QT += winextras
+
+    SOURCES += execute/win_util.cpp \
+        gui/WinIconProvider.cpp
+
+    HEADERS += execute/win_util.h \
+        gui/WinIconProvider.h
 
     # Windows icons
     RC_FILE = derfla.rc
     DISTFILES += derfla.rc
     LIBS+=-L$$PWD/../../3rdparty/zlib-1.2.8 \
         -L$$PWD/../../3rdparty/Everything-SDK/lib \
-        -lzlib -lOle32 -lVersion
+        -lzlib -lOle32 -lVersion -lComctl32 -lGdi32
     INCLUDEPATH += $$PWD/../../3rdparty/Everything-SDK/include \
         $$PWD/../../3rdparty/Everything-SDK/ipc
 
