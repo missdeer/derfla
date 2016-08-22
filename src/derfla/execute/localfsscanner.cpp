@@ -8,7 +8,7 @@
 
 LocalFSScanner::LocalFSScanner(QObject *parent) : QObject(parent)
 {
-    connect(this, &LocalFSScanner::finished, [this] {QTimer::singleShot(10 *60* 1000, this, &LocalFSScanner::scan);});
+    connect(this, &LocalFSScanner::finished, [this] {QTimer::singleShot(60 *60* 1000, this, &LocalFSScanner::scan);});
 
     workerThread.start(QThread::IdlePriority);
 }
