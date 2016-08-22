@@ -107,7 +107,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     using namespace win_util;
     QDir dir(d.directory);
     
-    QFileInfoList list = dir.entryInfoList(QStringList() << "*.exe" << "*.msc" << "*.lnk", QDir::Files);
+    QFileInfoList list = dir.entryInfoList(QStringList() << "*.exe" << "*.msc" << "*.bat" << "*.lnk", QDir::Files);
     std::for_each(list.begin(), list.end(),
         std::bind(processFile, d, std::placeholders::_1));
 

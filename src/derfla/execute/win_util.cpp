@@ -94,7 +94,7 @@ namespace win_util {
                 f.replace("%" % e % "%", v);
             }
             QFileInfo fi(f);
-            if (fi.suffix() != "exe" && fi.suffix() != "msc")
+            if (fi.suffix() != "exe" && fi.suffix() != "msc" && fi.suffix() != "bat")
                 return;
             QString a = QString::fromUtf16((const ushort*)pwszArguments);
             pos = 0;
