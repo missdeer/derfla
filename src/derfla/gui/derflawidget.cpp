@@ -84,6 +84,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
 DerflaWidget::~DerflaWidget()
 {
+    delete localFSScanner;
     hotkeyManager->unregisterHotkey();
 }
 

@@ -2,6 +2,7 @@
 #include "derflawidget.h"
 #include "qtsingleapplication.h"
 #include <boost/scope_exit.hpp>
+#include "dbrw.h"
 
 int main(int argc, char *argv[])
 {
@@ -38,6 +39,11 @@ int main(int argc, char *argv[])
         CoUninitialize();
     } BOOST_SCOPE_EXIT_END
 #endif
+
+    DBRW::instance();
+    BOOST_SCOPE_EXIT(void) {
+        DBRW::destroy();
+    } BOOST_SCOPE_EXIT_END
 
     DerflaWidget w;
     w.show();

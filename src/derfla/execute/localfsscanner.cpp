@@ -130,7 +130,6 @@ void LocalFSScanner::processFilesOnWindows(const Directory& d, const QFileInfo& 
             return;
         f = QString::fromUtf16((const ushort *)wszPath);
         QRegExp r("%([^%]+)%");
-
         int pos = 0;
         if ((pos = r.indexIn(f, pos)) != -1)
         {
