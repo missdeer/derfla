@@ -27,6 +27,7 @@ bool DBRW::removeOldRecords(qint64 timestamp)
 bool DBRW::insertLFS(const QByteArray &icon, const QString &title, const QString &description, const QString &target, const QString &arguments, const QString workingDirectory, qint64 timestamp, qint64 lastModified, const QString &type)
 {
     QSqlQuery query(db_);
+    Q_ASSERT(db_.isOpen());
     query.prepare("INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
         "VALUES (:icon, :title, :description, :target, :arguments, :working_directory, :timestamp, :last_modified, :type);");
     // save to database
@@ -44,7 +45,13 @@ bool DBRW::insertLFS(const QByteArray &icon, const QString &title, const QString
 
 DBRW::DBRW()
 {
-    dbPath_ = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/cache.db";
+    dbPath_ = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QDir d(dbPath_);
+    if (!d.exists())
+    {
+        d.mkpath(dbPath_);
+    }
+    dbPath_.append("/cache.db");
     if (!openDatabase())
     {
         qCritical() << "can't open cache database";

@@ -33,7 +33,7 @@ void LocalFSScanner::scan()
         CoUninitialize();
     } BOOST_SCOPE_EXIT_END
 #endif
-    qDebug() << "LocalFSScanner::scan" << QThread::currentThreadId();
+
     timestamp = QDateTime::currentDateTime().toMSecsSinceEpoch();
     scanDirectories.clear();
 
@@ -101,7 +101,6 @@ void LocalFSScanner::getBuiltinDirectories()
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
     QDir dir(d.directory);
-    qDebug() << "scanning" << dir.absolutePath();
     
     QFileInfoList list = dir.entryInfoList(QStringList() << "*.exe" << "*.msc" << "*.lnk", QDir::Files);
     std::for_each(list.begin(), list.end(),
@@ -112,6 +111,66 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::NoDotAndDotDot | QDir::AllDirs);
         std::for_each(list.begin(), list.end(),
             [&](const QFileInfo& fileInfo) { scanDirectory(Directory(d.directory + QDir::separator() + fileInfo.fileName(), true)); });
+    }
+}
+
+void LocalFSScanner::readDescriptionFromResource(const QString& f, QString& desc)
+{
+    DWORD  verHandle = NULL;
+    UINT   size = 0;
+    DWORD  verSize = GetFileVersionInfoSize(f.toStdWString().c_str(), &verHandle);
+
+    if (!verSize)
+    {
+        return;
+    }
+    LPSTR verData = new char[verSize];
+    BOOST_SCOPE_EXIT(verData) {
+        delete verData;
+    } BOOST_SCOPE_EXIT_END
+
+    if (!GetFileVersionInfo(f.toStdWString().c_str(), verHandle, verSize, verData))
+    {
+        return;
+    }
+    HRESULT hr;
+
+    struct LANGANDCODEPAGE {
+        WORD wLanguage;
+        WORD wCodePage;
+    } *lpTranslate;
+
+    // Read the list of languages and code pages.
+    UINT cbTranslate = 0;
+    VerQueryValue(verData,
+        L"\\VarFileInfo\\Translation",
+        (LPVOID*)&lpTranslate,
+        &cbTranslate);
+
+    // Read the file description for each language and code page.
+    const size_t subBlockSize = 50;
+    WCHAR SubBlock[subBlockSize] = { 0 };
+    UINT dwBytes = 0;
+    for (int i = 0; i < (cbTranslate / sizeof(struct LANGANDCODEPAGE)); i++)
+    {
+        hr = StringCchPrintf(SubBlock, subBlockSize,
+            L"\\StringFileInfo\\%04x%04x\\FileDescription",
+            lpTranslate[i].wLanguage,
+            lpTranslate[i].wCodePage);
+        if (FAILED(hr))
+        {
+            // TODO: write error handler.
+        }
+
+        LPBYTE lpBuffer = NULL;
+        // Retrieve file description for language and code page "i". 
+        VerQueryValue(verData,
+            SubBlock,
+            (LPVOID *)&lpBuffer,
+            &dwBytes);
+
+        desc = QString::fromUtf16((const ushort*)lpBuffer);
+        break;
     }
 }
 
@@ -132,17 +191,67 @@ void LocalFSScanner::processFilesOnWindows(const Directory& d, const QFileInfo& 
         HRESULT hr = resolveShellLink(NULL, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
         if (FAILED(hr))
             return;
-        f = QString::fromUtf16((const ushort *)wszPath);
         QRegExp r("%([^%]+)%");
+        f = QString::fromUtf16((const ushort *)wszPath);
         int pos = 0;
-        if ((pos = r.indexIn(f, pos)) != -1)
+        while ((pos = r.indexIn(f, pos)) != -1)
         {
             QString e = r.cap(1);
             auto v = qgetenv(e.toStdString().c_str());
             f.replace("%" % e % "%", v);
         }
+        QFileInfo fi(f);
+        if (fi.suffix() != "exe" && fi.suffix() != "msc")
+            return;
+        QString a = QString::fromUtf16((const ushort*)pwszArguments);
+        pos = 0;
+        while ((pos = r.indexIn(a, pos)) != -1)
+        {
+            QString e = r.cap(1);
+            auto v = qgetenv(e.toStdString().c_str());
+            a.replace("%" % e % "%", v);
+        }
+        QString w = QString::fromUtf16((const ushort*)wszWorkingDirectory);
+        pos = 0;
+        while ((pos = r.indexIn(w, pos)) != -1)
+        {
+            QString e = r.cap(1);
+            auto v = qgetenv(e.toStdString().c_str());
+            w.replace("%" % e % "%", v);
+        }
+
+        QString desc = QString::fromUtf16((const ushort*)wszDescription);
+        if (desc.isEmpty())
+            readDescriptionFromResource(f, desc);
+        if (desc.isEmpty())
+            desc = f;
+        DBRW::instance()->insertLFS("",
+            fileInfo.baseName(),
+            desc,
+            f,
+            a,
+            w,
+            timestamp,
+            fileInfo.lastModified().toMSecsSinceEpoch(),
+            fileInfo.isDir() ? "g" : "c"
+        );
+        return;
     }
-    qDebug() << "find file:" << f;
+
+    QString desc;
+    readDescriptionFromResource(f, desc);
+    if (desc.isEmpty())
+        desc = f;
+    DBRW::instance()->insertLFS("",
+        fileInfo.fileName(),
+        desc,
+        f,
+        "",
+        QFileInfo(f).absolutePath().replace(QChar('/'), QChar('\\')),
+        timestamp,
+        fileInfo.lastModified().toMSecsSinceEpoch(),
+        fileInfo.isDir() ? "g" : "c"
+    );
 }
 
 HRESULT LocalFSScanner::resolveShellLink(HWND hwnd, LPCWSTR lpszLinkFile, LPWSTR lpszPath, LPWSTR lpszWorkingDirectory, LPWSTR lpszDescription, LPWSTR lpszArguments)

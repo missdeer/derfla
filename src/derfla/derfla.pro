@@ -57,7 +57,7 @@ win32: {
     DISTFILES += derfla.rc
     LIBS+=-L$$PWD/../../3rdparty/zlib-1.2.8 \
         -L$$PWD/../../3rdparty/Everything-SDK/lib \
-        -lzlib -lOle32
+        -lzlib -lOle32 -lVersion
     INCLUDEPATH += $$PWD/../../3rdparty/Everything-SDK/include \
         $$PWD/../../3rdparty/Everything-SDK/ipc
 

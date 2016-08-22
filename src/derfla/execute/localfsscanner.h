@@ -31,6 +31,7 @@ private:
     void getBuiltinDirectories();
     void scanDirectory(const Directory& d);
 #if defined(Q_OS_WIN)
+    void readDescriptionFromResource(const QString& f, QString& desc);
     void processFilesOnWindows(const Directory& d, const QFileInfo& fileInfo);
     HRESULT resolveShellLink(HWND hwnd, LPCWSTR lpszLinkFile, LPWSTR lpszPath, LPWSTR lpszWorkingDirectory, LPWSTR lpszDescription, LPWSTR lpszArguments);
 #endif
