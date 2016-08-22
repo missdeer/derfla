@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     gui/candidatelistdelegate.cpp \
     gui/candidatelistwidget.cpp \
     execute/localfsscanner.cpp \
-    execute/dbrw.cpp
+    execute/dbrw.cpp \
+    execute/util.cpp
 
 HEADERS  += gui/derflawidget.h \
     gui/CharLineEdit.h \
@@ -27,7 +28,8 @@ HEADERS  += gui/derflawidget.h \
     gui/candidatelistwidget.h \
     stdafx.h \
     execute/localfsscanner.h \
-    execute/dbrw.h
+    execute/dbrw.h \
+    execute/util.h
 
 FORMS    += \
     gui/candidatelist.ui

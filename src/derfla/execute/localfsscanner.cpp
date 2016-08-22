@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "dbrw.h"
+#include "util.h"
 #if defined(Q_OS_WIN)
 #include "win_util.h"
 #endif
@@ -132,7 +133,6 @@ void LocalFSScanner::getBuiltinDirectories()
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
     QDir dir(d.directory);
-    qDebug() << "scanning" << dir.absolutePath();
 
     QFileInfoList list = dir.entryInfoList(QStringList() << "*.app", QDir::AllDirs | QDir::NoDotAndDotDot);
     list << dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
@@ -144,8 +144,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                 || (fileInfo.isDir() && fileInfo.suffix() == "app"))
         {
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
-            qDebug() << "find" <<  f;
-            dbrw->insertLFS("",
+            dbrw->insertLFS(util::extractXPMFromFile(fileInfo),
                             fileInfo.fileName(),
                             f,
                             f,

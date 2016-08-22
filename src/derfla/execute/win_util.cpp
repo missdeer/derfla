@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "dbrw.h"
 #include "localfsscanner.h"
-#include "WinIconProvider.h"
+#include "util.h"
 #include "win_util.h"
 
 namespace win_util {
@@ -119,15 +119,7 @@ namespace win_util {
             if (desc.isEmpty())
                 desc = f;
 
-            WinIconProvider iconProvider;
-            QIcon i = iconProvider.icon(fi);
-            QPixmap pixmap = i.pixmap(32, 32);
-            QByteArray bytes;
-            QBuffer buf(&bytes);
-            buf.open(QIODevice::WriteOnly);
-            pixmap.save(&buf, "XPM");
-
-            DBRW::instance()->insertLFS(bytes,
+            DBRW::instance()->insertLFS(util::extractXPMFromFile(fi),
                 fileInfo.baseName(),
                 desc,
                 f,
@@ -140,19 +132,11 @@ namespace win_util {
             return;
         }
 
-        WinIconProvider iconProvider;
-        QIcon i = iconProvider.icon(fileInfo);
-        QPixmap pixmap = i.pixmap(32, 32);
-        QByteArray bytes;
-        QBuffer buf(&bytes);
-        buf.open(QIODevice::WriteOnly);
-        pixmap.save(&buf, "XPM");
-
         QString desc;
         readDescriptionFromResource(f, desc);
         if (desc.isEmpty())
             desc = f;
-        DBRW::instance()->insertLFS(bytes,
+        DBRW::instance()->insertLFS(util::extractXPMFromFile(fileInfo),
             fileInfo.fileName(),
             desc,
             f,
