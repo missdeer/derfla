@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "derflawidget.h"
 #include "qtsingleapplication.h"
+#include <boost/scope_exit.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +31,13 @@ int main(int argc, char *argv[])
         QMessageBox::critical(NULL, QObject::tr("Expired"), QObject::tr("This application has been expired, please visit http://www.getderfla.com for a new build."), QMessageBox::Ok );
         return 1;
     }
+
+#if defined(Q_OS_WIN)
+    CoInitialize(NULL);
+    BOOST_SCOPE_EXIT(void) {
+        CoUninitialize();
+    } BOOST_SCOPE_EXIT_END
+#endif
 
     DerflaWidget w;
     w.show();

@@ -3,6 +3,15 @@
 
 #include <QObject>
 
+struct Directory
+{
+    Directory( const QString& d, bool r)
+        : directory(d), recursive(r) 
+    {}
+    QString directory;
+    bool recursive = false;
+};
+
 class LocalFSScanner : public QObject
 {
     Q_OBJECT
@@ -16,10 +25,14 @@ public slots:
     void scan();
 private:
     QThread workerThread;
-    QStringList scanDirectories;
+    QList<Directory> scanDirectories;
     void getDirectoriesFromEnvironmentVariable();
     void getBuiltinDirectories();
-    void scanDirectory(const QString& d);
+    void scanDirectory(const Directory& d);
+#if defined(Q_OS_WIN)
+    void processFilesOnWindows(const Directory& d, const QFileInfo& fileInfo);
+    HRESULT resolveShellLink(HWND hwnd, LPCWSTR lpszLinkFile, LPWSTR lpszPath, LPWSTR lpszWorkingDirectory, LPWSTR lpszDescription, LPWSTR lpszArguments);
+#endif
 };
 
 #endif // LOCALFSSCANNER_H
