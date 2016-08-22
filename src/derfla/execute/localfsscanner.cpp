@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <boost/scope_exit.hpp>
+#include "dbrw.h"
 #include "localfsscanner.h"
 
 LocalFSScanner::LocalFSScanner(QObject *parent) : QObject(parent)
@@ -33,7 +34,9 @@ void LocalFSScanner::scan()
     } BOOST_SCOPE_EXIT_END
 #endif
     qDebug() << "LocalFSScanner::scan" << QThread::currentThreadId();
+    timestamp = QDateTime::currentDateTime().toMSecsSinceEpoch();
     scanDirectories.clear();
+
     getBuiltinDirectories();
     getDirectoriesFromEnvironmentVariable();
     std::sort(scanDirectories.begin(), scanDirectories.end(),
@@ -44,6 +47,7 @@ void LocalFSScanner::scan()
 
     std::for_each(scanDirectories.begin(), scanDirectories.end(),
                   std::bind(&LocalFSScanner::scanDirectory, this, std::placeholders::_1));
+    DBRW::instance()->removeOldRecords(timestamp);
     emit finished();
 }
 
@@ -289,12 +293,24 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     QFileInfoList list = dir.entryInfoList(QStringList() << "*.app", QDir::AllDirs | QDir::NoDotAndDotDot);
     list << dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
 
+    DBRW* dbrw = DBRW::instance();
     std::for_each(list.begin(), list.end(),
                   [&](const QFileInfo& fileInfo) {
-        if (fileInfo.permission(QFile::ExeGroup) && fileInfo.isFile() || fileInfo.isDir() && fileInfo.suffix() == "app")
+        if ((fileInfo.isFile() && fileInfo.permission(QFile::ExeGroup))
+                || (fileInfo.isDir() && fileInfo.suffix() == "app"))
         {
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
             qDebug() << "find" <<  f;
+            dbrw->insertLFS("",
+                            fileInfo.fileName(),
+                            f,
+                            f,
+                            "",
+                            QFileInfo(f).filePath(),
+                            timestamp,
+                            fileInfo.lastModified().toMSecsSinceEpoch(),
+                            fileInfo.isDir() ? "g" : "c"
+                            );
         }
     });
 }

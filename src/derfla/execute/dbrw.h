@@ -9,7 +9,8 @@ class DBRW : public QObject
 public:
     static DBRW* instance();
     static void destroy();
-    bool insertLFS(const QByteArray& icon, const QString& title, const QString& description, const QString& target, const QString& arguments, const QString workingDirectory, quint64 timestamp, quint64 lastModified, const QString& type);
+    bool removeOldRecords(qint64 timestamp);
+    bool insertLFS(const QByteArray& icon, const QString& title, const QString& description, const QString& target, const QString& arguments, const QString workingDirectory, qint64 timestamp, qint64 lastModified, const QString& type);
 signals:
 
 public slots:

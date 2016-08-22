@@ -16,7 +16,15 @@ void DBRW::destroy()
     instance_ = nullptr;
 }
 
-bool DBRW::insertLFS(const QByteArray &icon, const QString &title, const QString &description, const QString &target, const QString &arguments, const QString workingDirectory, quint64 timestamp, quint64 lastModified, const QString &type)
+bool DBRW::removeOldRecords(qint64 timestamp)
+{
+    QSqlQuery query(db_);
+    query.prepare("DELETE FROM lfs WHERE timestamp < :timestamp;");
+    query.bindValue(":timestamp", timestamp);
+    return query.exec();
+}
+
+bool DBRW::insertLFS(const QByteArray &icon, const QString &title, const QString &description, const QString &target, const QString &arguments, const QString workingDirectory, qint64 timestamp, qint64 lastModified, const QString &type)
 {
     QSqlQuery query(db_);
     query.prepare("INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "

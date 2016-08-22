@@ -24,6 +24,7 @@ signals:
 public slots:
     void scan();
 private:
+    qint64 timestamp;
     QThread workerThread;
     QList<Directory> scanDirectories;
     void getDirectoriesFromEnvironmentVariable();
