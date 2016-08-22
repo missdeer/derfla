@@ -75,7 +75,7 @@ namespace win_util {
         {
             WCHAR wszPath[MAX_PATH] = { 0 };
             WCHAR wszWorkingDirectory[MAX_PATH] = { 0 };
-            WCHAR wszDescription[MAX_PATH] = { 0 };
+            WCHAR wszDescription[1024 * 8] = { 0 };
             const size_t argumentsLength = 65535;
             WCHAR *pwszArguments = new WCHAR[argumentsLength];
             BOOST_SCOPE_EXIT(pwszArguments) {
@@ -221,8 +221,8 @@ namespace win_util {
         }
 
         // Get the description of the target.
-        WCHAR szDescription[MAX_PATH] = { 0 };
-        hres = psl->GetDescription(szDescription, MAX_PATH);
+        WCHAR szDescription[1024 * 8] = { 0 };
+        hres = psl->GetDescription(szDescription, 1024 * 8);
 
         if (FAILED(hres))
         {
@@ -230,7 +230,7 @@ namespace win_util {
             return hres;
         }
 
-        hres = StringCbCopy(lpszDescription, MAX_PATH, szDescription);
+        hres = StringCbCopy(lpszDescription, 1024 * 8, szDescription);
         if (FAILED(hres))
         {
             // Handle the error
