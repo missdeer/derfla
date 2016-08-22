@@ -1,6 +1,8 @@
 #include "stdafx.h"
-#include <boost/scope_exit.hpp>
 #include "dbrw.h"
+#if defined(Q_OS_WIN)
+#include "win_util.h"
+#endif
 #include "localfsscanner.h"
 
 LocalFSScanner::LocalFSScanner(QObject *parent) : QObject(parent)
@@ -27,14 +29,15 @@ void LocalFSScanner::start()
 
 void LocalFSScanner::scan()
 {
+    timestamp = QDateTime::currentDateTime().toMSecsSinceEpoch();
 #if defined(Q_OS_WIN)
+    win_util::timestamp = timestamp;
     CoInitialize(NULL);
     BOOST_SCOPE_EXIT(void) {
         CoUninitialize();
     } BOOST_SCOPE_EXIT_END
 #endif
 
-    timestamp = QDateTime::currentDateTime().toMSecsSinceEpoch();
     scanDirectories.clear();
 
     getBuiltinDirectories();
@@ -99,12 +102,13 @@ void LocalFSScanner::getBuiltinDirectories()
 }
 
 void LocalFSScanner::scanDirectory(const Directory &d)
-{
+{    
+    using namespace win_util;
     QDir dir(d.directory);
     
     QFileInfoList list = dir.entryInfoList(QStringList() << "*.exe" << "*.msc" << "*.lnk", QDir::Files);
     std::for_each(list.begin(), list.end(),
-        std::bind(&LocalFSScanner::processFilesOnWindows, this, d, std::placeholders::_1));
+        std::bind(processFile, d, std::placeholders::_1));
 
     if (d.recursive)
     {
@@ -114,275 +118,6 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     }
 }
 
-void LocalFSScanner::readDescriptionFromResource(const QString& f, QString& desc)
-{
-    DWORD  verHandle = NULL;
-    UINT   size = 0;
-    DWORD  verSize = GetFileVersionInfoSize(f.toStdWString().c_str(), &verHandle);
-
-    if (!verSize)
-    {
-        return;
-    }
-    LPSTR verData = new char[verSize];
-    BOOST_SCOPE_EXIT(verData) {
-        delete verData;
-    } BOOST_SCOPE_EXIT_END
-
-    if (!GetFileVersionInfo(f.toStdWString().c_str(), verHandle, verSize, verData))
-    {
-        return;
-    }
-    HRESULT hr;
-
-    struct LANGANDCODEPAGE {
-        WORD wLanguage;
-        WORD wCodePage;
-    } *lpTranslate;
-
-    // Read the list of languages and code pages.
-    UINT cbTranslate = 0;
-    VerQueryValue(verData,
-        L"\\VarFileInfo\\Translation",
-        (LPVOID*)&lpTranslate,
-        &cbTranslate);
-
-    // Read the file description for each language and code page.
-    const size_t subBlockSize = 50;
-    WCHAR SubBlock[subBlockSize] = { 0 };
-    UINT dwBytes = 0;
-    for (int i = 0; i < (cbTranslate / sizeof(struct LANGANDCODEPAGE)); i++)
-    {
-        hr = StringCchPrintf(SubBlock, subBlockSize,
-            L"\\StringFileInfo\\%04x%04x\\FileDescription",
-            lpTranslate[i].wLanguage,
-            lpTranslate[i].wCodePage);
-        if (FAILED(hr))
-        {
-            // TODO: write error handler.
-        }
-
-        LPBYTE lpBuffer = NULL;
-        // Retrieve file description for language and code page "i". 
-        VerQueryValue(verData,
-            SubBlock,
-            (LPVOID *)&lpBuffer,
-            &dwBytes);
-
-        desc = QString::fromUtf16((const ushort*)lpBuffer);
-        break;
-    }
-}
-
-void LocalFSScanner::processFilesOnWindows(const Directory& d, const QFileInfo& fileInfo)
-{
-    QString f(d.directory + QDir::separator() + fileInfo.fileName());
-    f.replace("\\\\", "\\");
-    if (fileInfo.suffix() == "lnk")
-    {
-        WCHAR wszPath[MAX_PATH] = { 0 };
-        WCHAR wszWorkingDirectory[MAX_PATH] = { 0 };
-        WCHAR wszDescription[MAX_PATH] = { 0 };
-        const size_t argumentsLength = 65535;
-        WCHAR *pwszArguments = new WCHAR[argumentsLength];
-        BOOST_SCOPE_EXIT(pwszArguments) {
-            delete pwszArguments;
-        } BOOST_SCOPE_EXIT_END
-        HRESULT hr = resolveShellLink(NULL, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
-        if (FAILED(hr))
-            return;
-        QRegExp r("%([^%]+)%");
-        f = QString::fromUtf16((const ushort *)wszPath);
-        int pos = 0;
-        while ((pos = r.indexIn(f, pos)) != -1)
-        {
-            QString e = r.cap(1);
-            auto v = qgetenv(e.toStdString().c_str());
-            f.replace("%" % e % "%", v);
-        }
-        QFileInfo fi(f);
-        if (fi.suffix() != "exe" && fi.suffix() != "msc")
-            return;
-        QString a = QString::fromUtf16((const ushort*)pwszArguments);
-        pos = 0;
-        while ((pos = r.indexIn(a, pos)) != -1)
-        {
-            QString e = r.cap(1);
-            auto v = qgetenv(e.toStdString().c_str());
-            a.replace("%" % e % "%", v);
-        }
-        QString w = QString::fromUtf16((const ushort*)wszWorkingDirectory);
-        pos = 0;
-        while ((pos = r.indexIn(w, pos)) != -1)
-        {
-            QString e = r.cap(1);
-            auto v = qgetenv(e.toStdString().c_str());
-            w.replace("%" % e % "%", v);
-        }
-
-        QString desc = QString::fromUtf16((const ushort*)wszDescription);
-        if (desc.isEmpty())
-            readDescriptionFromResource(f, desc);
-        if (desc.isEmpty())
-            desc = f;
-        DBRW::instance()->insertLFS("",
-            fileInfo.baseName(),
-            desc,
-            f,
-            a,
-            w,
-            timestamp,
-            fileInfo.lastModified().toMSecsSinceEpoch(),
-            fileInfo.isDir() ? "g" : "c"
-        );
-        return;
-    }
-
-    QString desc;
-    readDescriptionFromResource(f, desc);
-    if (desc.isEmpty())
-        desc = f;
-    DBRW::instance()->insertLFS("",
-        fileInfo.fileName(),
-        desc,
-        f,
-        "",
-        QFileInfo(f).absolutePath().replace(QChar('/'), QChar('\\')),
-        timestamp,
-        fileInfo.lastModified().toMSecsSinceEpoch(),
-        fileInfo.isDir() ? "g" : "c"
-    );
-}
-
-HRESULT LocalFSScanner::resolveShellLink(HWND hwnd, LPCWSTR lpszLinkFile, LPWSTR lpszPath, LPWSTR lpszWorkingDirectory, LPWSTR lpszDescription, LPWSTR lpszArguments)
-{
-    IShellLink* psl = nullptr;
-
-    *lpszPath = 0; // Assume failure 
-
-    // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
-    // has already been called. 
-    HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID*)&psl);
-    if (FAILED(hres))
-    {
-        qDebug() << "CoCreateInstance failed";
-        return hres;
-    }
-
-    BOOST_SCOPE_EXIT(psl) {
-        // Release the pointer to the IShellLink interface. 
-        psl->Release();
-    } BOOST_SCOPE_EXIT_END
-
-    IPersistFile* ppf;
-
-    // Get a pointer to the IPersistFile interface. 
-    hres = psl->QueryInterface(IID_IPersistFile, (void**)&ppf);
-
-    if (FAILED(hres))
-    {
-        qDebug() << "psl->QueryInterface(IID_IPersistFile, (void**)&ppf) failed";
-        return hres;
-    }
-
-    BOOST_SCOPE_EXIT(ppf) {
-        // Release the pointer to the IPersistFile interface. 
-        ppf->Release();
-    } BOOST_SCOPE_EXIT_END
-
-    // Load the shortcut. 
-    hres = ppf->Load(lpszLinkFile, STGM_READ);
-
-    if (FAILED(hres))
-    {
-        qDebug() << "ppf->Load(lpszLinkFile, STGM_READ) failed";
-        return hres;
-    }
-    // Resolve the link. 
-    hres = psl->Resolve(hwnd, 0);
-
-    if (FAILED(hres))
-    {
-        qDebug() << "psl->Resolve(hwnd, 0) failed";
-        return hres;
-    }
-
-    // Get the path to the link target. 
-    WIN32_FIND_DATA wfd;
-    WCHAR szGotPath[MAX_PATH] = { 0 };
-    hres = psl->GetPath(szGotPath, MAX_PATH, &wfd, SLGP_RAWPATH);
-
-    if (FAILED(hres))
-    {
-        qDebug() << "psl->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_RAWPATH) failed";
-        return hres;
-    }
-
-    hres = StringCbCopy(lpszPath, MAX_PATH, szGotPath);
-    if (FAILED(hres))
-    {
-        // Handle the error
-        qDebug() << "failed StringCbCopy(lpszPath, iPathBufferSize, szGotPath)";
-        return hres;
-    }
-    
-    // Get the description of the target. 
-    WCHAR szDescription[MAX_PATH] = { 0 };
-    hres = psl->GetDescription(szDescription, MAX_PATH);
-
-    if (FAILED(hres))
-    {
-        qDebug() << "psl->GetDescription(szDescription, MAX_PATH) failed";
-        return hres;
-    }
-
-    hres = StringCbCopy(lpszDescription, MAX_PATH, szDescription);
-    if (FAILED(hres))
-    {
-        // Handle the error
-        qDebug() << "failed StringCbCopy(lpszDescription, MAX_PATH, szDescription)";
-        return hres;
-    }
-    // Get the working directory 
-    WCHAR szWorkingDirectory[MAX_PATH] = { 0 };
-    hres = psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH);
-    if (FAILED(hres))
-    {
-        qDebug() << "psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH) failed";
-        return hres;
-    }
-
-    hres = StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory);
-    if (FAILED(hres))
-    {
-        // Handle the error
-        qDebug() << "failed StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory)";
-        return hres;
-    }
-
-    // Get arguments
-    const size_t argumentsLength = 65535;
-    WCHAR *pszArguments = new WCHAR[argumentsLength];
-    BOOST_SCOPE_EXIT(pszArguments) {
-        delete pszArguments;
-    } BOOST_SCOPE_EXIT_END
-    hres = psl->GetArguments(pszArguments, argumentsLength);
-    if (FAILED(hres))
-    {
-        qDebug() << "psl->GetArguments(pszArguments, argumentsLength) failed";
-        return hres;
-    }
-
-    hres = StringCbCopy(lpszArguments, argumentsLength, pszArguments);
-    if (FAILED(hres))
-    {
-        // Handle the error
-        qDebug() << "failed StringCbCopy(lpszArguments, argumentsLength, pszArguments)";
-        return hres;
-    }
-
-    return hres;
-}
 #elif defined(Q_OS_MAC)
 void LocalFSScanner::getBuiltinDirectories()
 {

@@ -69,6 +69,8 @@
 #include <QDragEnterEvent>
 #include <QHBoxLayout>
 
+#include <boost/scope_exit.hpp>
+
 #define check_expiration do { \
     QDate d =  QLocale(QLocale::C).toDate(QString(__DATE__).simplified(), QLatin1String("MMM d yyyy")); \
     if (d.daysTo(QDate::currentDate()) > 30) { \

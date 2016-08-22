@@ -52,6 +52,9 @@ macx: {
 }
 
 win32: {
+    SOURCES += execute/win_util.cpp
+    HEADERS += execute/win_util.h
+
     # Windows icons
     RC_FILE = derfla.rc
     DISTFILES += derfla.rc
