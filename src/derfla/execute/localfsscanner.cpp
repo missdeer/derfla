@@ -6,8 +6,10 @@
 #endif
 #include "localfsscanner.h"
 
-LocalFSScanner::LocalFSScanner(QObject *parent) : QObject(parent), yieldRequired_(false)
+LocalFSScanner::LocalFSScanner(QObject *parent) : QObject(parent)
 {
+    connect(this, &LocalFSScanner::scanRequired, &LocalFSScanner::scan);
+    connect(this, &LocalFSScanner::finished, &LocalFSScanner::scanFinished);
     workerThread_.start(QThread::IdlePriority);
 }
 
@@ -24,9 +26,22 @@ void LocalFSScanner::start()
 {
     this->moveToThread(&workerThread_);
     if (DBRW::instance()->firstLaunch())
-        QTimer::singleShot(1000, this, &LocalFSScanner::scan);
+        emit scanRequired();
     else
         QTimer::singleShot(10 * 60 * 1000, this, &LocalFSScanner::scan);
+}
+
+void LocalFSScanner::scheduleScan()
+{
+    if (qApp->activeWindow())
+        QTimer::singleShot(5 * 60 * 1000, this, &LocalFSScanner::scheduleScan);
+    else
+        emit scanRequired();
+}
+
+void LocalFSScanner::scanFinished()
+{
+    QTimer::singleShot(60 * 60 * 1000, this, &LocalFSScanner::scheduleScan);
 }
 
 void LocalFSScanner::scan()

@@ -38,8 +38,6 @@ private slots:
     void onLoadingAnimationTimer();
     void showInFront();
     void candidateListDone();
-    void localFSScannerFinished();
-    void onNextLFSScanning();
 private:
     QPoint mouseMovePos_;
     QPixmap backgroundImage_;

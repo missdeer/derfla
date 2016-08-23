@@ -21,10 +21,12 @@ public:
     void start();
 signals:
     void finished();
-public slots:
+    void scanRequired();
+private slots:
     void scan();
+    void scheduleScan();
+    void scanFinished();
 private:
-    bool yieldRequired_;
     qint64 timestamp_;
     QThread workerThread_;
     QList<Directory> scanDirectories_;
