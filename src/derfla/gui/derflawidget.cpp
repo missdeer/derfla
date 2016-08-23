@@ -10,9 +10,9 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     mouseMovePos_(0, 0),
     loadingAnimationTimer_(new QTimer(this)),
     input_(new CharLineEdit(this)),
-    candidateList_(nullptr),
+    candidateList_(new CandidateList),
     hotkeyManager_(new UGlobalHotkeys),
-    localFSScanner_(new LocalFSScanner())
+    localFSScanner_(new LocalFSScanner)
 {
 #if defined(Q_OS_MAC)
     setWindowFlags(Qt::FramelessWindowHint );
@@ -33,6 +33,10 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 #ifdef Q_WS_MAC
     QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
 #endif
+
+    connect(candidateList_, &CandidateList::done, this, &DerflaWidget::candidateListDone);
+    connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::keyPressed);
+
     QAction *logoAction = new QAction(tr("Input"), this);
     logoAction->setIcon(QIcon(":/derfla.ico"));
     input_->addAction(logoAction, QLineEdit::ActionPosition::TrailingPosition);
@@ -294,12 +298,6 @@ void DerflaWidget::onNextLFSScanning()
 void DerflaWidget::showCandidateList()
 {
     check_expiration;
-    if (!candidateList_)
-    {
-        candidateList_ = new CandidateList();
-        connect(candidateList_, &CandidateList::done, this, &DerflaWidget::candidateListDone);
-        connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::keyPressed);
-    }
     candidateList_->show();
     candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
     candidateList_->update(input_->text());
