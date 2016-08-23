@@ -146,8 +146,11 @@ void LocalFSScanner::getBuiltinDirectories()
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
     QThread::yieldCurrentThread();
-    QDir dir(d.directory);
 
+    if (QFileInfo(d.directory).suffix() == "framework")
+        return;
+
+    QDir dir(d.directory);
     QFileInfoList list = dir.entryInfoList(QStringList() << "*.app", QDir::AllDirs | QDir::NoDotAndDotDot);
     list << dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
 
