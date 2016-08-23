@@ -64,7 +64,7 @@ void CandidateListDelegate::paint(QPainter * painter, const QStyleOptionViewItem
     int imageSpace = 10;
     if (!ic.isNull()) {
         //ICON
-        r = option.rect.adjusted(5, 10, -10, -10);
+        r = option.rect.adjusted(10, 10, -10, -10);
         ic.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
         imageSpace = 55;
     }
