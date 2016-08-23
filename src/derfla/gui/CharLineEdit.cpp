@@ -56,6 +56,11 @@ void CharLineEdit::keyPressEvent(QKeyEvent* event)
 				handled = true;
 			}
 			break;
+        case Qt::Key_Escape:
+        case Qt::Key_Return:
+        case Qt::Key_Enter:
+            handled = true;
+            break;
 		}
 	}
 
@@ -66,9 +71,8 @@ void CharLineEdit::keyPressEvent(QKeyEvent* event)
 	else
 	{
 		QLineEdit::keyPressEvent(event);
+        emit keyPressed(event);
 	}
-
-	emit keyPressed(event);
 }
 
 

@@ -35,6 +35,27 @@ bool DerflaAction::run()
             SW_SHOWNORMAL);
     }
 #elif defined(Q_OS_MAC)
+    if (workingDirectory_.isEmpty())
+        workingDirectory_ = QFileInfo(target_).absolutePath();
+    if (QFileInfo(workingDirectory_).isFile())
+        workingDirectory_ = QFileInfo(workingDirectory_).absolutePath();
+    if (QFileInfo(target_).isDir())
+    {
+        QStringList args {
+            target_,
+        };
+        if (!arguments_.isEmpty())
+            args << "--args"
+                 << arguments_.split(' ');
+        QProcess::startDetached("/usr/bin/open", args, workingDirectory_);
+    }
+    else
+    {
+        QString args = QString("'tell application \"Terminal\" to do script \"%1 %2\"'").arg(target_).arg(arguments_);
+//        qDebug() << args;
+//        QProcess::startDetached("osascript", QStringList() << "-e" << args, workingDirectory_);
+        system(("osascript -e " + args).toStdString().c_str());
+    }
 #else
 #endif
     return true;

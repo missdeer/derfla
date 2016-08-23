@@ -123,31 +123,23 @@ void DerflaWidget::moveEvent(QMoveEvent *event)
 void DerflaWidget::keyPressEvent(QKeyEvent *event)
 {
     check_expiration;
-    static QDateTime lastTime = QDateTime::currentDateTime();
-    QDateTime now = QDateTime::currentDateTime();
     //qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key() << now;
     if (event->key() == Qt::Key_Escape)
     {
-        if (lastTime.msecsTo(now) > 50)
+        //qDebug() << "DerflaWidget::keyPressEvent escape" << candidateList_->isVisible();
+        if (candidateList_->isVisible())
+            candidateList_->hide();
+        else
         {
-            //qDebug() << "DerflaWidget::keyPressEvent escape" << candidateList_->isVisible();
-            if (candidateList_->isVisible())
-                candidateList_->hide();
+            if (input_->text().isEmpty())
+                hide();
             else
-            {
-                if (input_->text().isEmpty())
-                    hide();
-                else
-                    input_->setText("");
-            }
+                input_->setText("");
         }
     }
     else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
-        if (lastTime.msecsTo(now) > 50)
-        {
-            doEnter();
-        }
+        doEnter();
     }
     else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_PageDown ||
              event->key() == Qt::Key_Up || event->key() == Qt::Key_PageUp)
@@ -173,9 +165,9 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
     }
     else if (event->key() == Qt::Key_Slash || event->key() == Qt::Key_Backslash)
     {
-//        if (inputData.count() > 0 && inputData.last().hasLabel(LABEL_FILE) &&
-//                searchResults.count() > 0 && searchResults[0].id == HASH_LAUNCHYFILE)
-//            doTab();
+        //        if (inputData.count() > 0 && inputData.last().hasLabel(LABEL_FILE) &&
+        //                searchResults.count() > 0 && searchResults[0].id == HASH_LAUNCHYFILE)
+        //            doTab();
         processKey();
     }
     else if (event->key()== Qt::Key_Insert && event->modifiers() == Qt::ShiftModifier)
@@ -195,7 +187,6 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
         event->ignore();
         processKey();
     }
-    lastTime = now;
 }
 
 void DerflaWidget::inputChanged(const QString &text)
@@ -245,11 +236,11 @@ void DerflaWidget::loadSkin()
 {
     check_expiration;
     QString fileName = QFileDialog::getOpenFileName(this,
-                                                        tr("Load Derfla Skin"),
-                                                        "",
-                                                        tr("Derfla Skin Configuration (*.xml);;All files (*.*)"));
+                                                    tr("Load Derfla Skin"),
+                                                    "",
+                                                    tr("Derfla Skin Configuration (*.xml);;All files (*.*)"));
     if (fileName.isEmpty())
-            return;
+        return;
     QFileInfo f(fileName);
     applySkin(f.baseName());
 }
