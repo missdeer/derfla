@@ -83,6 +83,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
 
     connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::localFSScannerFinished);
+    connect(this, &DerflaWidget::scanRequired, localFSScanner_, &LocalFSScanner::scan);
     localFSScanner_->start();
 }
 
@@ -292,7 +293,7 @@ void DerflaWidget::onNextLFSScanning()
     if (qApp->activeWindow())
         QTimer::singleShot(5 * 60 * 1000, this, &DerflaWidget::onNextLFSScanning);
     else
-        QTimer::singleShot(1000, localFSScanner_, &LocalFSScanner::scan);
+        emit scanRequired();
 }
 
 void DerflaWidget::showCandidateList()

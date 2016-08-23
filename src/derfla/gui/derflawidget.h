@@ -28,6 +28,8 @@ protected:
     void moveEvent(QMoveEvent *event);
 
     void keyPressEvent(QKeyEvent* event);
+signals:
+    void scanRequired();
 private slots:
     void inputChanged(const QString& text);
     void keyPressed(QKeyEvent* e);
