@@ -135,7 +135,6 @@ bool DBRW::queryActions(DerflaActionList &dal, const QString &keyword, int count
     q.addBindValue(keyword);
     if (q.exec())
     {
-        int idIndex = q.record().indexOf("id");
         int iconIndex = q.record().indexOf("icon");
         int titleIndex = q.record().indexOf("title");
         int descriptionIndex = q.record().indexOf("description");
@@ -153,19 +152,16 @@ bool DBRW::queryActions(DerflaActionList &dal, const QString &keyword, int count
             da->setTarget(q.value(targetIndex).toString());
             da->setTitle(q.value(titleIndex).toString());
             da->setDescription(q.value(descriptionIndex).toString());
-            dal.append(da);
+            auto it = std::find_if(dal.begin(), dal.end(), [da](DerflaActionPtr d) {
+                    return da->title() == d->title()
+                    && da->description() == d->description()
+                    && da->target() == d->target();}
+                    );
+            if (dal.end() == it)
+                dal.append(da);
         }
-
         q.clear();
         q.finish();
-
-        std::sort(dal.begin(), dal.end(), [](DerflaActionPtr da1, DerflaActionPtr da2) {
-            return da1->title() > da2->title();
-        });
-        auto it = std::unique(dal.begin(), dal.end(), [](DerflaActionPtr da1, DerflaActionPtr da2) {
-            return da1->title() == da2->title() && da1->description() == da2->description();
-        });
-        dal.erase(it, dal.end());
 
         if (dal.length() >= countRequired)
         {
