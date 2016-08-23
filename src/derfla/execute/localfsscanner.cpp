@@ -125,11 +125,10 @@ void LocalFSScanner::scanDirectory(const Directory &d)
 void LocalFSScanner::getBuiltinDirectories()
 {
     auto homePath = qgetenv("HOME");
-    scanDirectories_ << Directory("/Applications", false)
-                    << Directory(homePath + "/Applications", false)
+    scanDirectories_ << Directory("/Applications", true)
+                    << Directory(homePath + "/Applications", true)
                     << Directory(homePath, false)
-                    << Directory("/System/Library/CoreServices", false)
-                    << Directory("/System/Library/CoreServices/Applications", false);
+                    << Directory("/System/Library/CoreServices", true);
 }
 
 void LocalFSScanner::scanDirectory(const Directory &d)
@@ -143,10 +142,10 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     DBRW* dbrw = DBRW::instance();
     std::for_each(list.begin(), list.end(),
                   [&](const QFileInfo& fileInfo) {
+        QString f(d.directory + QDir::separator() + fileInfo.fileName());
         if ((fileInfo.isFile() && fileInfo.permission(QFile::ExeGroup))
                 || (fileInfo.isDir() && fileInfo.suffix() == "app"))
         {
-            QString f(d.directory + QDir::separator() + fileInfo.fileName());
             dbrw->insertLFS(util::extractXPMFromFile(fileInfo),
                             fileInfo.fileName(),
                             f,
@@ -157,6 +156,10 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                             fileInfo.lastModified().toMSecsSinceEpoch(),
                             fileInfo.isDir() ? "g" : "c"
                             );
+        }
+        else if (fileInfo.isDir() && d.recursive)
+        {
+            scanDirectory(Directory {f, true });
         }
     });
 }
