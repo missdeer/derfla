@@ -23,15 +23,15 @@ bool DBRW::getLFSActions(DerflaActionList &dal, const QString& keyword, int coun
     Q_ASSERT(db.isOpen());
 
     QSqlQuery q(db);
-    q.prepare("SELECT * FROM lfs WHERE title LIKE '%'||?||'%' LIMIT 50;");
+    q.prepare(QString("SELECT * FROM lfs WHERE title LIKE '%'||?||'%' LIMIT %1;").arg(countRequired+10));
     if (queryActions(dal, keyword, countRequired, q))
         return true;
 
-    q.prepare("SELECT * FROM lfs WHERE description LIKE '%'||?||'%' LIMIT 50;");
+    q.prepare(QString("SELECT * FROM lfs WHERE description LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - dal.length()+10));
     if (queryActions(dal, keyword, countRequired, q))
         return true;
 
-    q.prepare("SELECT * FROM lfs WHERE target LIKE '%'||?||'%' LIMIT 50;");
+    q.prepare(QString("SELECT * FROM lfs WHERE target LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - dal.length()+10));
     if (queryActions(dal, keyword, countRequired, q))
         return true;
 
