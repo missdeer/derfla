@@ -33,9 +33,11 @@ private slots:
     void keyPressed(QKeyEvent* e);
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
     void loadSkin();
-    void onTimer();
+    void onLoadingAnimationTimer();
     void showInFront();
     void candidateListDone();
+    void localFSScannerFinished();
+    void onNextLFSScanning();
 private:
     QPoint mouseMovePos_;
     QPixmap backgroundImage_;

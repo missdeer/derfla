@@ -6,10 +6,8 @@
 #endif
 #include "localfsscanner.h"
 
-LocalFSScanner::LocalFSScanner(QObject *parent) : QObject(parent)
+LocalFSScanner::LocalFSScanner(QObject *parent) : QObject(parent), yieldRequired_(false)
 {
-    connect(this, &LocalFSScanner::finished, [this] {QTimer::singleShot(60 *60* 1000, this, &LocalFSScanner::scan);});
-
     workerThread_.start(QThread::IdlePriority);
 }
 
@@ -107,6 +105,7 @@ void LocalFSScanner::getBuiltinDirectories()
 
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
+    QThread::yieldCurrentThread();
     using namespace win_util;
     QDir dir(d.directory);
     
@@ -135,6 +134,7 @@ void LocalFSScanner::getBuiltinDirectories()
 
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
+    QThread::yieldCurrentThread();
     QDir dir(d.directory);
 
     QFileInfoList list = dir.entryInfoList(QStringList() << "*.app", QDir::AllDirs | QDir::NoDotAndDotDot);
@@ -172,6 +172,7 @@ void LocalFSScanner::getBuiltinDirectories()
 }
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
+    QThread::yieldCurrentThread();
     QDir dir(d.directory);
 
     QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);

@@ -73,13 +73,13 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     trayIcon_->setToolTip(tr("Derfla - Accelerate your keyboard!"));
     trayIcon_->show();
 
-    connect(loadingAnimationTimer_, SIGNAL(timeout()), this, SLOT(onTimer()));
+    connect(loadingAnimationTimer_, SIGNAL(timeout()), this, SLOT(onLoadingAnimationTimer()));
 
     hotkeyManager_->registerHotkey("Alt+Space");
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
 
+    connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::localFSScannerFinished);
     localFSScanner_->start();
-    qDebug() << "main thread id:" << QThread::currentThreadId();
 }
 
 DerflaWidget::~DerflaWidget()
@@ -251,7 +251,7 @@ void DerflaWidget::loadSkin()
     applySkin(f.baseName());
 }
 
-void DerflaWidget::onTimer()
+void DerflaWidget::onLoadingAnimationTimer()
 {
     static int degree = 0;
     degree += 36;
@@ -282,6 +282,19 @@ void DerflaWidget::candidateListDone()
     check_expiration;
     hideCandidateList();
     input_->setText("");
+}
+
+void DerflaWidget::localFSScannerFinished()
+{
+    QTimer::singleShot(60 * 60 *1000, this, &DerflaWidget::onNextLFSScanning);
+}
+
+void DerflaWidget::onNextLFSScanning()
+{
+    if (qApp->activeWindow())
+        QTimer::singleShot(5 * 60 * 1000, this, &DerflaWidget::onNextLFSScanning);
+    else
+        QTimer::singleShot(1000, localFSScanner_, &LocalFSScanner::scan);
 }
 
 void DerflaWidget::showCandidateList()

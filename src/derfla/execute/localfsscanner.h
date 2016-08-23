@@ -24,6 +24,7 @@ signals:
 public slots:
     void scan();
 private:
+    bool yieldRequired_;
     qint64 timestamp_;
     QThread workerThread_;
     QList<Directory> scanDirectories_;
