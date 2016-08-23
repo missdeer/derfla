@@ -54,9 +54,12 @@ void CandidateList::update(const QString &text)
 void CandidateList::refreshList()
 {
     if (itemCount_ > 0)
+    {
         ui->list->setCurrentRow(0);
-    QSize s = size();
-    resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
+        QSize s = size();
+        resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
+        //qDebug() << itemCount_ << s << size() << s.width() << qMin(10, itemCount_) * CandidateListItemHeight;
+    }
 }
 
 int CandidateList::count() const
@@ -83,7 +86,7 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void CandidateList::showEvent(QShowEvent *event)
+void CandidateList::showEvent(QShowEvent* /*event*/)
 {
     refreshList();
 }
