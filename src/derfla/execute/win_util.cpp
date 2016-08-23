@@ -326,8 +326,8 @@ namespace win_util {
     {
         HANDLE hImage;
 
-        DWORD  bytes;
-        DWORD  iSection;
+        //DWORD  bytes;
+        //DWORD  iSection;
         DWORD  SectionOffset;
         DWORD  CoffHeaderOffset;
         DWORD  MoreDosHeader[16];
@@ -337,7 +337,7 @@ namespace win_util {
         IMAGE_DOS_HEADER      image_dos_header;
         IMAGE_FILE_HEADER     image_file_header;
         IMAGE_OPTIONAL_HEADER image_optional_header;
-        IMAGE_SECTION_HEADER  image_section_header;
+        //IMAGE_SECTION_HEADER  image_section_header;
         
         /*
         *  Open the reference file.

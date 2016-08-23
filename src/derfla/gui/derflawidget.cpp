@@ -105,19 +105,19 @@ void DerflaWidget::mousePressEvent(QMouseEvent *event)
     mouseMovePos_ = event->globalPos();
 }
 
-void DerflaWidget::mouseReleaseEvent(QMouseEvent */*event*/)
+void DerflaWidget::mouseReleaseEvent(QMouseEvent* /*event*/)
 {
     mouseMovePos_ = QPoint(0, 0);
 }
 
-void DerflaWidget::paintEvent(QPaintEvent */*event*/)
+void DerflaWidget::paintEvent(QPaintEvent* /*event*/)
 {
     QPainter painter(this);
     painter.drawPixmap(0, 0, backgroundImage_);
     painter.setRenderHint(QPainter::Antialiasing);
 }
 
-void DerflaWidget::moveEvent(QMoveEvent */*event*/)
+void DerflaWidget::moveEvent(QMoveEvent* /*event*/)
 {
     if (candidateList_ && candidateList_->isVisible())
         candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
