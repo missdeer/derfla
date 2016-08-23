@@ -88,10 +88,10 @@ void CandidateList::onEnter()
 
 bool CandidateList::getActiveWindowFlag() const
 {
-    return activeWindowFlag;
+    return activeWindowFlag_;
 }
 
 void CandidateList::setActiveWindowFlag(bool value)
 {
-    activeWindowFlag = value;
+    activeWindowFlag_ = value;
 }

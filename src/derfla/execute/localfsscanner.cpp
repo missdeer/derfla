@@ -10,48 +10,48 @@ LocalFSScanner::LocalFSScanner(QObject *parent) : QObject(parent)
 {
     connect(this, &LocalFSScanner::finished, [this] {QTimer::singleShot(60 *60* 1000, this, &LocalFSScanner::scan);});
 
-    workerThread.start(QThread::IdlePriority);
+    workerThread_.start(QThread::IdlePriority);
 }
 
 LocalFSScanner::~LocalFSScanner()
 {
-    if (workerThread.isRunning())
+    if (workerThread_.isRunning())
     {
-        workerThread.quit();
-        workerThread.wait();
+        workerThread_.quit();
+        workerThread_.wait();
     }
 }
 
 void LocalFSScanner::start()
 {
-    this->moveToThread(&workerThread);
+    this->moveToThread(&workerThread_);
     QTimer::singleShot(1000, this, &LocalFSScanner::scan);
 }
 
 void LocalFSScanner::scan()
 {
-    timestamp = QDateTime::currentDateTime().toMSecsSinceEpoch();
+    timestamp_ = QDateTime::currentDateTime().toMSecsSinceEpoch();
 #if defined(Q_OS_WIN)
-    win_util::timestamp = timestamp;
+    win_util::timestamp = timestamp_;
     CoInitialize(NULL);
     BOOST_SCOPE_EXIT(void) {
         CoUninitialize();
     } BOOST_SCOPE_EXIT_END
 #endif
 
-    scanDirectories.clear();
+    scanDirectories_.clear();
 
     getBuiltinDirectories();
     getDirectoriesFromEnvironmentVariable();
-    std::sort(scanDirectories.begin(), scanDirectories.end(),
+    std::sort(scanDirectories_.begin(), scanDirectories_.end(),
         [&](const Directory& d1, const Directory& d2) { return d1.directory < d2.directory; });
-    auto it = std::unique(scanDirectories.begin(), scanDirectories.end(), 
+    auto it = std::unique(scanDirectories_.begin(), scanDirectories_.end(),
         [&](const Directory& d1, const Directory& d2) { return QDir(d1.directory) == QDir(d2.directory); });
-    scanDirectories.erase(it, scanDirectories.end());
+    scanDirectories_.erase(it, scanDirectories_.end());
 
-    std::for_each(scanDirectories.begin(), scanDirectories.end(),
+    std::for_each(scanDirectories_.begin(), scanDirectories_.end(),
                   std::bind(&LocalFSScanner::scanDirectory, this, std::placeholders::_1));
-    DBRW::instance()->removeOldRecords(timestamp);
+    DBRW::instance()->removeOldRecords(timestamp_);
     emit finished();
 }
 
@@ -69,7 +69,7 @@ void LocalFSScanner::getDirectoriesFromEnvironmentVariable()
 #else
     QStringList&& paths = path.split(':');
 #endif
-    std::for_each(paths.begin(), paths.end(), [&](const QString& p) { scanDirectories.append(Directory( p, false)); });
+    std::for_each(paths.begin(), paths.end(), [&](const QString& p) { scanDirectories_.append(Directory( p, false)); });
 }
 
 #if defined(Q_OS_WIN)
@@ -96,7 +96,7 @@ void LocalFSScanner::getBuiltinDirectories()
         HRESULT hr = SHGetKnownFolderPath(p.first, 0, NULL, &wszPath);
         if (SUCCEEDED(hr))
         {
-            scanDirectories << Directory(QString::fromUtf16((const ushort *)wszPath), p.second);
+            scanDirectories_ << Directory(QString::fromUtf16((const ushort *)wszPath), p.second);
             CoTaskMemFree(wszPath);
         }
     }

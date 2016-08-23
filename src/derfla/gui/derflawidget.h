@@ -37,16 +37,15 @@ private slots:
     void showInFront();
     void candidateListDone();
 private:
-    QThread scanThread;
-    QPoint mouseMovePos;
-    QPixmap backgroundImage;
-    QTimer* timer;
-    CharLineEdit* input;
-    QSystemTrayIcon* trayicon;
-    CandidateList* candidatelist;
-    UGlobalHotkeys *hotkeyManager;
-    LocalFSScanner* localFSScanner;
-    void ShowCandidateList();
+    QPoint mouseMovePos_;
+    QPixmap backgroundImage_;
+    QTimer* loadingAnimationTimer_;
+    CharLineEdit* input_;
+    QSystemTrayIcon* trayIcon_;
+    CandidateList* candidateList_;
+    UGlobalHotkeys *hotkeyManager_;
+    LocalFSScanner* localFSScanner_;
+    void showCandidateList();
     void processKey();
     void doEnter();
     void doTab();
@@ -54,7 +53,7 @@ private:
     bool applySkin(const QString& skin);
     void waiting();
     void stopWaiting();
-    void HideCandidateList();
+    void hideCandidateList();
 };
 
 #endif // DerflaWidget_H

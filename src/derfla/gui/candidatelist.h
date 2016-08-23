@@ -32,7 +32,7 @@ private slots:
 
 private:
     Ui::CandidateList *ui;
-    bool activeWindowFlag;
+    bool activeWindowFlag_;
 };
 
 #endif // CANDIDATELIST_H
