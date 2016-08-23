@@ -182,7 +182,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         if (fileInfo.permission(QFile::ExeGroup) && fileInfo.isFile())
         {
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
-            qDebug() << "find" <<  f;
+            //qDebug() << "find" <<  f;
         }
     });
 
@@ -190,7 +190,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     std::for_each(list.begin(), list.end(),
                   [&](const QFileInfo& fileInfo) {
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
-            qDebug() << "find" <<  f;
+            //qDebug() << "find" <<  f;
     });
 }
 #endif

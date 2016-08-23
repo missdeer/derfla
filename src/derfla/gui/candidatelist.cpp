@@ -33,9 +33,6 @@ void CandidateList::update(const QString &text)
 
     DerflaActionList dal;
     DBRW::instance()->getLFSActions(dal, text, 25);
-    itemCount_ = dal.length();
-    QSize s = size();
-    resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
     ui->list->clear();
     for (DerflaActionPtr da: dal)
     {
@@ -45,6 +42,17 @@ void CandidateList::update(const QString &text)
         item->setData(Qt::DecorationRole, da->icon());
         ui->list->addItem(item);
     }
+    itemCount_ = dal.length();
+    refreshList();
+
+}
+
+void CandidateList::refreshList()
+{
+    if (itemCount_ > 0)
+        ui->list->setCurrentRow(0);
+    QSize s = size();
+    resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
 }
 
 int CandidateList::count() const
@@ -62,34 +70,25 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
             setActiveWindowFlag(false);
             ui->list->setCurrentRow(1);
         }
-        qDebug() << "CandidateList::keyPressEvent: event->key() == Qt::Key_Down";
+        //qDebug() << "CandidateList::keyPressEvent: event->key() == Qt::Key_Down";
     }
     else
     {
-        qDebug() << "CandidateList::keyPressEvent: ignore" << event;
+        //qDebug() << "CandidateList::keyPressEvent: ignore" << event;
         event->ignore();
     }
 }
 
 void CandidateList::showEvent(QShowEvent *event)
 {
-    if (itemCount_ > 0)
-        ui->list->setCurrentRow(0);
-    QSize s = size();
-    resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
-}
-
-void CandidateList::on_listWidget_pressed(const QModelIndex &index)
-{
-    qDebug() << "CandidateList::on_listWidget_pressed";
-    onEnter();
+    refreshList();
 }
 
 void CandidateList::onEnter()
 {
     check_expiration;
     int index = ui->list->currentRow();
-    qDebug() << "CandidateList::onEnter:" << index;
+    //qDebug() << "CandidateList::onEnter:" << index;
     close();
     emit done();
 }

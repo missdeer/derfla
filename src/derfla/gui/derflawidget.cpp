@@ -27,7 +27,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     if (!applySkin("derfla"))
     {
-        qDebug() << "loading skin failed";
+        //qDebug() << "loading skin failed";
         return;
     }
 #ifdef Q_WS_MAC
@@ -125,12 +125,12 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
     check_expiration;
     static QDateTime lastTime = QDateTime::currentDateTime();
     QDateTime now = QDateTime::currentDateTime();
-    qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key() << now;
+    //qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key() << now;
     if (event->key() == Qt::Key_Escape)
     {
         if (lastTime.msecsTo(now) > 50)
         {
-            qDebug() << "DerflaWidget::keyPressEvent escape" << candidateList_->isVisible();
+            //qDebug() << "DerflaWidget::keyPressEvent escape" << candidateList_->isVisible();
             if (candidateList_->isVisible())
                 candidateList_->hide();
             else
@@ -149,10 +149,10 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
     else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_PageDown ||
              event->key() == Qt::Key_Up || event->key() == Qt::Key_PageUp)
     {
-        qDebug() << "DerflaWidget::keyPressEvent 1:" << event->key();
+        //qDebug() << "DerflaWidget::keyPressEvent 1:" << event->key();
         if (candidateList_->isVisible())
         {
-            qDebug() << "DerflaWidget::keyPressEvent 2:" << event->key();
+            //qDebug() << "DerflaWidget::keyPressEvent 2:" << event->key();
             candidateList_->activateWindow();
             candidateList_->setActiveWindowFlag(true);
             qApp->sendEvent(candidateList_, event);
@@ -198,7 +198,7 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
 void DerflaWidget::inputChanged(const QString &text)
 {
     check_expiration;
-    qDebug() <<  "DerflaWidget::inputChanged:" << input_->text();
+    //qDebug() <<  "DerflaWidget::inputChanged:" << input_->text();
     if (input_->text().isEmpty())
     {
         hideCandidateList();
@@ -214,7 +214,7 @@ void DerflaWidget::inputChanged(const QString &text)
 void DerflaWidget::keyPressed(QKeyEvent *e)
 {
     check_expiration;
-    qDebug() << "DerflaWidget::keyPressed" << e;
+    //qDebug() << "DerflaWidget::keyPressed" << e;
     if ( e->key() != Qt::Key_Escape)
         hideCandidateList();
     activateWindow();
@@ -314,26 +314,26 @@ void DerflaWidget::showCandidateList()
 void DerflaWidget::processKey()
 {
     check_expiration;
-    qDebug() << "DerflaWidget::processKey";
+    //qDebug() << "DerflaWidget::processKey";
 }
 
 void DerflaWidget::doEnter()
 {
     check_expiration;
-    qDebug() << "DerflaWidget::doEnter";
+    //qDebug() << "DerflaWidget::doEnter";
     candidateList_->onEnter();
 }
 
 void DerflaWidget::doTab()
 {
     check_expiration;
-    qDebug() << "DerflaWidget::doTab";
+    //qDebug() << "DerflaWidget::doTab";
 }
 
 void DerflaWidget::doBackTab()
 {
     check_expiration;
-    qDebug() << __FUNCTION__;
+    //qDebug() << "DerflaWidget::doBackTab";
 }
 
 bool DerflaWidget::applySkin(const QString& skin)
@@ -377,7 +377,7 @@ bool DerflaWidget::applySkin(const QString& skin)
 
     if (!backgroundImage_.load(imagePath))
     {
-        qDebug() << "can't load picture from " << imagePath;
+        //qDebug() << "can't load picture from " << imagePath;
         return false;
     }
     resize(backgroundImage_.size());
