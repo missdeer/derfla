@@ -154,8 +154,7 @@ bool DBRW::queryActions(DerflaActionList &dal, const QString &keyword, int count
             da->setDescription(q.value(descriptionIndex).toString());
             auto it = std::find_if(dal.begin(), dal.end(), [da](DerflaActionPtr d) {
                     return da->title() == d->title()
-                    && da->description() == d->description()
-                    && da->target() == d->target();}
+                    && da->description() == d->description();}
                     );
             if (dal.end() == it)
                 dal.append(da);
