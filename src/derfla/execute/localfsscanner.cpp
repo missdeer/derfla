@@ -77,18 +77,15 @@ void LocalFSScanner::getDirectoriesFromEnvironmentVariable()
 void LocalFSScanner::getBuiltinDirectories()
 {
     std::vector<std::pair<REFKNOWNFOLDERID, bool>> dirs{
-        { FOLDERID_AdminTools , false},
         { FOLDERID_ApplicationShortcuts , false },
         { FOLDERID_AppsFolder , false },
-        { FOLDERID_CommonAdminTools , false },
-        { FOLDERID_CommonPrograms , false },
+        { FOLDERID_StartMenu , true },
         { FOLDERID_CommonStartMenu , true },
         { FOLDERID_ControlPanelFolder , true },
         { FOLDERID_Desktop , false },
-        { FOLDERID_UserPinned , true },
-        { FOLDERID_Programs , false },
         { FOLDERID_PublicDesktop , false },
         { FOLDERID_QuickLaunch , false },
+        { FOLDERID_UserPinned , true },
     };
     
     for (auto p : dirs)
