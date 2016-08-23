@@ -17,7 +17,6 @@ class DerflaAction : public QObject
 public:
     explicit DerflaAction(QObject *parent = 0);
 
-    bool run();
 
     QIcon icon() const;
     void setIcon(const QIcon& icon);
@@ -42,7 +41,8 @@ public:
 
 signals:
 
-public slots:
+    public slots :
+        bool run();
 
 private:
     QIcon icon_;

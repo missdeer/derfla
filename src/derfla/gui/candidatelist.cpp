@@ -31,20 +31,24 @@ void CandidateList::update(const QString &text)
     if (text.isEmpty())
         hide();
 
-    DerflaActionList dal;
-    DBRW::instance()->getLFSActions(dal, text, 25);
+    dal_.clear();
     ui->list->clear();
-    for (DerflaActionPtr da: dal)
+    DBRW::instance()->getLFSActions(dal_, text, 25);
+    if (dal_.empty())
+        hide();
+    else
     {
-        QListWidgetItem* item = new QListWidgetItem(ui->list);
-        item->setData(Qt::DisplayRole, da->title());
-        item->setData(Qt::UserRole + 1, da->description());
-        item->setData(Qt::DecorationRole, da->icon());
-        ui->list->addItem(item);
+        for (DerflaActionPtr da : dal_)
+        {
+            QListWidgetItem* item = new QListWidgetItem(ui->list);
+            item->setData(Qt::DisplayRole, da->title());
+            item->setData(Qt::UserRole + 1, da->description());
+            item->setData(Qt::DecorationRole, da->icon());
+            ui->list->addItem(item);
+        }
+        itemCount_ = dal_.length();
+        refreshList();
     }
-    itemCount_ = dal.length();
-    refreshList();
-
 }
 
 void CandidateList::refreshList()
@@ -89,7 +93,13 @@ void CandidateList::onEnter()
     check_expiration;
     int index = ui->list->currentRow();
     //qDebug() << "CandidateList::onEnter:" << index;
-    close();
+    if (index < 0 || index >= itemCount_)
+    {
+        close();
+        return;
+    }
+    DerflaActionPtr da = dal_.at(index);
+    da->run();
     emit done();
 }
 

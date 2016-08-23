@@ -253,19 +253,19 @@ void DerflaWidget::loadSkin()
 
 void DerflaWidget::onLoadingAnimationTimer()
 {
-    static int degree = 0;
-    degree += 36;
-    if (degree > 360)
-        degree -= 360;
-    QList<QAction*> actions = input_->actions();
-    if (actions.isEmpty())
-        return;
-    QAction* logoAction = actions.at(0);
-    QPixmap icon(":/loading.png");
-    QMatrix rm;
-    rm.rotate(degree);
-    icon = icon.transformed(rm);
-    logoAction->setIcon(icon);
+    //static int degree = 0;
+    //degree += 36;
+    //if (degree > 360)
+    //    degree -= 360;
+    //QList<QAction*> actions = input_->actions();
+    //if (actions.isEmpty())
+    //    return;
+    //QAction* logoAction = actions.at(0);
+    //QPixmap icon(":/loading.png");
+    //QMatrix rm;
+    //rm.rotate(degree);
+    //icon = icon.transformed(rm);
+    //logoAction->setIcon(icon);
 }
 
 void DerflaWidget::showInFront()

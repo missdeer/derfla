@@ -8,6 +8,12 @@ DerflaAction::DerflaAction(QObject *parent)
 
 }
 
+
+bool DerflaAction::run()
+{
+    return true;
+}
+
 QIcon DerflaAction::icon() const
 {
     return icon_;

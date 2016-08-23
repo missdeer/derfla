@@ -3,6 +3,7 @@
 
 #include <QFrame>
 #include "candidatelistwidget.h"
+#include "derflaaction.h"
 
 namespace Ui {
 class CandidateList;
@@ -36,6 +37,7 @@ private:
     Ui::CandidateList *ui;
     bool activeWindowFlag_;
     int itemCount_;
+    DerflaActionList dal_;
 };
 
 #endif // CANDIDATELIST_H
