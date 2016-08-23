@@ -5,6 +5,7 @@
 #if defined(_WIN32)
 #define NOMINMAX
 #include <Windows.h>
+#include <Winnt.h>
 #include <Shellapi.h>
 #include <shobjidl.h>
 #include <shlguid.h>

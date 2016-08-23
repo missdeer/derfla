@@ -144,7 +144,10 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
     }
     else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
-        doEnter();
+        if (lastTime.msecsTo(now) > 50)
+        {
+            doEnter();
+        }
     }
     else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_PageDown ||
              event->key() == Qt::Key_Up || event->key() == Qt::Key_PageUp)

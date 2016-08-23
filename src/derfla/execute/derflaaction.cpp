@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#if defined(Q_OS_WIN)
+#include "win_util.h"
+#endif
 #include "derflaaction.h"
 
 DerflaAction::DerflaAction(QObject *parent)
@@ -11,6 +14,29 @@ DerflaAction::DerflaAction(QObject *parent)
 
 bool DerflaAction::run()
 {
+#if defined(Q_OS_WIN)
+    if (QFileInfo(target_).suffix() == "exe" && QFileInfo(target_).fileName() != "cmd.exe" && win_util::isConsoleApplication(target_))
+    {
+        QString args = QString("/K %1 %2").arg(target_).arg(arguments_);
+        ::ShellExecuteW(NULL,
+            L"open",
+            L"cmd.exe",
+            args.toStdWString().c_str(),
+            workingDirectory_.toStdWString().c_str(),
+            SW_SHOWNORMAL);
+    }
+    else
+    {
+        ::ShellExecuteW(NULL,
+            L"open",
+            target_.toStdWString().c_str(),
+            arguments_.toStdWString().c_str(),
+            workingDirectory_.toStdWString().c_str(),
+            SW_SHOWNORMAL);
+    }
+#elif defined(Q_OS_MAC)
+#else
+#endif
     return true;
 }
 
