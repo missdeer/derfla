@@ -404,42 +404,42 @@ namespace win_util {
         switch (image_optional_header.Subsystem)
         {
         case IMAGE_SUBSYSTEM_UNKNOWN:
-            printf("Type is unknown.\n");
+            //printf("Type is unknown.\n");
             break;
 
         case IMAGE_SUBSYSTEM_NATIVE:
-            printf("Type is native.\n");
+            //printf("Type is native.\n");
             break;
 
         case IMAGE_SUBSYSTEM_WINDOWS_GUI:
-            printf("Type is Windows GUI.\n");
+            //printf("Type is Windows GUI.\n");
             break;
 
         case IMAGE_SUBSYSTEM_WINDOWS_CUI:
-            printf("Type is Windows CUI.\n");
+            //printf("Type is Windows CUI.\n");
             return true;
             break;
 
         case IMAGE_SUBSYSTEM_OS2_CUI:
-            printf("Type is OS/2 CUI.\n");
+            //printf("Type is OS/2 CUI.\n");
             return true;
             break;
 
         case IMAGE_SUBSYSTEM_POSIX_CUI:
-            printf("Type is POSIX CUI.\n");
+            //printf("Type is POSIX CUI.\n");
             return true;
             break;
 
         case IMAGE_SUBSYSTEM_NATIVE_WINDOWS:
-            printf("Type is native Win9x driver.\n");
+            //printf("Type is native Win9x driver.\n");
             break;
 
         case IMAGE_SUBSYSTEM_WINDOWS_CE_GUI:
-            printf("Type is Windows CE.\n");
+            //printf("Type is Windows CE.\n");
             break;
 
         default:
-            printf("Unknown type %u.\n", image_optional_header.Subsystem);
+            //printf("Unknown type %u.\n", image_optional_header.Subsystem);
             break;
         }
         return false;
