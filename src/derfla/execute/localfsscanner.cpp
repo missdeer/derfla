@@ -123,7 +123,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
 void LocalFSScanner::getBuiltinDirectories()
 {
     auto homePath = qgetenv("HOME");
-    scanDirectories << Directory("/Applications", false)
+    scanDirectories_ << Directory("/Applications", false)
                     << Directory(homePath + "/Applications", false)
                     << Directory(homePath, false)
                     << Directory("/System/Library/CoreServices", false)
@@ -150,7 +150,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                             f,
                             "",
                             QFileInfo(f).filePath(),
-                            timestamp,
+                            timestamp_,
                             fileInfo.lastModified().toMSecsSinceEpoch(),
                             fileInfo.isDir() ? "g" : "c"
                             );
@@ -161,7 +161,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
 void LocalFSScanner::getBuiltinDirectories()
 {
     auto homePath = qgetenv("HOME");
-    scanDirectories << Directory("/usr/share/applications/",false)
+    scanDirectories_ << Directory("/usr/share/applications/",false)
                     << Directory("/usr/local/share/applications/", false)
                     << Directory("/usr/share/gdm/applications/", false)
                     << Directory("/usr/share/applications/kde/", false)
