@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#if defined(Q_OS_WIN)
+#include "win_util.h"
+#endif
 #include "derflaaction.h"
 
 DerflaAction::DerflaAction(QObject *parent)
@@ -6,6 +9,54 @@ DerflaAction::DerflaAction(QObject *parent)
     , actionType_(DAT_UNKNOWN)
 {
 
+}
+
+
+bool DerflaAction::run()
+{
+#if defined(Q_OS_WIN)
+    if (QFileInfo(target_).suffix() == "exe" && QFileInfo(target_).fileName() != "cmd.exe" && win_util::isConsoleApplication(target_))
+    {
+        QString args = QString("/K %1 %2").arg(target_).arg(arguments_);
+        ::ShellExecuteW(NULL,
+            L"open",
+            L"cmd.exe",
+            args.toStdWString().c_str(),
+            workingDirectory_.toStdWString().c_str(),
+            SW_SHOWNORMAL);
+    }
+    else
+    {
+        ::ShellExecuteW(NULL,
+            L"open",
+            target_.toStdWString().c_str(),
+            arguments_.toStdWString().c_str(),
+            workingDirectory_.toStdWString().c_str(),
+            SW_SHOWNORMAL);
+    }
+#elif defined(Q_OS_MAC)
+    if (workingDirectory_.isEmpty())
+        workingDirectory_ = QFileInfo(target_).absolutePath();
+    if (QFileInfo(workingDirectory_).isFile())
+        workingDirectory_ = QFileInfo(workingDirectory_).absolutePath();
+    if (QFileInfo(target_).isDir())
+    {
+        QStringList args {
+            target_,
+        };
+        if (!arguments_.isEmpty())
+            args << "--args"
+                 << arguments_.split(' ');
+        QProcess::startDetached("/usr/bin/open", args, workingDirectory_);
+    }
+    else
+    {
+        QString cmdline = QString("osascript -e 'tell application \"Terminal\" to do script \"%1 %2\"'").arg(target_).arg(arguments_);
+        system(cmdline.toStdString().c_str());
+    }
+#else
+#endif
+    return true;
 }
 
 QIcon DerflaAction::icon() const

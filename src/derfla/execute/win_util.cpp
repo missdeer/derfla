@@ -8,6 +8,43 @@ namespace win_util {
 
     qint64 timestamp = 0;
 
+    static DWORD AbsoluteSeek(HANDLE hFile, DWORD  offset)
+    {
+        DWORD newOffset;
+
+        if ((newOffset = SetFilePointer(hFile,
+            offset,
+            NULL,
+            FILE_BEGIN)) == 0xFFFFFFFF)
+        {
+            printf("SetFilePointer failed, error %lu.\n", GetLastError());
+            exit(1);
+        }
+
+        return newOffset;
+    }
+
+    static void  ReadBytes(HANDLE hFile, LPVOID buffer, DWORD  size)
+    {
+        DWORD bytes;
+
+        if (!ReadFile(hFile,
+            buffer,
+            size,
+            &bytes,
+            NULL))
+        {
+            printf("ReadFile failed, error %lu.\n", GetLastError());
+            exit(1);
+        }
+        else if (size != bytes)
+        {
+            printf("Read the wrong number of bytes, expected %lu, got %lu.\n",
+                size, bytes);
+            exit(1);
+        }
+    }
+
     void readDescriptionFromResource(const QString& f, QString& desc)
     {
         DWORD  verHandle = NULL;
@@ -159,7 +196,7 @@ namespace win_util {
         HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID*)&psl);
         if (FAILED(hres))
         {
-            qDebug() << "CoCreateInstance failed";
+            //qDebug() << "CoCreateInstance failed";
             return hres;
         }
 
@@ -175,7 +212,7 @@ namespace win_util {
 
         if (FAILED(hres))
         {
-            qDebug() << "psl->QueryInterface(IID_IPersistFile, (void**)&ppf) failed";
+            //qDebug() << "psl->QueryInterface(IID_IPersistFile, (void**)&ppf) failed";
             return hres;
         }
 
@@ -189,7 +226,7 @@ namespace win_util {
 
         if (FAILED(hres))
         {
-            qDebug() << "ppf->Load(lpszLinkFile, STGM_READ) failed";
+            //qDebug() << "ppf->Load(lpszLinkFile, STGM_READ) failed";
             return hres;
         }
         // Resolve the link.
@@ -197,7 +234,7 @@ namespace win_util {
 
         if (FAILED(hres))
         {
-            qDebug() << "psl->Resolve(hwnd, 0) failed";
+            //qDebug() << "psl->Resolve(hwnd, 0) failed";
             return hres;
         }
 
@@ -208,7 +245,7 @@ namespace win_util {
 
         if (FAILED(hres))
         {
-            qDebug() << "psl->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_RAWPATH) failed";
+            //qDebug() << "psl->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_RAWPATH) failed";
             return hres;
         }
 
@@ -216,7 +253,7 @@ namespace win_util {
         if (FAILED(hres))
         {
             // Handle the error
-            qDebug() << "failed StringCbCopy(lpszPath, iPathBufferSize, szGotPath)";
+            //qDebug() << "failed StringCbCopy(lpszPath, iPathBufferSize, szGotPath)";
             return hres;
         }
 
@@ -226,7 +263,7 @@ namespace win_util {
 
         if (FAILED(hres))
         {
-            qDebug() << "psl->GetDescription(szDescription, MAX_PATH) failed";
+            //qDebug() << "psl->GetDescription(szDescription, MAX_PATH) failed";
             return hres;
         }
 
@@ -234,7 +271,7 @@ namespace win_util {
         if (FAILED(hres))
         {
             // Handle the error
-            qDebug() << "failed StringCbCopy(lpszDescription, MAX_PATH, szDescription)";
+            //qDebug() << "failed StringCbCopy(lpszDescription, MAX_PATH, szDescription)";
             return hres;
         }
         // Get the working directory
@@ -242,7 +279,7 @@ namespace win_util {
         hres = psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH);
         if (FAILED(hres))
         {
-            qDebug() << "psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH) failed";
+            //qDebug() << "psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH) failed";
             return hres;
         }
 
@@ -250,7 +287,7 @@ namespace win_util {
         if (FAILED(hres))
         {
             // Handle the error
-            qDebug() << "failed StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory)";
+            //qDebug() << "failed StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory)";
             return hres;
         }
 
@@ -263,7 +300,7 @@ namespace win_util {
             hres = psl->GetArguments(pszArguments, argumentsLength);
         if (FAILED(hres))
         {
-            qDebug() << "psl->GetArguments(pszArguments, argumentsLength) failed";
+            //qDebug() << "psl->GetArguments(pszArguments, argumentsLength) failed";
             return hres;
         }
 
@@ -271,10 +308,141 @@ namespace win_util {
         if (FAILED(hres))
         {
             // Handle the error
-            qDebug() << "failed StringCbCopy(lpszArguments, argumentsLength, pszArguments)";
+            //qDebug() << "failed StringCbCopy(lpszArguments, argumentsLength, pszArguments)";
             return hres;
         }
 
         return hres;
     }
+
+
+#define XFER_BUFFER_SIZE 2048
+
+#ifndef IMAGE_SIZEOF_NT_OPTIONAL_HEADER
+#define  IMAGE_SIZEOF_NT_OPTIONAL_HEADER  sizeof(IMAGE_OPTIONAL_HEADER)
+#endif // IMAGE_SIZEOF_NT_OPTIONAL_HEADER
+
+    bool isConsoleApplication(const QString& path)
+    {
+        HANDLE hImage;
+
+        DWORD  bytes;
+        DWORD  iSection;
+        DWORD  SectionOffset;
+        DWORD  CoffHeaderOffset;
+        DWORD  MoreDosHeader[16];
+
+        ULONG  ntSignature;
+
+        IMAGE_DOS_HEADER      image_dos_header;
+        IMAGE_FILE_HEADER     image_file_header;
+        IMAGE_OPTIONAL_HEADER image_optional_header;
+        IMAGE_SECTION_HEADER  image_section_header;
+        
+        /*
+        *  Open the reference file.
+        */
+        hImage = CreateFile(path.toStdWString().c_str(),
+            GENERIC_READ,
+            FILE_SHARE_READ,
+            NULL,
+            OPEN_EXISTING,
+            FILE_ATTRIBUTE_NORMAL,
+            NULL);
+
+        if (INVALID_HANDLE_VALUE == hImage)
+        {
+            return false;
+        }
+
+        /*
+        *  Read the MS-DOS image header.
+        */
+        ReadBytes(hImage,
+            &image_dos_header,
+            sizeof(IMAGE_DOS_HEADER));
+
+        if (IMAGE_DOS_SIGNATURE != image_dos_header.e_magic)
+        {
+            printf("Sorry, I do not understand this file.\n");
+            return false;
+        }
+
+        /*
+        *  Read more MS-DOS header.       */
+        ReadBytes(hImage,
+            MoreDosHeader,
+            sizeof(MoreDosHeader));
+
+        /*
+        *  Get actual COFF header.
+        */
+        CoffHeaderOffset = AbsoluteSeek(hImage, image_dos_header.e_lfanew) +
+            sizeof(ULONG);
+
+        ReadBytes(hImage, &ntSignature, sizeof(ULONG));
+
+        if (IMAGE_NT_SIGNATURE != ntSignature)
+        {
+            printf("Missing NT signature. Unknown file type.\n");
+            return false;
+        }
+
+        SectionOffset = CoffHeaderOffset + IMAGE_SIZEOF_FILE_HEADER + IMAGE_SIZEOF_NT_OPTIONAL_HEADER;
+
+        ReadBytes(hImage,
+            &image_file_header,
+            IMAGE_SIZEOF_FILE_HEADER);
+
+        /*
+        *  Read optional header.
+        */
+        ReadBytes(hImage,
+            &image_optional_header,
+            IMAGE_SIZEOF_NT_OPTIONAL_HEADER);
+
+        switch (image_optional_header.Subsystem)
+        {
+        case IMAGE_SUBSYSTEM_UNKNOWN:
+            printf("Type is unknown.\n");
+            break;
+
+        case IMAGE_SUBSYSTEM_NATIVE:
+            printf("Type is native.\n");
+            break;
+
+        case IMAGE_SUBSYSTEM_WINDOWS_GUI:
+            printf("Type is Windows GUI.\n");
+            break;
+
+        case IMAGE_SUBSYSTEM_WINDOWS_CUI:
+            printf("Type is Windows CUI.\n");
+            return true;
+            break;
+
+        case IMAGE_SUBSYSTEM_OS2_CUI:
+            printf("Type is OS/2 CUI.\n");
+            return true;
+            break;
+
+        case IMAGE_SUBSYSTEM_POSIX_CUI:
+            printf("Type is POSIX CUI.\n");
+            return true;
+            break;
+
+        case IMAGE_SUBSYSTEM_NATIVE_WINDOWS:
+            printf("Type is native Win9x driver.\n");
+            break;
+
+        case IMAGE_SUBSYSTEM_WINDOWS_CE_GUI:
+            printf("Type is Windows CE.\n");
+            break;
+
+        default:
+            printf("Unknown type %u.\n", image_optional_header.Subsystem);
+            break;
+        }
+        return false;
+    }
+
 }

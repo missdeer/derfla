@@ -1,11 +1,13 @@
 #include "stdafx.h"
+#include "dbrw.h"
 #include "candidatelistdelegate.h"
 #include "candidatelist.h"
 #include "ui_candidatelist.h"
 
 CandidateList::CandidateList(QWidget *parent) :
     QFrame(parent),
-    ui(new Ui::CandidateList)
+    ui(new Ui::CandidateList),
+    itemCount_(0)
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_ShowWithoutActivating);
@@ -16,15 +18,6 @@ CandidateList::CandidateList(QWidget *parent) :
 #endif
 
     ui->list->setItemDelegate(new CandidateListDelegate(ui->list));
-    for (int i = 0; i < 12; i++)
-    {
-        QListWidgetItem *item = new QListWidgetItem();
-        item->setData(Qt::DisplayRole, QString( "Title %1").arg(i));
-        item->setData(Qt::UserRole + 1, QString("Description %1").arg(i));
-        item->setData(Qt::DecorationRole, QIcon(":/derfla.ico"));
-        ui->list->addItem(item);
-    }
-
     connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
 }
 
@@ -37,11 +30,38 @@ void CandidateList::update(const QString &text)
 {
     if (text.isEmpty())
         hide();
+
+    dal_.clear();
+    ui->list->clear();
+    DBRW::instance()->getLFSActions(dal_, text, 25);
+    if (dal_.empty())
+        hide();
+    else
+    {
+        for (DerflaActionPtr da : dal_)
+        {
+            QListWidgetItem* item = new QListWidgetItem(ui->list);
+            item->setData(Qt::DisplayRole, da->title());
+            item->setData(Qt::UserRole + 1, da->description());
+            item->setData(Qt::DecorationRole, da->icon());
+            ui->list->addItem(item);
+        }
+        itemCount_ = dal_.length();
+        refreshList();
+    }
+}
+
+void CandidateList::refreshList()
+{
+    if (itemCount_ > 0)
+        ui->list->setCurrentRow(0);
+    QSize s = size();
+    resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
 }
 
 int CandidateList::count() const
 {
-    return ui->list->count();
+    return itemCount_;
 }
 
 void CandidateList::keyPressEvent(QKeyEvent *event)
@@ -54,44 +74,41 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
             setActiveWindowFlag(false);
             ui->list->setCurrentRow(1);
         }
-        qDebug() << "CandidateList::keyPressEvent: event->key() == Qt::Key_Down";
+        //qDebug() << "CandidateList::keyPressEvent: event->key() == Qt::Key_Down";
     }
     else
     {
-        qDebug() << "CandidateList::keyPressEvent: ignore" << event;
+        //qDebug() << "CandidateList::keyPressEvent: ignore" << event;
         event->ignore();
     }
 }
 
 void CandidateList::showEvent(QShowEvent *event)
 {
-    if (ui->list->count() > 0)
-        ui->list->setCurrentRow(0);
-    QSize s = size();
-    resize(s.width(), qMin(10, ui->list->count()) * CandidateListItemHeight);
-}
-
-void CandidateList::on_listWidget_pressed(const QModelIndex &index)
-{
-    qDebug() << "CandidateList::on_listWidget_pressed";
-    onEnter();
+    refreshList();
 }
 
 void CandidateList::onEnter()
 {
     check_expiration;
     int index = ui->list->currentRow();
-    qDebug() << "CandidateList::onEnter:" << index;
-    close();
+    //qDebug() << "CandidateList::onEnter:" << index;
+    if (index < 0 || index >= itemCount_)
+    {
+        close();
+        return;
+    }
+    DerflaActionPtr da = dal_.at(index);
+    da->run();
     emit done();
 }
 
 bool CandidateList::getActiveWindowFlag() const
 {
-    return activeWindowFlag;
+    return activeWindowFlag_;
 }
 
 void CandidateList::setActiveWindowFlag(bool value)
 {
-    activeWindowFlag = value;
+    activeWindowFlag_ = value;
 }

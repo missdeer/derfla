@@ -28,25 +28,28 @@ protected:
     void moveEvent(QMoveEvent *event);
 
     void keyPressEvent(QKeyEvent* event);
+signals:
+    void scanRequired();
 private slots:
     void inputChanged(const QString& text);
     void keyPressed(QKeyEvent* e);
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
     void loadSkin();
-    void onTimer();
+    void onLoadingAnimationTimer();
     void showInFront();
     void candidateListDone();
+    void localFSScannerFinished();
+    void onNextLFSScanning();
 private:
-    QThread scanThread;
-    QPoint mouseMovePos;
-    QPixmap backgroundImage;
-    QTimer* timer;
-    CharLineEdit* input;
-    QSystemTrayIcon* trayicon;
-    CandidateList* candidatelist;
-    UGlobalHotkeys *hotkeyManager;
-    LocalFSScanner* localFSScanner;
-    void ShowCandidateList();
+    QPoint mouseMovePos_;
+    QPixmap backgroundImage_;
+    QTimer* loadingAnimationTimer_;
+    CharLineEdit* input_;
+    QSystemTrayIcon* trayIcon_;
+    CandidateList* candidateList_;
+    UGlobalHotkeys *hotkeyManager_;
+    LocalFSScanner* localFSScanner_;
+    void showCandidateList();
     void processKey();
     void doEnter();
     void doTab();
@@ -54,7 +57,7 @@ private:
     bool applySkin(const QString& skin);
     void waiting();
     void stopWaiting();
-    void HideCandidateList();
+    void hideCandidateList();
 };
 
 #endif // DerflaWidget_H

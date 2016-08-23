@@ -69,7 +69,7 @@ void UGlobalHotkeys::registerHotkey(const UKeySequence& keySeq, size_t id) {
     }
 
     if (!RegisterHotKey((HWND)winId(), id, winMod, key)) {
-        qDebug() << "Error activating hotkey!";
+        //qDebug() << "Error activating hotkey!";
     } else {
         Registered.insert(id);
     }

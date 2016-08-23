@@ -158,12 +158,12 @@ void QtLocalPeer::receiveConnection()
     uMsg.resize(remaining);
     int got = 0;
     char* uMsgBuf = uMsg.data();
-    //qDebug() << "RCV: remaining" << remaining;
+    ////qDebug() << "RCV: remaining" << remaining;
     do {
         got = ds.readRawData(uMsgBuf, remaining);
         remaining -= got;
         uMsgBuf += got;
-        //qDebug() << "RCV: got" << got << "remaining" << remaining;
+        ////qDebug() << "RCV: got" << got << "remaining" << remaining;
     } while (remaining && got >= 0 && socket->waitForReadyRead(2000));
     //### error check: got<0
     if (got < 0) {
