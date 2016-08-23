@@ -33,6 +33,7 @@ private slots:
 private:
     Ui::CandidateList *ui;
     bool activeWindowFlag_;
+    int itemCount_;
 };
 
 #endif // CANDIDATELIST_H

@@ -54,4 +54,7 @@ private:
     DerflaActionType actionType_;
 };
 
+typedef QSharedPointer<DerflaAction> DerflaActionPtr;
+typedef QList<DerflaActionPtr> DerflaActionList;
+
 #endif // DERFLAACTION_H

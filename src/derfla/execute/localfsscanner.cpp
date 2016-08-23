@@ -103,7 +103,7 @@ void LocalFSScanner::getBuiltinDirectories()
 }
 
 void LocalFSScanner::scanDirectory(const Directory &d)
-{    
+{
     using namespace win_util;
     QDir dir(d.directory);
     
@@ -170,7 +170,6 @@ void LocalFSScanner::getBuiltinDirectories()
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
     QDir dir(d.directory);
-    qDebug() << "scanning" << dir.absolutePath();
 
     QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
 
