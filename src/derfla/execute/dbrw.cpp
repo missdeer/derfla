@@ -75,6 +75,9 @@ DBRW::DBRW()
         d.mkpath(dbPath_);
     }
     dbPath_.append("/cache.db");
+
+    firstLaunch_ = !QFile::exists(dbPath_);
+
     if (!openDatabase())
     {
         qCritical() << "can't open cache database";
@@ -155,6 +158,15 @@ bool DBRW::queryActions(DerflaActionList &dal, const QString &keyword, int count
 
         q.clear();
         q.finish();
+
+        std::sort(dal.begin(), dal.end(), [](DerflaActionPtr da1, DerflaActionPtr da2) {
+            return da1->title() > da2->title();
+        });
+        auto it = std::unique(dal.begin(), dal.end(), [](DerflaActionPtr da1, DerflaActionPtr da2) {
+            return da1->title() == da2->title() && da1->description() == da2->description();
+        });
+        dal.erase(it, dal.end());
+
         if (dal.length() >= countRequired)
         {
             while(dal.length() > countRequired)

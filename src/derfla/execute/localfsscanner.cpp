@@ -25,7 +25,10 @@ LocalFSScanner::~LocalFSScanner()
 void LocalFSScanner::start()
 {
     this->moveToThread(&workerThread_);
-    QTimer::singleShot(1000, this, &LocalFSScanner::scan);
+    if (DBRW::instance()->firstLaunch())
+        QTimer::singleShot(1000, this, &LocalFSScanner::scan);
+    else
+        QTimer::singleShot(10 * 60 * 1000, this, &LocalFSScanner::scan);
 }
 
 void LocalFSScanner::scan()

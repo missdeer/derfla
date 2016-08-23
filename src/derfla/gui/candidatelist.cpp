@@ -34,6 +34,8 @@ void CandidateList::update(const QString &text)
     DerflaActionList dal;
     DBRW::instance()->getLFSActions(dal, text, 25);
     itemCount_ = dal.length();
+    QSize s = size();
+    resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
     ui->list->clear();
     for (DerflaActionPtr da: dal)
     {
