@@ -51,10 +51,8 @@ bool DerflaAction::run()
     }
     else
     {
-        QString args = QString("'tell application \"Terminal\" to do script \"%1 %2\"'").arg(target_).arg(arguments_);
-//        qDebug() << args;
-//        QProcess::startDetached("osascript", QStringList() << "-e" << args, workingDirectory_);
-        system(("osascript -e " + args).toStdString().c_str());
+        QString cmdline = QString("osascript -e 'tell application \"Terminal\" to do script \"%1 %2\"'").arg(target_).arg(arguments_);
+        system(cmdline.toStdString().c_str());
     }
 #else
 #endif
