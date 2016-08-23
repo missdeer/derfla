@@ -85,7 +85,7 @@ void LocalFSScanner::getBuiltinDirectories()
         { FOLDERID_CommonStartMenu , true },
         { FOLDERID_ControlPanelFolder , true },
         { FOLDERID_Desktop , false },
-        { FOLDERID_ImplicitAppShortcuts , false },
+        { FOLDERID_UserPinned , true },
         { FOLDERID_Programs , false },
         { FOLDERID_PublicDesktop , false },
         { FOLDERID_QuickLaunch , false },
