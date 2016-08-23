@@ -17,6 +17,7 @@ CandidateList::CandidateList(QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
 #endif
 
+    setMinimumSize(10, 10);
     ui->list->setItemDelegate(new CandidateListDelegate(ui->list));
     connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
 }
