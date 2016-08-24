@@ -35,6 +35,24 @@ void CandidateList::update(const QString &text)
     dal_.clear();
     ui->list->clear();
     DBRW::instance()->getLFSActions(dal_, text, 25);
+    populateList();
+}
+
+void CandidateList::update(AlfredWorkflowPtr aw, const QString &text)
+{
+    if (text.isEmpty())
+        hide();
+
+    dal_.clear();
+    ui->list->clear();
+    dal_ = aw->getActions(text); 
+    if (dal_.isEmpty())
+        DBRW::instance()->getLFSActions(dal_, text, 25);
+    populateList();
+}
+
+void CandidateList::populateList()
+{
     if (dal_.empty())
         hide();
     else

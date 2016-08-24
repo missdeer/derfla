@@ -4,6 +4,7 @@
 #include <QFrame>
 #include "candidatelistwidget.h"
 #include "derflaaction.h"
+#include "alfredworkflow.h"
 
 namespace Ui {
 class CandidateList;
@@ -17,6 +18,9 @@ public:
     explicit CandidateList(QWidget *parent = 0);
     ~CandidateList();
     void update(const QString& text);
+    void update(AlfredWorkflowPtr aw, const QString &text);
+
+    void populateList();
 
     void refreshList();
 

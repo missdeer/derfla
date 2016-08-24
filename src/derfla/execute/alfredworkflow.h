@@ -2,6 +2,7 @@
 #define ALFREDWORKFLOW_H
 
 #include <QObject>
+#include "derflaaction.h"
 
 class AlfredWorkflow : public QObject
 {
@@ -20,6 +21,8 @@ public:
     const QString& webaddress() const;
     bool disabled() const;
     bool hitKeyword(const QString& keyword);
+    DerflaActionList& getActions(const QString& input);
+    bool triggerAction(int index);
 signals:
 
 public slots:
@@ -38,6 +41,7 @@ private:
     QString inputSubtext_;
     int inputType_;
     bool inputWithSpace_;
+    DerflaActionList actions_;
 };
 
 

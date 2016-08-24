@@ -342,7 +342,16 @@ void DerflaWidget::showCandidateList()
     check_expiration;
     candidateList_->show();
     candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
-    candidateList_->update(input_->text());
+    
+    QString inputText = input_->text();
+    auto it = std::find_if(alfredWorkflowList_.begin(), alfredWorkflowList_.end(),
+        [&inputText](AlfredWorkflowPtr aw) {
+        return aw->hitKeyword(inputText);
+    });
+    if (alfredWorkflowList_.end() == it)
+        candidateList_->update(inputText);
+    else
+        candidateList_->update(*it, inputText);
 }
 
 void DerflaWidget::processKey()

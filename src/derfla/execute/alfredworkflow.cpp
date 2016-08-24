@@ -85,7 +85,14 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
             inputType_ = config["type"].toInt();
             inputWithSpace_ = config["withspace"].toBool();
         }
+        else if (type.startsWith("alfred.workflow.output."))
+        {
 
+        }
+        else if (type.startsWith("alfred.workflow.action."))
+        {
+
+        }
     }
     return true;
 }
@@ -132,5 +139,15 @@ bool AlfredWorkflow::disabled() const
 
 bool AlfredWorkflow::hitKeyword(const QString &keyword)
 {
-    return keywords_.contains(keyword);
+    return keywords_.contains(keyword.split(' ').at(0));
+}
+
+DerflaActionList& AlfredWorkflow::getActions(const QString& input)
+{
+    return actions_;
+}
+
+bool AlfredWorkflow::triggerAction(int index)
+{
+    return false;
 }
