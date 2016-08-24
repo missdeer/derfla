@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <JlCompress.h>
+#include <plistparser.h>
 #include "uglobalhotkeys.h"
 #include "CharLineEdit.h"
 #include "candidatelist.h"
@@ -451,6 +452,18 @@ void DerflaWidget::installAlfredWorkflow(const QString &path)
 
     if (!QFile::exists(plistName))
         return;
+
+    QFile *f = new QFile(plistName);
+    if (!f->open(QIODevice::ReadOnly))
+        return;
+
+    BOOST_SCOPE_EXIT(f) {
+        f->close();
+        delete f;
+    } BOOST_SCOPE_EXIT_END
+
+    auto v = PListParser::parsePList(f);
+    qDebug() << v;
 }
 
 void DerflaWidget::stopWaiting()

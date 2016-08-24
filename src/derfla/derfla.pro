@@ -10,6 +10,7 @@ include($$PWD/../../3rdparty/quazip-0.7.2/quazip.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../../3rdparty/sqlite3/sqlite3.pri)
+include($$PWD/../../3rdparty/qtplist/qtplist.pri)
 
 SOURCES += main.cpp\
         gui/derflawidget.cpp \
