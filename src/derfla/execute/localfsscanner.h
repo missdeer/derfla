@@ -19,6 +19,7 @@ public:
     explicit LocalFSScanner(QObject *parent = 0);
     ~LocalFSScanner();
     void start();
+    void stop() { stop_ = true; }
 signals:
     void finished();
     void scanRequired();
@@ -27,6 +28,7 @@ private slots:
     void scheduleScan();
     void scanFinished();
 private:
+    bool stop_;
     qint64 timestamp_;
     QThread workerThread_;
     QList<Directory> scanDirectories_;
