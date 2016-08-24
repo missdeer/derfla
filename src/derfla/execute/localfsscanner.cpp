@@ -11,12 +11,10 @@ LocalFSScanner::LocalFSScanner(QObject *parent)
     , stop_(false)
 {
     connect(this, &LocalFSScanner::scanRequired, &LocalFSScanner::scan);
-    connect(this, &LocalFSScanner::finished, &LocalFSScanner::stop);
 }
 
 LocalFSScanner::~LocalFSScanner()
 {
-    stop();
 }
 
 void LocalFSScanner::start()

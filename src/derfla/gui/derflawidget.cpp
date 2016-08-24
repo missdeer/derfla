@@ -88,6 +88,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     hotkeyManager_->registerHotkey("Alt+Space");
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
 
+    connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::finishedScan);
     localFSScanner_->start();
     QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
 }
@@ -335,6 +336,11 @@ void DerflaWidget::scheduleScan()
         localFSScanner_->start();
         QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
     }
+}
+
+void DerflaWidget::finishedScan()
+{
+    localFSScanner_->stop();
 }
 
 void DerflaWidget::showCandidateList()
