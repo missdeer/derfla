@@ -58,27 +58,35 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
     auto v = PListParser::parsePList(f);
     QVariantMap map = v.toMap();
     bundleId_ = map["bundleid"].toString();
-    qDebug() << "bundle id" << bundleId_;
-    QString category = map["category"].toString();
-    qDebug() << "category" << category;
-    QString author = map["createdby"].toString();
-    qDebug() << "author" << author;
-    QString description = map["description"].toString();
-    qDebug() << "description" << description;
-    bool disabled = map["disabled"].toBool();
-    qDebug() << "disabled" << disabled;
-    QString name = map["name"].toString();
-    qDebug() << "name" << name;
-    QString readme = map["readme"].toString();
-    qDebug() << "readme" << readme;
-    QString webaddress = map["webaddress"].toString();
-    qDebug() << "webaddress" << webaddress;
+    category_ = map["category"].toString();
+    author_ = map["createdby"].toString();
+    description_ = map["description"].toString();
+    disabled_ = map["disabled"].toBool();
+    name_ = map["name"].toString();
+    readme_ = map["readme"].toString();
+    webaddress_ = map["webaddress"].toString();
+
     QVariantMap connections = map["connections"].toMap();
-    qDebug() << "connections" << connections;
     QVariantMap uidata = map["uidata"].toMap();
-    qDebug() << "uidata" << uidata;
     QVariantList objects = map["objects"].toList();
-    qDebug() << "objects" << objects;
+    for (QVariant obj : objects)
+    {
+        QVariantMap o = obj.toMap();
+        QString type = o["type"].toString();
+        qDebug() << "type:" << type;
+
+        QVariantMap config = o["config"].toMap();
+        qDebug() << "config:" << config;
+        if (type.startsWith("alfred.workflow.input."))
+        {
+            keywords_.append(config["keyword"].toString());
+            inputTitle_ = config["title"].toString();
+            inputSubtext_ = config["subtext"].toString();
+            inputType_ = config["type"].toInt();
+            inputWithSpace_ = config["withspace"].toBool();
+        }
+
+    }
     return true;
 }
 
@@ -124,5 +132,5 @@ bool AlfredWorkflow::disabled() const
 
 bool AlfredWorkflow::hitKeyword(const QString &keyword)
 {
-    return false;
+    return keywords_.contains(keyword);
 }

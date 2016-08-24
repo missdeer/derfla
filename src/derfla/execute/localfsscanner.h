@@ -18,15 +18,14 @@ class LocalFSScanner : public QObject
 public:
     explicit LocalFSScanner(QObject *parent = 0);
     ~LocalFSScanner();
-    void start();
-    void stop() { stop_ = true; }
 signals:
     void finished();
     void scanRequired();
+public slots:
+    void start();
+    void stop();
 private slots:
     void scan();
-    void scheduleScan();
-    void scanFinished();
 private:
     bool stop_;
     qint64 timestamp_;

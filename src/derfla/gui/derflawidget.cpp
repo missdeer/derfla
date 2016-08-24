@@ -89,6 +89,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
 
     localFSScanner_->start();
+    QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
 }
 
 DerflaWidget::~DerflaWidget()
@@ -323,6 +324,17 @@ void DerflaWidget::installAlfredWorkflows()
             alfredWorkflowList_.append(aw);
         }
     });
+}
+
+void DerflaWidget::scheduleScan()
+{
+    if (qApp->activeWindow())
+        QTimer::singleShot(5 * 60 * 1000, this, &DerflaWidget::scheduleScan);
+    else
+    {
+        localFSScanner_->start();
+        QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
+    }
 }
 
 void DerflaWidget::showCandidateList()

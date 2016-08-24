@@ -33,6 +33,11 @@ private:
     QString name_;
     QString webaddress_;
     bool disabled_;
+    QStringList keywords_;
+    QString inputTitle_;
+    QString inputSubtext_;
+    int inputType_;
+    bool inputWithSpace_;
 };
 
 

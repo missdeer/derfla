@@ -30,7 +30,7 @@ protected:
 
     void keyPressEvent(QKeyEvent* event);
 signals:
-    void scanRequired();
+
 private slots:
     void inputChanged(const QString& text);
     void keyPressed(QKeyEvent* e);
@@ -41,6 +41,7 @@ private slots:
     void candidateListDone();
     void quit();
     void installAlfredWorkflows();
+    void scheduleScan();
 private:
     QPoint mouseMovePos_;
     QPixmap backgroundImage_;

@@ -11,45 +11,32 @@ LocalFSScanner::LocalFSScanner(QObject *parent)
     , stop_(false)
 {
     connect(this, &LocalFSScanner::scanRequired, &LocalFSScanner::scan);
-    connect(this, &LocalFSScanner::finished, &LocalFSScanner::scanFinished);
-    workerThread_.start(QThread::IdlePriority);
+    connect(this, &LocalFSScanner::finished, &LocalFSScanner::stop);
 }
 
 LocalFSScanner::~LocalFSScanner()
 {
     stop();
-    if (workerThread_.isRunning())
-    {
-        workerThread_.quit();
-        workerThread_.wait();
-    }
 }
 
 void LocalFSScanner::start()
 {
-    this->moveToThread(&workerThread_);
+    stop_ = false;
+    workerThread_.start(QThread::IdlePriority);
+    moveToThread(&workerThread_);
     if (DBRW::instance()->firstLaunch())
         emit scanRequired();
     else
         QTimer::singleShot(10 * 60 * 1000, this, &LocalFSScanner::scan);
 }
 
-void LocalFSScanner::scheduleScan()
+void LocalFSScanner::stop()
 {
-    if (!stop_)
+    stop_ = true;
+    if (workerThread_.isRunning())
     {
-        if (qApp->activeWindow())
-            QTimer::singleShot(5 * 60 * 1000, this, &LocalFSScanner::scheduleScan);
-        else
-            emit scanRequired();
-    }
-}
-
-void LocalFSScanner::scanFinished()
-{
-    if (!stop_)
-    {
-        QTimer::singleShot(60 * 60 * 1000, this, &LocalFSScanner::scheduleScan);
+        workerThread_.quit();
+        workerThread_.wait();
     }
 }
 
