@@ -38,6 +38,7 @@ private slots:
     void onLoadingAnimationTimer();
     void showInFront();
     void candidateListDone();
+    void quit();
 private:
     QPoint mouseMovePos_;
     QPixmap backgroundImage_;

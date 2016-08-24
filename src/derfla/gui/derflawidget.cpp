@@ -47,24 +47,24 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     QAction *quitAction = new QAction(tr("E&xit"), this);
     quitAction->setShortcut(tr("Ctrl+Q"));
-    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(quitAction, &QAction::triggered, this, &DerflaWidget::quit);
     addAction(quitAction);
 
     QAction *clearAction = new QAction(tr("&Clear Input"), this);
     clearAction->setShortcut(tr("Ctrl+U"));
-    connect(clearAction, SIGNAL(triggered()), input_, SLOT(clear()));
+    connect(clearAction, &QAction::triggered, input_, &QLineEdit::clear);
     addAction(clearAction);
 
     QAction *loadSkinAction = new QAction(tr("Load &Skin"), this);
     loadSkinAction->setShortcut(tr("Ctrl+O"));
-    connect(loadSkinAction, SIGNAL(triggered()), this, SLOT(loadSkin()));
+    connect(loadSkinAction, &QAction::triggered, this, &DerflaWidget::loadSkin);
     addAction(loadSkinAction);
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
 
     QAction *showAction = new QAction(tr("Show"), this);
     showAction->setShortcut(tr("Alt+Space"));
-    connect(showAction, SIGNAL(triggered()), this, SLOT(showInFront()));
+    connect(showAction, &QAction::triggered, this, &DerflaWidget::showInFront);
 
     QMenu* trayiconMenu = new QMenu(this);
     trayiconMenu->addAction(showAction);
@@ -279,6 +279,12 @@ void DerflaWidget::candidateListDone()
     check_expiration;
     hideCandidateList();
     input_->setText("");
+}
+
+void DerflaWidget::quit()
+{
+    localFSScanner_->stop();
+    qApp->quit();
 }
 
 void DerflaWidget::showCandidateList()
