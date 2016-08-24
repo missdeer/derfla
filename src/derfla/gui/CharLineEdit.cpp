@@ -8,7 +8,6 @@ CharLineEdit::CharLineEdit(QWidget* parent) :
     setAttribute(Qt::WA_InputMethodEnabled);
     setAttribute(Qt::WA_MacShowFocusRect, false);
     setWindowFlags(Qt::FramelessWindowHint);
-    setStyleSheet("QLineEdit { border: 0px solid gray;border-radius: 5px;padding: 0 8px;selection-background-color: darkgray; }");
 }
 
 

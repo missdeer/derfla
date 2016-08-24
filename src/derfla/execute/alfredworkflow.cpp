@@ -12,7 +12,7 @@ bool AlfredWorkflow::installFromBundle(const QString &path)
 {
     if (!QFile::exists(path))
     {
-        qDebug() << path << "doesn't exist";
+        //qDebug() << path << "doesn't exist";
         return false;
     }
 
@@ -27,7 +27,7 @@ bool AlfredWorkflow::installFromBundle(const QString &path)
     QStringList files = JlCompress::extractDir(path, dirName);
     if (files.isEmpty())
     {
-        qDebug() << "extracting" << path << "to" << dirName << "failed";
+        //qDebug() << "extracting" << path << "to" << dirName << "failed";
         return false;
     }
     return loadFromDirectory(dirName);
@@ -39,14 +39,14 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
 
     if (!QFile::exists(plistName))
     {
-        qDebug() << plistName << "doesn't exist";
+        //qDebug() << plistName << "doesn't exist";
         return false;
     }
 
     QFile *f = new QFile(plistName);
     if (!f->open(QIODevice::ReadOnly))
     {
-        qDebug() << "can't open" << plistName;
+        //qDebug() << "can't open" << plistName;
         return false;
     }
 
@@ -73,10 +73,10 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
     {
         QVariantMap o = obj.toMap();
         QString type = o["type"].toString();
-        qDebug() << "type:" << type;
+        //qDebug() << "type:" << type;
 
         QVariantMap config = o["config"].toMap();
-        qDebug() << "config:" << config;
+        //qDebug() << "config:" << config;
         if (type.startsWith("alfred.workflow.input."))
         {
             keywords_.append(config["keyword"].toString());

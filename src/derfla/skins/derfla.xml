@@ -5,4 +5,5 @@
 	<width>150</width>
 	<height>68</height>
 	<pixelsize>48</pixelsize>
+	<inputstyle>QLineEdit { border: 0px solid gray;border-radius: 5px;padding: 0 8px;selection-background-color: darkgray; }</inputstyle>
 </skin>

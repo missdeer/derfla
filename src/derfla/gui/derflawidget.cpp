@@ -88,9 +88,9 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     hotkeyManager_->registerHotkey("Alt+Space");
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
 
-    connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::finishedScan);
-    localFSScanner_->start();
-    QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
+//    connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::finishedScan);
+//    localFSScanner_->start();
+//    QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
 }
 
 DerflaWidget::~DerflaWidget()
@@ -138,7 +138,7 @@ void DerflaWidget::moveEvent(QMoveEvent* /*event*/)
 void DerflaWidget::keyPressEvent(QKeyEvent *event)
 {
     check_expiration;
-    //qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key() << now;
+    //qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key();
     if (event->key() == Qt::Key_Escape)
     {
         //qDebug() << "DerflaWidget::keyPressEvent escape" << candidateList_->isVisible();
@@ -452,6 +452,11 @@ bool DerflaWidget::applySkin(const QString& skin)
     f.setPixelSize(fzElem.text().toInt());
     f.setFamily(globalDefaultFontFamily);
     input_->setFont(f);
+
+    QDomElement issElem = docElem.firstChildElement("inputstyle");
+    if (issElem.isNull())
+        return false;
+    input_->setStyleSheet(issElem.text());
 
     return true;
 }

@@ -5,4 +5,11 @@
 	<width>700</width>
 	<height>80</height>
 	<pixelsize>48</pixelsize>
+	<inputstyle>QLineEdit { font: 48px;
+	border-width: 0px;
+	background-color: rgba(0,244,120,0%);
+	border-style: solid;
+	color: white;
+	qproperty-alignment: AlignLeft;
+	qproperty-geometry: rect(20 18 700 80);}</inputstyle>
 </skin>
