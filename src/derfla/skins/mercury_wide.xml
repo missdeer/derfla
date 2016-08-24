@@ -1,10 +1,5 @@
 <skin>
 	<image>mercury_wide.png</image>
-	<x>28</x>
-	<y>22</y>
-	<width>690</width>
-	<height>68</height>
-	<pixelsize>48</pixelsize>
 	<inputstyle>QLineEdit { font: 48px;
 	border-width: 0px;
 	background-color: rgba(0,244,120,0%);

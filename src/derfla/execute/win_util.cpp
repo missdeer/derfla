@@ -196,7 +196,7 @@ namespace win_util {
         HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID*)&psl);
         if (FAILED(hres))
         {
-            //qDebug() << "CoCreateInstance failed";
+            qCritical() << "CoCreateInstance failed";
             return hres;
         }
 
@@ -212,7 +212,7 @@ namespace win_util {
 
         if (FAILED(hres))
         {
-            //qDebug() << "psl->QueryInterface(IID_IPersistFile, (void**)&ppf) failed";
+            qWarning() << "psl->QueryInterface(IID_IPersistFile, (void**)&ppf) failed";
             return hres;
         }
 
@@ -226,7 +226,7 @@ namespace win_util {
 
         if (FAILED(hres))
         {
-            //qDebug() << "ppf->Load(lpszLinkFile, STGM_READ) failed";
+            qWarning() << "ppf->Load(lpszLinkFile, STGM_READ) failed";
             return hres;
         }
         // Resolve the link.
@@ -234,7 +234,7 @@ namespace win_util {
 
         if (FAILED(hres))
         {
-            //qDebug() << "psl->Resolve(hwnd, 0) failed";
+            qWarning() << "psl->Resolve(hwnd, 0) failed";
             return hres;
         }
 
@@ -245,7 +245,7 @@ namespace win_util {
 
         if (FAILED(hres))
         {
-            //qDebug() << "psl->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_RAWPATH) failed";
+            qWarning() << "psl->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_RAWPATH) failed";
             return hres;
         }
 
@@ -253,7 +253,7 @@ namespace win_util {
         if (FAILED(hres))
         {
             // Handle the error
-            //qDebug() << "failed StringCbCopy(lpszPath, iPathBufferSize, szGotPath)";
+            qWarning() << "failed StringCbCopy(lpszPath, iPathBufferSize, szGotPath)";
             return hres;
         }
 
@@ -263,7 +263,7 @@ namespace win_util {
 
         if (FAILED(hres))
         {
-            //qDebug() << "psl->GetDescription(szDescription, MAX_PATH) failed";
+            qWarning() << "psl->GetDescription(szDescription, MAX_PATH) failed";
             return hres;
         }
 
@@ -271,7 +271,7 @@ namespace win_util {
         if (FAILED(hres))
         {
             // Handle the error
-            //qDebug() << "failed StringCbCopy(lpszDescription, MAX_PATH, szDescription)";
+            qWarning() << "failed StringCbCopy(lpszDescription, MAX_PATH, szDescription)";
             return hres;
         }
         // Get the working directory
@@ -279,7 +279,7 @@ namespace win_util {
         hres = psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH);
         if (FAILED(hres))
         {
-            //qDebug() << "psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH) failed";
+            qWarning() << "psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH) failed";
             return hres;
         }
 
@@ -287,7 +287,7 @@ namespace win_util {
         if (FAILED(hres))
         {
             // Handle the error
-            //qDebug() << "failed StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory)";
+            qWarning() << "failed StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory)";
             return hres;
         }
 
@@ -300,7 +300,7 @@ namespace win_util {
             hres = psl->GetArguments(pszArguments, argumentsLength);
         if (FAILED(hres))
         {
-            //qDebug() << "psl->GetArguments(pszArguments, argumentsLength) failed";
+            qWarning() << "psl->GetArguments(pszArguments, argumentsLength) failed";
             return hres;
         }
 
@@ -308,7 +308,7 @@ namespace win_util {
         if (FAILED(hres))
         {
             // Handle the error
-            //qDebug() << "failed StringCbCopy(lpszArguments, argumentsLength, pszArguments)";
+            qWarning() << "failed StringCbCopy(lpszArguments, argumentsLength, pszArguments)";
             return hres;
         }
 
@@ -364,7 +364,7 @@ namespace win_util {
 
         if (IMAGE_DOS_SIGNATURE != image_dos_header.e_magic)
         {
-            printf("Sorry, I do not understand this file.\n");
+            qWarning("Sorry, I do not understand this file.\n");
             return false;
         }
 
@@ -384,7 +384,7 @@ namespace win_util {
 
         if (IMAGE_NT_SIGNATURE != ntSignature)
         {
-            printf("Missing NT signature. Unknown file type.\n");
+            qWarning("Missing NT signature. Unknown file type.\n");
             return false;
         }
 

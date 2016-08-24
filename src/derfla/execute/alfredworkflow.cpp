@@ -12,7 +12,7 @@ bool AlfredWorkflow::installFromBundle(const QString &path)
 {
     if (!QFile::exists(path))
     {
-        //qDebug() << path << "doesn't exist";
+        qWarning() << path << "doesn't exist";
         return false;
     }
 
@@ -27,7 +27,7 @@ bool AlfredWorkflow::installFromBundle(const QString &path)
     QStringList files = JlCompress::extractDir(path, dirName);
     if (files.isEmpty())
     {
-        //qDebug() << "extracting" << path << "to" << dirName << "failed";
+        qWarning() << "extracting" << path << "to" << dirName << "failed";
         return false;
     }
     return loadFromDirectory(dirName);
@@ -39,14 +39,14 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
 
     if (!QFile::exists(plistName))
     {
-        //qDebug() << plistName << "doesn't exist";
+        qWarning() << plistName << "doesn't exist";
         return false;
     }
 
     QFile *f = new QFile(plistName);
     if (!f->open(QIODevice::ReadOnly))
     {
-        //qDebug() << "can't open" << plistName;
+        qWarning() << "can't open" << plistName;
         return false;
     }
 

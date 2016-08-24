@@ -27,7 +27,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     if (!applySkin("derfla"))
     {
-        //qDebug() << "loading skin failed";
+        qCritical() << "loading skin failed";
         return;
     }
 #ifdef Q_WS_MAC
@@ -426,36 +426,19 @@ bool DerflaWidget::applySkin(const QString& skin)
 
     if (!backgroundImage_.load(imagePath))
     {
-        //qDebug() << "can't load picture from " << imagePath;
+        qCritical() << "can't load picture from " << imagePath;
         return false;
     }
     resize(backgroundImage_.size());
 
-    QDomElement xElem = docElem.firstChildElement("x");
-    if (xElem.isNull())
-        return false;
-    QDomElement yElem = docElem.firstChildElement("y");
-    if (yElem.isNull())
-        return false;
-    QDomElement wElem = docElem.firstChildElement("width");
-    if (wElem.isNull())
-        return false;
-    QDomElement hElem = docElem.firstChildElement("height");
-    if (hElem.isNull())
-        return false;
-
-    input_->setGeometry(xElem.text().toInt(), yElem.text().toInt(), wElem.text().toInt(), hElem.text().toInt());
-    QFont f = input_->font();
-    QDomElement fzElem = docElem.firstChildElement("pixelsize");
-    if (fzElem.isNull())
-        return false;
-    f.setPixelSize(fzElem.text().toInt());
-    f.setFamily(globalDefaultFontFamily);
-    input_->setFont(f);
-
     QDomElement issElem = docElem.firstChildElement("inputstyle");
     if (issElem.isNull())
         return false;
+
+    QFont f = input_->font();
+    f.setFamily(globalDefaultFontFamily);
+    input_->setFont(f);
+
     input_->setStyleSheet(issElem.text());
 
     return true;
