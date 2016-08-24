@@ -5,7 +5,7 @@
 CharLineEdit::CharLineEdit(QWidget* parent) :
 	QLineEdit(parent)
 {
-	setAttribute(Qt::WA_InputMethodEnabled);
+    setAttribute(Qt::WA_InputMethodEnabled);
     setWindowFlags(Qt::FramelessWindowHint);
 }
 

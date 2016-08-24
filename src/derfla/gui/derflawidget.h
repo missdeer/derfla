@@ -39,7 +39,7 @@ private slots:
     void showInFront();
     void candidateListDone();
     void quit();
-    void installAlfredWorkflow();
+    void installAlfredWorkflows();
 private:
     QPoint mouseMovePos_;
     QPixmap backgroundImage_;
@@ -58,6 +58,7 @@ private:
     void waiting();
     void stopWaiting();
     void hideCandidateList();
+    void installAlfredWorkflow(const QString& path);
 };
 
 #endif // DerflaWidget_H

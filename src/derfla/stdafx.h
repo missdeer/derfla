@@ -20,6 +20,7 @@
 
 #include <QtCore>
 #include <QtGui>
+#include <QStyleOption>
 #include <QSettings>
 #include <QMessageBox>
 #include <QFile>

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <JlCompress.h>
 #include "uglobalhotkeys.h"
 #include "CharLineEdit.h"
 #include "candidatelist.h"
@@ -62,7 +63,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     QAction *installAlfredWorkflow = new QAction(tr("Install &Alfred Workflow"), this);
     installAlfredWorkflow->setShortcut(tr("Ctrl+I"));
-    connect(installAlfredWorkflow, &QAction::triggered, this, &DerflaWidget::installAlfredWorkflow);
+    connect(installAlfredWorkflow, &QAction::triggered, this, &DerflaWidget::installAlfredWorkflows);
     addAction(installAlfredWorkflow);
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -116,11 +117,15 @@ void DerflaWidget::mouseReleaseEvent(QMouseEvent* /*event*/)
     mouseMovePos_ = QPoint(0, 0);
 }
 
-void DerflaWidget::paintEvent(QPaintEvent* /*event*/)
+void DerflaWidget::paintEvent(QPaintEvent* event)
 {
+    QStyleOption styleOption;
+    styleOption.init(this);
     QPainter painter(this);
-    painter.drawPixmap(0, 0, backgroundImage_);
     painter.setRenderHint(QPainter::Antialiasing);
+    style()->drawPrimitive(QStyle::PE_Widget, &styleOption, &painter, this);
+    painter.drawPixmap(0, 0, backgroundImage_);
+    QWidget::paintEvent(event);
 }
 
 void DerflaWidget::moveEvent(QMoveEvent* /*event*/)
@@ -293,7 +298,7 @@ void DerflaWidget::quit()
     qApp->quit();
 }
 
-void DerflaWidget::installAlfredWorkflow()
+void DerflaWidget::installAlfredWorkflows()
 {
     check_expiration;
     QStringList fileNames = QFileDialog::getOpenFileNames(this,
@@ -307,6 +312,8 @@ void DerflaWidget::installAlfredWorkflow()
     if (fileNames.isEmpty())
         return;
 
+    std::for_each(fileNames.begin(), fileNames.end(),
+                  std::bind(&DerflaWidget::installAlfredWorkflow, this, std::placeholders::_1));
 }
 
 void DerflaWidget::showCandidateList()
@@ -424,6 +431,26 @@ void DerflaWidget::hideCandidateList()
     check_expiration;
     if (candidateList_->isVisible())
         candidateList_->hide();
+}
+
+void DerflaWidget::installAlfredWorkflow(const QString &path)
+{
+    if (!QFile::exists(path))
+        return;
+
+    QFileInfo fi(path);
+    QString dirName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/alfredworkflow/" % fi.completeBaseName();
+    QDir d(dirName);
+    if (!d.exists())
+    {
+        d.mkpath(dirName);
+    }
+    // extract
+    JlCompress::extractDir(path, dirName);
+    QString plistName = dirName % "/info.plist";
+
+    if (!QFile::exists(plistName))
+        return;
 }
 
 void DerflaWidget::stopWaiting()
