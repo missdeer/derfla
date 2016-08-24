@@ -60,6 +60,11 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     connect(loadSkinAction, &QAction::triggered, this, &DerflaWidget::loadSkin);
     addAction(loadSkinAction);
 
+    QAction *installAlfredWorkflow = new QAction(tr("Install &Alfred Workflow"), this);
+    installAlfredWorkflow->setShortcut(tr("Ctrl+I"));
+    connect(installAlfredWorkflow, &QAction::triggered, this, &DerflaWidget::installAlfredWorkflow);
+    addAction(installAlfredWorkflow);
+
     setContextMenuPolicy(Qt::ActionsContextMenu);
 
     QAction *showAction = new QAction(tr("Show"), this);
@@ -69,6 +74,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     QMenu* trayiconMenu = new QMenu(this);
     trayiconMenu->addAction(showAction);
     trayiconMenu->addAction(loadSkinAction);
+    trayiconMenu->addAction(installAlfredWorkflow);
     trayiconMenu->addAction(quitAction);
     trayIcon_ = new QSystemTrayIcon(this);
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::trayIconActivated);
@@ -285,6 +291,22 @@ void DerflaWidget::quit()
 {
     localFSScanner_->stop();
     qApp->quit();
+}
+
+void DerflaWidget::installAlfredWorkflow()
+{
+    check_expiration;
+    QStringList fileNames = QFileDialog::getOpenFileNames(this,
+#if defined(Q_OS_MAC)
+        tr("Install Alfred Workflow"),
+#else
+        tr("Install Alfred Workflow (Notice: Some system dependent work flow may not work properly on this system.)"),
+#endif
+        "",
+        tr("Alfred Workflow (*.alfredworkflow)"));
+    if (fileNames.isEmpty())
+        return;
+
 }
 
 void DerflaWidget::showCandidateList()

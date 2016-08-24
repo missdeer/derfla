@@ -39,6 +39,7 @@ private slots:
     void showInFront();
     void candidateListDone();
     void quit();
+    void installAlfredWorkflow();
 private:
     QPoint mouseMovePos_;
     QPixmap backgroundImage_;
