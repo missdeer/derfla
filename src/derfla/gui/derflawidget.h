@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QTimer>
 #include <QSystemTrayIcon>
+#include "alfredworkflow.h"
 
 class CharLineEdit;
 class CandidateList;
@@ -49,6 +50,7 @@ private:
     CandidateList* candidateList_;
     UGlobalHotkeys *hotkeyManager_;
     LocalFSScanner* localFSScanner_;
+    AlfredWorkflowList alfredWorkflowList_;
     void showCandidateList();
     void processKey();
     void doEnter();
@@ -58,7 +60,6 @@ private:
     void waiting();
     void stopWaiting();
     void hideCandidateList();
-    void installAlfredWorkflow(const QString& path);
 };
 
 #endif // DerflaWidget_H

@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     execute/localfsscanner.cpp \
     execute/dbrw.cpp \
     execute/util.cpp \
-    execute/derflaaction.cpp
+    execute/derflaaction.cpp \
+    execute/alfredworkflow.cpp
 
 HEADERS  += gui/derflawidget.h \
     gui/CharLineEdit.h \
@@ -32,7 +33,8 @@ HEADERS  += gui/derflawidget.h \
     execute/localfsscanner.h \
     execute/dbrw.h \
     execute/util.h \
-    execute/derflaaction.h
+    execute/derflaaction.h \
+    execute/alfredworkflow.h
 
 FORMS    += \
     gui/candidatelist.ui

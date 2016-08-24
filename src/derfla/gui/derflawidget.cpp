@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include <JlCompress.h>
-#include <plistparser.h>
 #include "uglobalhotkeys.h"
 #include "CharLineEdit.h"
 #include "candidatelist.h"
@@ -314,7 +312,17 @@ void DerflaWidget::installAlfredWorkflows()
         return;
 
     std::for_each(fileNames.begin(), fileNames.end(),
-                  std::bind(&DerflaWidget::installAlfredWorkflow, this, std::placeholders::_1));
+                  [&](const QString& path) {
+        AlfredWorkflowPtr aw(new AlfredWorkflow);
+        if (aw->installFromBundle(path))
+        {
+            auto it = std::find_if(alfredWorkflowList_.begin(), alfredWorkflowList_.end(),
+                                   [&](AlfredWorkflowPtr a) { return aw->bundleId() == a->bundleId(); });
+            if (alfredWorkflowList_.end() != it)
+                alfredWorkflowList_.erase(it);
+            alfredWorkflowList_.append(aw);
+        }
+    });
 }
 
 void DerflaWidget::showCandidateList()
@@ -432,38 +440,6 @@ void DerflaWidget::hideCandidateList()
     check_expiration;
     if (candidateList_->isVisible())
         candidateList_->hide();
-}
-
-void DerflaWidget::installAlfredWorkflow(const QString &path)
-{
-    if (!QFile::exists(path))
-        return;
-
-    QFileInfo fi(path);
-    QString dirName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/alfredworkflow/" % fi.completeBaseName();
-    QDir d(dirName);
-    if (!d.exists())
-    {
-        d.mkpath(dirName);
-    }
-    // extract
-    JlCompress::extractDir(path, dirName);
-    QString plistName = dirName % "/info.plist";
-
-    if (!QFile::exists(plistName))
-        return;
-
-    QFile *f = new QFile(plistName);
-    if (!f->open(QIODevice::ReadOnly))
-        return;
-
-    BOOST_SCOPE_EXIT(f) {
-        f->close();
-        delete f;
-    } BOOST_SCOPE_EXIT_END
-
-    auto v = PListParser::parsePList(f);
-    qDebug() << v;
 }
 
 void DerflaWidget::stopWaiting()
