@@ -1,20 +1,20 @@
-#ifndef ALFREDWORFLOWACTION_H
-#define ALFREDWORFLOWACTION_H
+#ifndef AlfredWorkflowAction_H
+#define AlfredWorkflowAction_H
 
 #include <QObject>
 
-class AlfredWorflowAction : public QObject
+class AlfredWorkflowAction : public QObject
 {
     Q_OBJECT
 public:
-    explicit AlfredWorflowAction(QObject *parent = 0);
+    explicit AlfredWorkflowAction(QObject *parent = 0);
 
 signals:
 
 public slots:
 };
 
-typedef QSharedPointer<AlfredWorflowAction> AlfredWorflowActionPtr;
-typedef QList<AlfredWorflowActionPtr> AlfredWorflowActionList;
+typedef QSharedPointer<AlfredWorkflowAction> AlfredWorkflowActionPtr;
+typedef QList<AlfredWorkflowActionPtr> AlfredWorkflowActionList;
 
-#endif // ALFREDWORFLOWACTION_H
+#endif // AlfredWorkflowAction_H

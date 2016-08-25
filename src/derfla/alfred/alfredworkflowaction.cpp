@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "alfredworflowaction.h"
+#include "alfredworkflowaction.h"
 
-AlfredWorflowAction::AlfredWorflowAction(QObject *parent) : QObject(parent)
+AlfredWorkflowAction::AlfredWorkflowAction(QObject *parent) : QObject(parent)
 {
 
 }
