@@ -40,7 +40,7 @@ private slots:
 private:
     Ui::CandidateList *ui;
     bool activeWindowFlag_;
-    int itemCount_;
+    int itemCount_ = 0;
     DerflaActionList dal_;
 };
 

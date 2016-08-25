@@ -79,21 +79,40 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
         //qDebug() << "config:" << config;
         if (type.startsWith("alfred.workflow.input."))
         {
-            keywords_.append(config["keyword"].toString());
-            inputTitle_ = config["title"].toString();
-            inputSubtext_ = config["subtext"].toString();
-            inputType_ = config["type"].toInt();
-            inputWithSpace_ = config["withspace"].toBool();
+            input_ = type;
+            inputEscaping_ = config["escaping"].toInt();
+            inputKeywords_.append(config["keyword"].toString());
+            if (config.find("title") != config.end())
+                inputTitle_ = config["title"].toString();
+            else if (config.find("text") != config.end())
+                inputTitle_ = config["text"].toString();
+            if (config.find("subtext") != config.end())
+                inputSubtext_ = config["subtext"].toString();
+            if (config.find("script") != config.end())
+                inputScript_ = config["script"].toString();
+            if (config.find("runningsubtext") != config.end())
+                inputRunningSubtext_ = config["runningsubtext"].toString();
+            if (config.find("type") != config.end())
+                inputType_ = config["type"].toInt();
+            if (config.find("withspace") != config.end())
+                inputWithSpace_ = config["withspace"].toBool();
         }
         else if (type.startsWith("alfred.workflow.output."))
         {
-
+            output_ = type;
         }
         else if (type.startsWith("alfred.workflow.action."))
         {
-
+            action_ = type;
+            actionEscaping_ = config["escaping"].toInt();
+            if (config.find("script") != config.end())
+                actionScript_ = config["script"].toString();
+            if (config.find("type") != config.end())
+                actionType_ = config["type"].toInt();            
         }
     }
+
+    installDirectory_ = dirName;
     return true;
 }
 
@@ -139,11 +158,25 @@ bool AlfredWorkflow::disabled() const
 
 bool AlfredWorkflow::hitKeyword(const QString &keyword)
 {
-    return keywords_.contains(keyword.split(' ').at(0));
+    return inputKeywords_.contains(keyword.split(' ').at(0));
 }
 
 DerflaActionList& AlfredWorkflow::getActions(const QString& input)
 {
+    action_.clear();
+    if (hitKeyword(input))
+    {
+        if (input_ == "alfred.workflow.input.keyword")
+        {
+            // return the text
+            DerflaActionPtr da(new DerflaAction);
+            da->setTitle(inputTitle_);
+            QPixmap pixmap;
+            pixmap.load(installDirectory_ % "/icon.png");
+            da->setIcon(QIcon(pixmap));
+            actions_.append(da);
+        }
+    }
     return actions_;
 }
 

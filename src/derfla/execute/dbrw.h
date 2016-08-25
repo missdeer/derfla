@@ -21,7 +21,7 @@ public slots:
 
 private:
     static DBRW *instance_;
-    bool firstLaunch_;
+    bool firstLaunch_ = false;
     QString dbPath_;
     QSqlDatabase db_;
     DBRW();

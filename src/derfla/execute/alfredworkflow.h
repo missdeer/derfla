@@ -28,6 +28,8 @@ signals:
 public slots:
 
 private:
+    QString installDirectory_;
+
     QString bundleId_;
     QString category_;
     QString author_;
@@ -35,12 +37,25 @@ private:
     QString readme_;
     QString name_;
     QString webaddress_;
-    bool disabled_;
-    QStringList keywords_;
+    bool disabled_ = false;
+    QStringList inputKeywords_;
+
+    QString input_;
+    QString output_;
+    QString action_;
+
     QString inputTitle_;
     QString inputSubtext_;
-    int inputType_;
-    bool inputWithSpace_;
+    QString inputScript_;
+    QString inputRunningSubtext_;
+    int inputType_ = 0;
+    int inputEscaping_ = 0;
+    bool inputWithSpace_ = false;
+
+    QString actionScript_;
+    int actionType_ = 0;
+    int actionEscaping_ = 0;
+
     DerflaActionList actions_;
 };
 

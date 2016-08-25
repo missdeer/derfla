@@ -27,8 +27,8 @@ public slots:
 private slots:
     void scan();
 private:
-    bool stop_;
-    qint64 timestamp_;
+    bool stop_ = false;
+    qint64 timestamp_ = 0;
     QThread workerThread_;
     QList<Directory> scanDirectories_;
     void getDirectoriesFromEnvironmentVariable();
