@@ -2,6 +2,7 @@
 #define AlfredWorkflowAction_H
 
 #include <QObject>
+#include "derflaaction.h"
 
 class AlfredWorkflowAction : public QObject
 {
@@ -9,6 +10,7 @@ class AlfredWorkflowAction : public QObject
 public:
     explicit AlfredWorkflowAction(const QString& workingDirectory, QObject *parent = 0);
 
+    void getDerflaActions(const QString& input, DerflaActionList& derflaActions);
     void parse(const QString& type, const QUuid uid, const QVariantMap& v);
     const QUuid& getUid() const { return uid_; }
 

@@ -4,6 +4,18 @@
 #include <QObject>
 #include "derflaaction.h"
 
+struct AlfredWorkflowInputField
+{
+    bool not_ = false;
+    bool split_ = true;
+    bool words_ = true;
+    QString field_;
+    QString value_;
+};
+
+typedef QSharedPointer<AlfredWorkflowInputField> AlfredWorkflowInputFieldPtr;
+typedef QList<AlfredWorkflowInputFieldPtr> AlfredWorkflowInputFieldList;
+
 class AlfredWorkflowInput : public QObject
 {
     Q_OBJECT
@@ -31,7 +43,14 @@ private:
     int argumentType_ = 0;
     int type_ = 0;
     int escaping_ = 0;
+    int dateRange_ = 0;
     bool withSpace_ = false;
+    bool anchorFields_ = true;
+    bool includeSystem_ = true;
+    QStringList scopes_;
+    QStringList types_;
+    AlfredWorkflowInputFieldList fields_;
+
     QStringList keywords_;
 };
 

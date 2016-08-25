@@ -21,6 +21,11 @@ AlfredWorkflowAction::AlfredWorkflowAction(const QString& workingDirectory, QObj
 
 }
 
+void AlfredWorkflowAction::getDerflaActions(const QString& input, DerflaActionList& derflaActions)
+{
+
+}
+
 void AlfredWorkflowAction::parse(const QString& type, const QUuid uid, const QVariantMap& v)
 {
     typeId_ = type;

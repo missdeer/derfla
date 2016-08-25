@@ -103,6 +103,12 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
             awa->parse(type, uid, config);
             actionList.append(awa);
         }
+        else if (type.startsWith("alfred.workflow.trigger."))
+        {
+            AlfredWorkflowTriggerPtr awt(new AlfredWorkflowTrigger(dirName, this));
+            awt->parse(type, uid, config);
+            triggerList.append(awt);
+        }
     }
 
     installDirectory_ = dirName;

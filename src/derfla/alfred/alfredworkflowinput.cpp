@@ -52,4 +52,38 @@ void AlfredWorkflowInput::parse(const QString& type, const QUuid uid, const QVar
         type_ = v["type"].toInt();
     if (v.find("withspace") != v.end())
         withSpace_ = v["withspace"].toBool();
+    if (v.find("anchorfields") != v.end())
+        anchorFields_ = v["anchorfields"].toBool();
+    if (v.find("daterange") != v.end())
+        dateRange_ = v["daterange"].toInt();
+    if (v.find("includesystem") != v.end())
+        includeSystem_ = v["includesystem"].toBool();
+    auto scopes = v.find("scopes");
+    if (scopes != v.end())
+    {
+        QVariantList l = scopes->toList();
+        std::for_each (l.begin(), l.end(), [this](const QVariant& s) { this->scopes_.append(s.toString()); });
+    }
+    auto types = v.find("types");
+    if (types != v.end())
+    {
+        QVariantList l = types->toList();
+        std::for_each(l.begin(), l.end(), [this](const QVariant& t) { this->types_.append(t.toString()); });
+    }
+    auto fields = v.find("fields");
+    if (fields != v.end())
+    {
+        QVariantList l = fields->toList();
+        std::for_each(l.begin(), l.end(), 
+            [this](const QVariant& t) { 
+            AlfredWorkflowInputFieldPtr awif(new AlfredWorkflowInputField);
+            QVariantMap m = t.toMap();
+            awif->not_ = m["not"].toBool();
+            awif->split_ = m["split"].toBool();
+            awif->words_ = m["words"].toBool();
+            awif->field_ = m["field"].toString();
+            awif->value_ = m["value"].toString();
+            this->fields_.append(awif);
+        });
+    }
 }

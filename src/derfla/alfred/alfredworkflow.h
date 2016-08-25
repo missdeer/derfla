@@ -6,6 +6,7 @@
 #include "alfredworkflowaction.h"
 #include "alfredworkflowinput.h"
 #include "alfredworkflowoutput.h"
+#include "alfredworkflowtrigger.h"
 
 class AlfredWorkflow : public QObject
 {
@@ -42,6 +43,7 @@ private:
     bool disabled_ = false;
     
     QMap<QUuid, QList<QUuid>> connections_;
+    AlfredWorkflowTriggerList triggerList;
     AlfredWorkflowInputList inputList;
     AlfredWorkflowOutputList outputList;
     AlfredWorkflowActionList actionList;
