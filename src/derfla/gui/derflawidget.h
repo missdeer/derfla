@@ -43,6 +43,7 @@ private slots:
     void installAlfredWorkflows();
     void scheduleScan();
     void finishedScan();
+    void loadInstalledAlfredWorkflows();
 private:
     QPoint mouseMovePos_;
     QPixmap backgroundImage_;

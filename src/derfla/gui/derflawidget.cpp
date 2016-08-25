@@ -91,6 +91,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 //    connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::finishedScan);
 //    localFSScanner_->start();
 //    QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
+    QTimer::singleShot(1000, this, &DerflaWidget::loadInstalledAlfredWorkflows);
 }
 
 DerflaWidget::~DerflaWidget()
@@ -455,6 +456,31 @@ void DerflaWidget::hideCandidateList()
     check_expiration;
     if (candidateList_->isVisible())
         candidateList_->hide();
+}
+
+void DerflaWidget::loadInstalledAlfredWorkflows()
+{
+    QString dirName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/alfredworkflow";
+    QDir dir(dirName);
+    if (!dir.exists())
+    {
+        qWarning() << dirName << "doesn't exist";
+        return;
+    }
+
+    QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::NoDotAndDotDot | QDir::AllDirs);
+    std::for_each(list.begin(), list.end(), [&](const QFileInfo& fi) {
+        QString absolutePath = dirName % QDir::separator() % fi.fileName();
+        AlfredWorkflowPtr aw(new AlfredWorkflow);
+        if (aw->loadFromDirectory(absolutePath))
+        {
+            auto it = std::find_if(alfredWorkflowList_.begin(), alfredWorkflowList_.end(),
+                [&](AlfredWorkflowPtr a) { return aw->bundleId() == a->bundleId(); });
+            if (alfredWorkflowList_.end() != it)
+                alfredWorkflowList_.erase(it);
+            alfredWorkflowList_.append(aw);
+        }
+    });
 }
 
 void DerflaWidget::stopWaiting()
