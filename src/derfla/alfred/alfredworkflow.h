@@ -64,7 +64,6 @@ private:
     DerflaActionList actions_;
 };
 
-
 typedef QSharedPointer<AlfredWorkflow> AlfredWorkflowPtr;
 typedef QList<AlfredWorkflowPtr> AlfredWorkflowList;
 

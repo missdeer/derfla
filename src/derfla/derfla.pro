@@ -22,7 +22,10 @@ SOURCES += main.cpp\
     execute/dbrw.cpp \
     execute/util.cpp \
     execute/derflaaction.cpp \
-    alfred/alfredworkflow.cpp
+    alfred/alfredworkflow.cpp \
+    alfred/alfredworkflowinput.cpp \
+    alfred/alfredworkflowoutput.cpp \
+    alfred/alfredworflowaction.cpp
 
 HEADERS  += gui/derflawidget.h \
     gui/CharLineEdit.h \
@@ -34,7 +37,10 @@ HEADERS  += gui/derflawidget.h \
     execute/dbrw.h \
     execute/util.h \
     execute/derflaaction.h \
-    alfred/alfredworkflow.h
+    alfred/alfredworkflow.h \
+    alfred/alfredworkflowinput.h \
+    alfred/alfredworkflowoutput.h \
+    alfred/alfredworflowaction.h
 
 FORMS    += \
     gui/candidatelist.ui
