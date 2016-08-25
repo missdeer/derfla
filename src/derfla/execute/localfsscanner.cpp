@@ -136,8 +136,14 @@ void LocalFSScanner::getBuiltinDirectories()
     auto homePath = qgetenv("HOME");
     scanDirectories_ << Directory("/Applications", true)
                     << Directory(homePath + "/Applications", true)
+                    << Directory("/Applications/Xcode.app/Contents/Applications", false)
+                    << Directory("/Developer/Applications", false)
                     << Directory(homePath, false)
-                    << Directory("/System/Library/CoreServices", true);
+                    << Directory(homePath + "/Library/PreferencePanes", false)
+                    << Directory("/usr/local/Cellar", true)
+                    << Directory("/opt/homebrew-cask/Caskroom", false)
+                    << Directory("/System/Library/PerferencePanes", false)
+                    << Directory("/System/Library/CoreServices/Applications", true);
 }
 
 void LocalFSScanner::scanDirectory(const Directory &d)
@@ -149,7 +155,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         return;
 
     QDir dir(d.directory);
-    QFileInfoList list = dir.entryInfoList(QStringList() << "*.app", QDir::AllDirs | QDir::NoDotAndDotDot);
+    QFileInfoList list = dir.entryInfoList(QStringList() << "*.app" << "*.prefPane", QDir::AllDirs | QDir::NoDotAndDotDot);
     if (stop_) return;
     list << dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
 
@@ -160,7 +166,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         if (stop_) return;
         QString f(d.directory + QDir::separator() + fileInfo.fileName());
         if ((fileInfo.isFile() && fileInfo.permission(QFile::ExeGroup))
-                || (fileInfo.isDir() && fileInfo.suffix() == "app"))
+                || (fileInfo.isDir() && (fileInfo.suffix() == "app" || fileInfo.suffix() == "prefPane")))
         {
             dbrw->insertLFS(util::extractXPMFromFile(fileInfo),
                             fileInfo.fileName(),
