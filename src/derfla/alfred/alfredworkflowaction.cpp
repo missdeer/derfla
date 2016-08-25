@@ -23,7 +23,23 @@ AlfredWorkflowAction::AlfredWorkflowAction(const QString& workingDirectory, QObj
 
 void AlfredWorkflowAction::getDerflaActions(const QString& input, DerflaActionList& derflaActions)
 {
+    DerflaActionPtr da(new DerflaAction);
+    //da->setTitle(text_);
+    QPixmap pixmap;
+    pixmap.load(workingDirectory_ % "/icon.png");
+    da->setIcon(QIcon(pixmap));
 
+    da->setActionType(*actionTypeMap.find(typeId_));
+    // copy
+    da->script_ = script_;
+    da->appleScript_ = appleScript_;
+    da->url_ = url_;
+    da->type_ = type_;
+    da->escaping_ = escaping_;
+    da->utf8_ = utf8_;
+    da->plusSpaces_ = plusSpaces_;
+    da->cacheScript_ = cacheScript_;
+    derflaActions.append(da);
 }
 
 void AlfredWorkflowAction::parse(const QString& type, const QUuid uid, const QVariantMap& v)

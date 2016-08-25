@@ -20,13 +20,15 @@ enum DerflaActionType
     DAT_LAUNCHFILES,
 };
 
+class AlfredWorkflowAction;
+
 class DerflaAction : public QObject
 {
     Q_OBJECT
+        friend AlfredWorkflowAction;
 public:
     explicit DerflaAction(QObject *parent = 0);
-
-
+    
     QIcon icon() const;
     void setIcon(const QIcon& icon);
 
@@ -50,8 +52,8 @@ public:
 
 signals:
 
-    public slots :
-        bool run();
+public slots :
+    bool run();
 
 private:
     QIcon icon_;
@@ -61,6 +63,15 @@ private:
     QString arguments_;
     QString workingDirectory_;
     DerflaActionType actionType_;
+    // members from AlfredWorkflowAction
+    QString script_;
+    QString appleScript_;
+    QString url_;
+    int type_ = 0;
+    int escaping_ = 0;
+    bool cacheScript_ = false;
+    bool plusSpaces_ = false;
+    bool utf8_ = false;
 };
 
 typedef QSharedPointer<DerflaAction> DerflaActionPtr;
