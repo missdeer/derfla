@@ -26,6 +26,18 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
         //da->setActionType(*actionTypeMap.find(action_));
         derflaActions.append(da);
     }
+    else if (typeId_ == "alfred.workflow.input.scriptfilter")
+    {
+
+    }
+    else if (typeId_ == "alfred.workflow.input.filefilter")
+    {
+
+    }
+    else
+    {
+        qWarning() << "unsupported workflow";
+    }
 }
 
 void AlfredWorkflowInput::parse(const QString& type, const QUuid uid, const QVariantMap& v)
