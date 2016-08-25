@@ -13,6 +13,8 @@ public:
     bool hitKeyword(const QString& keyword);
     void getDerflaActions(const QString& input, DerflaActionList& derflaActions);
     void parse(const QString& type, const QUuid uid, const QVariantMap& v);
+    const QUuid& getUid() const { return uid_; }
+
 signals:
 
 public slots:

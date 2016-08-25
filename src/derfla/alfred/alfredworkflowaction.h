@@ -10,6 +10,8 @@ public:
     explicit AlfredWorkflowAction(const QString& workingDirectory, QObject *parent = 0);
 
     void parse(const QString& type, const QUuid uid, const QVariantMap& v);
+    const QUuid& getUid() const { return uid_; }
+
 signals:
 
 public slots:

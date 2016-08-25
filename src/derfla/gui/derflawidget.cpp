@@ -470,7 +470,7 @@ void DerflaWidget::loadInstalledAlfredWorkflows()
 
     QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::NoDotAndDotDot | QDir::AllDirs);
     std::for_each(list.begin(), list.end(), [&](const QFileInfo& fi) {
-        QString absolutePath = dirName % QDir::separator() % fi.fileName();
+        QString absolutePath = dirName % "/" % fi.fileName();
         AlfredWorkflowPtr aw(new AlfredWorkflow);
         if (aw->loadFromDirectory(absolutePath))
         {
