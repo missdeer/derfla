@@ -67,32 +67,41 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
     webaddress_ = map["webaddress"].toString();
 
     QVariantMap connections = map["connections"].toMap();
+    for (QVariantMap::const_iterator it = connections.constBegin(); connections.constEnd() != it; ++it)
+    {
+        QVariantList l = it.value().toList();
+        QList<QUuid> destinationIds;
+        std::for_each(l.begin(), l.end(), 
+            [&destinationIds](const QVariant& v) {destinationIds.append(v.toMap()["destinationuid"].toUuid()); });
+        connections_.insert(QUuid(it.key()), destinationIds);
+    }
+
     QVariantMap uidata = map["uidata"].toMap();
     QVariantList objects = map["objects"].toList();
-    for (QVariant obj : objects)
+    for (const QVariant& obj : objects)
     {
         QVariantMap o = obj.toMap();
         QString type = o["type"].toString();
-        QUuid uid = o["uid"].toUuid();
+        QUuid uid(o["uid"].toUuid());
 
         QVariantMap config = o["config"].toMap();
         if (type.startsWith("alfred.workflow.input."))
         {
             AlfredWorkflowInputPtr awi(new AlfredWorkflowInput(dirName, this));
             awi->parse(type, uid, config);
-            alfredWorkflowInputList.append(awi);
+            inputList.append(awi);
         }
         else if (type.startsWith("alfred.workflow.output."))
         {
             AlfredWorkflowOutputPtr awo(new AlfredWorkflowOutput(dirName, this));
             awo->parse(type, uid, config);
-            alfredWorkflowOutputList.append(awo);
+            outputList.append(awo);
         }
         else if (type.startsWith("alfred.workflow.action."))
         {
             AlfredWorkflowActionPtr awa(new AlfredWorkflowAction(dirName, this));
             awa->parse(type, uid, config);
-            alfredWorkflowActionList.append(awa);
+            actionList.append(awa);
         }
     }
 
@@ -143,17 +152,17 @@ bool AlfredWorkflow::disabled() const
 bool AlfredWorkflow::hitKeyword(const QString &keyword)
 {
     const QString& kw = keyword.split(' ').at(0);
-    auto it = std::find_if(alfredWorkflowInputList.begin(), alfredWorkflowInputList.end(),
+    auto it = std::find_if(inputList.begin(), inputList.end(),
         [&kw](AlfredWorkflowInputPtr awi) {
         return awi->hitKeyword(kw);
     });
-    return alfredWorkflowInputList.end() != it;
+    return inputList.end() != it;
 }
 
 DerflaActionList& AlfredWorkflow::getActions(const QString& input)
 {
     derflaActions_.clear();
-    for (AlfredWorkflowInputPtr awi : alfredWorkflowInputList)
+    for (AlfredWorkflowInputPtr awi : inputList)
     {
         awi->getDerflaActions(input, derflaActions_);
     }

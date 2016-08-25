@@ -41,9 +41,10 @@ private:
     QString webaddress_;
     bool disabled_ = false;
     
-    AlfredWorkflowInputList alfredWorkflowInputList;
-    AlfredWorkflowOutputList alfredWorkflowOutputList;
-    AlfredWorkflowActionList alfredWorkflowActionList;
+    QMap<QUuid, QList<QUuid>> connections_;
+    AlfredWorkflowInputList inputList;
+    AlfredWorkflowOutputList outputList;
+    AlfredWorkflowActionList actionList;
     DerflaActionList derflaActions_;
 };
 
