@@ -25,7 +25,7 @@ SOURCES += main.cpp\
     alfred/alfredworkflow.cpp \
     alfred/alfredworkflowinput.cpp \
     alfred/alfredworkflowoutput.cpp \
-    alfred/alfredworflowaction.cpp
+    alfred/alfredworkflowaction.cpp
 
 HEADERS  += gui/derflawidget.h \
     gui/CharLineEdit.h \
@@ -40,7 +40,7 @@ HEADERS  += gui/derflawidget.h \
     alfred/alfredworkflow.h \
     alfred/alfredworkflowinput.h \
     alfred/alfredworkflowoutput.h \
-    alfred/alfredworflowaction.h
+    alfred/alfredworkflowaction.h
 
 FORMS    += \
     gui/candidatelist.ui

@@ -3,6 +3,9 @@
 
 #include <QObject>
 #include "derflaaction.h"
+#include "alfredworkflowaction.h"
+#include "alfredworkflowinput.h"
+#include "alfredworkflowoutput.h"
 
 class AlfredWorkflow : public QObject
 {
@@ -22,7 +25,6 @@ public:
     bool disabled() const;
     bool hitKeyword(const QString& keyword);
     DerflaActionList& getActions(const QString& input);
-    bool triggerAction(int index);
 signals:
 
 public slots:
@@ -38,30 +40,11 @@ private:
     QString name_;
     QString webaddress_;
     bool disabled_ = false;
-    QStringList inputKeywords_;
-
-    QString input_; // alfred.workflow.input.*
-    QString output_; // alfred.workflow.output.*
-    QString action_; // alfred.workflow.action.*
-
-    QString inputTitle_;
-    QString inputSubtext_;
-    QString inputScript_;
-    QString inputRunningSubtext_;
-    int inputType_ = 0;
-    int inputEscaping_ = 0;
-    bool inputWithSpace_ = false;
-
-    QString actionScript_;
-    QString actionAppleScript_;
-    QString actionURL_;
-    int actionType_ = 0;
-    int actionEscaping_ = 0;
-    bool actionCacheScript_ = false;
-    bool actionPlusSpaces_ = false;
-    bool actionUTF8_ = false;
-
-    DerflaActionList actions_;
+    
+    AlfredWorkflowInputList alfredWorkflowInputList;
+    AlfredWorkflowOutputList alfredWorkflowOutputList;
+    AlfredWorkflowActionList alfredWorkflowActionList;
+    DerflaActionList derflaActions_;
 };
 
 typedef QSharedPointer<AlfredWorkflow> AlfredWorkflowPtr;
