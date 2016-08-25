@@ -40,9 +40,9 @@ private:
     bool disabled_ = false;
     QStringList inputKeywords_;
 
-    QString input_;
-    QString output_;
-    QString action_;
+    QString input_; // alfred.workflow.input.*
+    QString output_; // alfred.workflow.output.*
+    QString action_; // alfred.workflow.action.*
 
     QString inputTitle_;
     QString inputSubtext_;
@@ -53,8 +53,13 @@ private:
     bool inputWithSpace_ = false;
 
     QString actionScript_;
+    QString actionAppleScript_;
+    QString actionURL_;
     int actionType_ = 0;
     int actionEscaping_ = 0;
+    bool actionCacheScript_ = false;
+    bool actionPlusSpaces_ = false;
+    bool actionUTF8_ = false;
 
     DerflaActionList actions_;
 };

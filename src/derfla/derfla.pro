@@ -22,7 +22,7 @@ SOURCES += main.cpp\
     execute/dbrw.cpp \
     execute/util.cpp \
     execute/derflaaction.cpp \
-    execute/alfredworkflow.cpp
+    alfred/alfredworkflow.cpp
 
 HEADERS  += gui/derflawidget.h \
     gui/CharLineEdit.h \
@@ -34,12 +34,12 @@ HEADERS  += gui/derflawidget.h \
     execute/dbrw.h \
     execute/util.h \
     execute/derflaaction.h \
-    execute/alfredworkflow.h
+    alfred/alfredworkflow.h
 
 FORMS    += \
     gui/candidatelist.ui
 
-INCLUDEPATH += $$PWD $$PWD/gui $$PWD/execute
+INCLUDEPATH += $$PWD $$PWD/gui $$PWD/execute $$PWD/alfred
 
 macx: {
     QMAKE_MAC_SDK = macosx10.11

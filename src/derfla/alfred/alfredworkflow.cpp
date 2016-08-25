@@ -3,6 +3,18 @@
 #include <plistparser.h>
 #include "alfredworkflow.h"
 
+static QMap<QString, DerflaActionType> actionTypeMap{
+    {"alfred.workflow.action.script", DAT_SCRIPT},
+    { "alfred.workflow.action.openurl", DAT_OPENURL },
+    { "alfred.workflow.action.applescript", DAT_APPLESCRIPT },
+    { "alfred.workflow.action.systemwebsearch", DAT_SYSTEMWEBSEARCH },
+    { "alfred.workflow.action.revealfile", DAT_REVEALFILE },
+    { "alfred.workflow.action.terminalcommand", DAT_TERMINALCOMMAND },
+    { "alfred.workflow.action.openfile", DAT_OPENFILE },
+    { "alfred.workflow.action.browseinalfred", DAT_BROWSEINALFRED },
+    { "alfred.workflow.action.lauchfiles", DAT_LAUNCHFILES },
+};
+
 AlfredWorkflow::AlfredWorkflow(QObject *parent) : QObject(parent)
 {
 
@@ -80,8 +92,10 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
         if (type.startsWith("alfred.workflow.input."))
         {
             input_ = type;
-            inputEscaping_ = config["escaping"].toInt();
-            inputKeywords_.append(config["keyword"].toString());
+            if (config.find("escaping") != config.end())
+                inputEscaping_ = config["escaping"].toInt();
+            if (config.find("keyword") != config.end())
+                inputKeywords_.append(config["keyword"].toString());
             if (config.find("title") != config.end())
                 inputTitle_ = config["title"].toString();
             else if (config.find("text") != config.end())
@@ -104,11 +118,22 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
         else if (type.startsWith("alfred.workflow.action."))
         {
             action_ = type;
-            actionEscaping_ = config["escaping"].toInt();
+            if (config.find("escaping") != config.end())
+                actionEscaping_ = config["escaping"].toInt();
             if (config.find("script") != config.end())
                 actionScript_ = config["script"].toString();
+            if (config.find("url") != config.end())
+                actionURL_ = config["url"].toString();
+            if (config.find("applescript") != config.end())
+                actionAppleScript_ = config["applescript"].toString();
             if (config.find("type") != config.end())
-                actionType_ = config["type"].toInt();            
+                actionType_ = config["type"].toInt();
+            if (config.find("cachescript") != config.end())
+                actionCacheScript_ = config["cachescript"].toBool();
+            if (config.find("plusspaces") != config.end())
+                actionPlusSpaces_ = config["plusspaces"].toBool();
+            if (config.find("utf8") != config.end())
+                actionUTF8_ = config["utf8"].toBool();
         }
     }
 
@@ -163,7 +188,7 @@ bool AlfredWorkflow::hitKeyword(const QString &keyword)
 
 DerflaActionList& AlfredWorkflow::getActions(const QString& input)
 {
-    action_.clear();
+    actions_.clear();
     if (hitKeyword(input))
     {
         if (input_ == "alfred.workflow.input.keyword")
@@ -174,6 +199,7 @@ DerflaActionList& AlfredWorkflow::getActions(const QString& input)
             QPixmap pixmap;
             pixmap.load(installDirectory_ % "/icon.png");
             da->setIcon(QIcon(pixmap));
+            da->setActionType(*actionTypeMap.find(action_));
             actions_.append(da);
         }
     }
