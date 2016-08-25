@@ -14,14 +14,16 @@ static QMap<QString, DerflaActionType> actionTypeMap{
     { "alfred.workflow.action.lauchfiles", DAT_LAUNCHFILES },
 };
 
-AlfredWorkflowAction::AlfredWorkflowAction(QObject *parent) : QObject(parent)
+AlfredWorkflowAction::AlfredWorkflowAction(const QString& workingDirectory, QObject *parent) 
+    : QObject(parent)
+    , workingDirectory_(workingDirectory)
 {
 
 }
 
 void AlfredWorkflowAction::parse(const QString& type, const QUuid uid, const QVariantMap& v)
 {
-    action_ = type;
+    typeId_ = type;
     uid_ = uid;
     if (v.find("escaping") != v.end())
         escaping_ = v["escaping"].toInt();

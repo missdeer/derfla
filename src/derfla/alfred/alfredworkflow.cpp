@@ -78,19 +78,19 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
         QVariantMap config = o["config"].toMap();
         if (type.startsWith("alfred.workflow.input."))
         {
-            AlfredWorkflowInputPtr awi(new AlfredWorkflowInput);
+            AlfredWorkflowInputPtr awi(new AlfredWorkflowInput(dirName, this));
             awi->parse(type, uid, config);
             alfredWorkflowInputList.append(awi);
         }
         else if (type.startsWith("alfred.workflow.output."))
         {
-            AlfredWorkflowOutputPtr awo(new AlfredWorkflowOutput);
+            AlfredWorkflowOutputPtr awo(new AlfredWorkflowOutput(dirName, this));
             awo->parse(type, uid, config);
             alfredWorkflowOutputList.append(awo);
         }
         else if (type.startsWith("alfred.workflow.action."))
         {
-            AlfredWorkflowActionPtr awa(new AlfredWorkflowAction);
+            AlfredWorkflowActionPtr awa(new AlfredWorkflowAction(dirName, this));
             awa->parse(type, uid, config);
             alfredWorkflowActionList.append(awa);
         }

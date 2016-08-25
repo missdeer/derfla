@@ -7,7 +7,7 @@ class AlfredWorkflowAction : public QObject
 {
     Q_OBJECT
 public:
-    explicit AlfredWorkflowAction(QObject *parent = 0);
+    explicit AlfredWorkflowAction(const QString& workingDirectory, QObject *parent = 0);
 
     void parse(const QString& type, const QUuid uid, const QVariantMap& v);
 signals:
@@ -15,8 +15,9 @@ signals:
 public slots:
 
 private:
+    const QString& workingDirectory_;
     QUuid uid_;
-    QString action_; // alfred.workflow.action.*
+    QString typeId_; // alfred.workflow.action.*
     QString script_;
     QString appleScript_;
     QString url_;

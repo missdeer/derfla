@@ -8,7 +8,7 @@ class AlfredWorkflowInput : public QObject
 {
     Q_OBJECT
 public:
-    explicit AlfredWorkflowInput(QObject *parent = 0);
+    explicit AlfredWorkflowInput(const QString& workingDirectory, QObject *parent = 0);
 
     bool hitKeyword(const QString& keyword);
     void getDerflaActions(const QString& input, DerflaActionList& derflaActions);
@@ -18,13 +18,15 @@ signals:
 public slots:
 
 private:
+    const QString& workingDirectory_;
     QUuid uid_;
-    QString input_; // alfred.workflow.input.*
+    QString typeId_; // alfred.workflow.input.*
     QString text_;
     QString title_;
     QString subtext_;
     QString script_;
     QString runningSubtext_;
+    int argumentType_ = 0;
     int type_ = 0;
     int escaping_ = 0;
     bool withSpace_ = false;

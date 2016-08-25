@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "alfredworkflowinput.h"
 
-AlfredWorkflowInput::AlfredWorkflowInput(QObject *parent) : QObject(parent)
+AlfredWorkflowInput::AlfredWorkflowInput(const QString& workingDirectory, QObject *parent) 
+    : QObject(parent)
+    , workingDirectory_(workingDirectory)
 {
 
 }
@@ -13,25 +15,27 @@ bool AlfredWorkflowInput::hitKeyword(const QString& keyword)
 
 void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionList& derflaActions)
 {
-    if (input_ == "alfred.workflow.input.keyword")
+    if (typeId_ == "alfred.workflow.input.keyword")
     {
         // return the text
         DerflaActionPtr da(new DerflaAction);
         da->setTitle(title_);
-        //QPixmap pixmap;
-        //pixmap.load(installDirectory_ % "/icon.png");
-        //da->setIcon(QIcon(pixmap));
+        QPixmap pixmap;
+        pixmap.load(workingDirectory_ % "/icon.png");
+        da->setIcon(QIcon(pixmap));
         //da->setActionType(*actionTypeMap.find(action_));
-        //derflaActions_.append(da);
+        derflaActions.append(da);
     }
 }
 
 void AlfredWorkflowInput::parse(const QString& type, const QUuid uid, const QVariantMap& v)
 {
-    input_ = type;
+    typeId_ = type;
     uid_ = uid;
     if (v.find("escaping") != v.end())
         escaping_ = v["escaping"].toInt();
+    if (v.find("argumenttype") != v.end())
+        argumentType_ = v["argumenttype"].toInt();
     if (v.find("keyword") != v.end())
         keywords_.append(v["keyword"].toString());
     if (v.find("title") != v.end())
