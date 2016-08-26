@@ -35,11 +35,17 @@ private:
     const QString& workingDirectory_;
     QUuid uid_;
     QString typeId_; // alfred.workflow.input.*
+
+    // keyword
     QString text_;
-    QString title_;
     QString subtext_;
+
+    // script filter
+    QString title_;
     QString script_;
     QString runningSubtext_;
+
+    QString keyword_;
     int argumentType_ = 0; // 0 - arguments required, 1- arguments optional, 2- none
     int type_ = 0; // 0-bash, 1-php, 2-ruby, 3-python, 4-perl, 5-zsh, 6-osascript(AS), 7-osascript(JS)
     int escaping_ = 0;
@@ -55,7 +61,6 @@ private:
     QStringList types_;
     AlfredWorkflowInputFieldList fields_;
 
-    QStringList keywords_;
 };
 
 typedef QSharedPointer<AlfredWorkflowInput> AlfredWorkflowInputPtr;

@@ -10,7 +10,7 @@ AlfredWorkflowInput::AlfredWorkflowInput(const QString& workingDirectory, QObjec
 
 bool AlfredWorkflowInput::hitKeyword(const QString& keyword)
 {
-    return keywords_.contains(keyword);
+    return keyword_ == keyword;
 }
 
 void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionList& derflaActions)
@@ -50,7 +50,7 @@ void AlfredWorkflowInput::parse(const QString& type, const QUuid uid, const QVar
     if (v.find("argumenttype") != v.end())
         argumentType_ = v["argumenttype"].toInt();
     if (v.find("keyword") != v.end())
-        keywords_.append(v["keyword"].toString());
+        keyword_ = v["keyword"].toString();
     if (v.find("title") != v.end())
         title_ = v["title"].toString();
     else if (v.find("text") != v.end())
