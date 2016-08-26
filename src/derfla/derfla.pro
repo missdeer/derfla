@@ -49,7 +49,7 @@ HEADERS  += stdafx.h \
 FORMS    += \
     gui/candidatelist.ui
 
-INCLUDEPATH += $$PWD $$PWD/gui $$PWD/lfs $$PWD/alfred
+INCLUDEPATH += $$PWD $$PWD/gui $$PWD/lfs $$PWD/alfred $$PWD/util $$PWD/executeor
 
 macx: {
     QMAKE_MAC_SDK = macosx10.11
