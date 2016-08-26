@@ -19,7 +19,8 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
     {
         // return the text
         DerflaActionPtr da(new DerflaAction);
-        da->setTitle(title_);
+        da->setTitle(text_);
+        da->setDescription(subtext_);
         QPixmap pixmap;
         pixmap.load(workingDirectory_ % "/icon.png");
         da->setIcon(QIcon(pixmap));
