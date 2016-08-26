@@ -18,10 +18,10 @@ SOURCES += main.cpp\
     gui/candidatelist.cpp \
     gui/candidatelistdelegate.cpp \
     gui/candidatelistwidget.cpp \
+    gui/derflaaction.cpp \
     lfs/localfsscanner.cpp \
     lfs/dbrw.cpp \
     util/util.cpp \
-    lfs/derflaaction.cpp \
     alfred/alfredworkflow.cpp \
     alfred/alfredworkflowinput.cpp \
     alfred/alfredworkflowoutput.cpp \
@@ -29,16 +29,16 @@ SOURCES += main.cpp\
     alfred/alfredworkflowtrigger.cpp \
     alfred/alfredworkflowscriptescape.cpp
 
-HEADERS  += gui/derflawidget.h \
+HEADERS  += stdafx.h \
+    gui/derflawidget.h \
     gui/CharLineEdit.h \
     gui/candidatelist.h \
     gui/candidatelistdelegate.h \
     gui/candidatelistwidget.h \
-    stdafx.h \
+    gui/derflaaction.h \
     lfs/localfsscanner.h \
     lfs/dbrw.h \
     util/util.h \
-    lfs/derflaaction.h \
     alfred/alfredworkflow.h \
     alfred/alfredworkflowinput.h \
     alfred/alfredworkflowoutput.h \
