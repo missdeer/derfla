@@ -19,6 +19,7 @@ public:
     ~CandidateList();
     void update(const QString& text);
     void update(AlfredWorkflowPtr aw, const QString &text);
+    void update(AlfredWorkflowList& awl, const QString &text);
 
     void populateList();
 

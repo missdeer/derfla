@@ -69,15 +69,25 @@ void CandidateListDelegate::paint(QPainter * painter, const QStyleOptionViewItem
         imageSpace = 55;
     }
 
-    //TITLE
-    r = option.rect.adjusted(imageSpace, 0, -10, -30);
-    painter->setFont(QFont(globalDefaultFontFamily, 16, QFont::Normal));
-    painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignBottom | Qt::AlignLeft, title, &r);
+    if (description.isEmpty())
+    {
+        //TITLE
+        r = option.rect.adjusted(imageSpace, 15, -10, -15);
+        painter->setFont(QFont(globalDefaultFontFamily, 20, QFont::Normal));
+        painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignBottom | Qt::AlignLeft, title, &r);
+    }
+    else
+    {
+        //TITLE
+        r = option.rect.adjusted(imageSpace, 0, -10, -30);
+        painter->setFont(QFont(globalDefaultFontFamily, 16, QFont::Normal));
+        painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignBottom | Qt::AlignLeft, title, &r);
 
-    //DESCRIPTION
-    r = option.rect.adjusted(imageSpace, 35, -10, 5);
-    painter->setFont(QFont(globalDefaultFontFamily, 10, QFont::Normal));
-    painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignLeft, description, &r);
+        //DESCRIPTION
+        r = option.rect.adjusted(imageSpace, 35, -10, 5);
+        painter->setFont(QFont(globalDefaultFontFamily, 10, QFont::Normal));
+        painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignLeft, description, &r);
+    }
 }
 
 QSize CandidateListDelegate::sizeHint(const QStyleOptionViewItem & /*option*/, const QModelIndex & /*index*/) const

@@ -51,6 +51,25 @@ void CandidateList::update(AlfredWorkflowPtr aw, const QString &text)
     populateList();
 }
 
+void CandidateList::update(AlfredWorkflowList& awl, const QString &text)
+{
+    if (text.isEmpty())
+        hide();
+
+    dal_.clear();
+    ui->list->clear();
+
+    for (AlfredWorkflowPtr aw: awl)
+    {
+        DerflaActionList dal = aw->getActions(text);
+        dal_.append(dal);
+    }
+
+    if (dal_.isEmpty())
+        DBRW::instance()->getLFSActions(dal_, text, 25);
+    populateList();
+}
+
 void CandidateList::populateList()
 {
     if (dal_.empty())

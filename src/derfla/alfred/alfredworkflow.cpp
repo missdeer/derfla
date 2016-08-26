@@ -157,10 +157,9 @@ bool AlfredWorkflow::disabled() const
 
 bool AlfredWorkflow::hitKeyword(const QString &keyword)
 {
-    const QString& kw = keyword.split(' ').at(0);
     auto it = std::find_if(inputList.begin(), inputList.end(),
-        [&kw](AlfredWorkflowInputPtr awi) {
-        return awi->hitKeyword(kw);
+        [&keyword](AlfredWorkflowInputPtr awi) {
+        return awi->hitKeyword(keyword);
     });
     return inputList.end() != it;
 }

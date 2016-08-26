@@ -351,14 +351,16 @@ void DerflaWidget::showCandidateList()
     candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
     
     QString inputText = input_->text();
-    auto it = std::find_if(alfredWorkflowList_.begin(), alfredWorkflowList_.end(),
+
+    AlfredWorkflowList alfredWorkflowList;
+    std::copy_if(alfredWorkflowList_.begin(), alfredWorkflowList_.end(), std::back_inserter(alfredWorkflowList), 
         [&inputText](AlfredWorkflowPtr aw) {
         return aw->hitKeyword(inputText);
     });
-    if (alfredWorkflowList_.end() == it)
+    if (alfredWorkflowList.empty())
         candidateList_->update(inputText);
     else
-        candidateList_->update(*it, inputText);
+        candidateList_->update(alfredWorkflowList, inputText);
 }
 
 void DerflaWidget::processKey()

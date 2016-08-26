@@ -32,7 +32,7 @@ signals:
 public slots:
 
 private:
-    const QString& workingDirectory_;
+    QString workingDirectory_;
     QUuid uid_;
     QString typeId_; // alfred.workflow.input.*
 

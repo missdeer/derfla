@@ -10,21 +10,47 @@ AlfredWorkflowInput::AlfredWorkflowInput(const QString& workingDirectory, QObjec
 
 bool AlfredWorkflowInput::hitKeyword(const QString& keyword)
 {
-    return keyword_ == keyword;
+    if (keyword_.isEmpty())
+        return false;
+    if (withSpace_)
+    {
+        if (keyword.length() < keyword_.length())
+            return false;
+        QStringList&& kws = keyword.split(' ');
+        QStringList&& kws_ = keyword_.split(' ');
+        if (kws.length() < kws_.length())
+            return false;
+        for (int index = 0; index < kws.length() && index < kws_.length(); index++)
+        {
+            if (kws[index] != kws_[index])
+                return false;            
+        }
+        qDebug() << "withSpace" << keyword_ << keyword;
+        return true;
+    }
+    else
+    {
+        if (keyword_ == keyword)
+            qDebug() << "not withSpace" << keyword_ << keyword;
+        return keyword_ == keyword;
+    }
 }
 
 void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionList& derflaActions)
 {
     if (typeId_ == "alfred.workflow.input.keyword")
     {
-        DerflaActionPtr da(new DerflaAction);
-        da->setTitle(text_);
-        da->setDescription(subtext_);
-        QPixmap pixmap;
-        pixmap.load(workingDirectory_ % "/icon.png");
-        da->setIcon(QIcon(pixmap));
-        // do something to associate with Derfla actions 
-        derflaActions.append(da);
+        if (!text_.isEmpty())
+        {
+            DerflaActionPtr da(new DerflaAction);
+            da->setTitle(text_);
+            da->setDescription(subtext_);
+            QPixmap pixmap;
+            pixmap.load(workingDirectory_ + "/icon.png");
+            da->setIcon(QIcon(pixmap));
+            // do something to associate with Derfla actions 
+            derflaActions.append(da);
+        }
     }
     else if (typeId_ == "alfred.workflow.input.scriptfilter")
     {
@@ -36,7 +62,10 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
         }
         else
         {
-            da->setTitle(runningSubtext_);
+            if (runningSubtext_.isEmpty())
+                da->setTitle(tr("Loading..."));
+            else
+                da->setTitle(runningSubtext_);
             // run script 
         }
         QPixmap pixmap;
@@ -113,4 +142,6 @@ void AlfredWorkflowInput::parse(const QString& type, const QUuid uid, const QVar
             this->fields_.append(awif);
         });
     }
+
+    qDebug() << "keyword:" << keyword_;
 }

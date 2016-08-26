@@ -4,7 +4,6 @@ TARGET = Derfla
 TEMPLATE = app
 CONFIG += c++11 precompile_header
 PRECOMPILED_HEADER = stdafx.h
-DEFINES += QT_USE_QSTRINGBUILDER=1
 
 include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
 include($$PWD/../../3rdparty/quazip-0.7.2/quazip.pri)
