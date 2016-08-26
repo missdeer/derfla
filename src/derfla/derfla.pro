@@ -27,7 +27,14 @@ SOURCES += main.cpp\
     alfred/alfredworkflowoutput.cpp \
     alfred/alfredworkflowaction.cpp \
     alfred/alfredworkflowtrigger.cpp \
-    alfred/alfredworkflowscriptescape.cpp
+    alfred/alfredworkflowscriptescape.cpp \
+    executor/executor.cpp \
+    executor/bashexecutor.cpp \
+    executor/zshexecutor.cpp \
+    executor/phpexecutor.cpp \
+    executor/pythonexecutor.cpp \
+    executor/perlexecutor.cpp \
+    executor/rubyexecutor.cpp
 
 HEADERS  += stdafx.h \
     gui/derflawidget.h \
@@ -44,14 +51,28 @@ HEADERS  += stdafx.h \
     alfred/alfredworkflowoutput.h \
     alfred/alfredworkflowaction.h \
     alfred/alfredworkflowtrigger.h \
-    alfred/alfredworkflowscriptescape.h
+    alfred/alfredworkflowscriptescape.h \
+    executor/executor.h \
+    executor/bashexecutor.h \
+    executor/zshexecutor.h \
+    executor/phpexecutor.h \
+    executor/pythonexecutor.h \
+    executor/perlexecutor.h \
+    executor/rubyexecutor.h
 
 FORMS    += \
     gui/candidatelist.ui
 
-INCLUDEPATH += $$PWD $$PWD/gui $$PWD/lfs $$PWD/alfred $$PWD/util $$PWD/executeor
+INCLUDEPATH += $$PWD $$PWD/gui $$PWD/lfs $$PWD/alfred $$PWD/util $$PWD/executor
 
 macx: {
+
+    SOURCES +=  \
+        executor/osascriptexecutor.cpp
+
+    HEADERS +=  \
+        executor/osascriptexecutor.h
+
     QMAKE_MAC_SDK = macosx10.11
     ICON = derfla.icns
     icon.path = $$PWD
