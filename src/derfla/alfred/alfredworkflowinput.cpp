@@ -17,19 +17,33 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
 {
     if (typeId_ == "alfred.workflow.input.keyword")
     {
-        // return the text
         DerflaActionPtr da(new DerflaAction);
         da->setTitle(text_);
         da->setDescription(subtext_);
         QPixmap pixmap;
         pixmap.load(workingDirectory_ % "/icon.png");
         da->setIcon(QIcon(pixmap));
-        //da->setActionType(*actionTypeMap.find(action_));
+        // do something to associate with Derfla actions 
         derflaActions.append(da);
     }
     else if (typeId_ == "alfred.workflow.input.scriptfilter")
     {
-
+        DerflaActionPtr da(new DerflaAction);
+        if (input.isEmpty())
+        {
+            da->setTitle(title_);
+            da->setDescription(subtext_);
+        }
+        else
+        {
+            da->setTitle(runningSubtext_);
+            // run script 
+        }
+        QPixmap pixmap;
+        pixmap.load(workingDirectory_ % "/icon.png");
+        da->setIcon(QIcon(pixmap));
+        // do something to associate with Derfla actions 
+        derflaActions.append(da);
     }
     else if (typeId_ == "alfred.workflow.input.filefilter")
     {
