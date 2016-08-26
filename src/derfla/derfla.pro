@@ -20,7 +20,7 @@ SOURCES += main.cpp\
     gui/candidatelistwidget.cpp \
     lfs/localfsscanner.cpp \
     lfs/dbrw.cpp \
-    lfs/util.cpp \
+    util/util.cpp \
     lfs/derflaaction.cpp \
     alfred/alfredworkflow.cpp \
     alfred/alfredworkflowinput.cpp \
@@ -37,7 +37,7 @@ HEADERS  += gui/derflawidget.h \
     stdafx.h \
     lfs/localfsscanner.h \
     lfs/dbrw.h \
-    lfs/util.h \
+    util/util.h \
     lfs/derflaaction.h \
     alfred/alfredworkflow.h \
     alfred/alfredworkflowinput.h \
@@ -72,10 +72,10 @@ win32: {
 
     QT += winextras
 
-    SOURCES += lfs/win_util.cpp \
+    SOURCES += util/win_util.cpp \
         gui/WinIconProvider.cpp
 
-    HEADERS += lfs/win_util.h \
+    HEADERS += util/win_util.h \
         gui/WinIconProvider.h
 
     # Windows icons
