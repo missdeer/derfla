@@ -38,6 +38,9 @@ bool AlfredWorkflowInput::hitKeyword(const QString& keyword)
 
 void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionList& derflaActions)
 {
+    if (!hitKeyword(input))
+        return;
+
     if (typeId_ == "alfred.workflow.input.keyword")
     {
         if (!text_.isEmpty())
@@ -46,7 +49,11 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
             da->setTitle(text_);
             da->setDescription(subtext_);
             QPixmap pixmap;
-            pixmap.load(workingDirectory_ + "/icon.png");
+            QString icon(workingDirectory_ + "/icon.png");
+            if (QFile::exists(icon))
+                pixmap.load(icon);
+            else
+                pixmap.load(":/derfla.ico");
             da->setIcon(QIcon(pixmap));
             // do something to associate with Derfla actions 
             derflaActions.append(da);
@@ -69,7 +76,11 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
             // run script 
         }
         QPixmap pixmap;
-        pixmap.load(workingDirectory_ % "/icon.png");
+        QString icon(workingDirectory_ + "/icon.png");
+        if (QFile::exists(icon))
+            pixmap.load(icon);
+        else
+            pixmap.load(":/derfla.ico");
         da->setIcon(QIcon(pixmap));
         // do something to associate with Derfla actions 
         derflaActions.append(da);
