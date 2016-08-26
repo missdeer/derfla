@@ -18,60 +18,71 @@
 
 #if defined (__cplusplus)
 
+// QtCore
 #include <QtCore>
-#include <QtGui>
-#include <QStyleOption>
-#include <QSettings>
-#include <QMessageBox>
+#include <QFuture>
+#include <QFutureWatcher>
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
+#include <QSettings>
 #include <QUrl>
-#include <QFileDialog>
 #include <QTemporaryFile>
 #include <QDate>
-#include <QDesktopServices>
 #include <QDateTime>
 #include <QThreadPool>
 #include <QCryptographicHash>
-#include <QProgressDialog>
 #include <QStandardPaths>
-#include <QDomDocument>
 #include <QTextStream>
-#include <QStringBuilder>
-#include <QApplication>
-#include <QMenu>
-#include <QClipboard>
-#include <QSplitter>
-#include <QHeaderView>
-#include <QtConcurrent>
-#include <QDesktopWidget>
-#include <QInputDialog>
 #include <QSharedPointer>
-#include <QTabWidget>
-#include <QDialog>
 #include <QItemSelection>
 #include <QAbstractTableModel>
 #include <QList>
-#include <QFuture>
-#include <QMainWindow>
 #include <QPoint>
+#include <QCommandLineOption>
+#include <QCommandLineParser>
+#include <QStringBuilder>
+
+// QtGui
+#include <QtGui>
+#include <QDesktopServices>
+#include <QClipboard>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+
+// Qt Widgets
+#include <QApplication>
+#include <QStyleOption>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QProgressDialog>
+#include <QMenu>
+#include <QSplitter>
+#include <QHeaderView>
+#include <QDesktopWidget>
+#include <QInputDialog>
+#include <QTabWidget>
+#include <QDialog>
+#include <QMainWindow>
 #include <QTableView>
 #include <QFileIconProvider>
+#include <QLineEdit>
+#include <QHBoxLayout>
 
+// Qt Xml
+#include <QDomDocument>
+
+// Qt Concurrent
+#include <QtConcurrent>
+
+// Qt Sql
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlError>
 #include <QSqlDriver>
 
-#include <QCommandLineOption>
-#include <QCommandLineParser>
-#include <QLineEdit>
-#include <QDropEvent>
-#include <QDragEnterEvent>
-#include <QHBoxLayout>
-
+// Boost
 #include <boost/scope_exit.hpp>
 
 #define check_expiration do { \
