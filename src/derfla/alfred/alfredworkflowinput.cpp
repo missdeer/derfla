@@ -53,7 +53,7 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
             if (QFile::exists(icon))
                 pixmap.load(icon);
             else
-                pixmap.load(":/derfla.ico");
+                pixmap.load(":/derfla.png");
             da->setIcon(QIcon(pixmap));
             // do something to associate with Derfla actions 
             derflaActions.append(da);
@@ -80,7 +80,7 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
         if (QFile::exists(icon))
             pixmap.load(icon);
         else
-            pixmap.load(":/derfla.ico");
+            pixmap.load(":/derfla.png");
         da->setIcon(QIcon(pixmap));
         // do something to associate with Derfla actions 
         derflaActions.append(da);
