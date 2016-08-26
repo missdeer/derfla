@@ -18,10 +18,10 @@ SOURCES += main.cpp\
     gui/candidatelist.cpp \
     gui/candidatelistdelegate.cpp \
     gui/candidatelistwidget.cpp \
-    execute/localfsscanner.cpp \
-    execute/dbrw.cpp \
-    execute/util.cpp \
-    execute/derflaaction.cpp \
+    lfs/localfsscanner.cpp \
+    lfs/dbrw.cpp \
+    lfs/util.cpp \
+    lfs/derflaaction.cpp \
     alfred/alfredworkflow.cpp \
     alfred/alfredworkflowinput.cpp \
     alfred/alfredworkflowoutput.cpp \
@@ -35,10 +35,10 @@ HEADERS  += gui/derflawidget.h \
     gui/candidatelistdelegate.h \
     gui/candidatelistwidget.h \
     stdafx.h \
-    execute/localfsscanner.h \
-    execute/dbrw.h \
-    execute/util.h \
-    execute/derflaaction.h \
+    lfs/localfsscanner.h \
+    lfs/dbrw.h \
+    lfs/util.h \
+    lfs/derflaaction.h \
     alfred/alfredworkflow.h \
     alfred/alfredworkflowinput.h \
     alfred/alfredworkflowoutput.h \
@@ -49,7 +49,7 @@ HEADERS  += gui/derflawidget.h \
 FORMS    += \
     gui/candidatelist.ui
 
-INCLUDEPATH += $$PWD $$PWD/gui $$PWD/execute $$PWD/alfred
+INCLUDEPATH += $$PWD $$PWD/gui $$PWD/lfs $$PWD/alfred
 
 macx: {
     QMAKE_MAC_SDK = macosx10.11
@@ -72,10 +72,10 @@ win32: {
 
     QT += winextras
 
-    SOURCES += execute/win_util.cpp \
+    SOURCES += lfs/win_util.cpp \
         gui/WinIconProvider.cpp
 
-    HEADERS += execute/win_util.h \
+    HEADERS += lfs/win_util.h \
         gui/WinIconProvider.h
 
     # Windows icons
