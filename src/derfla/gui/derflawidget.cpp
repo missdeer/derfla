@@ -24,8 +24,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     setAttribute(Qt::WA_TranslucentBackground);
 
     setFocusPolicy(Qt::ClickFocus);
-
-
+    
     if (!applySkin("derfla"))
     {
         qCritical() << "loading skin failed";
@@ -89,9 +88,10 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     hotkeyManager_->registerHotkey("Alt+Space");
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
 
-//    connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::finishedScan);
-//    localFSScanner_->start();
-//    QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
+    connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::finishedScan);
+    localFSScanner_->start();
+    QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
+
     QTimer::singleShot(1000, this, &DerflaWidget::loadInstalledAlfredWorkflows);
 }
 
@@ -331,9 +331,13 @@ void DerflaWidget::installAlfredWorkflows()
 void DerflaWidget::scheduleScan()
 {
     if (qApp->activeWindow())
+    {
+        qDebug() << "since windows is active, try in 5 minutes" << QThread::currentThreadId();
         QTimer::singleShot(5 * 60 * 1000, this, &DerflaWidget::scheduleScan);
+    }
     else
     {
+        qDebug() << "schedule scan now" << QThread::currentThreadId();
         localFSScanner_->start();
         QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
     }
@@ -341,6 +345,7 @@ void DerflaWidget::scheduleScan()
 
 void DerflaWidget::finishedScan()
 {
+    qDebug() << "stop scan local file system" << QThread::currentThreadId();
     localFSScanner_->stop();
 }
 

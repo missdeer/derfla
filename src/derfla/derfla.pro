@@ -65,6 +65,10 @@ FORMS    += \
 
 INCLUDEPATH += $$PWD $$PWD/gui $$PWD/lfs $$PWD/alfred $$PWD/util $$PWD/executor
 
+CONFIG(release, debug|release) : {
+    DEFINES += QT_NO_DEBUG_OUTPUT=1 QT_NO_INFO_OUTPUT=1
+}
+
 macx: {
 
     SOURCES +=  \
