@@ -52,6 +52,11 @@ public:
 
     bool Disabled() const { return disabled; }
     void Disabled(bool val) { disabled = val; }
+
+    bool operator==(const DerflaAction& da)
+    {
+        return id_ == da.id_;
+    }
 signals:
 
 public slots :
@@ -67,6 +72,7 @@ private:
     DerflaActionType actionType_;
 
     bool disabled = false;
+    QUuid id_;
     // members from AlfredWorkflowAction
     QString script_;
     QString appleScript_;

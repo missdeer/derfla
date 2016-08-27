@@ -7,6 +7,7 @@
 DerflaAction::DerflaAction(QObject *parent)
     : QObject(parent)
     , actionType_(DAT_UNKNOWN)
+    , id_(QUuid::createUuid())
 {
 
 }
