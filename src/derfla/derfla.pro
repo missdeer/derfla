@@ -111,7 +111,7 @@ win32: {
     contains(QMAKE_HOST.arch, x86_64): LIBS += -lEverything64
     else: LIBS += -lEverything32
 
-    QMAKE_LFLAGS += "/LTCG"
+    QMAKE_LFLAGS += "/NODEFAULTLIB:MSVCRT"
 #    CONFIG(release, debug|release): {
 #        copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Release/skins/)'
 #    } else {
