@@ -26,7 +26,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     setFocusPolicy(Qt::ClickFocus);
 
 
-    if (!applySkin(":/skins/derfla.derflaskin"))
+    if (!applySkin("derfla"))
     {
         qCritical() << "loading skin failed";
         return;
