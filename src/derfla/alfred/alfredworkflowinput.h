@@ -60,6 +60,10 @@ private:
     QStringList scopes_;
     QStringList types_;
     AlfredWorkflowInputFieldList fields_;
+
+    QString argument_;
+    void extractArgument(const QString& input);
+    QString embedArgument(const QString& text);
 };
 
 typedef QSharedPointer<AlfredWorkflowInput> AlfredWorkflowInputPtr;

@@ -45,10 +45,13 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
         pixmap.load(":/derfla.png");
     da->setIcon(QIcon(pixmap));
 
+    if (argumentType_ != 2)
+        extractArgument(input);
+
     if (typeId_ == "alfred.workflow.input.keyword")
     {
-        da->setTitle(text_.isEmpty() ? tr("") : text_);
-        da->setDescription(subtext_);
+        da->setTitle(text_.isEmpty() ? argument_ : embedArgument(text_));
+        da->setDescription(embedArgument(subtext_));
         // do something to associate with Derfla actions 
         derflaActions.append(da);
     }
@@ -57,7 +60,7 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
         if (runningSubtext_.isEmpty())
             da->setTitle(tr("Loading, wait for a moment please..."));
         else
-            da->setTitle(runningSubtext_);
+            da->setTitle(embedArgument(runningSubtext_));
         da->Disabled(true);
         // run script 
 
@@ -66,8 +69,8 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
     }
     else if (typeId_ == "alfred.workflow.input.filefilter")
     {
-        da->setTitle(title_.isEmpty() ? tr("Searching files...") : title_);
-        da->setDescription(subtext_);
+        da->setTitle(title_.isEmpty() ? tr("Searching files...") : embedArgument(title_));
+        da->setDescription(embedArgument(subtext_));
         da->Disabled(true);
         // do search files in scope with the fields by keyword
 
@@ -141,4 +144,26 @@ void AlfredWorkflowInput::parse(const QString& type, const QUuid uid, const QVar
     }
 
     qDebug() << "keyword:" << keyword_;
+}
+
+void AlfredWorkflowInput::extractArgument(const QString& input)
+{
+    int index = input.indexOf(keyword_);
+    if (index == 0)
+    {
+        argument_ = input.mid(keyword_.length() );
+        while (argument_.startsWith(QChar(' ')))
+            argument_.remove(0, 1);
+    }
+}
+
+QString AlfredWorkflowInput::embedArgument(const QString& text)
+{
+    if (argumentType_ == 2)
+        return text_;
+    if (text.isEmpty())
+        return argument_;
+
+    QString res(text);
+    return res.replace("{query}", argument_);
 }
