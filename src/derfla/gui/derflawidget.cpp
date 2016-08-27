@@ -25,7 +25,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     setFocusPolicy(Qt::ClickFocus);
     
-    if (!applySkin("derfla"))
+    if (!applySkin("black_glass_wide"))
     {
         qCritical() << "loading skin failed";
         return;
@@ -252,6 +252,7 @@ void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 void DerflaWidget::loadSkin()
 {
     check_expiration;
+    hideCandidateList();
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Load Derfla Skin"),
         "",
@@ -303,6 +304,7 @@ void DerflaWidget::quit()
 void DerflaWidget::installAlfredWorkflows()
 {
     check_expiration;
+    hideCandidateList();
     QStringList fileNames = QFileDialog::getOpenFileNames(this,
 #if defined(Q_OS_MAC)
         tr("Install Alfred Workflow"),
