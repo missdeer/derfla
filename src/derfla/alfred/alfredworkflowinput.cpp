@@ -26,15 +26,9 @@ bool AlfredWorkflowInput::hitKeyword(const QString& keyword)
             if (kws[index] != kws_[index])
                 return false;            
         }
-        qDebug() << "withSpace" << keyword_ << keyword;
         return true;
     }
-    else
-    {
-        if (keyword_ == keyword)
-            qDebug() << "not withSpace" << keyword_ << keyword;
-        return keyword_ == keyword;
-    }
+    return keyword_ == keyword;
 }
 
 void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionList& derflaActions)
