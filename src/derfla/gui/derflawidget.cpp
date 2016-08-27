@@ -322,7 +322,10 @@ void DerflaWidget::installAlfredWorkflows()
             auto it = std::find_if(alfredWorkflowList_.begin(), alfredWorkflowList_.end(),
                                    [&](AlfredWorkflowPtr a) { return aw->bundleId() == a->bundleId(); });
             if (alfredWorkflowList_.end() != it)
-                alfredWorkflowList_.erase(it);
+            {
+                qWarning() << "found an existed workflow with the same bundle id" << aw->bundleId();
+                //alfredWorkflowList_.erase(it);
+            }
             alfredWorkflowList_.append(aw);
         }
     });
@@ -362,6 +365,7 @@ void DerflaWidget::showCandidateList()
         [&inputText](AlfredWorkflowPtr aw) {
         return aw->hitKeyword(inputText);
     });
+
     if (alfredWorkflowList.empty())
         candidateList_->update(inputText);
     else
@@ -564,7 +568,10 @@ void DerflaWidget::loadInstalledAlfredWorkflows()
             auto it = std::find_if(alfredWorkflowList_.begin(), alfredWorkflowList_.end(),
                 [&](AlfredWorkflowPtr a) { return aw->bundleId() == a->bundleId(); });
             if (alfredWorkflowList_.end() != it)
-                alfredWorkflowList_.erase(it);
+            {
+                qWarning() << "found an existed workflow with the same bundle id" << aw->bundleId();
+                //alfredWorkflowList_.erase(it);
+            }
             alfredWorkflowList_.append(aw);
         }
     });

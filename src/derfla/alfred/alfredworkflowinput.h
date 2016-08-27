@@ -46,7 +46,7 @@ private:
     QString runningSubtext_;
 
     QString keyword_;
-    int argumentType_ = 0; // 0 - arguments required, 1- arguments optional, 2- none
+    int argumentType_ = 2; // 0 - arguments required, 1- arguments optional, 2- none
     int type_ = 0; // 0-bash, 1-php, 2-ruby, 3-python, 4-perl, 5-zsh, 6-osascript(AS), 7-osascript(JS)
     int escaping_ = 0;
     int dateRange_ = 0;
@@ -56,11 +56,10 @@ private:
     bool queueDelayImmediatelyInitially = false;
     bool withSpace_ = false;
     bool anchorFields_ = true;
-    bool includeSystem_ = true;
+    bool includeSystem_ = false;
     QStringList scopes_;
     QStringList types_;
     AlfredWorkflowInputFieldList fields_;
-
 };
 
 typedef QSharedPointer<AlfredWorkflowInput> AlfredWorkflowInputPtr;

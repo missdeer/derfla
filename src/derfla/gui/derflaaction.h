@@ -50,6 +50,8 @@ public:
     DerflaActionType actionType() const;
     void setActionType(const DerflaActionType& actionType);
 
+    bool Disabled() const { return disabled; }
+    void Disabled(bool val) { disabled = val; }
 signals:
 
 public slots :
@@ -63,6 +65,8 @@ private:
     QString arguments_;
     QString workingDirectory_;
     DerflaActionType actionType_;
+
+    bool disabled = false;
     // members from AlfredWorkflowAction
     QString script_;
     QString appleScript_;

@@ -89,25 +89,25 @@ bool AlfredWorkflow::loadFromDirectory(const QString &dirName)
         {
             AlfredWorkflowInputPtr awi(new AlfredWorkflowInput(dirName, this));
             awi->parse(type, uid, config);
-            inputList.append(awi);
+            inputList_.append(awi);
         }
         else if (type.startsWith("alfred.workflow.output."))
         {
             AlfredWorkflowOutputPtr awo(new AlfredWorkflowOutput(dirName, this));
             awo->parse(type, uid, config);
-            outputList.append(awo);
+            outputList_.append(awo);
         }
         else if (type.startsWith("alfred.workflow.action."))
         {
             AlfredWorkflowActionPtr awa(new AlfredWorkflowAction(dirName, this));
             awa->parse(type, uid, config);
-            actionList.append(awa);
+            actionList_.append(awa);
         }
         else if (type.startsWith("alfred.workflow.trigger."))
         {
             AlfredWorkflowTriggerPtr awt(new AlfredWorkflowTrigger(dirName, this));
             awt->parse(type, uid, config);
-            triggerList.append(awt);
+            triggerList_.append(awt);
         }
     }
 
@@ -157,17 +157,17 @@ bool AlfredWorkflow::disabled() const
 
 bool AlfredWorkflow::hitKeyword(const QString &keyword)
 {
-    auto it = std::find_if(inputList.begin(), inputList.end(),
+    auto it = std::find_if(inputList_.begin(), inputList_.end(),
         [&keyword](AlfredWorkflowInputPtr awi) {
         return awi->hitKeyword(keyword);
     });
-    return inputList.end() != it;
+    return inputList_.end() != it;
 }
 
 DerflaActionList& AlfredWorkflow::getActions(const QString& input)
 {
     derflaActions_.clear();
-    for (AlfredWorkflowInputPtr awi : inputList)
+    for (AlfredWorkflowInputPtr awi : inputList_)
     {
         awi->getDerflaActions(input, derflaActions_);
     }

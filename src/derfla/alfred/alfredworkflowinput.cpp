@@ -12,6 +12,7 @@ bool AlfredWorkflowInput::hitKeyword(const QString& keyword)
 {
     if (keyword_.isEmpty())
         return false;
+
     if (withSpace_)
     {
         if (keyword.length() < keyword_.length())
@@ -41,56 +42,47 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
     if (!hitKeyword(input))
         return;
 
+    DerflaActionPtr da(new DerflaAction);
+    QPixmap pixmap;
+    QString icon(workingDirectory_ + "/icon.png");
+    if (QFile::exists(icon))
+        pixmap.load(icon);
+    else
+        pixmap.load(":/derfla.png");
+    da->setIcon(QIcon(pixmap));
+
     if (typeId_ == "alfred.workflow.input.keyword")
     {
-        if (!text_.isEmpty())
-        {
-            DerflaActionPtr da(new DerflaAction);
-            da->setTitle(text_);
-            da->setDescription(subtext_);
-            QPixmap pixmap;
-            QString icon(workingDirectory_ + "/icon.png");
-            if (QFile::exists(icon))
-                pixmap.load(icon);
-            else
-                pixmap.load(":/derfla.png");
-            da->setIcon(QIcon(pixmap));
-            // do something to associate with Derfla actions 
-            derflaActions.append(da);
-        }
+        da->setTitle(text_.isEmpty() ? tr("") : text_);
+        da->setDescription(subtext_);
+        // do something to associate with Derfla actions 
+        derflaActions.append(da);
     }
     else if (typeId_ == "alfred.workflow.input.scriptfilter")
     {
-        DerflaActionPtr da(new DerflaAction);
-        if (input.isEmpty())
-        {
-            da->setTitle(title_);
-            da->setDescription(subtext_);
-        }
+        if (runningSubtext_.isEmpty())
+            da->setTitle(tr("Loading, wait for a moment please..."));
         else
-        {
-            if (runningSubtext_.isEmpty())
-                da->setTitle(tr("Loading..."));
-            else
-                da->setTitle(runningSubtext_);
-            // run script 
-        }
-        QPixmap pixmap;
-        QString icon(workingDirectory_ + "/icon.png");
-        if (QFile::exists(icon))
-            pixmap.load(icon);
-        else
-            pixmap.load(":/derfla.png");
-        da->setIcon(QIcon(pixmap));
+            da->setTitle(runningSubtext_);
+        da->Disabled(true);
+        // run script 
+
         // do something to associate with Derfla actions 
         derflaActions.append(da);
     }
     else if (typeId_ == "alfred.workflow.input.filefilter")
     {
+        da->setTitle(title_.isEmpty() ? tr("Searching files...") : title_);
+        da->setDescription(subtext_);
+        da->Disabled(true);
+        // do search files in scope with the fields by keyword
 
+        // do something to associate with Derfla actions 
+        derflaActions.append(da);
     }
     else
     {
+        Q_ASSERT(0);
         qWarning() << "unsupported workflow";
     }
 }
