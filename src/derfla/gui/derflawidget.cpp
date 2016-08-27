@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <JlCompress.h>
 #include "uglobalhotkeys.h"
 #include "CharLineEdit.h"
 #include "candidatelist.h"
@@ -25,7 +26,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     setFocusPolicy(Qt::ClickFocus);
 
 
-    if (!applySkin("derfla"))
+    if (!applySkin(":/skins/derfla.derflaskin"))
     {
         qCritical() << "loading skin failed";
         return;
@@ -252,13 +253,12 @@ void DerflaWidget::loadSkin()
 {
     check_expiration;
     QString fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("Load Derfla Skin"),
-                                                    "",
-                                                    tr("Derfla Skin Configuration (*.xml);;All files (*.*)"));
+        tr("Load Derfla Skin"),
+        "",
+        tr("Derfla Skin File (*.derflaskin);;Derfla Skin Configuration (*.xml);;All files (*.*)"));
     if (fileName.isEmpty())
         return;
-    QFileInfo f(fileName);
-    applySkin(f.baseName());
+    applySkin(fileName);
 }
 
 void DerflaWidget::onLoadingAnimationTimer()
@@ -391,41 +391,57 @@ void DerflaWidget::doBackTab()
 bool DerflaWidget::applySkin(const QString& skin)
 {
     check_expiration;
-    QString s = QApplication::applicationDirPath();
-    const QString skinPath = QString("/skins/%1.xml").arg(skin);
-#if defined(Q_OS_MAC)
-    QDir d(s);
-    d.cdUp();
-    d.cd("Resources");
-    s = d.absolutePath() +skinPath ;
-#else
-    s += skinPath;
-#endif
-
-    QDomDocument doc;
-    QFile file(s);
-    if (!file.open(QIODevice::ReadOnly))
-        return false;
-    if (!doc.setContent(&file))
+    QString s;
+    if (!QFileInfo::exists(skin))
     {
-        file.close();
+        // load by skin name 
+        s = QApplication::applicationDirPath();
+        const QString skinPath = QString("/skins/%1.xml").arg(skin);
+#if defined(Q_OS_MAC)
+        QDir d(s);
+        d.cdUp();
+        d.cd("Resources");
+        s = d.absolutePath() + skinPath;
+#else
+        s += skinPath;
+#endif
+        if (!QFile::exists(s))
+        {
+            // load by skin package - *.derflaskin, should be decompressed first
+            int index = s.lastIndexOf(".xml");
+            Q_ASSERT(index > 0);
+            s.remove(index, 4);
+            s.append(".derflaskin");
+            if (!loadSkinPackage(s, s))
+            {
+                return false;
+            }
+        }
+    }
+    else
+    {
+        QFileInfo fi(skin);
+        if (fi.suffix() == "xml")
+        {
+            // load by skin configuration file - *.xml
+            s = skin;
+        }
+        else
+        {
+            // load by skin package - *.derflaskin, should be decompressed first
+            if (!loadSkinPackage(skin, s))
+            {
+                return false;
+            }
+        }
+    }
+        
+    QString imagePath;
+    QString inputStyle;
+    if (!loadSkinConfiguration(s, imagePath, inputStyle))
+    {
         return false;
     }
-    file.close();
-
-    QDomElement docElem = doc.documentElement();
-    QDomElement imageElem = docElem.firstChildElement("image");
-    if (imageElem.isNull())
-        return false;
-
-    s = QApplication::applicationDirPath();
-#if defined(Q_OS_MAC)
-    d.setPath(s);
-    d.cdUp();
-    d.cd("Resources");
-    s = d.absolutePath();
-#endif
-    QString imagePath = QString("%1/skins/%2").arg(s).arg(imageElem.text());
 
     if (!backgroundImage_.load(imagePath))
     {
@@ -434,16 +450,12 @@ bool DerflaWidget::applySkin(const QString& skin)
     }
     resize(backgroundImage_.size());
 
-    QDomElement issElem = docElem.firstChildElement("inputstyle");
-    if (issElem.isNull())
-        return false;
 
+    input_->setStyleSheet(inputStyle);
     QFont f = input_->font();
     f.setFamily(globalDefaultFontFamily);
     input_->setFont(f);
-
-    input_->setStyleSheet(issElem.text());
-
+    
     return true;
 }
 
@@ -458,6 +470,74 @@ void DerflaWidget::hideCandidateList()
     check_expiration;
     if (candidateList_->isVisible())
         candidateList_->hide();
+}
+
+bool DerflaWidget::loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle)
+{
+    QDomDocument doc;
+    QFile file(configurationPath);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qCritical() << "can't open skin configuration file" << configurationPath;
+        return false;
+    }
+
+    if (!doc.setContent(&file))
+    {
+        qCritical() << "can't parse skin configuration file" << configurationPath;
+        file.close();
+        return false;
+    }
+    file.close();
+
+    QDomElement docElem = doc.documentElement();
+    QDomElement imageElem = docElem.firstChildElement("image");
+    if (imageElem.isNull())
+    {
+        qCritical() << "missing image element in skin configuration file" << configurationPath;
+        return false;
+    }
+    
+    QFileInfo cfg(configurationPath);
+
+    bgImagePath = QString("%1/%2").arg(cfg.absolutePath()).arg(imageElem.text());
+
+    QDomElement issElem = docElem.firstChildElement("inputstyle");
+    if (issElem.isNull())
+    {
+        qCritical() << "missing inputstyle element in skin configuration file" << configurationPath;
+        return false;
+    }
+    inputStyle = issElem.text();
+
+    return true;
+}
+
+bool DerflaWidget::loadSkinPackage(const QString& skinPath, QString& configurationPath)
+{
+    QString dirName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/Derfla/SkinTmp";
+    QDir dir(dirName);
+    if (!dir.exists())
+    {
+        dir.mkpath(dirName);
+    }
+    QStringList files = JlCompress::extractDir(skinPath, dirName);
+    if (files.empty())
+    {
+        qCritical() << "extracting" << skinPath << "to" << dirName << "failed";
+        return false;
+    }
+    configurationPath = dirName % "/skin.xml";
+    if (QFile::exists(configurationPath))
+        return true;
+
+    configurationPath = dirName % "/" % QFileInfo(skinPath).completeBaseName() % ".xml";
+    if (QFile::exists(configurationPath))
+        return true;
+
+    configurationPath.clear();
+    qCritical() << "can't find configuration file in skin package" << skinPath;
+    return false;
 }
 
 void DerflaWidget::loadInstalledAlfredWorkflows()

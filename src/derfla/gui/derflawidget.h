@@ -63,6 +63,8 @@ private:
     void waiting();
     void stopWaiting();
     void hideCandidateList();
+    bool loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle);
+    bool loadSkinPackage(const QString& skinPath, QString& configurationPath);
 };
 
 #endif // DerflaWidget_H

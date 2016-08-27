@@ -83,10 +83,10 @@ macx: {
     CONFIG(release, debug|release) : {
     }
     QMAKE_INFO_PLIST = osxInfo.plist
-    copy_skins.commands = 'cp -R \"$$PWD/skins\" \"$${TARGET}.app/Contents/Resources\"'
-    QMAKE_EXTRA_TARGETS +=  copy_skins
-    POST_TARGETDEPS += copy_skins
-    QMAKE_POST_LINK += $$quote(cp -R \"$$PWD/skins\" \"$${TARGET}.app/Contents/Resources\")
+#    copy_skins.commands = 'cp -R \"$$PWD/skins\" \"$${TARGET}.app/Contents/Resources\"'
+#    QMAKE_EXTRA_TARGETS +=  copy_skins
+#    POST_TARGETDEPS += copy_skins
+#    QMAKE_POST_LINK += $$quote(cp -R \"$$PWD/skins\" \"$${TARGET}.app/Contents/Resources\")
 }
 
 win32: {
@@ -112,13 +112,13 @@ win32: {
     else: LIBS += -lEverything32
 
     QMAKE_LFLAGS += "/LTCG"
-    CONFIG(release, debug|release): {
-        copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Release/skins/)'
-    } else {
-        copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Debug/skins/)'
-    }
-    QMAKE_EXTRA_TARGETS +=  copy_skins
-    POST_TARGETDEPS += copy_skins
+#    CONFIG(release, debug|release): {
+#        copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Release/skins/)'
+#    } else {
+#        copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Debug/skins/)'
+#    }
+#    QMAKE_EXTRA_TARGETS +=  copy_skins
+#    POST_TARGETDEPS += copy_skins
 }
 
 RESOURCES += \
