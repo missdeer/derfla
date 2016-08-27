@@ -140,8 +140,11 @@ void CandidateList::onEnter()
         return;
     }
     DerflaActionPtr da = dal_.at(index);
-    da->run();
-    emit done();
+    if (!da->Disabled())
+    {
+        da->run();
+        emit done();
+    }
 }
 
 bool CandidateList::getActiveWindowFlag() const
