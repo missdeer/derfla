@@ -133,9 +133,9 @@ void DerflaWidget::paintEvent(QPaintEvent* event)
         painter.drawPixmap(0, 0, backgroundImage_);
     else
     {
-        painter.drawPixmap(0, 0, left);
-        painter.drawPixmap(qMin(50, size.width() / 3), 0, mid);
-        painter.drawPixmap(widgetMinWidth_ - qMin(50, size.width() / 3), 0, right);
+        painter.drawPixmap(0, 0, leftPartBackgroundImage_);
+        painter.drawPixmap(qMin(50, size.width() / 3), 0, midPartBackgroundImage_);
+        painter.drawPixmap(widgetMinWidth_ - qMin(50, size.width() / 3), 0, rightPartBackgroundImage_);
     }
     QWidget::paintEvent(event);
 }
@@ -470,13 +470,12 @@ bool DerflaWidget::applySkin(const QString& skin)
     }
     QSize size = backgroundImage_.size();
 
-    left = backgroundImage_.copy(0, 0, 
+    leftPartBackgroundImage_ = backgroundImage_.copy(0, 0, 
         qMin( 50, size.width() / 3), size.height());
-    mid = backgroundImage_.copy(qMin(50, size.width() / 3), 0, 
+    midPartBackgroundImage_ = backgroundImage_.copy(qMin(50, size.width() / 3), 0, 
         size.width() - qMin(100, size.width()/3 * 2), size.height()).scaled(widgetMinWidth_ - qMin(100, size.width() / 3 * 2), size.height());
-    right = backgroundImage_.copy(size.width() - qMin(50, size.width() / 3), 0, 
+    rightPartBackgroundImage_ = backgroundImage_.copy(size.width() - qMin(50, size.width() / 3), 0, 
         qMin(50, size.width() / 3), size.height());
-    qDebug() << left.size() << mid.size() << right.size();
 
     if (size.width() < widgetMinWidth_)
         size.setWidth(widgetMinWidth_);

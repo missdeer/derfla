@@ -48,9 +48,9 @@ private:
     const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;
     QPixmap backgroundImage_;
-    QPixmap left;
-    QPixmap mid;
-    QPixmap right;
+    QPixmap leftPartBackgroundImage_;
+    QPixmap midPartBackgroundImage_;
+    QPixmap rightPartBackgroundImage_;
     QTimer* loadingAnimationTimer_;
     CharLineEdit* input_;
     QSystemTrayIcon* trayIcon_;
