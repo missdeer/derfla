@@ -127,7 +127,16 @@ void DerflaWidget::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     style()->drawPrimitive(QStyle::PE_Widget, &styleOption, &painter, this);
-    painter.drawPixmap(0, 0, backgroundImage_);
+    QSize size(backgroundImage_.size());
+
+    if (size.width() > widgetMinWidth_)
+        painter.drawPixmap(0, 0, backgroundImage_);
+    else
+    {
+        painter.drawPixmap(0, 0, left);
+        painter.drawPixmap(qMin(50, size.width() / 3), 0, mid);
+        painter.drawPixmap(widgetMinWidth_ - qMin(50, size.width() / 3), 0, right);
+    }
     QWidget::paintEvent(event);
 }
 
@@ -459,8 +468,19 @@ bool DerflaWidget::applySkin(const QString& skin)
         qCritical() << "can't load picture from " << imagePath;
         return false;
     }
-    resize(backgroundImage_.size());
+    QSize size = backgroundImage_.size();
 
+    left = backgroundImage_.copy(0, 0, 
+        qMin( 50, size.width() / 3), size.height());
+    mid = backgroundImage_.copy(qMin(50, size.width() / 3), 0, 
+        size.width() - qMin(100, size.width()/3 * 2), size.height()).scaled(widgetMinWidth_ - qMin(100, size.width() / 3 * 2), size.height());
+    right = backgroundImage_.copy(size.width() - qMin(50, size.width() / 3), 0, 
+        qMin(50, size.width() / 3), size.height());
+    qDebug() << left.size() << mid.size() << right.size();
+
+    if (size.width() < widgetMinWidth_)
+        size.setWidth(widgetMinWidth_);
+    resize(size);
 
     input_->setStyleSheet(inputStyle);
     QFont f = input_->font();

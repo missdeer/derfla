@@ -8,6 +8,6 @@
 	color: white;
 	selection-background-color: darkgray;
 	qproperty-alignment: AlignLeft;
-	qproperty-geometry: rect(46 62 150 68); }
+	qproperty-geometry: rect(46 62 370 68); }
 	</inputstyle>
 </skin>

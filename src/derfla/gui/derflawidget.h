@@ -45,8 +45,12 @@ private slots:
     void finishedScan();
     void loadInstalledAlfredWorkflows();
 private:
+    const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;
     QPixmap backgroundImage_;
+    QPixmap left;
+    QPixmap mid;
+    QPixmap right;
     QTimer* loadingAnimationTimer_;
     CharLineEdit* input_;
     QSystemTrayIcon* trayIcon_;

@@ -42,6 +42,7 @@
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 #include <QStringBuilder>
+#include <QProcess>
 
 // QtGui
 #include <QtGui>
