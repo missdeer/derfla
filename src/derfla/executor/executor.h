@@ -30,6 +30,8 @@ protected:
     QString workingDirectory_;
     QString program_;
     QStringList arguments_;
+
+private:
 };
 
 #endif // EXECUTOR_H

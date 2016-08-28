@@ -1,13 +1,10 @@
 <skin>
 	<image>derfla.png</image>
 	<inputstyle>QLineEdit { font: 48px;
-	border: 0px solid gray;
-	border-radius: 5px;
-	padding: 0 8px;
-	background-color: rgba(0,0,0,0%);
+	border-width: 0px;
+	background-color: rgba(0,244,120,0%);
+	border-style: solid;
 	color: white;
-	selection-background-color: darkgray;
 	qproperty-alignment: AlignLeft;
-	qproperty-geometry: rect(46 62 370 68); }
-	</inputstyle>
+	qproperty-geometry: rect(46 62 375 68); }</inputstyle>
 </skin>
