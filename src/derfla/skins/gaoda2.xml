@@ -1,0 +1,10 @@
+<skin>
+	<image>gaoda2.png</image>
+	<inputstyle>QLineEdit { font: 48px;
+	border-width: 0px;
+	background-color: rgba(0,244,120,0%);
+	border-style: solid;
+	color: black;
+	qproperty-alignment: AlignLeft;
+	qproperty-geometry: rect(142 160 310 60);}</inputstyle>
+</skin>
