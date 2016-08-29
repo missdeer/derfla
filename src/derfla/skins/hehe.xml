@@ -1,0 +1,10 @@
+<skin>
+	<image>hehe.png</image>
+	<inputstyle>QLineEdit { font: 80px;
+	border-width: 0px;
+	background-color: rgba(0,244,120,0%);
+	border-style: solid;
+	color: black;
+	qproperty-alignment: AlignLeft;
+	qproperty-geometry: rect(46 83 335 90);}</inputstyle>
+</skin>

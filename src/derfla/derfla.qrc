@@ -3,10 +3,6 @@
         <file>derfla.png</file>
         <file>derfla.ico</file>
         <file>loading.png</file>
-        <file>skins/black_glass.derflaskin</file>
-        <file>skins/black_glass_wide.derflaskin</file>
         <file>skins/derfla.derflaskin</file>
-        <file>skins/mercury.derflaskin</file>
-        <file>skins/mercury_wide.derflaskin</file>
     </qresource>
 </RCC>
