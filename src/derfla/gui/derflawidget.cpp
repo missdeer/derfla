@@ -414,6 +414,8 @@ bool DerflaWidget::applySkin(const QString& skin)
     QString s;
     if (!QFileInfo::exists(skin))
     {
+        if (applySkin(QString(":/skins/%1.derflaskin").arg(skin)))
+            return true;
         // load by skin name 
         s = QApplication::applicationDirPath();
         const QString skinPath = QString("/skins/%1.xml").arg(skin);
@@ -545,12 +547,10 @@ bool DerflaWidget::loadSkinConfiguration(const QString& configurationPath, QStri
 
 bool DerflaWidget::loadSkinPackage(const QString& skinPath, QString& configurationPath)
 {
-    QString dirName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/Derfla/SkinTmp";
+    QString dirName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/SkinTmp";
     QDir dir(dirName);
-    if (!dir.exists())
-    {
-        dir.mkpath(dirName);
-    }
+    dir.removeRecursively();
+    dir.mkpath(dirName);
     QStringList files = JlCompress::extractDir(skinPath, dirName);
     if (files.empty())
     {
