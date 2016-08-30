@@ -1,5 +1,5 @@
 <skin>
-	<image>gaoda1.png</image>
+	<image>gundam1.png</image>
 	<inputstyle>QLineEdit { font: 48px;
 	border-width: 0px;
 	background-color: rgba(0,244,120,0%);
