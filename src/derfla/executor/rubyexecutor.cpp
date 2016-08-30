@@ -28,3 +28,8 @@ bool RubyExecutor::run()
     process_->start(program_, QStringList() << "-e" << script_);
     return false;
 }
+
+void RubyExecutor::escape()
+{
+
+}

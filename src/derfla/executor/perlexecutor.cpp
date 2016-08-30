@@ -28,3 +28,8 @@ bool PerlExecutor::run()
     process_->start(program_, QStringList() << "-c" << script_);
     return false;
 }
+
+void PerlExecutor::escape()
+{
+
+}
