@@ -28,3 +28,8 @@ bool PythonExecutor::run()
     process_->start(program_, QStringList() << "-c" << script_);
     return false;
 }
+
+void PythonExecutor::escape()
+{
+
+}

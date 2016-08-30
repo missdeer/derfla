@@ -28,3 +28,8 @@ bool ZshExecutor::run()
     process_->start(program_, QStringList() << "-c" << script_);
     return false;
 }
+
+void ZshExecutor::escape()
+{
+
+}

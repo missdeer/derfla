@@ -28,3 +28,8 @@ bool PHPExecutor::run()
     process_->start(program_, QStringList() << "-r" << script_);
     return false;
 }
+
+void PHPExecutor::escape()
+{
+
+}
