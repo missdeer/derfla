@@ -12,6 +12,9 @@ public:
 signals:
 
 public slots:
+
+private:
+    QString program_;
 };
 
 #endif // OSASCRIPTEXECUTOR_H

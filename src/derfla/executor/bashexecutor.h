@@ -12,6 +12,9 @@ public:
 signals:
 
 public slots:
+
+private:
+    QString program_;
 };
 
 #endif // BASHEXECUTOR_H

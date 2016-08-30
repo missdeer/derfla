@@ -10,27 +10,23 @@ public:
     explicit Executor(QObject *parent = 0);
     virtual ~Executor();
 
-    virtual bool run() = 0;
+    virtual bool run();
     virtual void setCommandline(const QString& cmdline) { cmdline_ = cmdline; }
     virtual void setWorkingDirectory(const QString& dir) { workingDirectory_ = dir; }
-    virtual void setProgram(const QString& program) { program_ = program; }
-    virtual void setArguments(const QStringList& arguments) { arguments_ = arguments; }
     virtual void getStdout(QByteArray& output);
     virtual void getStderr(QByteArray& err);
 
     static Executor* createExecutor(int type);
     static Executor* createExecutor(const QString& type);
 signals:
-
+    void errorOccurred(QProcess::ProcessError error);
+    void finished(int exitCode, QProcess::ExitStatus exitStatus);
 public slots:
 
 protected:
     QSharedPointer<QProcess> process_;
     QString cmdline_;
     QString workingDirectory_;
-    QString program_;
-    QStringList arguments_;
-
 private:
 };
 

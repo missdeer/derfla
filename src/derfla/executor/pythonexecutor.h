@@ -11,7 +11,10 @@ public:
     bool run();
 signals:
 
-public slots:
+public slots :
+
+private:
+    QString program_;
 };
 
 #endif // PYTHONEXECUTOR_H

@@ -19,6 +19,22 @@ Executor::~Executor()
 
 }
 
+
+bool Executor::run()
+{
+    if (process_.isNull())
+    {
+        process_.reset(new QProcess);
+        connect(process_.data(), SIGNAL(errorOccurred(QProcess::ProcessError)), this, SIGNAL(errorOccurred(QProcess::ProcessError)));
+        connect(process_.data(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SIGNAL(finished(int, QProcess::ExitStatus)));
+    }
+
+    process_->terminate();
+    process_->setWorkingDirectory(workingDirectory_);
+
+    return true;
+}
+
 void Executor::getStdout(QByteArray& output)
 {
     output = process_->readAllStandardOutput();
