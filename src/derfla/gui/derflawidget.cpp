@@ -489,15 +489,18 @@ bool DerflaWidget::applySkin(const QString& skin)
         backgroundImage_ = t.copy(0, 0, size.width(), size.height());
     }
 
-    leftPartBackgroundImage_ = backgroundImage_.copy(0, 0, 
-        size.width() / 2 -1, size.height());
-    midPartBackgroundImage_ = backgroundImage_.copy(size.width() / 2 - 1, 0,
-        2, size.height()).scaled(widgetMinWidth_ - (size.width() - 2), size.height());
-    rightPartBackgroundImage_ = backgroundImage_.copy(size.width() / 2 + 1, 0,
-        size.width() / 2 - 1, size.height());
-
     if (size.width() < widgetMinWidth_)
+    {
+        leftPartBackgroundImage_ = backgroundImage_.copy(0, 0,
+                                                         size.width() / 2 -1, size.height());
+        midPartBackgroundImage_ = backgroundImage_.copy(size.width() / 2 - 1, 0,
+                                                        2, size.height()).scaled(widgetMinWidth_ - (size.width() - 2), size.height());
+        rightPartBackgroundImage_ = backgroundImage_.copy(size.width() / 2 + 1, 0,
+                                                          size.width() / 2 - 1, size.height());
+
         size.setWidth(widgetMinWidth_);
+    }
+    resize(1, 1);
     resize(size);
 
     input_->setStyleSheet(inputStyle);
