@@ -17,3 +17,8 @@ bool OSAScriptExecutor::run()
 {
     return false;
 }
+
+void OSAScriptExecutor::escape()
+{
+
+}
