@@ -67,7 +67,7 @@ private:
     void waiting();
     void stopWaiting();
     void hideCandidateList();
-    bool loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle);
+    bool loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle, int& cutTop, int& cutBottom);
     bool loadSkinPackage(const QString& skinPath, QString& configurationPath);
 };
 

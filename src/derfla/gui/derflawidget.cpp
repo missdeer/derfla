@@ -460,7 +460,8 @@ bool DerflaWidget::applySkin(const QString& skin)
         
     QString imagePath;
     QString inputStyle;
-    if (!loadSkinConfiguration(s, imagePath, inputStyle))
+    int cutTop = -1, cutBottom = -1;
+    if (!loadSkinConfiguration(s, imagePath, inputStyle, cutTop, cutBottom))
     {
         return false;
     }
@@ -470,7 +471,23 @@ bool DerflaWidget::applySkin(const QString& skin)
         qCritical() << "can't load picture from " << imagePath;
         return false;
     }
+
     QSize size = backgroundImage_.size();
+
+    if (cutTop >= 0 && cutBottom > cutTop)
+    {
+        QPixmap topPartBackgroundImage = backgroundImage_.copy(0, 0, size.width(), cutTop);
+        QPixmap cutPartBackgroundImage = backgroundImage_.copy(0, cutTop, size.width(), cutBottom - cutTop);
+        QPixmap bottomPartBackgroundImage = backgroundImage_.copy(0, cutBottom, size.width(), size.height() - cutBottom);
+        size.setHeight(size.height() - (cutBottom - cutTop));
+        qDebug() << topPartBackgroundImage.size() << cutPartBackgroundImage.size() << bottomPartBackgroundImage.size() << size << backgroundImage_.size();
+        QPixmap t(size);
+        t.fill(Qt::transparent);
+        QPainter painter(&t);
+        painter.drawPixmap(0, 0, size.width(), cutTop, topPartBackgroundImage);
+        painter.drawPixmap(0, cutTop, size.width(), size.height()- cutTop, bottomPartBackgroundImage);
+        backgroundImage_ = t.copy(0, 0, size.width(), size.height());
+    }
 
     leftPartBackgroundImage_ = backgroundImage_.copy(0, 0, 
         size.width() / 2 -1, size.height());
@@ -504,7 +521,7 @@ void DerflaWidget::hideCandidateList()
         candidateList_->hide();
 }
 
-bool DerflaWidget::loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle)
+bool DerflaWidget::loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle, int& cutTop, int& cutBottom)
 {
     QDomDocument doc;
     QFile file(configurationPath);
@@ -541,6 +558,17 @@ bool DerflaWidget::loadSkinConfiguration(const QString& configurationPath, QStri
         return false;
     }
     inputStyle = issElem.text();
+
+    QDomElement cutTopElem = docElem.firstChildElement("cuttop");
+    if (!cutTopElem.isNull())
+    {
+        cutTop = cutTopElem.text().toInt();
+    }
+    QDomElement cutBottomElem = docElem.firstChildElement("cutbottom");
+    if (!cutBottomElem.isNull())
+    {
+        cutBottom = cutBottomElem.text().toInt();
+    }
 
     return true;
 }
