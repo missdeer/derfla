@@ -25,6 +25,6 @@ PythonExecutor::PythonExecutor(QObject *parent)
 bool PythonExecutor::run()
 {
     Executor::run();
-    process_->start(program_, QStringList() << "-c" << cmdline_);
+    process_->start(program_, QStringList() << "-c" << script_);
     return false;
 }

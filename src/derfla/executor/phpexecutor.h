@@ -15,6 +15,7 @@ public slots :
 
 private:
     QString program_;
+    void escape();
 };
 
 #endif // PHPEXECUTOR_H

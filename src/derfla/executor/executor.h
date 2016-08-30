@@ -11,7 +11,8 @@ public:
     virtual ~Executor();
 
     virtual bool run();
-    virtual void setCommandline(const QString& cmdline) { cmdline_ = cmdline; }
+    virtual void escape() = 0;
+    virtual void setScript(const QString& script) { script_ = script; }
     virtual void setWorkingDirectory(const QString& dir) { workingDirectory_ = dir; }
     virtual void getStdout(QByteArray& output);
     virtual void getStderr(QByteArray& err);
@@ -25,7 +26,7 @@ public slots:
 
 protected:
     QSharedPointer<QProcess> process_;
-    QString cmdline_;
+    QString script_;
     QString workingDirectory_;
 private:
 };

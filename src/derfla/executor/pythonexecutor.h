@@ -15,6 +15,7 @@ public slots :
 
 private:
     QString program_;
+    void escape();
 };
 
 #endif // PYTHONEXECUTOR_H

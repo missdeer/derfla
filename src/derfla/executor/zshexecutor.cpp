@@ -25,6 +25,6 @@ ZshExecutor::ZshExecutor(QObject *parent)
 bool ZshExecutor::run()
 {
     Executor::run();
-    process_->start(program_, QStringList() << "-c" << cmdline_);
+    process_->start(program_, QStringList() << "-c" << script_);
     return false;
 }

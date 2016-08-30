@@ -25,6 +25,6 @@ PHPExecutor::PHPExecutor(QObject *parent)
 bool PHPExecutor::run()
 {
     Executor::run();
-    process_->start(program_, QStringList() << "-r" << cmdline_);
+    process_->start(program_, QStringList() << "-r" << script_);
     return false;
 }

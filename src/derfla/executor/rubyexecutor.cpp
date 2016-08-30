@@ -25,6 +25,6 @@ RubyExecutor::RubyExecutor(QObject *parent)
 bool RubyExecutor::run()
 {
     Executor::run();
-    process_->start(program_, QStringList() << "-e" << cmdline_);
+    process_->start(program_, QStringList() << "-e" << script_);
     return false;
 }

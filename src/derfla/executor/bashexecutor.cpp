@@ -25,6 +25,6 @@ BashExecutor::BashExecutor(QObject *parent)
 bool BashExecutor::run()
 {
     Executor::run();
-    process_->start(program_, QStringList() << "-c" << cmdline_);
+    process_->start(program_, QStringList() << "-c" << script_);
     return false;
 }
