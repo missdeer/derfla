@@ -14,6 +14,9 @@
 #include <PSapi.h>
 #include <Everything.h>
 #include <everything_ipc.h>
+#elif defined(Q_OS_MAC)
+#else
+#include <sys/resource.h>
 #endif
 
 #if defined (__cplusplus)

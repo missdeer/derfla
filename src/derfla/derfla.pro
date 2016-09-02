@@ -69,8 +69,11 @@ CONFIG(release, debug|release) : {
     DEFINES += QT_NO_DEBUG_OUTPUT=1 QT_NO_INFO_OUTPUT=1
 }
 
-macx: {
+unix: {
+    LIBS += -lz
+}
 
+macx: {
     SOURCES +=  \
         executor/osascriptexecutor.cpp
 
