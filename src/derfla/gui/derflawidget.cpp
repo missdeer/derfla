@@ -107,26 +107,22 @@ void DerflaWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if ((event->buttons() & Qt::LeftButton))
     {
-//        if(mouseMovePos_ != QPoint(0, 0))
-//        {
-//            move(geometry().x() + event->globalPos().x() - mouseMovePos_.x(),
-//                 geometry().y() + event->globalPos().y() - mouseMovePos_.y());
-            move(mapToParent(event->pos() - mouseMovePos_));
-            //mouseMovePos_ = event->pos();
-//        }
+        move(mapToParent(event->pos() - mouseMovePos_));
     }
 }
 
 void DerflaWidget::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton)
+    {
         mouseMovePos_ = event->pos();
     }
 }
 
 void DerflaWidget::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton)
+    {
         mouseMovePos_ = QPoint(0, 0);
     }
 }
