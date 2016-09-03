@@ -7,10 +7,10 @@ OSAScriptExecutor::OSAScriptExecutor(QObject *parent)
     QString envPath = qgetenv("PATH");
     QStringList paths = envPath.split(QChar(':'));
     auto it = std::find_if(paths.begin(), paths.end(), [](const QString& p) {
-        return QFile::exists(p % "/bash");
+        return QFile::exists(p % "/osascript");
     });
     if (paths.end() != it)
-        program_ = *it % "/bash";
+        program_ = *it % "/osascript";
 }
 
 bool OSAScriptExecutor::run()
@@ -18,7 +18,7 @@ bool OSAScriptExecutor::run()
     return false;
 }
 
-void OSAScriptExecutor::escape()
+void OSAScriptExecutor::doEscaping()
 {
 
 }

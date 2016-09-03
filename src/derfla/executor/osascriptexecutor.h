@@ -15,7 +15,7 @@ public slots:
 
 private:
     QString program_;
-    void escape();
+    void doEscaping();
 };
 
 #endif // OSASCRIPTEXECUTOR_H
