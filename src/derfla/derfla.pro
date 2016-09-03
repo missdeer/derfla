@@ -27,7 +27,7 @@ SOURCES += main.cpp\
     alfred/alfredworkflowoutput.cpp \
     alfred/alfredworkflowaction.cpp \
     alfred/alfredworkflowtrigger.cpp \
-    alfred/alfredworkflowscriptescape.cpp \
+    executor/scriptescape.cpp \
     executor/executor.cpp \
     executor/bashexecutor.cpp \
     executor/zshexecutor.cpp \
@@ -51,7 +51,7 @@ HEADERS  += stdafx.h \
     alfred/alfredworkflowoutput.h \
     alfred/alfredworkflowaction.h \
     alfred/alfredworkflowtrigger.h \
-    alfred/alfredworkflowscriptescape.h \
+    executor/scriptescape.h \
     executor/executor.h \
     executor/bashexecutor.h \
     executor/zshexecutor.h \

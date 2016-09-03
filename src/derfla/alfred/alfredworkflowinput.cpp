@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "executor.h"
 #include "alfredworkflowinput.h"
 
 AlfredWorkflowInput::AlfredWorkflowInput(const QString& workingDirectory, QObject *parent) 
@@ -62,8 +63,12 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
         else
             da->setTitle(embedArgument(runningSubtext_));
         da->Disabled(true);
-        // run script 
-
+        // run script
+        Executor* executor = Executor::createExecutor(scriptExecutorType_);
+        Q_ASSERT(executor);
+        executor->escape(escaping_); // must set before setting script
+        executor->setScript(script_);
+        executor->setWorkingDirectory(workingDirectory_);
         // do something to associate with Derfla actions 
         derflaActions.append(da);
     }
@@ -105,7 +110,7 @@ void AlfredWorkflowInput::parse(const QString& type, const QUuid uid, const QVar
     if (v.find("runningsubtext") != v.end())
         runningSubtext_ = v["runningsubtext"].toString();
     if (v.find("type") != v.end())
-        type_ = v["type"].toInt();
+        scriptExecutorType_ = v["type"].toInt();
     if (v.find("withspace") != v.end())
         withSpace_ = v["withspace"].toBool();
     if (v.find("anchorfields") != v.end())

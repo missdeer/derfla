@@ -12,7 +12,8 @@ public:
 
     virtual bool run();
     virtual void escape() = 0;
-    virtual void setScript(const QString& script) { script_ = script; }
+    virtual void escape(int esc) { escape_ = esc;  }
+    virtual void setScript(const QString& script) { script_ = script; escape(); }
     virtual void setWorkingDirectory(const QString& dir) { workingDirectory_ = dir; }
     virtual void getStdout(QByteArray& output);
     virtual void getStderr(QByteArray& err);
@@ -28,6 +29,7 @@ protected:
     QSharedPointer<QProcess> process_;
     QString script_;
     QString workingDirectory_;
+    int escape_;
 private:
 };
 

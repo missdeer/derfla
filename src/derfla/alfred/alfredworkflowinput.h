@@ -47,7 +47,7 @@ private:
 
     QString keyword_;
     int argumentType_ = 2; // 0 - arguments required, 1- arguments optional, 2- none
-    int type_ = 0; // 0-bash, 1-php, 2-ruby, 3-python, 4-perl, 5-zsh, 6-osascript(AS), 7-osascript(JS)
+    int scriptExecutorType_ = 0; // 0-bash, 1-php, 2-ruby, 3-python, 4-perl, 5-zsh, 6-osascript(AS), 7-osascript(JS)
     int escaping_ = 0;
     int dateRange_ = 0;
     int queueMode_ = 0;
