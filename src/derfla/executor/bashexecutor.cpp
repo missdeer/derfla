@@ -29,7 +29,7 @@ bool BashExecutor::run()
     return false;
 }
 
-void BashExecutor::escape()
+void BashExecutor::doEscaping()
 {
 
 }

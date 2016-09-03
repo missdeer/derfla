@@ -11,9 +11,8 @@ public:
     virtual ~Executor();
 
     virtual bool run();
-    virtual void escape() = 0;
-    virtual void escape(int esc) { escape_ = esc;  }
-    virtual void setScript(const QString& script) { script_ = script; escape(); }
+    virtual void escaping(int esc) { escaping_ = esc;  }
+    virtual void setScript(const QString& script) { script_ = script; doEscaping(); }
     virtual void setWorkingDirectory(const QString& dir) { workingDirectory_ = dir; }
     virtual void getStdout(QByteArray& output);
     virtual void getStderr(QByteArray& err);
@@ -29,8 +28,9 @@ protected:
     QSharedPointer<QProcess> process_;
     QString script_;
     QString workingDirectory_;
-    int escape_;
+    int escaping_;
 private:
+    virtual void doEscaping() = 0;
 };
 
 #endif // EXECUTOR_H

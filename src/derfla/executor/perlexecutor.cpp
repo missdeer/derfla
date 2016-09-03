@@ -29,7 +29,7 @@ bool PerlExecutor::run()
     return false;
 }
 
-void PerlExecutor::escape()
+void PerlExecutor::doEscaping()
 {
 
 }

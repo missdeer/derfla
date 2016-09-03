@@ -66,7 +66,7 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
         // run script
         Executor* executor = Executor::createExecutor(scriptExecutorType_);
         Q_ASSERT(executor);
-        executor->escape(escaping_); // must set before setting script
+        executor->escaping(escaping_); // must set before setting script
         executor->setScript(script_);
         executor->setWorkingDirectory(workingDirectory_);
         // do something to associate with Derfla actions 

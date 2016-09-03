@@ -29,7 +29,7 @@ bool PythonExecutor::run()
     return false;
 }
 
-void PythonExecutor::escape()
+void PythonExecutor::doEscaping()
 {
 
 }

@@ -29,7 +29,7 @@ bool PHPExecutor::run()
     return false;
 }
 
-void PHPExecutor::escape()
+void PHPExecutor::doEscaping()
 {
 
 }

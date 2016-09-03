@@ -29,7 +29,7 @@ bool RubyExecutor::run()
     return false;
 }
 
-void RubyExecutor::escape()
+void RubyExecutor::doEscaping()
 {
 
 }

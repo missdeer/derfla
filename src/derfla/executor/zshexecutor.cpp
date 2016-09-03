@@ -29,7 +29,7 @@ bool ZshExecutor::run()
     return false;
 }
 
-void ZshExecutor::escape()
+void ZshExecutor::doEscaping()
 {
 
 }

@@ -32,7 +32,7 @@ bool Executor::run()
     process_->terminate();
     process_->setWorkingDirectory(workingDirectory_);
 
-    escape();
+    doEscaping();
     return true;
 }
 
