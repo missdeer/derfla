@@ -4,7 +4,7 @@
 
 namespace util
 {
-
+    QByteArray extractPNGFromIcon(const QString& filePath);
     QByteArray extractPNGIconFromFile(const QFileInfo& fi);
 };
 

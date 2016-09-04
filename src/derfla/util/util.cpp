@@ -9,7 +9,9 @@ typedef WinIconProvider IconProvider;
 typedef QFileIconProvider IconProvider;
 #endif
 
-QByteArray util::extractPNGIconFromFile(const QFileInfo &fi)
+namespace util {
+
+QByteArray extractPNGIconFromFile(const QFileInfo &fi)
 {
     IconProvider iconProvider;
     QIcon i = iconProvider.icon(fi);
@@ -22,3 +24,17 @@ QByteArray util::extractPNGIconFromFile(const QFileInfo &fi)
     return bytes;
 }
 
+
+QByteArray extractPNGFromIcon(const QString &filePath)
+{
+    QPixmap pixmap;
+    pixmap.load(filePath);
+    QByteArray bytes;
+    QBuffer buf(&bytes);
+    buf.open(QIODevice::WriteOnly);
+    pixmap.save(&buf, "PNG");
+
+    return bytes;
+}
+
+}

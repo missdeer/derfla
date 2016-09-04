@@ -34,8 +34,7 @@ SOURCES += main.cpp\
     executor/phpexecutor.cpp \
     executor/pythonexecutor.cpp \
     executor/perlexecutor.cpp \
-    executor/rubyexecutor.cpp \
-    util/unix_util.cpp
+    executor/rubyexecutor.cpp
 
 HEADERS  += stdafx.h \
     gui/derflawidget.h \
@@ -59,8 +58,7 @@ HEADERS  += stdafx.h \
     executor/phpexecutor.h \
     executor/pythonexecutor.h \
     executor/perlexecutor.h \
-    executor/rubyexecutor.h \
-    util/unix_util.h
+    executor/rubyexecutor.h
 
 FORMS    += \
     gui/candidatelist.ui
@@ -71,8 +69,14 @@ CONFIG(release, debug|release) : {
     DEFINES += QT_NO_DEBUG_OUTPUT=1 QT_NO_INFO_OUTPUT=1
 }
 
-unix: {
+unix: !macx: {
     LIBS += -lz
+
+    SOURCES +=   \
+        util/unix_util.cpp
+
+    HEADERS +=   \
+        util/unix_util.h
 }
 
 macx: {
