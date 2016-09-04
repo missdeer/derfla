@@ -371,7 +371,7 @@ void DerflaWidget::finishedScan()
 void DerflaWidget::showCandidateList()
 {
     check_expiration;
-    candidateList_->show();
+    //candidateList_->show();
     candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
     
     QString inputText = input_->text();

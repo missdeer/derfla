@@ -31,7 +31,7 @@ CandidateList::~CandidateList()
 
 void CandidateList::update(const QString &text)
 {
-    if (text.isEmpty())
+    if (text.isEmpty() && isVisible())
         hide();
 
     dal_.clear();
@@ -42,7 +42,7 @@ void CandidateList::update(const QString &text)
 
 void CandidateList::update(AlfredWorkflowPtr aw, const QString &text)
 {
-    if (text.isEmpty())
+    if (text.isEmpty() && isVisible())
         hide();
 
     dal_.clear();
@@ -55,7 +55,7 @@ void CandidateList::update(AlfredWorkflowPtr aw, const QString &text)
 
 void CandidateList::update(AlfredWorkflowList& awl, const QString &text)
 {
-    if (text.isEmpty())
+    if (text.isEmpty() && isVisible())
         hide();
 
     dal_.clear();
@@ -75,7 +75,10 @@ void CandidateList::update(AlfredWorkflowList& awl, const QString &text)
 void CandidateList::populateList()
 {
     if (dal_.empty())
-        hide();
+    {
+        if (isVisible())
+            hide();
+    }
     else
     {
         for (DerflaActionPtr da : dal_)
@@ -96,9 +99,13 @@ void CandidateList::refreshList()
     if (itemCount_ > 0)
     {
         ui->list->setCurrentRow(0);
-        QSize s = size();
-        resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
-        //qDebug() << itemCount_ << s << size() << s.width() << qMin(10, itemCount_) * CandidateListItemHeight;
+        if (isHidden())
+        {
+            QSize s = size();
+            resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
+            //qDebug() << itemCount_ << s << size() << s.width() << qMin(10, itemCount_) * CandidateListItemHeight;
+            show();
+        }
     }
 }
 
