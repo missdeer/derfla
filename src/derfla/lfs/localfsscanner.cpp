@@ -161,9 +161,12 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         return;
 
     QDir dir(d.directory);
-    QFileInfoList list = dir.entryInfoList(QStringList() << "*.app" << "*.prefPane", QDir::AllDirs | QDir::NoDotAndDotDot);
+    QFileInfoList list << dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
     if (stop_) return;
-    list << dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
+    if (d.recursive)
+        list = dir.entryInfoList(QStringList() , QDir::AllDirs | QDir::NoDotAndDotDot);
+    else
+        list = dir.entryInfoList(QStringList() << "*.app" << "*.prefPane", QDir::AllDirs | QDir::NoDotAndDotDot);
 
     if (stop_) return;
     DBRW* dbrw = DBRW::instance();
@@ -217,16 +220,37 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         {
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
             //qDebug() << "find" <<  f;
+            dbrw->insertLFS(util::extractXPMFromFile(fileInfo),
+                            fileInfo.fileName(),
+                            f,
+                            f,
+                            "",
+                            QFileInfo(f).filePath(),
+                            timestamp_,
+                            fileInfo.lastModified().toMSecsSinceEpoch(),
+                            "c"
+                            );
         }
     });
 
     if (stop_) return;
+    DBRW* dbrw = DBRW::instance();
     list = dir.entryInfoList(QStringList() << "*.desktop", QDir::Files | QDir::Readable);
     std::for_each(list.begin(), list.end(),
                   [&](const QFileInfo& fileInfo) {
         if (stop_) return;
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
             //qDebug() << "find" <<  f;
+    });
+
+    if (stop_) return;
+    if (d.recursive)
+        list = dir.entryInfoList(QStringList() , QDir::AllDirs | QDir::NoDotAndDotDot);
+    std::for_each(list.begin(), list.end(),
+                  [&](const QFileInfo& fileInfo) {
+        if (stop_) return;
+        QString f(d.directory + QDir::separator() + fileInfo.fileName());
+        scanDirectory(Directory {f, true });
     });
 }
 #endif
