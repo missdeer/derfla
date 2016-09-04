@@ -101,11 +101,11 @@ void CandidateList::refreshList()
         ui->list->setCurrentRow(0);
         if (isHidden())
         {
-            QSize s = size();
-            resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
-            //qDebug() << itemCount_ << s << size() << s.width() << qMin(10, itemCount_) * CandidateListItemHeight;
             show();
         }
+        QSize s = size();
+        resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
+        //qDebug() << itemCount_ << s << size() << s.width() << qMin(10, itemCount_) * CandidateListItemHeight;
     }
 }
 
