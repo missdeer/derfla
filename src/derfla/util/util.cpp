@@ -9,7 +9,7 @@ typedef WinIconProvider IconProvider;
 typedef QFileIconProvider IconProvider;
 #endif
 
-QByteArray util::extractXPMFromFile(const QFileInfo &fi)
+QByteArray util::extractPNGIconFromFile(const QFileInfo &fi)
 {
     IconProvider iconProvider;
     QIcon i = iconProvider.icon(fi);

@@ -5,7 +5,7 @@
 namespace util
 {
 
-    QByteArray extractXPMFromFile(const QFileInfo& fi);
+    QByteArray extractPNGIconFromFile(const QFileInfo& fi);
 };
 
 #endif // UTIL_H

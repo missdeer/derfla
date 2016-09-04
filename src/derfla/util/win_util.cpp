@@ -156,7 +156,7 @@ namespace win_util {
             if (desc.isEmpty())
                 desc = f;
 
-            DBRW::instance()->insertLFS(util::extractXPMFromFile(fi),
+            DBRW::instance()->insertLFS(util::extractPNGIconFromFile(fi),
                 fileInfo.baseName(),
                 desc,
                 f,
@@ -173,7 +173,7 @@ namespace win_util {
         readDescriptionFromResource(f, desc);
         if (desc.isEmpty())
             desc = f;
-        DBRW::instance()->insertLFS(util::extractXPMFromFile(fileInfo),
+        DBRW::instance()->insertLFS(util::extractPNGIconFromFile(fileInfo),
             fileInfo.fileName(),
             desc,
             f,
