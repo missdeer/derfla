@@ -68,7 +68,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     setContextMenuPolicy(Qt::ActionsContextMenu);
 
     QAction *showAction = new QAction(tr("Show"), this);
-    showAction->setShortcut(tr("Alt+Space"));
+    showAction->setShortcut(tr("Ctrl+Alt+Space"));
     connect(showAction, &QAction::triggered, this, &DerflaWidget::showInFront);
 
     QMenu* trayiconMenu = new QMenu(this);
@@ -85,7 +85,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     connect(loadingAnimationTimer_, SIGNAL(timeout()), this, SLOT(onLoadingAnimationTimer()));
 
-    hotkeyManager_->registerHotkey("Alt+Space");
+    hotkeyManager_->registerHotkey("Ctrl+Alt+Space");
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
 
     connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::finishedScan);
