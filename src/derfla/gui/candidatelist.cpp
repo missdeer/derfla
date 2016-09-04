@@ -15,7 +15,7 @@ CandidateList::CandidateList(QWidget *parent) :
 #if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
 #else
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Tooltip);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 #endif
 
     setMinimumSize(10, 10);

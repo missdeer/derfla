@@ -15,9 +15,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     hotkeyManager_(new UGlobalHotkeys),
     localFSScanner_(new LocalFSScanner)
 {
-#if defined(Q_OS_MAC)
-    setWindowFlags(Qt::FramelessWindowHint );
-#elif defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
 #else
     setWindowFlags(Qt::FramelessWindowHint );
