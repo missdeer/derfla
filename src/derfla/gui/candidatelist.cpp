@@ -11,15 +11,15 @@ CandidateList::CandidateList(QWidget *parent) :
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_ShowWithoutActivating);
-#if defined(Q_OS_MAC)
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-#elif defined(Q_OS_WIN)
+    setFocusPolicy(Qt::NoFocus);
+#if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
 #else
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tooltip);
 #endif
 
     setMinimumSize(10, 10);
+    ui->list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->list->setItemDelegate(new CandidateListDelegate(ui->list));
     connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
 }
