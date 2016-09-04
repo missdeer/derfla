@@ -3,6 +3,9 @@
 #include "util.h"
 #if defined(Q_OS_WIN)
 #include "win_util.h"
+#elif defined(Q_OS_MAC)
+#else
+#include "unix_util.h"
 #endif
 #include "localfsscanner.h"
 
@@ -53,6 +56,10 @@ void LocalFSScanner::scan()
     BOOST_SCOPE_EXIT(void) {
         CoUninitialize();
     } BOOST_SCOPE_EXIT_END
+
+#elif defined(Q_OS_MAC)
+#else
+    unix_util::timestamp = timestamp_;
 #endif
 
     scanDirectories_.clear();
@@ -234,14 +241,10 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     });
 
     if (stop_) return;
-    DBRW* dbrw = DBRW::instance();
     list = dir.entryInfoList(QStringList() << "*.desktop", QDir::Files | QDir::Readable);
+    using namespace unix_util;
     std::for_each(list.begin(), list.end(),
-                  [&](const QFileInfo& fileInfo) {
-        if (stop_) return;
-            QString f(d.directory + QDir::separator() + fileInfo.fileName());
-            //qDebug() << "find" <<  f;
-    });
+        std::bind(processFile, d, std::placeholders::_1));
 
     if (stop_) return;
     if (d.recursive)

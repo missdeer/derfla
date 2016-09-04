@@ -17,8 +17,7 @@ namespace win_util {
             NULL,
             FILE_BEGIN)) == 0xFFFFFFFF)
         {
-            printf("SetFilePointer failed, error %lu.\n", GetLastError());
-            exit(1);
+            qCritical() << "SetFilePointer failed, error " << GetLastError();
         }
 
         return newOffset;
@@ -34,14 +33,11 @@ namespace win_util {
             &bytes,
             NULL))
         {
-            printf("ReadFile failed, error %lu.\n", GetLastError());
-            exit(1);
+            qCritical() << "ReadFile failed, error" << GetLastError();
         }
         else if (size != bytes)
         {
-            printf("Read the wrong number of bytes, expected %lu, got %lu.\n",
-                size, bytes);
-            exit(1);
+            qCritical() << "Read the wrong number of bytes, expected" << size << ", got" << bytes;
         }
     }
 
