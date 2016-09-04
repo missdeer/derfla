@@ -1,0 +1,7 @@
+libxcb1-dev
+libxcb-keysyms1-dev
+qtbase5-dev
+qtbase5-private-dev
+libsqlite3-dev
+libz-dev
+libboost-dev
