@@ -31,9 +31,39 @@ namespace unix_util {
         if (QFileInfo(iconName).isAbsolute() && QFile::exists(iconName))
             return iconName;
 
-        // find icon file
         // https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
-        QString iconPath = d.directory + QDir::separator() + iconName;
+        QStringList xdg = QString(qgetenv("XDG_DATA_DIRS")).split(QChar(':'));
+        QStringList iconDirs { QString("%1/.icons").arg(qgetenv("HOME")); };
+        for (const QString& x : xdg)
+        {
+            iconDirs << (x % "/icons" );
+        }
+        iconDirs << "/usr/share/pixmaps";
+
+        QStringList sizes {
+            "256x256",
+            "128x128",
+            "64x64",
+            "48x48",
+            "32x32",
+        };
+        QStringList suffixes {
+            "png", "xpm", "svg",
+        };
+
+        for (const QString& iconDir: iconDirs)
+        {
+            for (const QString& size: sizes)
+            {
+                for (const QString& suffix: suffixes)
+                {
+                    QString f = iconDir % "/hicolor/" % size % "/apps/" % iconName % "." % suffix;
+                    if (QFile::exists(f))
+                        return f;
+                }
+            }
+        }
+        return QString();
     }
 
     void processFile(const Directory& d, const QFileInfo& fileInfo)
