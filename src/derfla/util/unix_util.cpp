@@ -18,6 +18,10 @@ namespace unix_util {
         if (envPaths.end() == it)
             return false;
         filePath = *it + QDir::separator() + exe[0];
+        exe.removeAll("%f");
+        exe.removeAll("%U");
+        exe.removeAll("%F");
+        exe.removeAll("%u");
         if (exe.length() > 1)
         {
             exe.removeFirst();
