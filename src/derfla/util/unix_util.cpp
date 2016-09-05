@@ -27,7 +27,7 @@ namespace unix_util {
             exe.removeFirst();
             arguments = exe.join(' ');
         }
-        return false;
+        return true;
     }
 
     QString getIconPath(const QString& iconName)
