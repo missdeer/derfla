@@ -4,8 +4,7 @@
 OSAScriptExecutor::OSAScriptExecutor(QObject *parent)
     : Executor (parent)
 {
-    QString envPath = qgetenv("PATH");
-    QStringList paths = envPath.split(QChar(':'));
+    QStringList& paths = util::getEnvPaths();
     auto it = std::find_if(paths.begin(), paths.end(), [](const QString& p) {
         return QFile::exists(p % "/osascript");
     });

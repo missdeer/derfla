@@ -11,6 +11,8 @@ typedef QFileIconProvider IconProvider;
 
 namespace util {
 
+QStringList envPaths;
+
 QByteArray extractPNGIconFromFile(const QFileInfo &fi)
 {
     IconProvider iconProvider;
@@ -35,6 +37,25 @@ QByteArray extractPNGFromIcon(const QString &filePath)
     pixmap.save(&buf, "PNG");
 
     return bytes;
+}
+
+QStringList &getEnvPaths()
+{
+    if (envPaths.isEmpty())
+    {
+        QString path = qgetenv("PATH");
+        QStringList environment = QProcess::systemEnvironment();
+        auto it = std::find_if(environment.begin(), environment.end(),
+                               [&](const QString& env) { return env.startsWith("PATH="); });
+        if (environment.end() != it)
+            path = it->mid(5);
+#if defined(Q_OS_WIN)
+        envPaths << path.split(QChar(';'));
+#else
+        envPaths << path.split(QChar(':'));
+#endif
+    }
+    return envPaths;
 }
 
 }
