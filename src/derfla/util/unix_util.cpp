@@ -26,6 +26,17 @@ namespace unix_util {
         return false;
     }
 
+    QString getIconPath(const QString& iconName)
+    {
+        if (QFileInfo(iconName).isAbsolute() && QFile::exists(iconName))
+            return iconName;
+
+
+        // find icon file
+        // https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
+        QString iconPath = d.directory + QDir::separator() + iconName;
+    }
+
     void processFile(const Directory& d, const QFileInfo& fileInfo)
     {
         QString f(d.directory + QDir::separator() + fileInfo.fileName());
@@ -38,12 +49,7 @@ namespace unix_util {
         if (getAbsoluteFilePathArguments(settings.value("Exec").toString(), filePath, arguments))
         {
             QFileInfo fi(filePath);
-            QString iconPath = settings.value("Icon").toString();
-            // find icon file from /usr/share/icons
-            if (!QFileInfo(iconPath).isAbsolute() && QFile::exists(iconPath))
-            {
-                iconPath = d.directory + QDir::separator() + iconPath;
-            }
+            QString&& iconPath = getIconPath(settings.value("Icon").toString());
             DBRW::instance()->insertLFS(util::extractPNGFromIcon(iconPath),
                                         settings.value("Name").toString(),
                                         (settings.value("Comment").toString().isEmpty() ? f : settings.value("Comment").toString()) ,

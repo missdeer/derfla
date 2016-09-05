@@ -4,5 +4,6 @@
         <file>derfla.ico</file>
         <file>loading.png</file>
         <file>skins/derfla.derflaskin</file>
+        <file>terminal.png</file>
     </qresource>
 </RCC>
