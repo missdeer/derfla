@@ -81,9 +81,28 @@ void CandidateList::populateList()
     }
     else
     {
+#if !defined(Q_OS_MAC) && !defined(Q_OS_WIN)
         std::sort(dal_.begin(), dal_.end(), [](DerflaActionPtr da, DerflaActionPtr ) {
             return !da->icon().isNull();                
             });
+
+remove_duplicated:
+        auto it = std::find_if(dal_.begin(), dal_.end(), [&](DerflaActionPtr da) {
+            if (da->actionType() == DAT_CONSOLE)
+            {
+                auto findIt = std::find_if(dal_.begin(), dal_.end(), [da](DerflaActionPtr d) {
+                    return (d->actionType() == DAT_GUI && da->target() == d->target() && da->arguments() == d->arguments() );
+                });
+                return dal_.end() != findIt;
+            }
+            return false;
+            });
+        if (dal_.end() != it)
+        {
+            dal_.erase(it);
+            goto remove_duplicated;
+        }
+#endif
         for (DerflaActionPtr da : dal_)
         {
             QListWidgetItem* item = new QListWidgetItem(ui->list);
