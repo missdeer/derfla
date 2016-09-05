@@ -50,8 +50,8 @@ public:
     DerflaActionType actionType() const;
     void setActionType(const DerflaActionType& actionType);
 
-    bool Disabled() const { return disabled; }
-    void Disabled(bool val) { disabled = val; }
+    bool disabled() const { return disabled_; }
+    void setDisabled(bool val) { disabled_ = val; }
 
     bool operator==(const DerflaAction& da)
     {
@@ -71,7 +71,7 @@ private:
     QString workingDirectory_;
     DerflaActionType actionType_;
 
-    bool disabled = false;
+    bool disabled_ = false;
     QUuid id_;
     // members from AlfredWorkflowAction
     QString script_;

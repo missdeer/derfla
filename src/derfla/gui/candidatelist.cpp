@@ -149,7 +149,7 @@ void CandidateList::onEnter()
         return;
     }
     DerflaActionPtr da = dal_.at(index);
-    if (!da->Disabled())
+    if (!da->disabled())
     {
         da->run();
         emit done();

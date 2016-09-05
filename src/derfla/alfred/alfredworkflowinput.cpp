@@ -62,7 +62,7 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
             da->setTitle(tr("Loading, wait for a moment please..."));
         else
             da->setTitle(embedArgument(runningSubtext_));
-        da->Disabled(true);
+        da->setDisabled(true);
 
         // run script
         Executor* executor = Executor::createExecutor(scriptExecutorType_);
@@ -80,7 +80,7 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
     {
         da->setTitle(title_.isEmpty() ? tr("Searching files...") : embedArgument(title_));
         da->setDescription(embedArgument(subtext_));
-        da->Disabled(true);
+        da->setDisabled(true);
         // do search files in scope with the fields by keyword
 
         // do something to associate with Derfla actions 
