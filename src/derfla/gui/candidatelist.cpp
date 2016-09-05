@@ -117,6 +117,18 @@ int CandidateList::count() const
 void CandidateList::keyPressEvent(QKeyEvent *event)
 {
     check_expiration;
+#if defined(Q_OS_MAC)
+    switch(event->key())
+    {
+    case Qt::Key_Up:
+    case Qt::Key_Down:
+        qApp->sendEvent(ui->list, event);
+        break;
+    default:
+        event->ignore();
+        break;
+    }
+#else
     if (event->key() == Qt::Key_Down)
     {
         if (count() > 1 && getActiveWindowFlag())
@@ -131,6 +143,7 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
         //qDebug() << "CandidateList::keyPressEvent: ignore" << event;
         event->ignore();
     }
+#endif
 }
 
 void CandidateList::showEvent(QShowEvent* /*event*/)
