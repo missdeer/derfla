@@ -102,7 +102,7 @@
 #elif defined(Q_OS_MAC)
 #define globalDefaultFontFamily "PingFang CS"
 #else
-#define globalDefaultFontFamily "Droid Sans"
+#define globalDefaultFontFamily "DejaVu Sans"
 #endif
 
 #endif
