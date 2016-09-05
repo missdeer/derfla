@@ -42,10 +42,16 @@ namespace unix_util {
 
         QStringList sizes {
             "256x256",
+            "192x192",
             "128x128",
+            "96x96",
+            "72x72",
             "64x64",
             "48x48",
             "32x32",
+            "24x24",
+            "16x16",
+            "8x8",
         };
         QStringList suffixes {
             "png", "xpm", "svg",
@@ -78,17 +84,20 @@ namespace unix_util {
         if (getAbsoluteFilePathArguments(settings.value("Exec").toString(), filePath, arguments))
         {
             QFileInfo fi(filePath);
-            QString&& iconPath = getIconPath(settings.value("Icon").toString());
-            DBRW::instance()->insertLFS(util::extractPNGFromIcon(iconPath),
-                                        settings.value("Name").toString(),
-                                        (settings.value("Comment").toString().isEmpty() ? f : settings.value("Comment").toString()) ,
-                                        filePath,
-                                        arguments,
-                                        (settings.value("Path").toString().isEmpty() ? fi.absolutePath() : settings.value("Path").toString()) ,
-                                        timestamp,
-                                        fi.lastModified().toMSecsSinceEpoch(),
-                                        "g"
-                                        );
+            if (fi.permission(QFile::ExeGroup) && fi.isFile())
+            {
+                QString&& iconPath = getIconPath(settings.value("Icon").toString());
+                DBRW::instance()->insertLFS(util::extractPNGFromIcon(iconPath),
+                                            settings.value("Name").toString(),
+                                            (settings.value("Comment").toString().isEmpty() ? f : settings.value("Comment").toString()) ,
+                                            filePath,
+                                            arguments,
+                                            (settings.value("Path").toString().isEmpty() ? fi.absolutePath() : settings.value("Path").toString()) ,
+                                            timestamp,
+                                            fi.lastModified().toMSecsSinceEpoch(),
+                                            "g"
+                                            );
+            }
         }
         settings.endGroup();
     }
