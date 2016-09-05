@@ -216,7 +216,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         if (fileInfo.permission(QFile::ExeGroup) && fileInfo.isFile() && fileInfo.suffix() != "desktop")
         {
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
-            //qDebug() << "find" <<  f;
+            qWarning() << "find" <<  f;
             dbrw->insertLFS(util::extractPNGIconFromFile(fileInfo),
                             fileInfo.fileName(),
                             f,
@@ -232,9 +232,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
 
     if (stop_) return;
     list = dir.entryInfoList(QStringList() << "*.desktop", QDir::Files | QDir::Readable);
-    using namespace unix_util;
-    std::for_each(list.begin(), list.end(),
-        std::bind(processFile, d, std::placeholders::_1));
+    std::for_each(list.begin(), list.end(), [&d](const QFileInfo& fi){ unix_util::processFile(d, fi);});
 
     if (d.recursive)
     {

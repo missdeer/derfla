@@ -16,13 +16,20 @@ static QStringList localeNames;
 
 QByteArray extractPNGIconFromFile(const QFileInfo &fi)
 {
+    QByteArray bytes;
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
     IconProvider iconProvider;
     QIcon i = iconProvider.icon(fi);
     QPixmap pixmap = i.pixmap(i.actualSize(QSize(32, 32)));
-    QByteArray bytes;
-    QBuffer buf(&bytes);
-    buf.open(QIODevice::WriteOnly);
-    pixmap.save(&buf, "PNG");
+    if (!pixmap.isNull())
+    {
+        QBuffer buf(&bytes);
+        buf.open(QIODevice::WriteOnly);
+        pixmap.save(&buf, "PNG");    
+    }
+#else
+    Q_UNUSED(fi);
+#endif
 
     return bytes;
 }
@@ -30,12 +37,18 @@ QByteArray extractPNGIconFromFile(const QFileInfo &fi)
 
 QByteArray extractPNGFromIcon(const QString &filePath)
 {
-    QPixmap pixmap;
-    pixmap.load(filePath);
     QByteArray bytes;
-    QBuffer buf(&bytes);
-    buf.open(QIODevice::WriteOnly);
-    pixmap.save(&buf, "PNG");
+    QPixmap pixmap;
+    if (pixmap.load(filePath))
+    {
+        QBuffer buf(&bytes);
+        buf.open(QIODevice::WriteOnly);
+        pixmap.save(&buf, "PNG");        
+    }
+    else
+    {
+        qWarning() << "loading icon file failed" << filePath;
+    }
 
     return bytes;
 }

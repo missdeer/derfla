@@ -81,6 +81,9 @@ void CandidateList::populateList()
     }
     else
     {
+        std::sort(dal_.begin(), dal_.end(), [](DerflaActionPtr da, DerflaActionPtr ) {
+            return !da->icon().isNull();                
+            });
         for (DerflaActionPtr da : dal_)
         {
             QListWidgetItem* item = new QListWidgetItem(ui->list);

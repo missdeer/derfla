@@ -32,7 +32,7 @@ namespace unix_util {
 
     QString getIconPath(const QString& iconName)
     {
-        if (QFileInfo(iconName).isAbsolute() && QFile::exists(iconName))
+        if (QFile::exists(iconName) && QFileInfo(iconName).isAbsolute())
             return iconName;
 
         // https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
@@ -80,7 +80,7 @@ namespace unix_util {
     {
         QString f(d.directory + QDir::separator() + fileInfo.fileName());
         f.replace("//", "/");
-        qDebug() << f;
+        qWarning() << f;
         QString filePath;
         QString arguments;
         QSettings settings(f, QSettings::IniFormat);
