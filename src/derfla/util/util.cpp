@@ -11,7 +11,7 @@ typedef QFileIconProvider IconProvider;
 
 namespace util {
 
-QStringList envPaths;
+static QStringList envPaths;
 
 QByteArray extractPNGIconFromFile(const QFileInfo &fi)
 {
