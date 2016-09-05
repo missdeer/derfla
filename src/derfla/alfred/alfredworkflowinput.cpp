@@ -63,12 +63,16 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
         else
             da->setTitle(embedArgument(runningSubtext_));
         da->Disabled(true);
+
         // run script
         Executor* executor = Executor::createExecutor(scriptExecutorType_);
         Q_ASSERT(executor);
         executor->escaping(escaping_); // must set before setting script
         executor->setScript(script_);
         executor->setWorkingDirectory(workingDirectory_);
+        connect(executor, &Executor::errorOccurred, this, &AlfredWorkflowInput::errorOccurred);
+        connect(executor, &Executor::finished, this, &AlfredWorkflowInput::finished);
+
         // do something to associate with Derfla actions 
         derflaActions.append(da);
     }
@@ -149,6 +153,16 @@ void AlfredWorkflowInput::parse(const QString& type, const QUuid uid, const QVar
     }
 
     qDebug() << "keyword:" << keyword_;
+}
+
+void AlfredWorkflowInput::errorOccurred(QProcess::ProcessError error)
+{
+
+}
+
+void AlfredWorkflowInput::finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+
 }
 
 void AlfredWorkflowInput::extractArgument(const QString& input)

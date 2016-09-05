@@ -31,6 +31,10 @@ signals:
 
 public slots:
 
+private slots:
+    void errorOccurred(QProcess::ProcessError error);
+    void finished(int exitCode, QProcess::ExitStatus exitStatus);
+
 private:
     QString workingDirectory_;
     QUuid uid_;

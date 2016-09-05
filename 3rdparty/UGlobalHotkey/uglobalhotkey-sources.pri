@@ -1,6 +1,8 @@
 INCLUDEPATH += $$PWD/
 
-QT += gui-private
+unix: !macx : {
+    QT += x11extras
+}
 
 SOURCES += \
     $$PWD/ukeysequence.cpp \

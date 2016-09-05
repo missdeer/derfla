@@ -3,7 +3,7 @@
 #include <windows.h>
 #elif defined(Q_OS_LINUX)
 #include <QWindow>
-#include <qpa/qplatformnativeinterface.h>
+#include <QX11Info>
 #include <QApplication>
 #endif
 
@@ -15,9 +15,9 @@ UGlobalHotkeys::UGlobalHotkeys(QWidget *parent)
 {
     #if defined(Q_OS_LINUX)
     qApp->installNativeEventFilter(this);
-    QWindow wndw;
-    void* v = qApp->platformNativeInterface()->nativeResourceForWindow("connection", &wndw);
-    X11Connection = (xcb_connection_t*)v;
+    //QWindow wndw;
+    //void* v = qApp->platformNativeInterface()->nativeResourceForWindow("connection", &wndw);
+    X11Connection = QX11Info::connection(); //(xcb_connection_t*)v;
     X11Wid = xcb_setup_roots_iterator(xcb_get_setup(X11Connection)).data->root;
     X11KeySymbs = xcb_key_symbols_alloc(X11Connection);
     #endif

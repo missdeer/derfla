@@ -88,3 +88,13 @@ Executor* Executor::createExecutor(const QString& type)
     return nullptr;
 }
 
+const QUuid &Executor::getUuid() const
+{
+    return uuid_;
+}
+
+void Executor::setUuid(const QUuid &uuid)
+{
+    uuid_ = uuid;
+}
+

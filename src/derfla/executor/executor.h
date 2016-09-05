@@ -19,6 +19,10 @@ public:
 
     static Executor* createExecutor(int type);
     static Executor* createExecutor(const QString& type);
+
+    const QUuid& getUuid() const;
+    void setUuid(const QUuid &uuid);
+
 signals:
     void errorOccurred(QProcess::ProcessError error);
     void finished(int exitCode, QProcess::ExitStatus exitStatus);
@@ -30,6 +34,7 @@ protected:
     QString workingDirectory_;
     int escaping_;
 private:
+    QUuid uuid_;
     virtual void doEscaping() = 0;
 };
 
