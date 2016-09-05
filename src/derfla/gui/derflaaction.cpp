@@ -56,6 +56,46 @@ bool DerflaAction::run()
         system(cmdline.toStdString().c_str());
     }
 #else
+    if (actionType_ == DAT_CONSOLE)
+    {
+        // console application, running in a terminal
+        // konsole/xterm/gnome-terminal...
+        QStringList& paths = util::getEnvPaths();
+        for (const QString& path : paths)
+        {
+            if (QFile::exist(path % "/konsole"))
+            {
+                QStringList args {
+                    "--noclose",
+                    "-e",
+                    target_,
+                };
+                args << arguments_;
+                QProcess::startDetached(path % "/konsole", args, workingDirectory_);
+                return true;
+            }
+        }
+        for (const QString& path : paths)
+        {
+            if (QFile::exist(path % "/xterm"))
+            {
+                QStringList args {
+                    "-hold",
+                    "-e",
+                    target_,
+                };
+                args << arguments_;
+                QProcess::startDetached(path % "/xterm", args, workingDirectory_);
+                return true;
+            }
+        }
+    }
+
+    if (workingDirectory_.isEmpty())
+        workingDirectory_ = QFileInfo(target_).absolutePath();
+    if (QFileInfo(workingDirectory_).isFile())
+        workingDirectory_ = QFileInfo(workingDirectory_).absolutePath();
+    QProcess::startDetached(target_, arguments_.split(' '), workingDirectory_);
 #endif
     return true;
 }

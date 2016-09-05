@@ -141,6 +141,7 @@ bool DBRW::queryActions(DerflaActionList &dal, const QString &keyword, int count
         int targetIndex = q.record().indexOf("target");
         int argumentsIndex = q.record().indexOf("arguments");
         int workingDirectoryIndex = q.record().indexOf("working_directory");
+        int typeIndex = q.record().indexOf("type");
         while (q.next())
         {
             DerflaActionPtr da(new DerflaAction);
@@ -152,6 +153,7 @@ bool DBRW::queryActions(DerflaActionList &dal, const QString &keyword, int count
             da->setTarget(q.value(targetIndex).toString());
             da->setTitle(q.value(titleIndex).toString());
             da->setDescription(q.value(descriptionIndex).toString());
+            da->setActionType(q.value(typeIndex).toString() == "c" ? DAT_CONSOLE : DAT_GUI);
             auto it = std::find_if(dal.begin(), dal.end(), [da](DerflaActionPtr d) {
                     return da->title() == d->title()
                     && da->description() == d->description();}
