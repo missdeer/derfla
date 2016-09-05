@@ -18,8 +18,6 @@ QByteArray extractPNGIconFromFile(const QFileInfo &fi)
     IconProvider iconProvider;
     QIcon i = iconProvider.icon(fi);
     QPixmap pixmap = i.pixmap(i.actualSize(QSize(32, 32)));
-    if (pixmap.isNull())
-        pixmap.load(":/terminal.png");
     QByteArray bytes;
     QBuffer buf(&bytes);
     buf.open(QIODevice::WriteOnly);
@@ -32,8 +30,7 @@ QByteArray extractPNGIconFromFile(const QFileInfo &fi)
 QByteArray extractPNGFromIcon(const QString &filePath)
 {
     QPixmap pixmap;
-    if (!pixmap.load(filePath))
-        pixmap.load(":/terminal.png");
+    pixmap.load(filePath);
     QByteArray bytes;
     QBuffer buf(&bytes);
     buf.open(QIODevice::WriteOnly);
