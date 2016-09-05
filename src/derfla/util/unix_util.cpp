@@ -31,7 +31,6 @@ namespace unix_util {
         if (QFileInfo(iconName).isAbsolute() && QFile::exists(iconName))
             return iconName;
 
-
         // find icon file
         // https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
         QString iconPath = d.directory + QDir::separator() + iconName;
