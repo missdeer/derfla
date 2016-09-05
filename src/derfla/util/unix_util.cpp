@@ -86,10 +86,24 @@ namespace unix_util {
             QFileInfo fi(filePath);
             if (fi.permission(QFile::ExeGroup) && fi.isFile())
             {
+                QStringList& localeNames = util::getLocaleNames();
+                QString name = settings.value("Name").toString();
+                QString comment = settings.value("Comment").toString();
+                for (const QString& locale : localeNames)
+                {
+                    if (!settings.value(QString("Name[%1]").arg(locale)).toString().isEmpty())
+                    {
+                        name = settings.value(QString("Name[%1]").arg(locale)).toString();
+                    }
+                    if (!settings.value(QString("Comment[%1]").arg(locale)).toString().isEmpty())
+                    {
+                        comment = settings.value(QString("Comment[%1]").arg(locale)).toString();
+                    }
+                }
                 QString&& iconPath = getIconPath(settings.value("Icon").toString());
                 DBRW::instance()->insertLFS(util::extractPNGFromIcon(iconPath),
-                                            settings.value("Name").toString(),
-                                            (settings.value("Comment").toString().isEmpty() ? f : settings.value("Comment").toString()) ,
+                                            name,
+                                            (comment.isEmpty() ? f : comment) ,
                                             filePath,
                                             arguments,
                                             (settings.value("Path").toString().isEmpty() ? fi.absolutePath() : settings.value("Path").toString()) ,

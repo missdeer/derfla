@@ -12,6 +12,7 @@ typedef QFileIconProvider IconProvider;
 namespace util {
 
 static QStringList envPaths;
+static QStringList localeNames;
 
 QByteArray extractPNGIconFromFile(const QFileInfo &fi)
 {
@@ -37,6 +38,19 @@ QByteArray extractPNGFromIcon(const QString &filePath)
     pixmap.save(&buf, "PNG");
 
     return bytes;
+}
+
+QStringList& getLocaleNames()
+{
+    if (localeNames.isEmpty())
+    {
+        QStringList uiLanguages = QLocale::system().uiLanguages();
+        for (const QString& locale: uiLanguages)
+        {
+            localeNames << QLocale(locale).name();
+        }
+    }
+    return localeNames;
 }
 
 QStringList &getEnvPaths()
