@@ -33,7 +33,7 @@ namespace unix_util {
 
         // https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
         QStringList xdg = QString(qgetenv("XDG_DATA_DIRS")).split(QChar(':'));
-        QStringList iconDirs { QString("%1/.icons").arg(qgetenv("HOME")); };
+        QStringList iconDirs { QString("%1/.icons").arg(qgetenv("HOME").constData()) };
         for (const QString& x : xdg)
         {
             iconDirs << (x % "/icons" );
