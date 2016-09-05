@@ -28,7 +28,7 @@ void LocalFSScanner::start()
     if (DBRW::instance()->firstLaunch())
     {
         qDebug() << "scan local file system now" << QThread::currentThreadId();
-        emit scanRequired();
+        QTimer::singleShot(3 * 1000, this, &LocalFSScanner::scanRequired);
     }
     else
     {
