@@ -8,13 +8,14 @@ namespace unix_util {
 
     qint64 timestamp = 0;
 
-    bool getAbsoluteFilePathArguments(const QString& exec, const QStringList& paths, QString& filePath, QString& arguments)
+    bool getAbsoluteFilePathArguments(const QString& exec, QString& filePath, QString& arguments)
     {
+        QStringList& envPaths = util::getEnvPaths();
         QStringList exe = exec.split(' ');
-        auto it = std::find_if(paths.begin(), paths.end(), [&](const QString& path){
+        auto it = std::find_if(envPaths.begin(), envPaths.end(), [&](const QString& path){
             return QFile::exists(path + QDir::separator() + exe[0]);
         });
-        if (paths.end() == it)
+        if (envPaths.end() == it)
             return false;
         filePath = *it + QDir::separator() + exe[0];
         if (exe.length() > 1)
@@ -25,16 +26,48 @@ namespace unix_util {
         return false;
     }
 
+    QString getIconPath(const QString& iconName)
+    {
+        if (QFileInfo(iconName).isAbsolute() && QFile::exists(iconName))
+            return iconName;
+
+        // https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
+        QStringList xdg = QString(qgetenv("XDG_DATA_DIRS")).split(QChar(':'));
+        QStringList iconDirs { QString("%1/.icons").arg(qgetenv("HOME")); };
+        for (const QString& x : xdg)
+        {
+            iconDirs << (x % "/icons" );
+        }
+        iconDirs << "/usr/share/pixmaps";
+
+        QStringList sizes {
+            "256x256",
+            "128x128",
+            "64x64",
+            "48x48",
+            "32x32",
+        };
+        QStringList suffixes {
+            "png", "xpm", "svg",
+        };
+
+        for (const QString& iconDir: iconDirs)
+        {
+            for (const QString& size: sizes)
+            {
+                for (const QString& suffix: suffixes)
+                {
+                    QString f = iconDir % "/hicolor/" % size % "/apps/" % iconName % "." % suffix;
+                    if (QFile::exists(f))
+                        return f;
+                }
+            }
+        }
+        return QString();
+    }
+
     void processFile(const Directory& d, const QFileInfo& fileInfo)
     {
-        QString path = qgetenv("PATH");
-        QStringList environment = QProcess::systemEnvironment();
-        auto it = std::find_if(environment.begin(), environment.end(),
-                               [&](const QString& env) { return env.startsWith("PATH="); });
-        if (environment.end() != it)
-             path = it->mid(5);
-        QStringList&& paths = path.split(':');
-
         QString f(d.directory + QDir::separator() + fileInfo.fileName());
         f.replace("//", "/");
 
@@ -42,14 +75,10 @@ namespace unix_util {
         QString arguments;
         QSettings settings(f, QSettings::IniFormat);
         settings.beginGroup("Desktop Entry");
-        if (getAbsoluteFilePathArguments(settings.value("Exec").toString(), paths, filePath, arguments))
+        if (getAbsoluteFilePathArguments(settings.value("Exec").toString(), filePath, arguments))
         {
             QFileInfo fi(filePath);
-            QString iconPath = settings.value("Icon").toString();
-            if (!QFileInfo(iconPath).isAbsolute() && QFile::exists(iconPath))
-            {
-                iconPath = d.directory + QDir::separator() + iconPath;
-            }
+            QString&& iconPath = getIconPath(settings.value("Icon").toString());
             DBRW::instance()->insertLFS(util::extractPNGFromIcon(iconPath),
                                         settings.value("Name").toString(),
                                         (settings.value("Comment").toString().isEmpty() ? f : settings.value("Comment").toString()) ,

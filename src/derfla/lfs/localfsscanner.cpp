@@ -80,18 +80,7 @@ void LocalFSScanner::scan()
 
 void LocalFSScanner::getDirectoriesFromEnvironmentVariable()
 {
-    QString path = qgetenv("PATH");
-    QStringList environment = QProcess::systemEnvironment();
-    auto it = std::find_if(environment.begin(), environment.end(),
-                           [&](const QString& env) { return env.startsWith("PATH="); });
-    if (environment.end() != it)
-         path = it->mid(5);
-
-#if defined(Q_OS_WIN)
-    QStringList&& paths = path.split(';');
-#else
-    QStringList&& paths = path.split(':');
-#endif
+    QStringList& paths = util::getEnvPaths();
     std::for_each(paths.begin(), paths.end(), [&](const QString& p) { scanDirectories_.append(Directory( p, false)); });
 }
 

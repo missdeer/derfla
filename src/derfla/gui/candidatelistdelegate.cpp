@@ -58,11 +58,17 @@ void CandidateListDelegate::paint(QPainter * painter, const QStyleOptionViewItem
 
     //GET TITLE, DESCRIPTION AND ICON
     QIcon ic = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
+    if (ic.isNull())
+    {
+        QPixmap pixmap(":/terminal.png");
+        ic.addPixmap(pixmap);
+    }
     QString title = index.data(Qt::DisplayRole).toString();
     QString description = index.data(Qt::UserRole + 1).toString();
 
     int imageSpace = 10;
-    if (!ic.isNull()) {
+    if (!ic.isNull())
+    {
         //ICON
         r = option.rect.adjusted(10, 10, -10, -10);
         ic.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
