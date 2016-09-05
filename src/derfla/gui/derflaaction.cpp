@@ -63,7 +63,7 @@ bool DerflaAction::run()
         QStringList& paths = util::getEnvPaths();
         for (const QString& path : paths)
         {
-            if (QFile::exist(path % "/konsole"))
+            if (QFile::exists(path % "/konsole"))
             {
                 QStringList args {
                     "--noclose",
@@ -77,7 +77,7 @@ bool DerflaAction::run()
         }
         for (const QString& path : paths)
         {
-            if (QFile::exist(path % "/xterm"))
+            if (QFile::exists(path % "/xterm"))
             {
                 QStringList args {
                     "-hold",
@@ -147,7 +147,11 @@ QString DerflaAction::workingDirectory() const
 
 void DerflaAction::setWorkingDirectory(const QString& workingDirectory)
 {
-    workingDirectory_ = workingDirectory;
+    QFileInfo fi(workingDirectory);
+    if (fi.isDir())
+        workingDirectory_ = workingDirectory;
+    else
+        workingDirectory_ = fi.absolutePath();
 }
 
 DerflaActionType DerflaAction::actionType() const
