@@ -103,7 +103,7 @@ namespace unix_util {
                 QString&& iconPath = getIconPath(settings.value("Icon").toString());
                 DBRW::instance()->insertLFS(util::extractPNGFromIcon(iconPath),
                                             name,
-                                            (comment.isEmpty() ? f : comment) ,
+                                            (comment.isEmpty() ? filePath : comment) ,
                                             filePath,
                                             arguments,
                                             (settings.value("Path").toString().isEmpty() ? fi.absolutePath() : settings.value("Path").toString()) ,
