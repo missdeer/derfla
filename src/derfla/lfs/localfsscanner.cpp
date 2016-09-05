@@ -220,6 +220,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
 
     if (stop_) return;
+    DBRW* dbrw = DBRW::instance();
     std::for_each(list.begin(), list.end(),
                   [&](const QFileInfo& fileInfo) {
         if (stop_) return;
