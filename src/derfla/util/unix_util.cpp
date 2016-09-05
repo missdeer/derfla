@@ -76,7 +76,7 @@ namespace unix_util {
     {
         QString f(d.directory + QDir::separator() + fileInfo.fileName());
         f.replace("//", "/");
-
+        qDebug() << f;
         QString filePath;
         QString arguments;
         QSettings settings(f, QSettings::IniFormat);

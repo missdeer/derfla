@@ -222,7 +222,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                             f,
                             f,
                             "",
-                            QFileInfo(f).filePath(),
+                            QFileInfo(f).absolutePath(),
                             timestamp_,
                             fileInfo.lastModified().toMSecsSinceEpoch(),
                             "c"
