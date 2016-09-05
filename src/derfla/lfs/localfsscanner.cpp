@@ -206,14 +206,14 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     QThread::yieldCurrentThread();
     QDir dir(d.directory);
 
-    QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
+    QFileInfoList list = dir.entryInfoList(QStringList(), QDir::Files | QDir::Readable);
 
     if (stop_) return;
     DBRW* dbrw = DBRW::instance();
     std::for_each(list.begin(), list.end(),
                   [&](const QFileInfo& fileInfo) {
         if (stop_) return;
-        if (fileInfo.permission(QFile::ExeGroup) && fileInfo.isFile())
+        if (fileInfo.permission(QFile::ExeGroup) && fileInfo.isFile() && fileInfo.suffix() != "desktop")
         {
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
             //qDebug() << "find" <<  f;
@@ -236,14 +236,17 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     std::for_each(list.begin(), list.end(),
         std::bind(processFile, d, std::placeholders::_1));
 
-    if (stop_) return;
     if (d.recursive)
-        list = dir.entryInfoList(QStringList() , QDir::AllDirs | QDir::NoDotAndDotDot);
-    std::for_each(list.begin(), list.end(),
-                  [&](const QFileInfo& fileInfo) {
+    {
         if (stop_) return;
-        QString f(d.directory + QDir::separator() + fileInfo.fileName());
-        scanDirectory(Directory {f, true });
-    });
+        list = dir.entryInfoList(QStringList() , QDir::AllDirs | QDir::NoDotAndDotDot);
+        std::for_each(list.begin(), list.end(),
+                      [&](const QFileInfo& fileInfo) {
+            if (stop_) return;
+            QString f(d.directory + QDir::separator() + fileInfo.fileName());
+            f.replace("//", "/");
+            scanDirectory(Directory {f, true });
+        });
+    }
 }
 #endif
