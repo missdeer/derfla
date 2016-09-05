@@ -8,22 +8,21 @@ namespace unix_util {
 
     qint64 timestamp = 0;
 
-    void getAbsoluteFilePathArguments(const QString& exec, const QStringList& paths, QString& filePath, QString& arguments)
+    bool getAbsoluteFilePathArguments(const QString& exec, const QStringList& paths, QString& filePath, QString& arguments)
     {
         QStringList exe = exec.split(' ');
-        for( const QString& path: paths)
-        {
-            if (QFile::exists(path + QDir::separator() + exe[0]))
-            {
-                filePath = path + QDir::separator() + exe[0];
-                break;
-            }
-        }
+        auto it = std::find_if(paths.begin(), paths.end(), [&](const QString& path){
+            return QFile::exists(path + QDir::separator() + exe[0]);
+        });
+        if (paths.end() == it)
+            return false;
+        filePath = *it + QDir::separator() + exe[0];
         if (exe.length() > 1)
         {
             exe.removeFirst();
             arguments = exe.join(' ');
         }
+        return false;
     }
 
     void processFile(const Directory& d, const QFileInfo& fileInfo)
@@ -43,34 +42,25 @@ namespace unix_util {
         QString arguments;
         QSettings settings(f, QSettings::IniFormat);
         settings.beginGroup("Desktop Entry");
-        getAbsoluteFilePathArguments(settings.value("Exec").toString(), paths, filePath, arguments);
-        qDebug() << settings.value("Name").toString();
-        qDebug() << settings.value("Exec").toString();
-        qDebug() << settings.value("Icon").toString();
-        qDebug() << settings.value("Type").toString();
-        qDebug() << settings.value("Comment").toString();
-        qDebug() << settings.value("Path").toString();
-        // Defect cant git list
-        qDebug() << settings.value("Categories").toString();
-        qDebug() << settings.value("GenericName").toString();
-        qDebug() << settings.value("Terminal").toString();
-        qDebug() << settings.value("MimeType").toString();
-        QFileInfo fi(filePath);
-        QString iconPath = settings.value("Icon").toString();
-        if (!QFileInfo(iconPath).isAbsolute() && QFile::exists(iconPath))
+        if (getAbsoluteFilePathArguments(settings.value("Exec").toString(), paths, filePath, arguments))
         {
-            iconPath = d.directory + QDir::separator() + iconPath;
+            QFileInfo fi(filePath);
+            QString iconPath = settings.value("Icon").toString();
+            if (!QFileInfo(iconPath).isAbsolute() && QFile::exists(iconPath))
+            {
+                iconPath = d.directory + QDir::separator() + iconPath;
+            }
+            DBRW::instance()->insertLFS(util::extractPNGFromIcon(iconPath),
+                                        settings.value("Name").toString(),
+                                        (settings.value("Comment").toString().isEmpty() ? f : settings.value("Comment").toString()) ,
+                                        filePath,
+                                        arguments,
+                                        (settings.value("Path").toString().isEmpty() ? fi.absolutePath() : settings.value("Path").toString()) ,
+                                        timestamp,
+                                        fi.lastModified().toMSecsSinceEpoch(),
+                                        "g"
+                                        );
         }
-        DBRW::instance()->insertLFS(util::extractPNGFromIcon(iconPath),
-                        settings.value("Name").toString(),
-                        (settings.value("Comment").toString().isEmpty() ? f : settings.value("Comment").toString()) ,
-                        filePath,
-                        arguments,
-                        (settings.value("Path").toString().isEmpty() ? fi.absolutePath() : settings.value("Path").toString()) ,
-                        timestamp,
-                        fi.lastModified().toMSecsSinceEpoch(),
-                        "g"
-                        );
         settings.endGroup();
     }
 }
