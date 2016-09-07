@@ -253,7 +253,7 @@ void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
     switch(reason)
     {
     case QSystemTrayIcon::DoubleClick:
-        if (!isVisible())
+        if (isHidden())
             show();
         activateWindow();
         raise();
@@ -296,7 +296,7 @@ void DerflaWidget::onLoadingAnimationTimer()
 void DerflaWidget::showInFront()
 {
     check_expiration;
-    if (!isVisible())
+    if (isHidden())
         show();
     activateWindow();
     raise();
