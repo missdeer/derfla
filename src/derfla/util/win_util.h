@@ -3,7 +3,7 @@
 
 struct Directory;
 
-namespace win_util
+namespace util
 {
     extern qint64 timestamp;
     bool isConsoleApplication(const QString& path);

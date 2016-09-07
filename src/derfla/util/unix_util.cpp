@@ -4,7 +4,7 @@
 #include "util.h"
 #include "unix_util.h"
 
-namespace unix_util {
+namespace util {
 
     qint64 timestamp = 0;
 

@@ -4,7 +4,7 @@
 #include "util.h"
 #include "win_util.h"
 
-namespace win_util {
+namespace util {
 
     qint64 timestamp = 0;
 

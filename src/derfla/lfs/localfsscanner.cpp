@@ -51,7 +51,7 @@ void LocalFSScanner::scan()
 {
     timestamp_ = QDateTime::currentDateTime().toMSecsSinceEpoch();
 #if defined(Q_OS_WIN)
-    win_util::timestamp = timestamp_;
+    util::timestamp = timestamp_;
     CoInitialize(NULL);
     BOOST_SCOPE_EXIT(void) {
         CoUninitialize();
@@ -59,7 +59,7 @@ void LocalFSScanner::scan()
 
 #elif defined(Q_OS_MAC)
 #else
-    unix_util::timestamp = timestamp_;
+    util::timestamp = timestamp_;
 #endif
 
     scanDirectories_.clear();
@@ -115,7 +115,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
 {
     if (stop_) return;
     QThread::yieldCurrentThread();
-    using namespace win_util;
+    using namespace util;
     QDir dir(d.directory);
     
     QFileInfoList list = dir.entryInfoList(QStringList() << "*.exe" << "*.msc" << "*.bat" << "*.lnk", QDir::Files);
@@ -232,7 +232,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
 
     if (stop_) return;
     list = dir.entryInfoList(QStringList() << "*.desktop", QDir::Files | QDir::Readable);
-    std::for_each(list.begin(), list.end(), [&d](const QFileInfo& fi){ unix_util::processFile(d, fi);});
+    std::for_each(list.begin(), list.end(), [&d](const QFileInfo& fi){ util::processFile(d, fi);});
 
     if (d.recursive)
     {

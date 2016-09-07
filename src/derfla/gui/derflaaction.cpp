@@ -16,7 +16,7 @@ DerflaAction::DerflaAction(QObject *parent)
 bool DerflaAction::run()
 {
 #if defined(Q_OS_WIN)
-    if (QFileInfo(target_).suffix() == "exe" && QFileInfo(target_).fileName() != "cmd.exe" && win_util::isConsoleApplication(target_))
+    if (QFileInfo(target_).suffix() == "exe" && QFileInfo(target_).fileName() != "cmd.exe" && util::isConsoleApplication(target_))
     {
         QString args = QString("/K %1 %2").arg(target_).arg(arguments_);
         ::ShellExecuteW(NULL,

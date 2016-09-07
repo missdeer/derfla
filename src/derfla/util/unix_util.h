@@ -3,7 +3,7 @@
 
 struct Directory;
 
-namespace unix_util
+namespace util
 {
     extern qint64 timestamp;
     void processFile(const Directory& d, const QFileInfo& fileInfo);
