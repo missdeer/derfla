@@ -56,7 +56,7 @@ bool DerflaAction::run()
         system(cmdline.toStdString().c_str());
     }
 #else
-    if (actionType_ == DAT_CONSOLE)
+    if (actionType_ == DAT_CONSOLE && !QFileInfo(target_).baseName().contains("term", Qt::CaseInsensitive))
     {
         // console application, running in a terminal
         // konsole/xterm/gnome-terminal...
