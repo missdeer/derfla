@@ -93,6 +93,7 @@ namespace unix_util {
                 QStringList& localeNames = util::getLocaleNames();
                 QString name = settings.value("Name").toString();
                 QString comment = settings.value("Comment").toString();
+                bool terminal = settings.value("Terminal").toBool();
                 for (const QString& locale : localeNames)
                 {
                     if (!settings.value(QString("Name[%1]").arg(locale)).toString().isEmpty())
@@ -113,7 +114,7 @@ namespace unix_util {
                                             (settings.value("Path").toString().isEmpty() ? fi.absolutePath() : settings.value("Path").toString()) ,
                                             timestamp,
                                             fi.lastModified().toMSecsSinceEpoch(),
-                                            "g"
+                                            (terminal ? "c" : "g")
                                             );
             }
         }
