@@ -5,7 +5,6 @@ struct Directory;
 
 namespace util
 {
-    extern qint64 timestamp;
     bool isConsoleApplication(const QString& path);
     void readDescriptionFromResource(const QString& f, QString& desc);
     void processFile(const Directory& d, const QFileInfo& fileInfo);

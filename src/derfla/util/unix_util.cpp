@@ -6,8 +6,6 @@
 
 namespace util {
 
-    qint64 timestamp = 0;
-
     bool getAbsoluteFilePathArguments(const QString& exec, QString& filePath, QString& arguments)
     {
         QStringList& envPaths = util::getEnvPaths();

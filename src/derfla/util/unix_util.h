@@ -5,7 +5,6 @@ struct Directory;
 
 namespace util
 {
-    extern qint64 timestamp;
     void processFile(const Directory& d, const QFileInfo& fileInfo);
 };
 

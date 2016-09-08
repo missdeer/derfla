@@ -50,8 +50,8 @@ void LocalFSScanner::stop()
 void LocalFSScanner::scan()
 {
     timestamp_ = QDateTime::currentDateTime().toMSecsSinceEpoch();
-#if defined(Q_OS_WIN)
     util::timestamp = timestamp_;
+#if defined(Q_OS_WIN)
     CoInitialize(NULL);
     BOOST_SCOPE_EXIT(void) {
         CoUninitialize();
@@ -59,7 +59,6 @@ void LocalFSScanner::scan()
 
 #elif defined(Q_OS_MAC)
 #else
-    util::timestamp = timestamp_;
 #endif
 
     scanDirectories_.clear();

@@ -6,8 +6,6 @@
 
 namespace util {
 
-    qint64 timestamp = 0;
-
     static DWORD AbsoluteSeek(HANDLE hFile, DWORD  offset)
     {
         DWORD newOffset;
