@@ -9,6 +9,8 @@
 #endif
 #include "localfsscanner.h"
 
+#define check_stop do { if (stop_) return;   QThread::yieldCurrentThread(); } while(0)
+
 LocalFSScanner::LocalFSScanner(QObject *parent)
     : QObject(parent)
     , stop_(false)
@@ -112,17 +114,14 @@ void LocalFSScanner::getBuiltinDirectories()
 
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
-    if (stop_) return;
-    QThread::yieldCurrentThread();
-    using namespace util;
+    check_stop;
     QDir dir(d.directory);
     
     QFileInfoList list = dir.entryInfoList(QStringList() << "*.exe" << "*.msc" << "*.bat" << "*.lnk", QDir::Files);
-    if (stop_) return;
-    std::for_each(list.begin(), list.end(),
-        std::bind(processFile, d, std::placeholders::_1));
+    check_stop;
+    std::for_each(list.begin(), list.end(),[&d](const QFileInfo& fi){ util::processFile(d, fi);});
 
-    if (stop_) return;
+    check_stop;
     if (d.recursive)
     {
         QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::NoDotAndDotDot | QDir::AllDirs);
@@ -149,7 +148,7 @@ void LocalFSScanner::getBuiltinDirectories()
 
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
-    if (stop_) return;
+    check_stop;
     QThread::yieldCurrentThread();
 
     if (QFileInfo(d.directory).suffix() == "framework")
@@ -157,17 +156,17 @@ void LocalFSScanner::scanDirectory(const Directory &d)
 
     QDir dir(d.directory);
     QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
-    if (stop_) return;
+    check_stop;
     if (d.recursive)
         list << dir.entryInfoList(QStringList() , QDir::AllDirs | QDir::NoDotAndDotDot);
     else
         list << dir.entryInfoList(QStringList() << "*.app" << "*.prefPane", QDir::AllDirs | QDir::NoDotAndDotDot);
 
-    if (stop_) return;
+    check_stop;
     DBRW* dbrw = DBRW::instance();
     std::for_each(list.begin(), list.end(),
                   [&](const QFileInfo& fileInfo) {
-        if (stop_) return;
+        check_stop;
         QString f(d.directory + QDir::separator() + fileInfo.fileName());
         if ((fileInfo.isFile() && fileInfo.permission(QFile::ExeGroup))
                 || (fileInfo.isDir() && (fileInfo.suffix() == "app" || fileInfo.suffix() == "prefPane")))
@@ -201,17 +200,16 @@ void LocalFSScanner::getBuiltinDirectories()
 }
 void LocalFSScanner::scanDirectory(const Directory &d)
 {
-    if (stop_) return;
-    QThread::yieldCurrentThread();
+    check_stop;
     QDir dir(d.directory);
 
     QFileInfoList list = dir.entryInfoList(QStringList(), QDir::Files | QDir::Readable);
 
-    if (stop_) return;
+    check_stop;
     DBRW* dbrw = DBRW::instance();
     std::for_each(list.begin(), list.end(),
                   [&](const QFileInfo& fileInfo) {
-        if (stop_) return;
+        check_stop;
         if (fileInfo.permission(QFile::ExeGroup) && fileInfo.isFile() && fileInfo.suffix() != "desktop")
         {
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
@@ -229,17 +227,17 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         }
     });
 
-    if (stop_) return;
+    check_stop;
     list = dir.entryInfoList(QStringList() << "*.desktop", QDir::Files | QDir::Readable);
     std::for_each(list.begin(), list.end(), [&d](const QFileInfo& fi){ util::processFile(d, fi);});
 
     if (d.recursive)
     {
-        if (stop_) return;
+        check_stop;
         list = dir.entryInfoList(QStringList() , QDir::AllDirs | QDir::NoDotAndDotDot);
         std::for_each(list.begin(), list.end(),
                       [&](const QFileInfo& fileInfo) {
-            if (stop_) return;
+            check_stop;
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
             f.replace("//", "/");
             scanDirectory(Directory {f, true });
