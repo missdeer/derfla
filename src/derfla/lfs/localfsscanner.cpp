@@ -126,7 +126,10 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     {
         QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::NoDotAndDotDot | QDir::AllDirs);
         std::for_each(list.begin(), list.end(),
-            [&](const QFileInfo& fileInfo) { scanDirectory(Directory(d.directory + QDir::separator() + fileInfo.fileName(), true)); });
+            [&](const QFileInfo& fileInfo) {
+            check_stop;
+            scanDirectory(Directory(d.directory + QDir::separator() + fileInfo.fileName(), true));
+        });
     }
 }
 
@@ -184,6 +187,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         }
         else if (fileInfo.isDir() && d.recursive)
         {
+            check_stop;
             scanDirectory(Directory {f, true });
         }
     });
