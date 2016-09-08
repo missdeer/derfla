@@ -36,10 +36,6 @@ bool DerflaAction::run()
             SW_SHOWNORMAL);
     }
 #elif defined(Q_OS_MAC)
-    if (workingDirectory_.isEmpty())
-        workingDirectory_ = QFileInfo(target_).absolutePath();
-    if (QFileInfo(workingDirectory_).isFile())
-        workingDirectory_ = QFileInfo(workingDirectory_).absolutePath();
     if (QFileInfo(target_).isDir())
     {
         QStringList args {
@@ -91,10 +87,6 @@ bool DerflaAction::run()
         }
     }
 
-    if (workingDirectory_.isEmpty())
-        workingDirectory_ = QFileInfo(target_).absolutePath();
-    if (QFileInfo(workingDirectory_).isFile())
-        workingDirectory_ = QFileInfo(workingDirectory_).absolutePath();
     QProcess::startDetached(target_, arguments_.split(' '), workingDirectory_);
 #endif
     return true;
