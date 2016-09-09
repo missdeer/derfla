@@ -94,13 +94,13 @@ namespace util {
                 bool terminal = settings.value("Terminal").toBool();
                 for (const QString& locale : localeNames)
                 {
-                    if (!settings.value(QString("Name[%1]").arg(locale)).toString().isEmpty())
+                    if (!settings.value(QString("Name[%1]").arg(locale)).toByteArray().isEmpty())
                     {
-                        name = settings.value(QString("Name[%1]").arg(locale)).toString();
+                        name = settings.value(QString::fromUtf8(QString("Name[%1]").arg(locale)).toByteArray());
                     }
-                    if (!settings.value(QString("Comment[%1]").arg(locale)).toString().isEmpty())
+                    if (!settings.value(QString("Comment[%1]").arg(locale)).toByteArray().isEmpty())
                     {
-                        comment = settings.value(QString("Comment[%1]").arg(locale)).toString();
+                        comment = settings.value(QString::fromUtf8(QString("Comment[%1]").arg(locale)).toByteArray());
                     }
                 }
                 QString&& iconPath = getIconPath(settings.value("Icon").toString());
