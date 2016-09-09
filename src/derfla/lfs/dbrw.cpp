@@ -149,8 +149,11 @@ bool DBRW::queryActions(DerflaActionList &dal, const QString &keyword, int count
             pixmap.loadFromData(q.value(iconIndex).toByteArray());
             da->setIcon(QIcon(pixmap));
             da->setArguments(q.value(argumentsIndex).toString());
-            da->setWorkingDirectory(q.value(workingDirectoryIndex).toString());
             da->setTarget(q.value(targetIndex).toString());
+            QString workingDirectory = q.value(workingDirectoryIndex).toString();
+            if (workingDirectory.isEmpty())
+                workingDirectory = QFileInfo(da->target()).absolutePath();
+            da->setWorkingDirectory(workingDirectory);
             da->setTitle(q.value(titleIndex).toString());
             da->setDescription(q.value(descriptionIndex).toString());
             da->setActionType(q.value(typeIndex).toString() == "c" ? DAT_CONSOLE : DAT_GUI);
