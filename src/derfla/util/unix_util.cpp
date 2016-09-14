@@ -96,11 +96,11 @@ namespace util {
                 {
                     if (!settings.value(QString("Name[%1]").arg(locale)).toByteArray().isEmpty())
                     {
-                        name = settings.value(QString::fromUtf8(QString("Name[%1]").arg(locale)).toByteArray());
+                        name = settings.value(QString::fromUtf8(QString("Name[%1]").arg(locale).toUtf8()));
                     }
                     if (!settings.value(QString("Comment[%1]").arg(locale)).toByteArray().isEmpty())
                     {
-                        comment = settings.value(QString::fromUtf8(QString("Comment[%1]").arg(locale)).toByteArray());
+                        comment = settings.value(QString::fromUtf8(QString("Comment[%1]").arg(locale).toUtf8()));
                     }
                 }
                 QString&& iconPath = getIconPath(settings.value("Icon").toString());
