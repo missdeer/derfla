@@ -82,6 +82,7 @@ namespace util {
         QString filePath;
         QString arguments;
         QSettings settings(f, QSettings::IniFormat);
+        settings.setIniCodec("UTF-8");
         settings.beginGroup("Desktop Entry");
         if (getAbsoluteFilePathArguments(settings.value("Exec").toString(), filePath, arguments))
         {
@@ -94,13 +95,13 @@ namespace util {
                 bool terminal = settings.value("Terminal").toBool();
                 for (const QString& locale : localeNames)
                 {
-                    if (!settings.value(QString("Name[%1]").arg(locale)).toByteArray().isEmpty())
+                    if (!settings.value(QString("Name[%1]").arg(locale)).toString().isEmpty())
                     {
-                        name = QString::fromUtf8( settings.value(QString("Name[%1]").arg(locale)).toByteArray());
+                        name = settings.value(QString("Name[%1]").arg(locale)).toString();
                     }
-                    if (!settings.value(QString("Comment[%1]").arg(locale)).toByteArray().isEmpty())
+                    if (!settings.value(QString("Comment[%1]").arg(locale)).toString().isEmpty())
                     {
-                        comment = QString::fromUtf8(settings.value(QString("Comment[%1]").arg(locale)).toByteArray());
+                        comment = settings.value(QString("Comment[%1]").arg(locale)).toString();
                     }
                 }
                 QString&& iconPath = getIconPath(settings.value("Icon").toString());
