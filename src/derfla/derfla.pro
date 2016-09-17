@@ -86,7 +86,7 @@ macx: {
     HEADERS +=  \
         executor/osascriptexecutor.h
 
-    QMAKE_MAC_SDK = macosx10.11
+#    QMAKE_MAC_SDK = macosx10.11
     ICON = derfla.icns
     icon.path = $$PWD
     icon.files += derfla.png
