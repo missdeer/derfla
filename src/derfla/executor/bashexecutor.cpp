@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "scriptescape.h"
 #include "bashexecutor.h"
 
 BashExecutor::BashExecutor(QObject *parent)
@@ -23,11 +24,11 @@ BashExecutor::BashExecutor(QObject *parent)
 bool BashExecutor::run()
 {
     Executor::run();
-    process_->start(program_, QStringList() << "-c" << script_);
+    ExecutorRunner::instance()->run(uuid_, program_, QStringList() << "-c" << script_);
     return false;
 }
 
 void BashExecutor::doEscaping()
 {
-
+    ScriptEscape se(escaping_);
 }

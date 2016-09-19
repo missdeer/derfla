@@ -23,7 +23,7 @@ PHPExecutor::PHPExecutor(QObject *parent)
 bool PHPExecutor::run()
 {
     Executor::run();
-    process_->start(program_, QStringList() << "-r" << script_);
+    ExecutorRunner::instance()->run(uuid_, program_, QStringList() << "-r" << script_);
     return false;
 }
 

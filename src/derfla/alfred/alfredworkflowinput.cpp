@@ -70,8 +70,8 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
         executor->escaping(escaping_); // must set before setting script
         executor->setScript(script_);
         executor->setWorkingDirectory(workingDirectory_);
-        connect(executor, &Executor::errorOccurred, this, &AlfredWorkflowInput::errorOccurred);
-        connect(executor, &Executor::finished, this, &AlfredWorkflowInput::finished);
+        connect(ExecutorRunner::instance(), &ExecutorRunner::errorOccurred, this, &AlfredWorkflowInput::errorOccurred);
+        connect(ExecutorRunner::instance(), &ExecutorRunner::finished, this, &AlfredWorkflowInput::finished);
 
         // do something to associate with Derfla actions 
         derflaActions.append(da);

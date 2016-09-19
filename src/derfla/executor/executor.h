@@ -2,6 +2,7 @@
 #define EXECUTOR_H
 
 #include <QObject>
+#include "executorrunner.h"
 
 class Executor : public QObject
 {
@@ -24,17 +25,15 @@ public:
     void setUuid(const QUuid &uuid);
 
 signals:
-    void errorOccurred(QProcess::ProcessError error);
-    void finished(int exitCode, QProcess::ExitStatus exitStatus);
+
 public slots:
 
 protected:
-    QSharedPointer<QProcess> process_;
     QString script_;
     QString workingDirectory_;
     int escaping_;
-private:
     QUuid uuid_;
+private:
     virtual void doEscaping() = 0;
 };
 

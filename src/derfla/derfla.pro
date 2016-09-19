@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     executor/phpexecutor.cpp \
     executor/pythonexecutor.cpp \
     executor/perlexecutor.cpp \
-    executor/rubyexecutor.cpp
+    executor/rubyexecutor.cpp \
+    executor/executorrunner.cpp
 
 HEADERS  += stdafx.h \
     gui/derflawidget.h \
@@ -58,7 +59,8 @@ HEADERS  += stdafx.h \
     executor/phpexecutor.h \
     executor/pythonexecutor.h \
     executor/perlexecutor.h \
-    executor/rubyexecutor.h
+    executor/rubyexecutor.h \
+    executor/executorrunner.h
 
 FORMS    += \
     gui/candidatelist.ui

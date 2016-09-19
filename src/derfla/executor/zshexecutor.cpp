@@ -23,7 +23,7 @@ ZshExecutor::ZshExecutor(QObject *parent)
 bool ZshExecutor::run()
 {
     Executor::run();
-    process_->start(program_, QStringList() << "-c" << script_);
+    ExecutorRunner::instance()->run(uuid_, program_, QStringList() << "-c" << script_);
     return false;
 }
 

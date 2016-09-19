@@ -22,15 +22,10 @@ Executor::~Executor()
 
 bool Executor::run()
 {
-    if (process_.isNull())
-    {
-        process_.reset(new QProcess);
-        connect(process_.data(), SIGNAL(errorOccurred(QProcess::ProcessError)), this, SIGNAL(errorOccurred(QProcess::ProcessError)));
-        connect(process_.data(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SIGNAL(finished(int, QProcess::ExitStatus)));
-    }
+    QSharedPointer<QProcess> process(new QProcess);
+    process->setWorkingDirectory(workingDirectory_);
 
-    process_->terminate();
-    process_->setWorkingDirectory(workingDirectory_);
+    ExecutorRunner::instance()->run(uuid_, process);
 
     doEscaping();
     return true;
@@ -38,12 +33,13 @@ bool Executor::run()
 
 void Executor::getStdout(QByteArray& output)
 {
-    output = process_->readAllStandardOutput();
+    ExecutorRunner::instance()->getStdout(uuid_, output);
 }
 
 void Executor::getStderr(QByteArray& err)
 {
-    err = process_->readAllStandardError();
+
+    ExecutorRunner::instance()->getStderr(uuid_, err);
 }
 
 Executor* Executor::createExecutor(int type)
