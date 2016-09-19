@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "scriptescape.h"
 #include "phpexecutor.h"
 
 PHPExecutor::PHPExecutor(QObject *parent)
@@ -29,5 +30,6 @@ bool PHPExecutor::run()
 
 void PHPExecutor::doEscaping()
 {
+    ScriptEscape se(escaping_);
 
 }

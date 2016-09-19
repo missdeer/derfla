@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "scriptescape.h"
 #include "pythonexecutor.h"
 
 PythonExecutor::PythonExecutor(QObject *parent)
@@ -29,5 +30,6 @@ bool PythonExecutor::run()
 
 void PythonExecutor::doEscaping()
 {
+    ScriptEscape se(escaping_);
 
 }

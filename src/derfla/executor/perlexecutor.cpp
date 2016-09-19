@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "scriptescape.h"
 #include "perlexecutor.h"
 
 PerlExecutor::PerlExecutor(QObject *parent)
@@ -29,5 +30,5 @@ bool PerlExecutor::run()
 
 void PerlExecutor::doEscaping()
 {
-
+    ScriptEscape se(escaping_);
 }

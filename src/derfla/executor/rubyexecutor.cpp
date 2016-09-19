@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "scriptescape.h"
 #include "rubyexecutor.h"
 
 RubyExecutor::RubyExecutor(QObject *parent)
@@ -29,5 +30,6 @@ bool RubyExecutor::run()
 
 void RubyExecutor::doEscaping()
 {
+    ScriptEscape se(escaping_);
 
 }

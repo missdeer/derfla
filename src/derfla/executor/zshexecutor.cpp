@@ -1,4 +1,5 @@
 #include "executor.h"
+#include "scriptescape.h"
 #include "zshexecutor.h"
 
 ZshExecutor::ZshExecutor(QObject *parent)
@@ -29,5 +30,6 @@ bool ZshExecutor::run()
 
 void ZshExecutor::doEscaping()
 {
+    ScriptEscape se(escaping_);
 
 }
