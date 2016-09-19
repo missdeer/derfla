@@ -23,7 +23,7 @@ public:
 
     const QUuid& getUuid() const;
     void setUuid(const QUuid &uuid);
-
+    void findProgram(const QString& exe);
 signals:
 
 public slots:
@@ -31,6 +31,7 @@ public slots:
 protected:
     QString script_;
     QString workingDirectory_;
+    QString program_;
     int escaping_;
     QUuid uuid_;
 private:

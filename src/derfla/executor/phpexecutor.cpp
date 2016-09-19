@@ -2,23 +2,16 @@
 #include "scriptescape.h"
 #include "phpexecutor.h"
 
+#if defined(Q_OS_WIN)
+#define EXE "/php.exe"
+#else
+#define EXE "/php"
+#endif
+
 PHPExecutor::PHPExecutor(QObject *parent)
     : Executor (parent)
 {
-    QStringList& paths = util::getEnvPaths();
-#if defined(Q_OS_WIN)
-    auto it = std::find_if(paths.begin(), paths.end(), [](const QString& p) {
-        return QFile::exists(p % "/php.exe");
-    });
-    if (paths.end() != it)
-        program_ = *it % "/php.exe";
-#else
-    auto it = std::find_if(paths.begin(), paths.end(), [](const QString& p) {
-        return QFile::exists(p % "/php");
-    });
-    if (paths.end() != it)
-        program_ = *it % "/php";
-#endif
+    findProgram(EXE);
 }
 
 bool PHPExecutor::run()

@@ -14,7 +14,6 @@ signals:
 public slots:
 
 private:
-    QString program_;
     void doEscaping();
 };
 

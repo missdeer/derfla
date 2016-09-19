@@ -94,3 +94,13 @@ void Executor::setUuid(const QUuid &uuid)
     uuid_ = uuid;
 }
 
+void Executor::findProgram(const QString& exe)
+{
+    QStringList& paths = util::getEnvPaths();
+    auto it = std::find_if(paths.begin(), paths.end(), [&exe](const QString& p) {
+        return QFile::exists(p % exe);
+    });
+    if (paths.end() != it)
+        program_ = *it % exe;
+}
+

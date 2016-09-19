@@ -2,23 +2,16 @@
 #include "scriptescape.h"
 #include "bashexecutor.h"
 
+#if defined(Q_OS_WIN)
+#define EXE "/bash.exe"
+#else
+#define EXE "/bash"
+#endif
+
 BashExecutor::BashExecutor(QObject *parent)
     : Executor (parent)
 {
-    QStringList& paths = util::getEnvPaths();
-#if defined(Q_OS_WIN)
-    auto it = std::find_if(paths.begin(), paths.end(), [](const QString& p) {
-        return QFile::exists(p % "/bash.exe");
-    });
-    if (paths.end() != it)
-        program_ = *it % "/bash.exe";
-#else
-    auto it = std::find_if(paths.begin(), paths.end(), [](const QString& p) {
-        return QFile::exists(p % "/bash");
-    });
-    if (paths.end() != it)
-        program_ = *it % "/bash";
-#endif
+    findProgram(EXE);
 }
 
 bool BashExecutor::run()

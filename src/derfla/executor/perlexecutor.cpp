@@ -2,23 +2,16 @@
 #include "scriptescape.h"
 #include "perlexecutor.h"
 
+#if defined(Q_OS_WIN)
+#define EXE "/perl.exe"
+#else
+#define EXE "/perl"
+#endif
+
 PerlExecutor::PerlExecutor(QObject *parent)
     : Executor (parent)
 {
-    QStringList& paths = util::getEnvPaths();
-#if defined(Q_OS_WIN)
-    auto it = std::find_if(paths.begin(), paths.end(), [](const QString& p) {
-        return QFile::exists(p % "/perl.exe");
-    });
-    if (paths.end() != it)
-        program_ = *it % "/perl.exe";
-#else
-    auto it = std::find_if(paths.begin(), paths.end(), [](const QString& p) {
-        return QFile::exists(p % "/perl");
-    });
-    if (paths.end() != it)
-        program_ = *it % "/perl";
-#endif
+    findProgram(EXE);
 }
 
 bool PerlExecutor::run()

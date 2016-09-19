@@ -2,23 +2,16 @@
 #include "scriptescape.h"
 #include "pythonexecutor.h"
 
+#if defined(Q_OS_WIN)
+#define EXE "/python.exe"
+#else
+#define EXE "/python"
+#endif
+
 PythonExecutor::PythonExecutor(QObject *parent)
     : Executor (parent)
 {
-    QStringList& paths = util::getEnvPaths();
-#if defined(Q_OS_WIN)
-    auto it = std::find_if(paths.begin(), paths.end(), [](const QString& p) {
-        return QFile::exists(p % "/python.exe");
-    });
-    if (paths.end() != it)
-        program_ = *it % "/python.exe";
-#else
-    auto it = std::find_if(paths.begin(), paths.end(), [](const QString& p) {
-        return QFile::exists(p % "/python");
-    });
-    if (paths.end() != it)
-        program_ = *it % "/python";
-#endif
+    findProgram(EXE);
 }
 
 bool PythonExecutor::run()
