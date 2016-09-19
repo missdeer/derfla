@@ -25,7 +25,7 @@ bool Executor::run()
     QSharedPointer<QProcess> process(new QProcess);
     process->setWorkingDirectory(workingDirectory_);
 
-    ExecutorRunner::instance()->run(uuid_, process);
+    ExecutorRunner::instance()->registerProcess(uuid_, process);
 
     doEscaping();
     return true;

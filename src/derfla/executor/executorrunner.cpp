@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "executor.h"
 #include "executorrunner.h"
 
 ExecutorRunner* ExecutorRunner::instance_;
@@ -18,7 +19,7 @@ ExecutorRunner* ExecutorRunner::instance()
     return instance_;
 }
 
-void ExecutorRunner::run(const QUuid& uuid, QSharedPointer<QProcess> process)
+void ExecutorRunner::registerProcess(const QUuid& uuid, QSharedPointer<QProcess> process)
 {
     processMap_.insert(uuid, process);
 
@@ -26,13 +27,18 @@ void ExecutorRunner::run(const QUuid& uuid, QSharedPointer<QProcess> process)
     connect(process.data(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SIGNAL(finished(int, QProcess::ExitStatus)));
 }
 
-void ExecutorRunner::run(const QUuid& uuid, const QString& program, const QStringList& arguments)
+void ExecutorRunner::startProcess(const QUuid& uuid, const QString& program, const QStringList& arguments)
 {
     auto it = processMap_.find(uuid);
     if (processMap_.end() != it)
     {
         (*it)->start(program, arguments);
     }
+}
+
+void ExecutorRunner::run(Executor* executor)
+{
+    executor->run();
 }
 
 void ExecutorRunner::getStdout(const QUuid& uuid, QByteArray& output)

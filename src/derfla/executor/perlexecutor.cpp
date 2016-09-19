@@ -17,7 +17,7 @@ PerlExecutor::PerlExecutor(QObject *parent)
 bool PerlExecutor::run()
 {
     Executor::run();
-    ExecutorRunner::instance()->run(uuid_, program_, QStringList() << "-c" << script_);
+    ExecutorRunner::instance()->startProcess(uuid_, program_, QStringList() << "-c" << script_);
     return false;
 }
 
