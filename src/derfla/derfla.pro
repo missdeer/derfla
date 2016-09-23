@@ -27,7 +27,6 @@ SOURCES += main.cpp\
     alfred/alfredworkflowoutput.cpp \
     alfred/alfredworkflowaction.cpp \
     alfred/alfredworkflowtrigger.cpp \
-    executor/scriptescape.cpp \
     executor/executor.cpp \
     executor/bashexecutor.cpp \
     executor/zshexecutor.cpp \
@@ -35,7 +34,9 @@ SOURCES += main.cpp\
     executor/pythonexecutor.cpp \
     executor/perlexecutor.cpp \
     executor/rubyexecutor.cpp \
-    executor/executorrunner.cpp
+    executil/scriptescape.cpp \
+    executil/executorrunner.cpp \
+    executil/processwrapper.cpp
 
 HEADERS  += stdafx.h \
     gui/derflawidget.h \
@@ -52,7 +53,6 @@ HEADERS  += stdafx.h \
     alfred/alfredworkflowoutput.h \
     alfred/alfredworkflowaction.h \
     alfred/alfredworkflowtrigger.h \
-    executor/scriptescape.h \
     executor/executor.h \
     executor/bashexecutor.h \
     executor/zshexecutor.h \
@@ -60,12 +60,14 @@ HEADERS  += stdafx.h \
     executor/pythonexecutor.h \
     executor/perlexecutor.h \
     executor/rubyexecutor.h \
-    executor/executorrunner.h
+    executil/scriptescape.h \
+    executil/executorrunner.h \
+    executil/processwrapper.h
 
 FORMS    += \
     gui/candidatelist.ui
 
-INCLUDEPATH += $$PWD $$PWD/gui $$PWD/lfs $$PWD/alfred $$PWD/util $$PWD/executor
+INCLUDEPATH += $$PWD $$PWD/gui $$PWD/lfs $$PWD/alfred $$PWD/util $$PWD/executor $$PWD/executil
 
 CONFIG(release, debug|release) : {
     DEFINES += QT_NO_DEBUG_OUTPUT=1 QT_NO_INFO_OUTPUT=1
