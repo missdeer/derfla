@@ -17,7 +17,7 @@ RubyExecutor::RubyExecutor(QObject *parent)
 bool RubyExecutor::run()
 {
     Executor::run();
-    ExecutorRunner::instance()->startProcess(uuid_, program_, QStringList() << "-e" << script_);
+    start(program_, QStringList() << "-e" << script_);
     return false;
 }
 

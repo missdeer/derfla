@@ -3,23 +3,20 @@
 
 #include <QObject>
 
-class ProcessWrapper : public QObject
+class ProcessWrapper : public QProcess
 {
     Q_OBJECT
 public:
     explicit ProcessWrapper(QObject *parent = 0);
-    explicit ProcessWrapper(const QUuid& id, QObject *parent = 0);
+    explicit ProcessWrapper(const QUuid& uuid, QObject *parent = 0);
     ~ProcessWrapper();
     const QUuid& id() const;
-
-    void setWorkingDirectory(const QString& workingDirectory);
 signals:
 
 public slots:
 
-private:
-    QUuid id_;
-    QProcess* process_;
+protected:
+    QUuid uuid_;
 };
 
 typedef QSharedPointer<ProcessWrapper> ProcessPtr;

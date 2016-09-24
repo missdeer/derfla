@@ -11,8 +11,8 @@ class ExecutorRunner : public QObject
 public:
     static ExecutorRunner* instance();
 
-    void registerProcess(const QUuid& uuid, QSharedPointer<QProcess> process);
-    void startProcess(const QUuid& uuid, const QString& program, const QStringList& arguments);
+    Executor* createExecutor(int type);
+    Executor* createExecutor(const QString& type);
 
     void getStdout(const QUuid& uuid, QByteArray& output);
     void getStderr(const QUuid& uuid, QByteArray& err);
@@ -25,7 +25,7 @@ signals:
 public slots:
 
 private:
-    QMap<QUuid, QSharedPointer<QProcess>> processMap_;
+    QList<Executor*> prcocessList_;
 
     static ExecutorRunner* instance_;
     ExecutorRunner();

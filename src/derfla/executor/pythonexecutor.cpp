@@ -17,7 +17,7 @@ PythonExecutor::PythonExecutor(QObject *parent)
 bool PythonExecutor::run()
 {
     Executor::run();
-    ExecutorRunner::instance()->startProcess(uuid_, program_, QStringList() << "-c" << script_);
+    start(program_, QStringList() << "-c" << script_);
     return false;
 }
 

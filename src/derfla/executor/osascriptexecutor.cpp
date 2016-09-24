@@ -11,7 +11,7 @@ OSAScriptExecutor::OSAScriptExecutor(QObject *parent)
 bool OSAScriptExecutor::run()
 {
     Executor::run();
-    ExecutorRunner::instance()->startProcess(uuid_, program_, QStringList() << "-c" << script_);
+    start(program_, QStringList() << "-c" << script_);
     return false;
 }
 
