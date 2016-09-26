@@ -2,36 +2,28 @@
 #include "processwrapper.h"
 
 ProcessWrapper::ProcessWrapper(QObject *parent)
-    : QObject(parent)
-    , id_(QUuid::createUuid())
-    , process_(new QProcess)
+    : QProcess(parent)
+    , uuid_(QUuid::createUuid())
 {
 
 }
 
-ProcessWrapper::ProcessWrapper(const QUuid &id, QObject *parent)
-    : QObject(parent)
-    , id_(id)
-    , process_(new QProcess)
+ProcessWrapper::ProcessWrapper(const QUuid &uuid, QObject *parent)
+    : QProcess(parent)
+    , uuid_(uuid)
 {
 
 }
 
 ProcessWrapper::~ProcessWrapper()
 {
-    if (process_->state() == QProcess::Running)
+    if (state() == QProcess::Running)
     {
-        process_->terminate();
+        terminate();
     }
-    delete process_;
 }
 
 const QUuid& ProcessWrapper::id() const
 {
-    return id_;
-}
-
-void ProcessWrapper::setWorkingDirectory(const QString &workingDirectory)
-{
-    process_->setWorkingDirectory(workingDirectory);
+    return uuid_;
 }

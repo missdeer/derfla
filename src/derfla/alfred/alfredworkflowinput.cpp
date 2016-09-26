@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "executor.h"
+#include "executorrunner.h"
 #include "alfredworkflowinput.h"
 
 AlfredWorkflowInput::AlfredWorkflowInput(const QString& workingDirectory, QObject *parent) 
@@ -65,9 +66,9 @@ void AlfredWorkflowInput::getDerflaActions(const QString& input, DerflaActionLis
         da->setDisabled(true);
 
         // run script
-        Executor* executor = Executor::createExecutor(scriptExecutorType_);
+        Executor* executor = ExecutorRunner::instance()->createExecutor(scriptExecutorType_);
         Q_ASSERT(executor);
-        executor->escaping(escaping_); // must set before setting script
+        executor->escaping(escaping_);
         executor->setScript(script_);
         executor->setWorkingDirectory(workingDirectory_);
         ExecutorRunner::instance()->run(executor);
