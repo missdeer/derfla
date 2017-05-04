@@ -107,7 +107,13 @@ macx: {
 }
 
 win32: {
-
+    win32-msvc* {
+        QMAKE_LFLAGS += "/NODEFAULTLIB:MSVCRT"
+        LIBS += -L$$PWD/../../3rdparty/zlib-1.2.8 -lzlib
+    } else {
+        DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
+        LIBS += -lz
+    }
     QT += winextras
 
     SOURCES += util/win_util.cpp \
@@ -119,16 +125,13 @@ win32: {
     # Windows icons
     RC_FILE = derfla.rc
     DISTFILES += derfla.rc
-    LIBS+=-L$$PWD/../../3rdparty/zlib-1.2.8 \
-        -L$$PWD/../../3rdparty/Everything-SDK/lib \
-        -lzlib -lOle32 -lVersion -lComctl32 -lGdi32
+    LIBS += -L$$PWD/../../3rdparty/Everything-SDK/lib -lVersion -lComctl32
     INCLUDEPATH += $$PWD/../../3rdparty/Everything-SDK/include \
         $$PWD/../../3rdparty/Everything-SDK/ipc
 
     contains(QMAKE_HOST.arch, x86_64): LIBS += -lEverything64
     else: LIBS += -lEverything32
 
-    QMAKE_LFLAGS += "/NODEFAULTLIB:MSVCRT"
 #    CONFIG(release, debug|release): {
 #        copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Release/skins/)'
 #    } else {
