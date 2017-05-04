@@ -125,7 +125,7 @@ win32: {
     # Windows icons
     RC_FILE = derfla.rc
     DISTFILES += derfla.rc
-    LIBS += -L$$PWD/../../3rdparty/Everything-SDK/lib -lVersion -lComctl32
+    LIBS += -L$$PWD/../../3rdparty/Everything-SDK/lib -lVersion -lComctl32 -lOle32 -lGdi32
     INCLUDEPATH += $$PWD/../../3rdparty/Everything-SDK/include \
         $$PWD/../../3rdparty/Everything-SDK/ipc
 

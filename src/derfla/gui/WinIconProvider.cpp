@@ -178,7 +178,13 @@ bool WinIconProvider::addIconFromImageList(int imageListIndex, int iconIndex, QI
 {
 	HICON hIcon = 0;
 	IImageList* imageList;
+#if !defined(_MSC_VER)
+    // For MinGW:
+    static const IID iID_IImageList = {0x46eb5926, 0x582e, 0x4017, {0x9f, 0xdf, 0xe8, 0x99, 0x8d, 0xaa, 0x9, 0x50}};
+    HRESULT hResult = SHGetImageList(imageListIndex, iID_IImageList, (void**)&imageList);
+#else
 	HRESULT hResult = SHGetImageList(imageListIndex, IID_IImageList, (void**)&imageList);
+#endif
 	if (hResult == S_OK)
 	{
 		hResult = ((IImageList*)imageList)->GetIcon(iconIndex, ILD_TRANSPARENT, &hIcon);
