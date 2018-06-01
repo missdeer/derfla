@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include <JlCompress.h>
+#include <private/qzipreader_p.h>
 #include "uglobalhotkeys.h"
 #include "CharLineEdit.h"
 #include "candidatelist.h"
@@ -546,8 +546,9 @@ bool DerflaWidget::loadSkinPackage(const QString& skinPath, QString& configurati
     QDir dir(dirName);
     dir.removeRecursively();
     dir.mkpath(dirName);
-    QStringList files = JlCompress::extractDir(skinPath, dirName);
-    if (files.empty())
+    QZipReader zr(skinPath);
+    bool res = zr.extractAll(dirName);
+    if (!res)
     {
         qCritical() << "extracting" << skinPath << "to" << dirName << "failed";
         return false;

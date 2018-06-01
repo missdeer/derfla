@@ -1,12 +1,11 @@
-QT       += core gui widgets xml concurrent sql
+QT       += core gui widgets xml concurrent sql gui-private
 
 TARGET = Derfla
 TEMPLATE = app
-CONFIG += c++11 precompile_header
+CONFIG += c++14 precompile_header
 PRECOMPILED_HEADER = stdafx.h
 
 include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
-include($$PWD/../../3rdparty/quazip-0.7.2/quazip.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../../3rdparty/sqlite3/sqlite3.pri)
