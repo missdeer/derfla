@@ -2,7 +2,7 @@
 
 INCLUDEPATH += $$PWD
 
-win32 | macx : {
+win32-msvc* : {
     SOURCES += $$PWD/sqlite3.c
 } else: {
     LIBS += -lsqlite3

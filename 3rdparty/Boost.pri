@@ -1,6 +1,6 @@
 # Find Boost library.
 
-win32 : {
+win32-msvc* : {
     # Try to use qmake variable's value.
     _BOOST_ROOT = $$BOOST_ROOT
     isEmpty(_BOOST_ROOT) {
@@ -29,9 +29,7 @@ win32 : {
         message(Boost Library libs detected in BOOST_LIBS = $$_BOOST_LIBS)
         LIBS += -L$$_BOOST_LIBS
     }
-}
-
-unix : {
+} else {
     INCLUDEPATH += /usr/local/include
     LIBS += -L/usr/local/lib
 

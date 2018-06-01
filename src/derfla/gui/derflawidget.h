@@ -7,7 +7,6 @@
 #include <QPixmap>
 #include <QTimer>
 #include <QSystemTrayIcon>
-#include "alfredworkflow.h"
 
 class CharLineEdit;
 class CandidateList;
@@ -40,10 +39,8 @@ private slots:
     void showInFront();
     void candidateListDone();
     void quit();
-    void installAlfredWorkflows();
     void scheduleScan();
     void finishedScan();
-    void loadInstalledAlfredWorkflows();
 private:
     const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;
@@ -57,7 +54,6 @@ private:
     CandidateList* candidateList_;
     UGlobalHotkeys *hotkeyManager_;
     LocalFSScanner* localFSScanner_;
-    AlfredWorkflowList alfredWorkflowList_;
     void showCandidateList();
     void processKey();
     void doEnter();

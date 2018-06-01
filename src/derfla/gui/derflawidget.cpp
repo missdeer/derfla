@@ -60,21 +60,19 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     connect(loadSkinAction, &QAction::triggered, this, &DerflaWidget::loadSkin);
     addAction(loadSkinAction);
 
-    QAction *installAlfredWorkflow = new QAction(tr("Install &Alfred Workflow"), this);
-    installAlfredWorkflow->setShortcut(tr("Ctrl+I"));
-    connect(installAlfredWorkflow, &QAction::triggered, this, &DerflaWidget::installAlfredWorkflows);
-    addAction(installAlfredWorkflow);
-
     setContextMenuPolicy(Qt::ActionsContextMenu);
 
     QAction *showAction = new QAction(tr("Show"), this);
+#if defined(Q_OS_WIN)
+    showAction->setShortcut(tr("Alt+Space"));
+#else
     showAction->setShortcut(tr("Ctrl+Alt+Space"));
+#endif
     connect(showAction, &QAction::triggered, this, &DerflaWidget::showInFront);
 
     QMenu* trayiconMenu = new QMenu(this);
     trayiconMenu->addAction(showAction);
     trayiconMenu->addAction(loadSkinAction);
-    trayiconMenu->addAction(installAlfredWorkflow);
     trayiconMenu->addAction(quitAction);
     trayIcon_ = new QSystemTrayIcon(this);
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::trayIconActivated);
@@ -85,14 +83,16 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
 
     connect(loadingAnimationTimer_, SIGNAL(timeout()), this, SLOT(onLoadingAnimationTimer()));
 
+#if defined(Q_OS_WIN)
+    hotkeyManager_->registerHotkey("Alt+Space");
+#else
     hotkeyManager_->registerHotkey("Ctrl+Alt+Space");
+#endif
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
 
     connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::finishedScan);
     localFSScanner_->start();
     QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
-
-    QTimer::singleShot(1000, this, &DerflaWidget::loadInstalledAlfredWorkflows);
 }
 
 DerflaWidget::~DerflaWidget()
@@ -315,38 +315,6 @@ void DerflaWidget::quit()
     qApp->quit();
 }
 
-void DerflaWidget::installAlfredWorkflows()
-{
-    check_expiration;
-    hideCandidateList();
-    QStringList fileNames = QFileDialog::getOpenFileNames(this,
-#if defined(Q_OS_MAC)
-        tr("Install Alfred Workflow"),
-#else
-        tr("Install Alfred Workflow (Notice: Some system dependent work flow may not work properly on this system.)"),
-#endif
-        "",
-        tr("Alfred Workflow (*.alfredworkflow)"));
-    if (fileNames.isEmpty())
-        return;
-
-    std::for_each(fileNames.begin(), fileNames.end(),
-                  [&](const QString& path) {
-        AlfredWorkflowPtr aw(new AlfredWorkflow);
-        if (aw->installFromBundle(path))
-        {
-            auto it = std::find_if(alfredWorkflowList_.begin(), alfredWorkflowList_.end(),
-                                   [&](AlfredWorkflowPtr a) { return aw->bundleId() == a->bundleId(); });
-            if (alfredWorkflowList_.end() != it)
-            {
-                qWarning() << "found an existed workflow with the same bundle id" << aw->bundleId();
-                //alfredWorkflowList_.erase(it);
-            }
-            alfredWorkflowList_.append(aw);
-        }
-    });
-}
-
 void DerflaWidget::scheduleScan()
 {
     if (qApp->activeWindow())
@@ -376,16 +344,7 @@ void DerflaWidget::showCandidateList()
     
     QString inputText = input_->text();
 
-    AlfredWorkflowList alfredWorkflowList;
-    std::copy_if(alfredWorkflowList_.begin(), alfredWorkflowList_.end(), std::back_inserter(alfredWorkflowList), 
-        [&inputText](AlfredWorkflowPtr aw) {
-        return aw->hitKeyword(inputText);
-    });
-
-    if (alfredWorkflowList.empty())
-        candidateList_->update(inputText);
-    else
-        candidateList_->update(alfredWorkflowList, inputText);
+    candidateList_->update(inputText);
 }
 
 void DerflaWidget::processKey()
@@ -604,34 +563,6 @@ bool DerflaWidget::loadSkinPackage(const QString& skinPath, QString& configurati
     configurationPath.clear();
     qCritical() << "can't find configuration file in skin package" << skinPath;
     return false;
-}
-
-void DerflaWidget::loadInstalledAlfredWorkflows()
-{
-    QString dirName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/alfredworkflow";
-    QDir dir(dirName);
-    if (!dir.exists())
-    {
-        qWarning() << dirName << "doesn't exist";
-        return;
-    }
-
-    QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::NoDotAndDotDot | QDir::AllDirs);
-    std::for_each(list.begin(), list.end(), [&](const QFileInfo& fi) {
-        QString absolutePath = dirName % "/" % fi.fileName();
-        AlfredWorkflowPtr aw(new AlfredWorkflow);
-        if (aw->loadFromDirectory(absolutePath))
-        {
-            auto it = std::find_if(alfredWorkflowList_.begin(), alfredWorkflowList_.end(),
-                [&](AlfredWorkflowPtr a) { return aw->bundleId() == a->bundleId(); });
-            if (alfredWorkflowList_.end() != it)
-            {
-                qWarning() << "found an existed workflow with the same bundle id" << aw->bundleId();
-                //alfredWorkflowList_.erase(it);
-            }
-            alfredWorkflowList_.append(aw);
-        }
-    });
 }
 
 void DerflaWidget::stopWaiting()

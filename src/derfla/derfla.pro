@@ -10,7 +10,6 @@ include($$PWD/../../3rdparty/quazip-0.7.2/quazip.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../../3rdparty/sqlite3/sqlite3.pri)
-include($$PWD/../../3rdparty/qtplist/qtplist.pri)
 
 SOURCES += main.cpp\
         gui/derflawidget.cpp \
@@ -22,11 +21,6 @@ SOURCES += main.cpp\
     lfs/localfsscanner.cpp \
     lfs/dbrw.cpp \
     util/util.cpp \
-    alfred/alfredworkflow.cpp \
-    alfred/alfredworkflowinput.cpp \
-    alfred/alfredworkflowoutput.cpp \
-    alfred/alfredworkflowaction.cpp \
-    alfred/alfredworkflowtrigger.cpp \
     executor/executor.cpp \
     executor/bashexecutor.cpp \
     executor/zshexecutor.cpp \
@@ -48,11 +42,6 @@ HEADERS  += stdafx.h \
     lfs/localfsscanner.h \
     lfs/dbrw.h \
     util/util.h \
-    alfred/alfredworkflow.h \
-    alfred/alfredworkflowinput.h \
-    alfred/alfredworkflowoutput.h \
-    alfred/alfredworkflowaction.h \
-    alfred/alfredworkflowtrigger.h \
     executor/executor.h \
     executor/bashexecutor.h \
     executor/zshexecutor.h \
