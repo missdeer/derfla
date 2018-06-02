@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "dbrw.h"
 #include "candidatelistdelegate.h"
 #include "candidatelist.h"
 #include "ui_candidatelist.h"
@@ -36,7 +35,7 @@ void CandidateList::update(const QString &text)
 
     dal_.clear();
     ui->list->clear();
-    DBRW::instance()->getLFSActions(dal_, text, 25);
+    //DBRW::instance()->getLFSActions(dal_, text, 25);
     populateList();
 }
 
@@ -106,7 +105,7 @@ int CandidateList::count() const
 
 void CandidateList::keyPressEvent(QKeyEvent *event)
 {
-    check_expiration;
+
 #if defined(Q_OS_MAC)
     switch(event->key())
     {
@@ -143,7 +142,7 @@ void CandidateList::showEvent(QShowEvent* /*event*/)
 
 void CandidateList::onEnter()
 {
-    check_expiration;
+
     int index = ui->list->currentRow();
     //qDebug() << "CandidateList::onEnter:" << index;
     if (index < 0 || index >= itemCount_)

@@ -2,7 +2,6 @@
 #include "derflawidget.h"
 #include "qtsingleapplication.h"
 #include <boost/scope_exit.hpp>
-#include "dbrw.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +18,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Derfla");
     QCoreApplication::setApplicationVersion("1.0");
     QCoreApplication::setOrganizationDomain("dfordsoft.com");
-    QCoreApplication::setOrganizationName("DForD Software");
+    QCoreApplication::setOrganizationName("Derfla");
 
     if (a.isRunning())
     {
@@ -39,11 +38,6 @@ int main(int argc, char *argv[])
         CoUninitialize();
     } BOOST_SCOPE_EXIT_END
 #endif
-
-    DBRW::instance();
-    BOOST_SCOPE_EXIT(void) {
-        DBRW::destroy();
-    } BOOST_SCOPE_EXIT_END
 
     DerflaWidget w;
     w.show();

@@ -1,7 +1,4 @@
 #include "stdafx.h"
-#if defined(Q_OS_WIN)
-#include "win_util.h"
-#endif
 #include "derflaaction.h"
 
 DerflaAction::DerflaAction(QObject *parent)

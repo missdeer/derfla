@@ -3,7 +3,6 @@
 #include "uglobalhotkeys.h"
 #include "CharLineEdit.h"
 #include "candidatelist.h"
-#include "localfsscanner.h"
 #include "derflawidget.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent) :
@@ -12,8 +11,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     loadingAnimationTimer_(new QTimer(this)),
     input_(new CharLineEdit(this)),
     candidateList_(new CandidateList),
-    hotkeyManager_(new UGlobalHotkeys),
-    localFSScanner_(new LocalFSScanner)
+    hotkeyManager_(new UGlobalHotkeys)
 {
 #if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
@@ -89,15 +87,10 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     hotkeyManager_->registerHotkey("Ctrl+Alt+Space");
 #endif
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
-
-    connect(localFSScanner_, &LocalFSScanner::finished, this, &DerflaWidget::finishedScan);
-    localFSScanner_->start();
-    QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
 }
 
 DerflaWidget::~DerflaWidget()
 {
-    delete localFSScanner_;
     hotkeyManager_->unregisterHotkey();
 }
 
@@ -153,7 +146,7 @@ void DerflaWidget::moveEvent(QMoveEvent* /*event*/)
 
 void DerflaWidget::keyPressEvent(QKeyEvent *event)
 {
-    check_expiration;
+
     //qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key();
     if (event->key() == Qt::Key_Escape)
     {
@@ -222,7 +215,7 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
 
 void DerflaWidget::inputChanged(const QString &text)
 {
-    check_expiration;
+
     //qDebug() <<  "DerflaWidget::inputChanged:" << input_->text();
     if (text.isEmpty())
     {
@@ -238,7 +231,7 @@ void DerflaWidget::inputChanged(const QString &text)
 
 void DerflaWidget::keyPressed(QKeyEvent *e)
 {
-    check_expiration;
+
     //qDebug() << "DerflaWidget::keyPressed" << e;
     if ( e->key() != Qt::Key_Escape)
         hideCandidateList();
@@ -249,7 +242,7 @@ void DerflaWidget::keyPressed(QKeyEvent *e)
 
 void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    check_expiration;
+
     switch(reason)
     {
     case QSystemTrayIcon::DoubleClick:
@@ -265,7 +258,7 @@ void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void DerflaWidget::loadSkin()
 {
-    check_expiration;
+
     hideCandidateList();
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Load Derfla Skin"),
@@ -295,7 +288,7 @@ void DerflaWidget::onLoadingAnimationTimer()
 
 void DerflaWidget::showInFront()
 {
-    check_expiration;
+
     if (isHidden())
         show();
     activateWindow();
@@ -304,41 +297,19 @@ void DerflaWidget::showInFront()
 
 void DerflaWidget::candidateListDone()
 {
-    check_expiration;
+
     hideCandidateList();
     input_->setText("");
 }
 
 void DerflaWidget::quit()
 {
-    localFSScanner_->stop();
     qApp->quit();
-}
-
-void DerflaWidget::scheduleScan()
-{
-    if (qApp->activeWindow())
-    {
-        qDebug() << "since windows is active, try in 5 minutes" << QThread::currentThreadId();
-        QTimer::singleShot(5 * 60 * 1000, this, &DerflaWidget::scheduleScan);
-    }
-    else
-    {
-        qDebug() << "schedule scan now" << QThread::currentThreadId();
-        localFSScanner_->start();
-        QTimer::singleShot(60 * 60 * 1000, this, &DerflaWidget::scheduleScan);
-    }
-}
-
-void DerflaWidget::finishedScan()
-{
-    qDebug() << "stop scan local file system" << QThread::currentThreadId();
-    localFSScanner_->stop();
 }
 
 void DerflaWidget::showCandidateList()
 {
-    check_expiration;
+
     //candidateList_->show();
     candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
     
@@ -349,32 +320,32 @@ void DerflaWidget::showCandidateList()
 
 void DerflaWidget::processKey()
 {
-    check_expiration;
+
     //qDebug() << "DerflaWidget::processKey";
 }
 
 void DerflaWidget::doEnter()
 {
-    check_expiration;
+
     //qDebug() << "DerflaWidget::doEnter";
     candidateList_->onEnter();
 }
 
 void DerflaWidget::doTab()
 {
-    check_expiration;
+
     //qDebug() << "DerflaWidget::doTab";
 }
 
 void DerflaWidget::doBackTab()
 {
-    check_expiration;
+
     //qDebug() << "DerflaWidget::doBackTab";
 }
 
 bool DerflaWidget::applySkin(const QString& skin)
 {
-    check_expiration;
+
     QString s;
     if (!QFileInfo::exists(skin))
     {
@@ -477,13 +448,13 @@ bool DerflaWidget::applySkin(const QString& skin)
 
 void DerflaWidget::waiting()
 {
-    check_expiration;
+
     loadingAnimationTimer_->start(100);
 }
 
 void DerflaWidget::hideCandidateList()
 {
-    check_expiration;
+
     if (candidateList_->isVisible())
         candidateList_->hide();
 }
@@ -568,7 +539,7 @@ bool DerflaWidget::loadSkinPackage(const QString& skinPath, QString& configurati
 
 void DerflaWidget::stopWaiting()
 {
-    check_expiration;
+
     loadingAnimationTimer_->stop();
 
     QList<QAction*> actions = input_->actions();

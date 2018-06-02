@@ -11,7 +11,6 @@
 class CharLineEdit;
 class CandidateList;
 class UGlobalHotkeys;
-class LocalFSScanner;
 
 class DerflaWidget : public QWidget
 {
@@ -39,8 +38,6 @@ private slots:
     void showInFront();
     void candidateListDone();
     void quit();
-    void scheduleScan();
-    void finishedScan();
 private:
     const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;
@@ -53,7 +50,6 @@ private:
     QSystemTrayIcon* trayIcon_;
     CandidateList* candidateList_;
     UGlobalHotkeys *hotkeyManager_;
-    LocalFSScanner* localFSScanner_;
     void showCandidateList();
     void processKey();
     void doEnter();

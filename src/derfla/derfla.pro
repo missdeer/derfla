@@ -4,11 +4,11 @@ TARGET = Derfla
 TEMPLATE = app
 CONFIG += c++14 precompile_header
 PRECOMPILED_HEADER = stdafx.h
+DESTDIR = ../bin
 
 include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
-include($$PWD/../../3rdparty/sqlite3/sqlite3.pri)
 
 SOURCES += main.cpp\
         gui/derflawidget.cpp \
@@ -17,9 +17,6 @@ SOURCES += main.cpp\
     gui/candidatelistdelegate.cpp \
     gui/candidatelistwidget.cpp \
     gui/derflaaction.cpp \
-    lfs/localfsscanner.cpp \
-    lfs/dbrw.cpp \
-    util/util.cpp \
     executor/executor.cpp \
     executor/bashexecutor.cpp \
     executor/zshexecutor.cpp \
@@ -38,9 +35,6 @@ HEADERS  += stdafx.h \
     gui/candidatelistdelegate.h \
     gui/candidatelistwidget.h \
     gui/derflaaction.h \
-    lfs/localfsscanner.h \
-    lfs/dbrw.h \
-    util/util.h \
     executor/executor.h \
     executor/bashexecutor.h \
     executor/zshexecutor.h \
@@ -55,7 +49,7 @@ HEADERS  += stdafx.h \
 FORMS    += \
     gui/candidatelist.ui
 
-INCLUDEPATH += $$PWD $$PWD/gui $$PWD/lfs $$PWD/alfred $$PWD/util $$PWD/executor $$PWD/executil
+INCLUDEPATH += $$PWD $$PWD/gui $$PWD/executor $$PWD/executil
 
 CONFIG(release, debug|release) : {
     DEFINES += QT_NO_DEBUG_OUTPUT=1 QT_NO_INFO_OUTPUT=1
@@ -63,12 +57,6 @@ CONFIG(release, debug|release) : {
 
 unix: !macx: {
     LIBS += -lz
-
-    SOURCES +=   \
-        util/unix_util.cpp
-
-    HEADERS +=   \
-        util/unix_util.h
 }
 
 macx: {
@@ -103,12 +91,6 @@ win32: {
         LIBS += -lz
     }
     QT += winextras
-
-    SOURCES += util/win_util.cpp \
-        gui/WinIconProvider.cpp
-
-    HEADERS += util/win_util.h \
-        gui/WinIconProvider.h
 
     # Windows icons
     RC_FILE = derfla.rc
