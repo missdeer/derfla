@@ -23,15 +23,21 @@ bool DBRW::getLFSActions(DerflaActionList &dal, const QString& keyword, int coun
     Q_ASSERT(db.isOpen());
 
     QSqlQuery q(db);
-    q.prepare(QString("SELECT * FROM lfs WHERE title LIKE '%'||?||'%' LIMIT %1;").arg(countRequired+10));
+	QString sql = QString("SELECT * FROM lfs WHERE title LIKE '%'||?||'%' LIMIT %1;").arg(countRequired + 10);
+	if (!q.prepare(sql))
+		return false;
     if (queryActions(dal, keyword, countRequired, q))
         return true;
 
-    q.prepare(QString("SELECT * FROM lfs WHERE description LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - dal.length()+10));
-    if (queryActions(dal, keyword, countRequired, q))
+	sql = QString("SELECT * FROM lfs WHERE description LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - dal.length() + 10);
+	if (!q.prepare(sql))
+		return false; 
+	if (queryActions(dal, keyword, countRequired, q))
         return true;
 
-    q.prepare(QString("SELECT * FROM lfs WHERE target LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - dal.length()+10));
+	sql = QString("SELECT * FROM lfs WHERE target LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - dal.length() + 10);
+	if (!q.prepare(sql))
+		return false;
     if (queryActions(dal, keyword, countRequired, q))
         return true;
 
@@ -41,7 +47,8 @@ bool DBRW::getLFSActions(DerflaActionList &dal, const QString& keyword, int coun
 bool DBRW::removeOldRecords(qint64 timestamp)
 {
     QSqlQuery query(db_);
-    query.prepare("DELETE FROM lfs WHERE timestamp < :timestamp;");
+	if (!query.prepare("DELETE FROM lfs WHERE timestamp < :timestamp;"))
+		return false;
     query.bindValue(":timestamp", timestamp);
     return query.exec();
 }
@@ -51,8 +58,10 @@ bool DBRW::insertLFS(const QByteArray &icon, const QString &title, const QString
     Q_ASSERT(db_.isValid());
     Q_ASSERT(db_.isOpen());
     QSqlQuery query(db_);
-    query.prepare("INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
-        "VALUES (:icon, :title, :description, :target, :arguments, :working_directory, :timestamp, :last_modified, :type);");
+	QString sql = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
+		"VALUES (:icon, :title, :description, :target, :arguments, :working_directory, :timestamp, :last_modified, :type);";
+	if (!query.prepare(sql))
+		return false;
     // save to database
     query.bindValue(":icon", icon);
     query.bindValue(":title", title);
