@@ -20,8 +20,6 @@ enum DerflaActionType
     DAT_LAUNCHFILES,
 };
 
-class AlfredWorkflowAction;
-
 class DerflaAction : public QObject
 {
     Q_OBJECT

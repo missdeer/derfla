@@ -74,7 +74,7 @@ namespace util {
         return QString();
     }
 
-    void processFile(const Directory& d, const QFileInfo& fileInfo)
+    void processFile(const Directory& d, const QFileInfo& fileInfo, LFSInserter inserter)
     {
         QString f(d.directory + QDir::separator() + fileInfo.fileName());
         f.replace("//", "/");
@@ -105,7 +105,7 @@ namespace util {
                     }
                 }
                 QString&& iconPath = getIconPath(settings.value("Icon").toString());
-                DBRW::instance()->insertLFS(util::extractPNGFromIcon(iconPath),
+                inserter(util::extractPNGFromIcon(iconPath),
                                             name,
                                             (comment.isEmpty() ? filePath : comment) ,
                                             filePath,

@@ -2,6 +2,7 @@
 #define LOCALFSSCANNER_H
 
 #include <QObject>
+#include "dbrw.h"
 
 struct Directory
 {
@@ -16,7 +17,7 @@ class LocalFSScanner : public QObject
 {
     Q_OBJECT
 public:
-    explicit LocalFSScanner(QObject *parent = 0);
+    explicit LocalFSScanner(DBRW& dbrw, QObject *parent = 0);
     ~LocalFSScanner();
 signals:
     void finished();
@@ -27,6 +28,7 @@ public slots:
 private slots:
     void scan();
 private:
+    DBRW& dbrw_;
     bool stop_ = false;
     qint64 timestamp_ = 0;
     QThread workerThread_;

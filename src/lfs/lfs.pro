@@ -23,18 +23,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += $$PWD/util
 
 SOURCES += \
-        main.cpp \
+    main.cpp \
     dbrw.cpp \
     localfsscanner.cpp \
-    main.cpp
+    localfsitem.cpp
 
 SUBDIRS += \
     lfs.pro
 
 HEADERS += \
+    stdafx.h \
     dbrw.h \
     localfsscanner.h \
-    stdafx.h
+    localfsitem.h
 
 win32: {
     win32-msvc* {

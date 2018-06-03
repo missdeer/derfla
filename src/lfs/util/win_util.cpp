@@ -98,7 +98,7 @@ namespace util {
         }
     }
 
-    void processFile(const Directory& d, const QFileInfo& fileInfo)
+    void processFile(const Directory& d, const QFileInfo& fileInfo, LFSInserter inserter)
     {
         QString f(d.directory + QDir::separator() + fileInfo.fileName());
         f.replace("\\\\", "\\");
@@ -150,7 +150,7 @@ namespace util {
             if (desc.isEmpty())
                 desc = f;
 
-            DBRW::instance()->insertLFS(util::extractPNGIconFromFile(fi),
+            inserter(util::extractPNGIconFromFile(fi),
                 fileInfo.baseName(),
                 desc,
                 f,
@@ -167,7 +167,7 @@ namespace util {
         readDescriptionFromResource(f, desc);
         if (desc.isEmpty())
             desc = f;
-        DBRW::instance()->insertLFS(util::extractPNGIconFromFile(fileInfo),
+        inserter(util::extractPNGIconFromFile(fileInfo),
             fileInfo.fileName(),
             desc,
             f,

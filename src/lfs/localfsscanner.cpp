@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <functional>
 #include "dbrw.h"
 #include "util.h"
 #if defined(Q_OS_WIN)
@@ -9,10 +10,13 @@
 #endif
 #include "localfsscanner.h"
 
+using namespace std;
+
 #define check_stop do { if (stop_) return;   QThread::yieldCurrentThread(); } while(0)
 
-LocalFSScanner::LocalFSScanner(QObject *parent)
-    : QObject(parent)
+LocalFSScanner::LocalFSScanner(DBRW &dbrw, QObject *parent)
+    : dbrw_(dbrw)
+    , QObject(parent)
     , stop_(false)
 {
     connect(this, &LocalFSScanner::scanRequired, &LocalFSScanner::scan);
@@ -25,28 +29,13 @@ LocalFSScanner::~LocalFSScanner()
 void LocalFSScanner::start()
 {
     stop_ = false;
-    workerThread_.start(QThread::IdlePriority);
-    moveToThread(&workerThread_);
-    if (DBRW::instance()->firstLaunch())
-    {
-        qDebug() << "scan local file system now" << QThread::currentThreadId();
-        QTimer::singleShot(3 * 1000, this, &LocalFSScanner::scanRequired);
-    }
-    else
-    {
-        qDebug() << "scan local file system after 10 minutes" << QThread::currentThreadId();
-        QTimer::singleShot(10 * 60 * 1000, this, &LocalFSScanner::scan);
-    }
+    qDebug() << "scan local file system now" << QThread::currentThreadId();
+    QTimer::singleShot(3 * 1000, this, &LocalFSScanner::scanRequired);
 }
 
 void LocalFSScanner::stop()
 {
     stop_ = true;
-    if (workerThread_.isRunning())
-    {
-        workerThread_.quit();
-        workerThread_.wait();
-    }
 }
 
 void LocalFSScanner::scan()
@@ -54,13 +43,8 @@ void LocalFSScanner::scan()
     timestamp_ = QDateTime::currentDateTime().toMSecsSinceEpoch();
     util::timestamp = timestamp_;
 #if defined(Q_OS_WIN)
-    CoInitialize(NULL);
-    BOOST_SCOPE_EXIT(void) {
-        CoUninitialize();
-    } BOOST_SCOPE_EXIT_END
-
-#elif defined(Q_OS_MAC)
-#else
+    if (qApp->thread() != QThread::currentThread())
+        CoInitialize(NULL);
 #endif
 
     scanDirectories_.clear();
@@ -75,8 +59,13 @@ void LocalFSScanner::scan()
 
     for(const auto & d :  scanDirectories_)
         scanDirectory(d);
-    DBRW::instance()->removeOldRecords(timestamp_);
+    dbrw_.removeOldRecords(timestamp_);
     emit finished();
+
+#if defined(Q_OS_WIN)
+    if (qApp->thread() != QThread::currentThread())
+        CoUninitialize();
+#endif
 }
 
 void LocalFSScanner::getDirectoriesFromEnvironmentVariable()
@@ -121,8 +110,19 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     
     QFileInfoList list = dir.entryInfoList(QStringList() << "*.exe" << "*.msc" << "*.bat" << "*.lnk", QDir::Files);
     check_stop;
+
+    auto inserter = std::bind(&DBRW::insertLFS, &dbrw_,
+                              std::placeholders::_1,
+                              std::placeholders::_2,
+                              std::placeholders::_3,
+                              std::placeholders::_4,
+                              std::placeholders::_5,
+                              std::placeholders::_6,
+                              std::placeholders::_7,
+                              std::placeholders::_8,
+                              std::placeholders::_9);
     for(const auto & fi : list)
-        util::processFile(d, fi);
+        util::processFile(d, fi, inserter);
 
     check_stop;
     if (d.recursive)
@@ -169,7 +169,6 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         list << dir.entryInfoList(QStringList() << "*.app" << "*.prefPane", QDir::AllDirs | QDir::NoDotAndDotDot);
 
     check_stop;
-    DBRW* dbrw = DBRW::instance();
     for (const auto & fileInfo : list)
     {
         check_stop;
@@ -177,7 +176,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         if ((fileInfo.isFile() && fileInfo.permission(QFile::ExeGroup))
                 || (fileInfo.isDir() && (fileInfo.suffix() == "app" || fileInfo.suffix() == "prefPane")))
         {
-            dbrw->insertLFS(util::extractPNGIconFromFile(fileInfo),
+            dbrw_.insertLFS(util::extractPNGIconFromFile(fileInfo),
                             fileInfo.fileName(),
                             f,
                             f,
@@ -213,7 +212,6 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     QFileInfoList list = dir.entryInfoList(QStringList(), QDir::Files | QDir::Readable);
 
     check_stop;
-    DBRW* dbrw = DBRW::instance();
     for (const auto & fileInfo : list)
     {
         check_stop;
@@ -221,7 +219,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         {
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
             qWarning() << "find" <<  f;
-            dbrw->insertLFS(util::extractPNGIconFromFile(fileInfo),
+            dbrw_.insertLFS(util::extractPNGIconFromFile(fileInfo),
                             fileInfo.fileName(),
                             f,
                             f,
@@ -236,8 +234,18 @@ void LocalFSScanner::scanDirectory(const Directory &d)
 
     check_stop;
     list = dir.entryInfoList(QStringList() << "*.desktop", QDir::Files | QDir::Readable);
+    auto inserter = std::bind(&DBRW::insertLFS, &dbrw_,
+                              std::placeholders::_1,
+                              std::placeholders::_2,
+                              std::placeholders::_3,
+                              std::placeholders::_4,
+                              std::placeholders::_5,
+                              std::placeholders::_6,
+                              std::placeholders::_7,
+                              std::placeholders::_8,
+                              std::placeholders::_9);
     for(const auto & fi : list)
-        util::processFile(d, fi);
+        util::processFile(d, fi, inserter);
 
     if (d.recursive)
     {

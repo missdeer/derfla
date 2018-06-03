@@ -1,22 +1,43 @@
 #include "stdafx.h"
 #include "dbrw.h"
 
-DBRW *DBRW::instance_ = nullptr;
-
-DBRW* DBRW::instance()
+DBRW::DBRW()
 {
-    if (!instance_)
-        instance_ = new DBRW;
-    return instance_;
+    dbPath_ = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QDir d(dbPath_);
+    if (!d.exists())
+    {
+        d.mkpath(dbPath_);
+    }
+    dbPath_.append("/cache.db");
+
+    if (!openDatabase())
+    {
+        qCritical() << "can't open cache database";
+    }
 }
 
-void DBRW::destroy()
+DBRW::~DBRW()
 {
-    delete instance_;
-    instance_ = nullptr;
+    if (db_.isValid() && db_.isOpen())
+    {
+        db_.close();
+    }
 }
 
-bool DBRW::getLFSActions(DerflaActionList &dal, const QString& keyword, int countRequired)
+QString DBRW::search(const QString &keyword, int countRequired)
+{
+    QString res;
+    LocalFSItemList dal;
+    if (getLFSItems(dal, keyword, countRequired))
+    {
+
+    }
+
+    return res;
+}
+
+bool DBRW::getLFSItems(LocalFSItemList &dal, const QString& keyword, int countRequired)
 {
     QSqlDatabase db = QSqlDatabase::database(dbPath_, false);
     Q_ASSERT(db.isValid());
@@ -75,32 +96,6 @@ bool DBRW::insertLFS(const QByteArray &icon, const QString &title, const QString
     return query.exec();
 }
 
-DBRW::DBRW()
-{
-    dbPath_ = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir d(dbPath_);
-    if (!d.exists())
-    {
-        d.mkpath(dbPath_);
-    }
-    dbPath_.append("/cache.db");
-
-    firstLaunch_ = !QFile::exists(dbPath_);
-
-    if (!openDatabase())
-    {
-        qCritical() << "can't open cache database";
-    }
-}
-
-DBRW::~DBRW()
-{
-    if (db_.isValid() && db_.isOpen())
-    {
-        db_.close();
-    }
-}
-
 bool DBRW::createDatabase()
 {
     db_ = QSqlDatabase::database(dbPath_, true);
@@ -139,7 +134,7 @@ bool DBRW::openDatabase()
     return db_.open();
 }
 
-bool DBRW::queryActions(DerflaActionList &dal, const QString &keyword, int countRequired, QSqlQuery &q)
+bool DBRW::queryActions(LocalFSItemList &dal, const QString &keyword, int countRequired, QSqlQuery &q)
 {
     q.addBindValue(keyword);
     if (q.exec())
@@ -153,7 +148,7 @@ bool DBRW::queryActions(DerflaActionList &dal, const QString &keyword, int count
         int typeIndex = q.record().indexOf("type");
         while (q.next())
         {
-            DerflaActionPtr da(new DerflaAction);
+            LocalFSItemPtr da(new LocalFSItem);
             QPixmap pixmap;
             pixmap.loadFromData(q.value(iconIndex).toByteArray());
             da->setIcon(QIcon(pixmap));
@@ -166,7 +161,7 @@ bool DBRW::queryActions(DerflaActionList &dal, const QString &keyword, int count
             da->setTitle(q.value(titleIndex).toString());
             da->setDescription(q.value(descriptionIndex).toString());
             da->setActionType(q.value(typeIndex).toString() == "c" ? DAT_CONSOLE : DAT_GUI);
-            auto it = std::find_if(dal.begin(), dal.end(), [da](DerflaActionPtr d) {
+            auto it = std::find_if(dal.begin(), dal.end(), [da](LocalFSItemPtr d) {
                     return da->title() == d->title()
                     && da->description() == d->description();}
                     );

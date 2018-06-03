@@ -1,7 +1,12 @@
 #include "stdafx.h"
 #include "qtsingleapplication.h"
 #include <boost/scope_exit.hpp>
+#include <QTextStream>
+#include <iostream>
 #include "dbrw.h"
+#include "localfsscanner.h"
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -15,15 +20,10 @@ int main(int argc, char *argv[])
 #endif
     SharedTools::QtSingleApplication a("LFS", argc, argv);
 
-    QCoreApplication::setApplicationName("LFS");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("dfordsoft.com");
-    QCoreApplication::setOrganizationName("Derfla");
-
-    if (a.isRunning())
-    {
-        return 0;
-    }
+    a.setApplicationName("LFS");
+    a.setApplicationVersion("1.0");
+    a.setOrganizationDomain("dfordsoft.com");
+    a.setOrganizationName("Derfla");
 
 #if defined(Q_OS_WIN)
     CoInitialize(NULL);
@@ -32,10 +32,19 @@ int main(int argc, char *argv[])
     } BOOST_SCOPE_EXIT_END
 #endif
 
-    DBRW::instance();
-    BOOST_SCOPE_EXIT(void) {
-        DBRW::destroy();
-    } BOOST_SCOPE_EXIT_END
+    DBRW dbrw;
+    if (argc == 2)
+    {
+        QString res = dbrw.search(QString(argv[1]));
+        QTextStream ts( stdout );
+        ts << res;
+    }
+
+    if (a.isRunning())
+        return 0;
+
+    LocalFSScanner scanner(dbrw);
+    scanner.start();
 
     return a.exec();
 }

@@ -2,16 +2,17 @@
 #define DBRW_H
 
 #include <QObject>
+#include <functional>
+#include "localfsitem.h"
 
 class DBRW : public QObject
 {
     Q_OBJECT
 public:
-    static DBRW* instance();
-    static void destroy();
+    DBRW();
+    ~DBRW();
 
-    bool firstLaunch() const { return firstLaunch_;  }
-    bool getLFSActions(DerflaActionList& dal, const QString &keyword, int countRequired = 50);
+    QString search(const QString &keyword, int countRequired = 50);
     bool removeOldRecords(qint64 timestamp);
     bool insertLFS(const QByteArray& icon, const QString& title, const QString& description, const QString& target, const QString& arguments, const QString workingDirectory, qint64 timestamp, qint64 lastModified, const QString& type);
 signals:
@@ -19,15 +20,14 @@ signals:
 public slots:
 
 private:
-    static DBRW *instance_;
-    bool firstLaunch_ = false;
     QString dbPath_;
     QSqlDatabase db_;
-    DBRW();
-    ~DBRW();
     bool createDatabase();
     bool openDatabase();
-    bool queryActions(DerflaActionList& dal, const QString &keyword, int countRequired, QSqlQuery& q);
+    bool getLFSItems(LocalFSItemList& dal, const QString &keyword, int countRequired = 50);
+    bool queryActions(LocalFSItemList& dal, const QString &keyword, int countRequired, QSqlQuery& q);
 };
+
+typedef std::function<bool(const QByteArray&, const QString&, const QString&, const QString&, const QString&, const QString&, qint64, qint64, const QString&)> LFSInserter;
 
 #endif // DBRW_H
