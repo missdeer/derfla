@@ -94,13 +94,12 @@ win32: {
 
     # Windows icons
     RC_FILE = derfla.rc
-    DISTFILES += derfla.rc
     LIBS += -L$$PWD/../../3rdparty/Everything-SDK/lib -lVersion -lComctl32 -lOle32 -lGdi32
-    INCLUDEPATH += $$PWD/../../3rdparty/Everything-SDK/include \
-        $$PWD/../../3rdparty/Everything-SDK/ipc
+#    INCLUDEPATH += $$PWD/../../3rdparty/Everything-SDK/include \
+#        $$PWD/../../3rdparty/Everything-SDK/ipc
 
-    contains(QMAKE_HOST.arch, x86_64): LIBS += -lEverything64
-    else: LIBS += -lEverything32
+#    contains(QMAKE_HOST.arch, x86_64): LIBS += -lEverything64
+#    else: LIBS += -lEverything32
 
 #    CONFIG(release, debug|release): {
 #        copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Release/skins/)'
