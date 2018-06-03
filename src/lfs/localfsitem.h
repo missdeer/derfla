@@ -48,17 +48,10 @@ public:
     LocalFSItemType actionType() const;
     void setActionType(const LocalFSItemType& actionType);
 
-    bool disabled() const { return disabled_; }
-    void setDisabled(bool val) { disabled_ = val; }
-
     bool operator==(const LocalFSItem& da)
     {
         return id_ == da.id_;
     }
-signals:
-
-public slots :
-    bool run();
 
 private:
     QIcon icon_;
@@ -68,8 +61,6 @@ private:
     QString arguments_;
     QString workingDirectory_;
     LocalFSItemType actionType_;
-
-    bool disabled_ = false;
     QUuid id_;
 };
 

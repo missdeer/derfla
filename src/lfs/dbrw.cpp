@@ -1,4 +1,8 @@
 #include "stdafx.h"
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonValue>
 #include "dbrw.h"
 
 DBRW::DBRW()
@@ -28,16 +32,41 @@ DBRW::~DBRW()
 QString DBRW::search(const QString &keyword, int countRequired)
 {
     QString res;
-    LocalFSItemList dal;
-    if (getLFSItems(dal, keyword, countRequired))
+    LocalFSItemList fsil;
+    if (getLFSItems(fsil, keyword, countRequired))
     {
-
+        QJsonArray array;
+        for (auto item : fsil)
+        {
+            QJsonObject o;
+            o.insert("title", item->title());
+            o.insert("description", item->description());
+            o.insert("target", item->target());
+            o.insert("arguments", item->arguments());
+            o.insert("workingDir", item->workingDirectory());
+            QIcon icon = item->icon();
+            auto allSizes = icon.availableSizes();
+            if (!allSizes.isEmpty())
+            {
+                QSize size = allSizes.at(0);
+                auto pixmap = icon.pixmap(size);
+                QByteArray bytes;
+                QBuffer buffer(&bytes);
+                buffer.open(QIODevice::WriteOnly);
+                pixmap.save(&buffer, "PNG");
+                buffer.close();
+                o.insert("iconData", QString(bytes.toBase64()));
+            }
+            array.append(o);
+        }
+        QJsonDocument doc(array);
+        res = QString(doc.toJson(QJsonDocument::Compact));
     }
 
     return res;
 }
 
-bool DBRW::getLFSItems(LocalFSItemList &dal, const QString& keyword, int countRequired)
+bool DBRW::getLFSItems(LocalFSItemList &fsil, const QString& keyword, int countRequired)
 {
     QSqlDatabase db = QSqlDatabase::database(dbPath_, false);
     Q_ASSERT(db.isValid());
@@ -47,19 +76,19 @@ bool DBRW::getLFSItems(LocalFSItemList &dal, const QString& keyword, int countRe
 	QString sql = QString("SELECT * FROM lfs WHERE title LIKE '%'||?||'%' LIMIT %1;").arg(countRequired + 10);
 	if (!q.prepare(sql))
 		return false;
-    if (queryActions(dal, keyword, countRequired, q))
+    if (queryActions(fsil, keyword, countRequired, q))
         return true;
 
-	sql = QString("SELECT * FROM lfs WHERE description LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - dal.length() + 10);
+    sql = QString("SELECT * FROM lfs WHERE description LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - fsil.length() + 10);
 	if (!q.prepare(sql))
 		return false; 
-	if (queryActions(dal, keyword, countRequired, q))
+    if (queryActions(fsil, keyword, countRequired, q))
         return true;
 
-	sql = QString("SELECT * FROM lfs WHERE target LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - dal.length() + 10);
+    sql = QString("SELECT * FROM lfs WHERE target LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - fsil.length() + 10);
 	if (!q.prepare(sql))
 		return false;
-    if (queryActions(dal, keyword, countRequired, q))
+    if (queryActions(fsil, keyword, countRequired, q))
         return true;
 
     return false;
@@ -134,7 +163,7 @@ bool DBRW::openDatabase()
     return db_.open();
 }
 
-bool DBRW::queryActions(LocalFSItemList &dal, const QString &keyword, int countRequired, QSqlQuery &q)
+bool DBRW::queryActions(LocalFSItemList &fsil, const QString &keyword, int countRequired, QSqlQuery &q)
 {
     q.addBindValue(keyword);
     if (q.exec())
@@ -161,20 +190,20 @@ bool DBRW::queryActions(LocalFSItemList &dal, const QString &keyword, int countR
             da->setTitle(q.value(titleIndex).toString());
             da->setDescription(q.value(descriptionIndex).toString());
             da->setActionType(q.value(typeIndex).toString() == "c" ? DAT_CONSOLE : DAT_GUI);
-            auto it = std::find_if(dal.begin(), dal.end(), [da](LocalFSItemPtr d) {
+            auto it = std::find_if(fsil.begin(), fsil.end(), [da](LocalFSItemPtr d) {
                     return da->title() == d->title()
                     && da->description() == d->description();}
                     );
-            if (dal.end() == it)
-                dal.append(da);
+            if (fsil.end() == it)
+                fsil.append(da);
         }
         q.clear();
         q.finish();
 
-        if (dal.length() >= countRequired)
+        if (fsil.length() >= countRequired)
         {
-            while(dal.length() > countRequired)
-                dal.removeLast();
+            while(fsil.length() > countRequired)
+                fsil.removeLast();
             return true;
         }
     }

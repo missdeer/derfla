@@ -4,7 +4,7 @@ CONFIG += c++14 console precompile_header
 CONFIG -= app_bundle
 
 PRECOMPILED_HEADER = stdafx.h
-DESTDIR = ../bin
+DESTDIR = ../../bin
 
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)

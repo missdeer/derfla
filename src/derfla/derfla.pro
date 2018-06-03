@@ -4,7 +4,7 @@ TARGET = Derfla
 TEMPLATE = app
 CONFIG += c++14 precompile_header
 PRECOMPILED_HEADER = stdafx.h
-DESTDIR = ../bin
+DESTDIR = ../../bin
 
 include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
