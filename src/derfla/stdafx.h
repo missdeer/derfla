@@ -5,15 +5,8 @@
 #if defined(_WIN32)
 #define NOMINMAX
 #include <Windows.h>
-#include <Winnt.h>
-#include <Shellapi.h>
-#include <shobjidl.h>
-#include <shlguid.h>
-#include <Shlobj.h>
 #include <strsafe.h>
 #include <PSapi.h>
-#include <Everything.h>
-#include <everything_ipc.h>
 #elif defined(Q_OS_MAC)
 #else
 #include <sys/resource.h>
