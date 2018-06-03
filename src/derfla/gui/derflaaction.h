@@ -25,7 +25,6 @@ class AlfredWorkflowAction;
 class DerflaAction : public QObject
 {
     Q_OBJECT
-        friend AlfredWorkflowAction;
 public:
     explicit DerflaAction(QObject *parent = 0);
     
@@ -73,15 +72,6 @@ private:
 
     bool disabled_ = false;
     QUuid id_;
-    // members from AlfredWorkflowAction
-    QString script_;
-    QString appleScript_;
-    QString url_;
-    int type_ = 0;
-    int escaping_ = 0;
-    bool cacheScript_ = false;
-    bool plusSpaces_ = false;
-    bool utf8_ = false;
 };
 
 typedef QSharedPointer<DerflaAction> DerflaActionPtr;
