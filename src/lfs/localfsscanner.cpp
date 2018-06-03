@@ -29,7 +29,7 @@ LocalFSScanner::~LocalFSScanner()
 void LocalFSScanner::start()
 {
     stop_ = false;
-    qDebug() << "scan local file system now" << QThread::currentThreadId();
+    //qDebug() << "scan local file system now" << QThread::currentThreadId();
     QTimer::singleShot(3 * 1000, this, &LocalFSScanner::scanRequired);
 }
 

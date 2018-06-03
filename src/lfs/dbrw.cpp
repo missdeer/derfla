@@ -32,8 +32,9 @@ DBRW::~DBRW()
 QString DBRW::search(const QString &keyword, int countRequired)
 {
     QString res;
-    LocalFSItemList fsil;
-    if (getLFSItems(fsil, keyword, countRequired))
+	LocalFSItemList fsil; 
+	getLFSItems(fsil, keyword, countRequired);
+    if (!fsil.empty())
     {
         QJsonArray array;
         for (auto item : fsil)
