@@ -9,10 +9,14 @@ DerflaAction::DerflaAction(QObject *parent)
 
 }
 
-
 bool DerflaAction::run()
 {
-    return true;
+    return run_(this);
+}
+
+void DerflaAction::setRunner(const std::function<bool (DerflaAction *)> &run)
+{
+    run_ = run;
 }
 
 QIcon DerflaAction::icon() const

@@ -25,6 +25,11 @@ class DerflaAction : public QObject
     Q_OBJECT
 public:
     explicit DerflaAction(QObject *parent = 0);
+
+    bool operator==(const DerflaAction& da)
+    {
+        return id_ == da.id_;
+    }
     
     QIcon icon() const;
     void setIcon(const QIcon& icon);
@@ -50,10 +55,8 @@ public:
     bool disabled() const { return disabled_; }
     void setDisabled(bool val) { disabled_ = val; }
 
-    bool operator==(const DerflaAction& da)
-    {
-        return id_ == da.id_;
-    }
+    void setRunner(const std::function<bool (DerflaAction *)> &run);
+
 signals:
 
 public slots :
@@ -70,6 +73,7 @@ private:
 
     bool disabled_ = false;
     QUuid id_;
+	std::function<bool(DerflaAction*)> run_;
 };
 
 typedef QSharedPointer<DerflaAction> DerflaActionPtr;

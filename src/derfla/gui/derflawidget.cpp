@@ -2,16 +2,18 @@
 #include <private/qzipreader_p.h>
 #include "uglobalhotkeys.h"
 #include "CharLineEdit.h"
+#include "extensionmanager.h"
 #include "candidatelist.h"
 #include "derflawidget.h"
 
-DerflaWidget::DerflaWidget(QWidget *parent) :
-    QWidget(parent),
-    mouseMovePos_(0, 0),
-    loadingAnimationTimer_(new QTimer(this)),
-    input_(new CharLineEdit(this)),
-    candidateList_(new CandidateList),
-    hotkeyManager_(new UGlobalHotkeys)
+DerflaWidget::DerflaWidget(QWidget *parent)
+    : QWidget(parent)
+    , mouseMovePos_(0, 0)
+    , loadingAnimationTimer_(new QTimer(this))
+    , input_(new CharLineEdit(this))
+    , extensionManager_(new ExtensionManager)
+    , candidateList_(new CandidateList(extensionManager_))
+    , hotkeyManager_(new UGlobalHotkeys)
 {
 #if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
@@ -32,6 +34,7 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
 #endif
 
+    extensionManager_->loadAll();
     connect(candidateList_, &CandidateList::done, this, &DerflaWidget::candidateListDone);
     connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::keyPressed);
 

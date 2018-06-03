@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QSystemTrayIcon>
 
+class ExtensionManager;
 class CharLineEdit;
 class CandidateList;
 class UGlobalHotkeys;
@@ -49,6 +50,7 @@ private:
     QTimer* loadingAnimationTimer_;
     CharLineEdit* input_;
     QSystemTrayIcon* trayIcon_;
+    ExtensionManager* extensionManager_;
     CandidateList* candidateList_;
     UGlobalHotkeys *hotkeyManager_;
     void showCandidateList();

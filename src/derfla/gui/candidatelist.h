@@ -8,13 +8,14 @@
 namespace Ui {
 class CandidateList;
 }
+class ExtensionManager;
 
 class CandidateList : public QFrame
 {
     Q_OBJECT
 
 public:
-    explicit CandidateList(QWidget *parent = 0);
+    explicit CandidateList(ExtensionManager* extensionManager, QWidget *parent = 0);
     ~CandidateList();
     void update(const QString& text);
 
@@ -38,7 +39,8 @@ private slots:
 private:
     Ui::CandidateList *ui;
     bool activeWindowFlag_;
-    int itemCount_ = 0;
+    int itemCount_ ;
+    ExtensionManager* extensionManager_;
     DerflaActionList dal_;
 };
 

@@ -2,6 +2,7 @@
 #define EXTENSIONMANAGER_H
 
 #include <QObject>
+#include "extension.h"
 
 class ExtensionManager : public QObject
 {
@@ -9,6 +10,8 @@ class ExtensionManager : public QObject
 public:
     explicit ExtensionManager(QObject *parent = nullptr);
 
+    bool loadAll();
+    bool getActions(DerflaActionList& dal, const QString& prefix, int countRequired = 50);
 signals:
 
 public slots:

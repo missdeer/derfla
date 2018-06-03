@@ -1,12 +1,15 @@
 #include "stdafx.h"
+#include "extensionmanager.h"
 #include "candidatelistdelegate.h"
 #include "candidatelist.h"
 #include "ui_candidatelist.h"
 
-CandidateList::CandidateList(QWidget *parent) :
-    QFrame(parent),
-    ui(new Ui::CandidateList),
-    itemCount_(0)
+CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent)
+    : QFrame(parent)
+    , ui(new Ui::CandidateList)
+    , itemCount_(0)
+    , extensionManager_(extensionManager)
+
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_ShowWithoutActivating);
@@ -35,7 +38,7 @@ void CandidateList::update(const QString &text)
 
     dal_.clear();
     ui->list->clear();
-    //DBRW::instance()->getLFSActions(dal_, text, 25);
+    extensionManager_->getActions(dal_, text, 25);
     populateList();
 }
 
@@ -142,7 +145,6 @@ void CandidateList::showEvent(QShowEvent* /*event*/)
 
 void CandidateList::onEnter()
 {
-
     int index = ui->list->currentRow();
     //qDebug() << "CandidateList::onEnter:" << index;
     if (index < 0 || index >= itemCount_)
