@@ -26,7 +26,9 @@ SOURCES += main.cpp\
     executor/rubyexecutor.cpp \
     executil/scriptescape.cpp \
     executil/executorrunner.cpp \
-    executil/processwrapper.cpp
+    executil/processwrapper.cpp \
+    extension.cpp \
+    extensionmanager.cpp
 
 HEADERS  += stdafx.h \
     gui/derflawidget.h \
@@ -44,7 +46,9 @@ HEADERS  += stdafx.h \
     executor/rubyexecutor.h \
     executil/scriptescape.h \
     executil/executorrunner.h \
-    executil/processwrapper.h
+    executil/processwrapper.h \
+    extension.h \
+    extensionmanager.h
 
 FORMS    += \
     gui/candidatelist.ui

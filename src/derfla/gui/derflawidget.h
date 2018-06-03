@@ -34,6 +34,7 @@ private slots:
     void keyPressed(QKeyEvent* e);
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
     void loadSkin();
+	void installExtension();
     void onLoadingAnimationTimer();
     void showInFront();
     void candidateListDone();

@@ -58,6 +58,11 @@ DerflaWidget::DerflaWidget(QWidget *parent) :
     connect(loadSkinAction, &QAction::triggered, this, &DerflaWidget::loadSkin);
     addAction(loadSkinAction);
 
+	QAction *installExtensionAction = new QAction(tr("&Install Extension"), this);
+	installExtensionAction->setShortcut(tr("Ctrl+I"));
+	connect(installExtensionAction, &QAction::triggered, this, &DerflaWidget::installExtension);
+	addAction(installExtensionAction);
+
     setContextMenuPolicy(Qt::ActionsContextMenu);
 
     QAction *showAction = new QAction(tr("Show"), this);
@@ -258,15 +263,25 @@ void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void DerflaWidget::loadSkin()
 {
-
     hideCandidateList();
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Load Derfla Skin"),
         "",
-        tr("Derfla Skin File (*.derflaskin);;Derfla Skin Configuration (*.xml);;All files (*.*)"));
+        tr("Derfla Skin Package (*.derflaskin);;Derfla Skin Configuration (*.xml);;All files (*.*)"));
     if (fileName.isEmpty())
         return;
     applySkin(fileName);
+}
+
+void DerflaWidget::installExtension()
+{
+	QString fileName = QFileDialog::getOpenFileName(this,
+		tr("Install Derfla Extension"),
+		"",
+		tr("Derfla Extension Package (*.derflaextesion);;Derfla Extension Configuration (*.xml);;All files (*.*)"));
+	if (fileName.isEmpty())
+		return;
+
 }
 
 void DerflaWidget::onLoadingAnimationTimer()
@@ -288,7 +303,6 @@ void DerflaWidget::onLoadingAnimationTimer()
 
 void DerflaWidget::showInFront()
 {
-
     if (isHidden())
         show();
     activateWindow();
@@ -297,7 +311,6 @@ void DerflaWidget::showInFront()
 
 void DerflaWidget::candidateListDone()
 {
-
     hideCandidateList();
     input_->setText("");
 }
@@ -309,7 +322,6 @@ void DerflaWidget::quit()
 
 void DerflaWidget::showCandidateList()
 {
-
     //candidateList_->show();
     candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
     
@@ -320,32 +332,27 @@ void DerflaWidget::showCandidateList()
 
 void DerflaWidget::processKey()
 {
-
     //qDebug() << "DerflaWidget::processKey";
 }
 
 void DerflaWidget::doEnter()
 {
-
     //qDebug() << "DerflaWidget::doEnter";
     candidateList_->onEnter();
 }
 
 void DerflaWidget::doTab()
 {
-
     //qDebug() << "DerflaWidget::doTab";
 }
 
 void DerflaWidget::doBackTab()
 {
-
     //qDebug() << "DerflaWidget::doBackTab";
 }
 
 bool DerflaWidget::applySkin(const QString& skin)
 {
-
     QString s;
     if (!QFileInfo::exists(skin))
     {
@@ -448,13 +455,11 @@ bool DerflaWidget::applySkin(const QString& skin)
 
 void DerflaWidget::waiting()
 {
-
     loadingAnimationTimer_->start(100);
 }
 
 void DerflaWidget::hideCandidateList()
 {
-
     if (candidateList_->isVisible())
         candidateList_->hide();
 }
@@ -539,7 +544,6 @@ bool DerflaWidget::loadSkinPackage(const QString& skinPath, QString& configurati
 
 void DerflaWidget::stopWaiting()
 {
-
     loadingAnimationTimer_->stop();
 
     QList<QAction*> actions = input_->actions();
