@@ -4,15 +4,18 @@
 #include <QObject>
 #include "derflaaction.h"
 
+QT_BEGIN_NAMESPACE
+class QProcess;
+QT_END_NAMESPACE
+
 class Extension : public QObject
 {
     Q_OBJECT
 public:
     explicit Extension(QObject *parent = nullptr);
+    ~Extension();
 
-	bool load(const QString& configuration);
-	bool query(const QString& prefix);
-	bool run(DerflaAction* action);
+    bool query(const QString& prefix);
 
     const QString &author() const;
     void setAuthor(const QString &author);
@@ -44,7 +47,8 @@ public:
     void setWaitIconData(const QString& waitIconData);
 signals:
     void queried(DerflaActionList &);
-public slots:
+public slots:    
+    void finished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     QString author_;
@@ -57,6 +61,7 @@ private:
     QString waitDescription_;
     QIcon waitIcon_;
     DerflaActionList derflaActions_;
+    QProcess* process_;
 };
 
 typedef QSharedPointer<Extension> ExtensionPtr;

@@ -3,22 +3,65 @@
 
 Extension::Extension(QObject *parent) 
 	: QObject(parent)
+    , process_(nullptr)
 {
 
 }
 
-bool Extension::load(const QString& configuration)
+Extension::~Extension()
 {
-	return true;
+    if (process_)
+    {
+        if (process_->state() == QProcess::Running)
+            process_->terminate();
+        delete process_;
+    }
 }
 
 bool Extension::query(const QString& prefix)
 {
-	return true;
-}
+    QStringList arguments;
+    if (!process_)
+    {
+        process_ = new QProcess;
+        connect(process_, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(finished(int,QProcess::ExitStatus)));
+        if (executor_.isEmpty())
+        {
+            process_->setProgram(executable_);
+        }
+        else
+        {
+            QStringList envPaths;
+            QString path = qgetenv("PATH");
+            QStringList environment = QProcess::systemEnvironment();
+            auto it = std::find_if(environment.begin(), environment.end(),
+                                   [&](const QString& env) { return env.startsWith("PATH="); });
+            if (environment.end() != it)
+                path = it->mid(5);
+        #if defined(Q_OS_WIN)
+            QString exe = executor_ % ".exe";
+            envPaths << path.split(QChar(';'));
+        #else
+            QString exe = executor_;
+            envPaths << path.split(QChar(':'));
+        #endif
 
-bool Extension::run(DerflaAction* action)
-{
+            it = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString& p) {
+                return QFile::exists(p % exe);
+            });
+            if (envPaths.end() == it)
+            {
+                qDebug() << "can't find program:" << exe;
+                return false;
+            }
+            process_->setProgram(*it % exe);
+            arguments << executable_;
+        }
+        process_->setWorkingDirectory(QFileInfo(executable_).absolutePath());
+    }
+    arguments << prefix;
+    process_->setArguments(arguments);
+    process_->start();
 	return true;
 }
 
@@ -129,4 +172,10 @@ void Extension::setWaitIconData(const QString &waitIconData)
     {
         waitIcon_ = QIcon(pixmap);
     }
+}
+
+void Extension::finished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    QByteArray output = process_->readAllStandardOutput();
+    // convert json output to action list
 }
