@@ -8,3 +8,10 @@
 *.dll
 *.res
 *.user
+stdafx.h.cpp
+*.vcxproj
+*.filters
+ipch
+*.VC.db
+Makefile
+.vs
