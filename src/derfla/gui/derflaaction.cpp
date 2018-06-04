@@ -11,15 +11,10 @@ DerflaAction::DerflaAction(QObject *parent)
 
 bool DerflaAction::run()
 {
-    return run_(this);
+    return true;
 }
 
-void DerflaAction::setRunner(const std::function<bool (DerflaAction *)> &run)
-{
-    run_ = run;
-}
-
-QIcon DerflaAction::icon() const
+const QIcon &DerflaAction::icon() const
 {
     return icon_;
 }
@@ -29,7 +24,7 @@ void DerflaAction::setIcon(const QIcon& icon)
     icon_ = icon;
 }
 
-QString DerflaAction::title() const
+const QString &DerflaAction::title() const
 {
     return title_;
 }
@@ -39,7 +34,7 @@ void DerflaAction::setTitle(const QString& title)
     title_ = title;
 }
 
-QString DerflaAction::description() const
+const QString &DerflaAction::description() const
 {
     return description_;
 }
@@ -49,7 +44,7 @@ void DerflaAction::setDescription(const QString& description)
     description_ = description;
 }
 
-QString DerflaAction::target() const
+const QString &DerflaAction::target() const
 {
     return target_;
 }
@@ -59,7 +54,7 @@ void DerflaAction::setTarget(const QString& target)
     target_ = target;
 }
 
-QString DerflaAction::workingDirectory() const
+const QString &DerflaAction::workingDirectory() const
 {
     return workingDirectory_;
 }
@@ -73,17 +68,17 @@ void DerflaAction::setWorkingDirectory(const QString& workingDirectory)
         workingDirectory_ = fi.absolutePath();
 }
 
-DerflaActionType DerflaAction::actionType() const
+const QString &DerflaAction::actionType() const
 {
     return actionType_;
 }
 
-void DerflaAction::setActionType(const DerflaActionType& actionType)
+void DerflaAction::setActionType(const QString &actionType)
 {
     actionType_ = actionType;
 }
 
-QString DerflaAction::arguments() const
+const QString &DerflaAction::arguments() const
 {
     return arguments_;
 }

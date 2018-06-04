@@ -48,7 +48,7 @@ public:
 signals:
     void queried(DerflaActionList &);
 public slots:    
-    void finished(int exitCode, QProcess::ExitStatus exitStatus);
+    void finished(int, QProcess::ExitStatus);
 
 private:
     QString author_;

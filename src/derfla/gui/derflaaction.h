@@ -31,32 +31,29 @@ public:
         return id_ == da.id_;
     }
     
-    QIcon icon() const;
+    const QIcon& icon() const;
     void setIcon(const QIcon& icon);
 
-    QString title() const;
+    const QString& title() const;
     void setTitle(const QString& title);
 
-    QString description() const;
+    const QString& description() const;
     void setDescription(const QString& description);
 
-    QString target() const;
+    const QString& target() const;
     void setTarget(const QString& target);
 
-    QString arguments() const;
+    const QString& arguments() const;
     void setArguments(const QString& arguments);
 
-    QString workingDirectory() const;
+    const QString& workingDirectory() const;
     void setWorkingDirectory(const QString& workingDirectory);
 
-    DerflaActionType actionType() const;
-    void setActionType(const DerflaActionType& actionType);
+    const QString& actionType() const;
+    void setActionType(const QString& actionType);
 
     bool disabled() const { return disabled_; }
     void setDisabled(bool val) { disabled_ = val; }
-
-    void setRunner(const std::function<bool (DerflaAction *)> &run);
-
 signals:
 
 public slots :
@@ -69,11 +66,10 @@ private:
     QString target_;
     QString arguments_;
     QString workingDirectory_;
-    DerflaActionType actionType_;
+    QString actionType_;
 
     bool disabled_ = false;
     QUuid id_;
-	std::function<bool(DerflaAction*)> run_;
 };
 
 typedef QSharedPointer<DerflaAction> DerflaActionPtr;

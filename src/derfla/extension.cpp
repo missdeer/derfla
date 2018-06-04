@@ -174,8 +174,44 @@ void Extension::setWaitIconData(const QString &waitIconData)
     }
 }
 
-void Extension::finished(int exitCode, QProcess::ExitStatus exitStatus)
+void Extension::finished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
 {
     QByteArray output = process_->readAllStandardOutput();
     // convert json output to action list
+    derflaActions_.clear();
+
+    QJsonDocument doc = QJsonDocument::fromJson(output);
+    if (doc.isArray())
+    {
+        QJsonArray array = doc.array();
+        for (auto a : array)
+        {
+            if (!a.isObject())
+                continue;
+            QJsonObject o = a.toObject();
+            DerflaActionPtr action(new DerflaAction);
+            if (o["title"].isString())
+                action->setTitle(o["title"].toString());
+            if (o["description"].isString())
+                action->setDescription(o["description"].toString());
+            if (o["target"].isString())
+                action->setTarget(o["target"].toString());
+            if (o["arguments"].isString())
+                action->setArguments(o["arguments"].toString());
+            if (o["workingDir"].isString())
+                action->setWorkingDirectory(o["workingDir"].toString());
+            if (o["iconData"].isString())
+            {
+                QByteArray c = QByteArray::fromBase64(o["iconData"].toString().toUtf8());
+                QPixmap pixmap;
+                if (pixmap.loadFromData(c))
+                    action->setIcon(QIcon(pixmap));
+            }
+            if (o["iconPath"].isString())
+                action->setIcon(QIcon(o["iconPath"].toString()));
+            derflaActions_.append(action);
+        }
+    }
+
+    emit queried(derflaActions_);
 }
