@@ -12,9 +12,13 @@ public:
 
     bool loadAllFromCache();
     bool getActions(DerflaActionList& dal, const QString& prefix, int countRequired = 50);
+    bool installExtension(const QString& extensionFile);
 signals:
 
 public slots:
+
+private:
+    QList<ExtensionPtr> extensions_;
 };
 
 #endif // ExtensionMANAGER_H

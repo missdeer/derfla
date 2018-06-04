@@ -271,7 +271,7 @@ void DerflaWidget::loadSkin()
         tr("Load Derfla Skin"),
         "",
         tr("Derfla Skin Package (*.derflaskin);;Derfla Skin Configuration (*.xml);;All files (*.*)"));
-    if (fileName.isEmpty())
+    if (!QFile::exists(fileName))
         return;
     applySkin(fileName);
 }
@@ -282,9 +282,9 @@ void DerflaWidget::installExtension()
 		tr("Install Derfla Extension"),
 		"",
 		tr("Derfla Extension Package (*.derflaextesion);;Derfla Extension Configuration (*.xml);;All files (*.*)"));
-	if (fileName.isEmpty())
-		return;
-
+    if (!QFile::exists(fileName))
+        return;
+    extensionManager_->installExtension(fileName);
 }
 
 void DerflaWidget::onLoadingAnimationTimer()
