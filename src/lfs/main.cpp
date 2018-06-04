@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
     LocalFSScanner scanner(dbrw);
     scanner.start();
 
-    QObject::connect(&a, &SharedTools::QtSingleApplication::messageReceived, [&](const QString &message, QObject *socket){
+    QObject::connect(&a, &SharedTools::QtSingleApplication::messageReceived, [&](const QString &message, QObject *){
         if (message.compare("/exit", Qt::CaseInsensitive) == 0)
         {
             scanner.stop();

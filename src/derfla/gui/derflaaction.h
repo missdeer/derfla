@@ -9,14 +9,14 @@ enum DerflaActionType
     DAT_CONSOLE,
     DAT_GUI,
     // Alfred work flow action types are declared below
-    DAT_SCRIPT,
+    DAT_SCRIPT, // shell/bash/zsh, perl, php, python, ruby, etc.
     DAT_OPENURL,
     DAT_APPLESCRIPT,
     DAT_SYSTEMWEBSEARCH,
     DAT_REVEALFILE,
     DAT_TERMINALCOMMAND,
     DAT_OPENFILE,
-    DAT_BROWSEINALFRED,
+    DAT_BROWSEINDERFLA,
     DAT_LAUNCHFILES,
 };
 

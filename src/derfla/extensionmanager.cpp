@@ -7,7 +7,7 @@ ExtensionManager::ExtensionManager(QObject *parent)
 
 }
 
-bool ExtensionManager::loadAll()
+bool ExtensionManager::loadAllFromCache()
 {
     return true;
 }

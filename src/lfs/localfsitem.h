@@ -6,19 +6,9 @@
 
 enum LocalFSItemType
 {
-    DAT_UNKNOWN,
-    DAT_CONSOLE,
-    DAT_GUI,
-    // Alfred work flow action types are declared below
-    DAT_SCRIPT,
-    DAT_OPENURL,
-    DAT_APPLESCRIPT,
-    DAT_SYSTEMWEBSEARCH,
-    DAT_REVEALFILE,
-    DAT_TERMINALCOMMAND,
-    DAT_OPENFILE,
-    DAT_BROWSEINALFRED,
-    DAT_LAUNCHFILES,
+    FSIT_UNKNOWN,
+    FSIT_CONSOLE,
+    FSIT_GUI,
 };
 
 class LocalFSItem : public QObject

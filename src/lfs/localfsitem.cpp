@@ -3,7 +3,7 @@
 
 LocalFSItem::LocalFSItem(QObject *parent)
     : QObject(parent)
-    , actionType_(DAT_UNKNOWN)
+    , actionType_(FSIT_UNKNOWN)
     , id_(QUuid::createUuid())
 {
 

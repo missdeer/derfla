@@ -178,25 +178,25 @@ bool DBRW::queryActions(LocalFSItemList &fsil, const QString &keyword, int count
         int typeIndex = q.record().indexOf("type");
         while (q.next())
         {
-            LocalFSItemPtr da(new LocalFSItem);
+            LocalFSItemPtr item(new LocalFSItem);
             QPixmap pixmap;
             pixmap.loadFromData(q.value(iconIndex).toByteArray());
-            da->setIcon(QIcon(pixmap));
-            da->setArguments(q.value(argumentsIndex).toString());
-            da->setTarget(q.value(targetIndex).toString());
+            item->setIcon(QIcon(pixmap));
+            item->setArguments(q.value(argumentsIndex).toString());
+            item->setTarget(q.value(targetIndex).toString());
             QString workingDirectory = q.value(workingDirectoryIndex).toString();
             if (workingDirectory.isEmpty())
-                workingDirectory = QFileInfo(da->target()).absolutePath();
-            da->setWorkingDirectory(workingDirectory);
-            da->setTitle(q.value(titleIndex).toString());
-            da->setDescription(q.value(descriptionIndex).toString());
-            da->setActionType(q.value(typeIndex).toString() == "c" ? DAT_CONSOLE : DAT_GUI);
-            auto it = std::find_if(fsil.begin(), fsil.end(), [da](LocalFSItemPtr d) {
-                    return da->title() == d->title()
-                    && da->description() == d->description();}
+                workingDirectory = QFileInfo(item->target()).absolutePath();
+            item->setWorkingDirectory(workingDirectory);
+            item->setTitle(q.value(titleIndex).toString());
+            item->setDescription(q.value(descriptionIndex).toString());
+            item->setActionType(q.value(typeIndex).toString() == "c" ? FSIT_CONSOLE : FSIT_GUI);
+            auto it = std::find_if(fsil.begin(), fsil.end(), [item](LocalFSItemPtr d) {
+                    return item->title() == d->title()
+                    && item->description() == d->description();}
                     );
             if (fsil.end() == it)
-                fsil.append(da);
+                fsil.append(item);
         }
         q.clear();
         q.finish();

@@ -34,7 +34,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
 #endif
 
-    extensionManager_->loadAll();
+    extensionManager_->loadAllFromCache();
     connect(candidateList_, &CandidateList::done, this, &DerflaWidget::candidateListDone);
     connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::keyPressed);
 

@@ -42,10 +42,6 @@ void LocalFSScanner::scan()
 {
     timestamp_ = QDateTime::currentDateTime().toMSecsSinceEpoch();
     util::timestamp = timestamp_;
-#if defined(Q_OS_WIN)
-    if (qApp->thread() != QThread::currentThread())
-        CoInitialize(NULL);
-#endif
 
     scanDirectories_.clear();
 
@@ -61,11 +57,6 @@ void LocalFSScanner::scan()
         scanDirectory(d);
     dbrw_.removeOldRecords(timestamp_);
     emit finished();
-
-#if defined(Q_OS_WIN)
-    if (qApp->thread() != QThread::currentThread())
-        CoUninitialize();
-#endif
 }
 
 void LocalFSScanner::getDirectoriesFromEnvironmentVariable()

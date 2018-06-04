@@ -10,7 +10,7 @@ class ExtensionManager : public QObject
 public:
     explicit ExtensionManager(QObject *parent = nullptr);
 
-    bool loadAll();
+    bool loadAllFromCache();
     bool getActions(DerflaActionList& dal, const QString& prefix, int countRequired = 50);
 signals:
 
