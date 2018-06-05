@@ -71,6 +71,16 @@ void DerflaAction::setActionType(const QString &actionType)
     actionType_ = actionType;
 }
 
+const QString &DerflaAction::scriptExecutor() const
+{
+    return scriptExecutor_;
+}
+
+void DerflaAction::setScriptExecutor(const QString &scriptExecutor)
+{
+    scriptExecutor_ = scriptExecutor;
+}
+
 const QString &DerflaAction::arguments() const
 {
     return arguments_;

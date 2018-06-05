@@ -24,8 +24,48 @@ bool ActionExecutor::operator()(DerflaActionPtr da)
     return f(da);
 }
 
+void ActionExecutor::errorOccurred()
+{
+
+}
+
+void ActionExecutor::finished(int exitCode, QProcess::ExitStatus status)
+{
+    QProcess* e = qobject_cast<QProcess*>(sender());
+    e->deleteLater();
+}
+
 bool ActionExecutor::runScript(DerflaActionPtr da)
 {
+    QMap<QString, QString> m = {
+        { "bash",           "-c"},
+        { "php",            "-r"},
+        { "ruby",           "-e"},
+        { "python",         "-c"},
+        { "perl",           "-c"},
+        { "zsh",            "-c"},
+#if defined(Q_OS_MAC)
+        { "applescript(as)","-c"},
+        { "applescript(js)","-c"},
+#endif
+    };
+
+    auto it = m.find(da->scriptExecutor());
+    if (m.end() != it)
+    {
+        auto option = m[da->scriptExecutor()];
+#if defined(Q_OS_WIN)
+        QString exe = findProgram("/" % da->scriptExecutor() % ".exe");
+#else
+        QString exe = findProgram("/" % da->scriptExecutor());
+#endif
+        QProcess* e = new QProcess;
+
+        connect(e, &QProcess::errorOccurred, this, &ActionExecutor::errorOccurred);
+        connect(e, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &ActionExecutor::finished);
+
+        e->start(exe, QStringList() << option << da->target());
+    }
     return true;
 }
 
@@ -129,4 +169,28 @@ bool ActionExecutor::revealFile(DerflaActionPtr da)
 bool ActionExecutor::browseInDerfla(DerflaActionPtr da)
 {
     return true;
+}
+
+QString ActionExecutor::findProgram(const QString &exe)
+{
+    QStringList envPaths;
+
+    QString path = qgetenv("PATH");
+    QStringList environment = QProcess::systemEnvironment();
+    auto it = std::find_if(environment.begin(), environment.end(),
+                           [&](const QString& env) { return env.startsWith("PATH="); });
+    if (environment.end() != it)
+        path = it->mid(5);
+#if defined(Q_OS_WIN)
+    envPaths << path.split(QChar(';'));
+#else
+    envPaths << path.split(QChar(':'));
+#endif
+
+    it = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString& p) {
+        return QFile::exists(p % exe);
+    });
+    if (envPaths.end() != it)
+        return *it % exe;
+    return exe;
 }

@@ -36,6 +36,9 @@ public:
     bool disabled() const { return disabled_; }
     void setDisabled(bool val) { disabled_ = val; }
 
+    const QString &scriptExecutor() const;
+    void setScriptExecutor(const QString &scriptExecutor);
+
 private:
     QIcon icon_;
     QString title_;
@@ -44,6 +47,7 @@ private:
     QString arguments_;
     QString workingDirectory_;
     QString actionType_;
+    QString scriptExecutor_;
 
     bool disabled_ = false;
     QUuid id_;

@@ -4,6 +4,10 @@
 #include <QObject>
 #include "derflaaction.h"
 
+QT_BEGIN_NAMESPACE
+class QProcess;
+QT_END_NAMESPACE
+
 class ActionExecutor : public QObject
 {
     Q_OBJECT
@@ -14,7 +18,8 @@ public:
 signals:
 
 public slots:
-
+    void errorOccurred();
+    void finished(int exitCode, QProcess::ExitStatus status);
 private:
     bool runScript(DerflaActionPtr da);
     bool shellExecute(DerflaActionPtr da);
@@ -22,6 +27,8 @@ private:
     bool openUrl(DerflaActionPtr da);
     bool revealFile(DerflaActionPtr da);
     bool browseInDerfla(DerflaActionPtr da);
+
+    QString findProgram(const QString& exe);
 };
 
 #endif // ACTIONEXECUTOR_H

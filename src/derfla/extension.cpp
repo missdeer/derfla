@@ -202,6 +202,8 @@ void Extension::finished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
                 action->setWorkingDirectory(o["workingDir"].toString());
             if (o["actionType"].isString())
                 action->setActionType(o["actionType"].toString());
+            if (o["scriptExecutor"].isString())
+                action->setScriptExecutor(o["scriptExecutor"].toString());
             if (o["iconPath"].isString())
                 action->setIcon(QIcon(o["iconPath"].toString()));
             if (o["iconData"].isString())

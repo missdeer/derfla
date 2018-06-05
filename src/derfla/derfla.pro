@@ -17,19 +17,9 @@ SOURCES += main.cpp\
     gui/candidatelistdelegate.cpp \
     gui/candidatelistwidget.cpp \
     gui/derflaaction.cpp \
-    executor/executor.cpp \
-    executor/bashexecutor.cpp \
-    executor/zshexecutor.cpp \
-    executor/phpexecutor.cpp \
-    executor/pythonexecutor.cpp \
-    executor/perlexecutor.cpp \
-    executor/rubyexecutor.cpp \
-    executil/scriptescape.cpp \
-    executil/executorrunner.cpp \
-    executil/processwrapper.cpp \
+    gui/actionexecutor.cpp \
     extension.cpp \
-    extensionmanager.cpp \
-    gui/actionexecutor.cpp
+    extensionmanager.cpp
 
 HEADERS  += stdafx.h \
     gui/derflawidget.h \
@@ -38,19 +28,9 @@ HEADERS  += stdafx.h \
     gui/candidatelistdelegate.h \
     gui/candidatelistwidget.h \
     gui/derflaaction.h \
-    executor/executor.h \
-    executor/bashexecutor.h \
-    executor/zshexecutor.h \
-    executor/phpexecutor.h \
-    executor/pythonexecutor.h \
-    executor/perlexecutor.h \
-    executor/rubyexecutor.h \
-    executil/scriptescape.h \
-    executil/executorrunner.h \
-    executil/processwrapper.h \
+    gui/actionexecutor.h \
     extension.h \
-    extensionmanager.h \
-    gui/actionexecutor.h
+    extensionmanager.h
 
 FORMS    += \
     gui/candidatelist.ui
@@ -66,12 +46,6 @@ unix: !macx: {
 }
 
 macx: {
-    SOURCES +=  \
-        executor/osascriptexecutor.cpp
-
-    HEADERS +=  \
-        executor/osascriptexecutor.h
-
 #    QMAKE_MAC_SDK = macosx10.11
     ICON = derfla.icns
     icon.path = $$PWD
