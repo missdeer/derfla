@@ -14,6 +14,14 @@ public:
 signals:
 
 public slots:
+
+private:
+    bool runScript(DerflaActionPtr da);
+    bool shellExecute(DerflaActionPtr da);
+    bool terminalCommand(DerflaActionPtr da);
+    bool openUrl(DerflaActionPtr da);
+    bool revealFile(DerflaActionPtr da);
+    bool browseInDerfla(DerflaActionPtr da);
 };
 
 #endif // ACTIONEXECUTOR_H
