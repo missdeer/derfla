@@ -194,6 +194,8 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
         e->setWaitDescription(o["waitDescription"].toString());
         newObj.insert("waitDescription", e->waitDescription());
     }
+    if (o["daemon"].isBool() && o["daemon"].toBool())
+        e->runDaemon();
     extensions_.append(e);
     connect(e.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
     // cache
