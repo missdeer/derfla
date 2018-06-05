@@ -1,10 +1,8 @@
 #include "stdafx.h"
 #include "LocalFSItem.h"
 
-LocalFSItem::LocalFSItem(QObject *parent)
-    : QObject(parent)
-    , actionType_(FSIT_UNKNOWN)
-    , id_(QUuid::createUuid())
+LocalFSItem::LocalFSItem()
+    : id_(QUuid::createUuid())
 {
 
 }

@@ -15,8 +15,8 @@ using namespace std;
 #define check_stop do { if (stop_) return;   QThread::yieldCurrentThread(); } while(0)
 
 LocalFSScanner::LocalFSScanner(DBRW &dbrw, QObject *parent)
-    : dbrw_(dbrw)
-    , QObject(parent)
+    : QObject(parent)
+    , dbrw_(dbrw)
     , stop_(false)
 {
     connect(this, &LocalFSScanner::scanRequired, &LocalFSScanner::scan);

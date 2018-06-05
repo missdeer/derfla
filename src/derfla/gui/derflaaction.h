@@ -1,22 +1,11 @@
 #ifndef DERFLAACTION_H
 #define DERFLAACTION_H
 
-#include <QObject>
 
-/*
- * script
- * shellExecute
- * terminalCommand
- * openUrl
- * revealFile
- * browseInDerfla
- */
-
-class DerflaAction : public QObject
+class DerflaAction
 {
-    Q_OBJECT
 public:
-    explicit DerflaAction(QObject *parent = 0);
+    DerflaAction();
 
     bool operator==(const DerflaAction& da)
     {
@@ -46,10 +35,6 @@ public:
 
     bool disabled() const { return disabled_; }
     void setDisabled(bool val) { disabled_ = val; }
-signals:
-
-public slots :
-    bool run();
 
 private:
     QIcon icon_;

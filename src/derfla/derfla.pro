@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     executil/executorrunner.cpp \
     executil/processwrapper.cpp \
     extension.cpp \
-    extensionmanager.cpp
+    extensionmanager.cpp \
+    gui/actionexecutor.cpp
 
 HEADERS  += stdafx.h \
     gui/derflawidget.h \
@@ -48,7 +49,8 @@ HEADERS  += stdafx.h \
     executil/executorrunner.h \
     executil/processwrapper.h \
     extension.h \
-    extensionmanager.h
+    extensionmanager.h \
+    gui/actionexecutor.h
 
 FORMS    += \
     gui/candidatelist.ui

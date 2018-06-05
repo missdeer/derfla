@@ -1,16 +1,10 @@
 #include "stdafx.h"
 #include "derflaaction.h"
 
-DerflaAction::DerflaAction(QObject *parent)
-    : QObject(parent)
-    , id_(QUuid::createUuid())
+DerflaAction::DerflaAction()
+    : id_(QUuid::createUuid())
 {
 
-}
-
-bool DerflaAction::run()
-{
-    return true;
 }
 
 const QIcon &DerflaAction::icon() const

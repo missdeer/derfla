@@ -9,7 +9,6 @@ CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent
     , ui(new Ui::CandidateList)
     , itemCount_(0)
     , extensionManager_(extensionManager)
-
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_ShowWithoutActivating);
@@ -164,7 +163,7 @@ void CandidateList::onEnter()
     DerflaActionPtr da = dal_.at(index);
     if (!da->disabled())
     {
-        da->run();
+        actionExecutor_(da);
         emit done();
     }
 }

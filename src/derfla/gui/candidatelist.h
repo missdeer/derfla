@@ -3,12 +3,13 @@
 
 #include <QFrame>
 #include "candidatelistwidget.h"
-#include "derflaaction.h"
+#include "actionexecutor.h"
 
 namespace Ui {
 class CandidateList;
 }
 class ExtensionManager;
+class ActionExecutor;
 
 class CandidateList : public QFrame
 {
@@ -41,6 +42,7 @@ private:
     bool activeWindowFlag_;
     int itemCount_ ;
     ExtensionManager* extensionManager_;
+    ActionExecutor actionExecutor_;
     DerflaActionList dal_;
 };
 

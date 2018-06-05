@@ -1,21 +1,12 @@
 #ifndef LocalFSItem_H
 #define LocalFSItem_H
 
-#include <QObject>
 #include <QIcon>
 
-enum LocalFSItemType
+class LocalFSItem
 {
-    FSIT_UNKNOWN,
-    FSIT_CONSOLE,
-    FSIT_GUI,
-};
-
-class LocalFSItem : public QObject
-{
-    Q_OBJECT
 public:
-    explicit LocalFSItem(QObject *parent = 0);
+    LocalFSItem();
     
     const QIcon& icon() const;
     void setIcon(const QIcon& icon);
