@@ -18,6 +18,18 @@ Extension::~Extension()
     }
 }
 
+void Extension::runDaemon()
+{
+    QStringList arguments;
+    QString program = executable_;
+    if (!executor_.isEmpty())
+    {
+        program = findProgram();
+        arguments << executable_;
+    }
+    QProcess::startDetached(program, arguments, QFileInfo(executable_).absolutePath());
+}
+
 bool Extension::query(const QString& input)
 {
     QStringList arguments;
@@ -30,31 +42,8 @@ bool Extension::query(const QString& input)
             process_->setProgram(executable_);
         }
         else
-        {
-            QStringList envPaths;
-            QString path = qgetenv("PATH");
-            QStringList environment = QProcess::systemEnvironment();
-            auto it = std::find_if(environment.begin(), environment.end(),
-                                   [&](const QString& env) { return env.startsWith("PATH="); });
-            if (environment.end() != it)
-                path = it->mid(5);
-        #if defined(Q_OS_WIN)
-            QString exe = executor_ % ".exe";
-            envPaths << path.split(QChar(';'));
-        #else
-            QString exe = executor_;
-            envPaths << path.split(QChar(':'));
-        #endif
-
-            it = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString& p) {
-                return QFile::exists(p % exe);
-            });
-            if (envPaths.end() == it)
-            {
-                qDebug() << "can't find program:" << exe;
-                return false;
-            }
-            process_->setProgram(*it % exe);
+        {            
+            process_->setProgram(findProgram());
             arguments << executable_;
         }
         process_->setWorkingDirectory(QFileInfo(executable_).absolutePath());
@@ -218,4 +207,32 @@ void Extension::finished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
     }
 
     emit queried(derflaActions_);
+}
+
+QString Extension::findProgram()
+{
+    QStringList envPaths;
+    QString path = qgetenv("PATH");
+    QStringList environment = QProcess::systemEnvironment();
+    auto it = std::find_if(environment.begin(), environment.end(),
+                           [&](const QString& env) { return env.startsWith("PATH="); });
+    if (environment.end() != it)
+        path = it->mid(5);
+#if defined(Q_OS_WIN)
+    QString exe = executor_ % ".exe";
+    envPaths << path.split(QChar(';'));
+#else
+    QString exe = executor_;
+    envPaths << path.split(QChar(':'));
+#endif
+
+    it = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString& p) {
+        return QFile::exists(p % exe);
+    });
+    if (envPaths.end() == it)
+    {
+        qDebug() << "can't find program:" << exe;
+        return "";
+    }
+    return *it % exe;
 }

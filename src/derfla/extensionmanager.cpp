@@ -66,6 +66,8 @@ bool ExtensionManager::loadAllFromCache()
             e->setWaitTitle(o["waitTitle"].toString());
         if (o["waitDescription"].isString())
             e->setWaitDescription(o["waitDescription"].toString());
+        if (o["daemon"].isBool() && o["daemon"].toBool())
+            e->runDaemon();
         extensions_.append(e);
         connect(e.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
     }

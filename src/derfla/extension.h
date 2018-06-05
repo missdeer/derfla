@@ -15,6 +15,7 @@ public:
     explicit Extension(QObject *parent = nullptr);
     ~Extension();
 
+    void runDaemon();
     bool query(const QString& input);
 
     const QString &author() const;
@@ -51,6 +52,7 @@ public slots:
     void finished(int, QProcess::ExitStatus);
 
 private:
+    QProcess* process_;
     QString author_;
     QString name_;
     QString description_;
@@ -61,7 +63,8 @@ private:
     QString waitDescription_;
     QIcon waitIcon_;
     DerflaActionList derflaActions_;
-    QProcess* process_;
+
+    QString findProgram();
 };
 
 typedef QSharedPointer<Extension> ExtensionPtr;
