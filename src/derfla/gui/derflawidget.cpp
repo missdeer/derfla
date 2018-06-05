@@ -281,10 +281,15 @@ void DerflaWidget::installExtension()
 	QString fileName = QFileDialog::getOpenFileName(this,
 		tr("Install Derfla Extension"),
 		"",
-		tr("Derfla Extension Package (*.derflaextesion);;Derfla Extension Configuration (*.xml);;All files (*.*)"));
+        tr("Derfla Extension Package (*.derflaextension);;Derfla Extension Configuration (extension.cfg);;All files (*.*)"));
     if (!QFile::exists(fileName))
         return;
-    extensionManager_->installExtension(fileName);
+    try {
+        extensionManager_->installExtension(fileName);
+    }
+    catch(std::runtime_error& e) {
+        QMessageBox::warning(this, tr("Installing extension failed"), QString::fromLatin1(e.what()), QMessageBox::Ok);
+    }
 }
 
 void DerflaWidget::onLoadingAnimationTimer()

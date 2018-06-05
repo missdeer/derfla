@@ -106,13 +106,26 @@ bool ExtensionManager::query(const QString &input)
 
 bool ExtensionManager::installExtension(const QString &extensionFile)
 {
-    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/" % QUuid::createUuid().toString();
+    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/" % QUuid::createUuid().toString().mid(1, 36).toLower();
+    QDir dir(savePath);
+    if (!dir.exists())
+    {
+        if (!dir.mkpath(savePath))
+        {
+            QString err = QString("mkpath %1 failed").arg(savePath);
+            qDebug() << err;
+            throw std::runtime_error(err.toStdString());
+            return false;
+        }
+    }
     // extract
     QZipReader zr(extensionFile);
     bool res = zr.extractAll(savePath);
     if (!res)
     {
-        qDebug() << "extracting" << extensionFile << "to" << savePath << "failed";
+        QString err = QString("extracting %1 to %2 failed").arg(extensionFile).arg(savePath);
+        qDebug() << err;
+        throw std::runtime_error(err.toStdString());
         return false;
     }
     // read configuration file
@@ -121,13 +134,14 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
 
     if (!f.exists())
     {
-        qDebug() << "missing extension configuration file:" << extensionFile;
+        QString err = QString("missing extension configuration file: %1").arg(extensionFile);
+        throw std::runtime_error(err.toStdString());
         return false;
     }
 
     if (!f.open(QIODevice::ReadOnly))
     {
-        qDebug() << "opening extension configuration file failed";
+        throw std::runtime_error("opening extension configuration file failed");
         return false;
     }
     QByteArray c = f.readAll();
@@ -136,7 +150,7 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
     QJsonDocument json = QJsonDocument::fromJson(c);
     if (!json.isObject())
     {
-        qDebug() << "cached extension configuration is expected to be an object";
+        throw std::runtime_error("extension configuration is expected to be an object:" + QString(c).toStdString());
         return false;
     }
 
@@ -205,21 +219,25 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
     if (!f.open(QIODevice::ReadOnly))
     {
         qDebug() << "opening cached extensions configuration file failed";
-        return false;
     }
     c = f.readAll();
     f.close();
 
-    json = QJsonDocument::fromJson(c);
+    if (c.isEmpty())
+        json = QJsonDocument::fromJson("[]");
+    else
+        json = QJsonDocument::fromJson(c);
 
     Q_ASSERT (json.isArray());
     QJsonArray array = json.array();
     array.append(newObj);
+    f.setFileName(extensionsPath);
     if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
-        qDebug() << "opening cached extensions configuration file for writing failed";
+        throw std::runtime_error("opening cached extensions configuration file for writing failed");
         return false;
     }
+    qDebug() << QString(json.toJson());
     f.write(json.toJson());
     f.close();
     return true;
