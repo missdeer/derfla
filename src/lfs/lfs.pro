@@ -47,3 +47,6 @@ win32: {
 
     LIBS += -lVersion -lComctl32 -lOle32 -lGdi32
 }
+
+DISTFILES += \
+    extension.cfg
