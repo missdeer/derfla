@@ -46,6 +46,8 @@ bool ExtensionManager::loadAllFromCache()
         Q_ASSERT(a.isObject());
         QJsonObject o = a.toObject();
         ExtensionPtr e(new Extension);
+        if (o["id"].isString())
+            e->setId(o["id"].toString());
         if (o["author"].isString())
             e->setAuthor(o["author"].toString());
         if (o["name"].isString())
@@ -123,6 +125,7 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
     bool res = zr.extractAll(savePath);
     if (!res)
     {
+        dir.removeRecursively();
         QString err = QString("extracting %1 to %2 failed").arg(extensionFile).arg(savePath);
         qDebug() << err;
         throw std::runtime_error(err.toStdString());
@@ -134,6 +137,7 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
 
     if (!f.exists())
     {
+        dir.removeRecursively();
         QString err = QString("missing extension configuration file: %1").arg(extensionFile);
         throw std::runtime_error(err.toStdString());
         return false;
@@ -141,6 +145,7 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
 
     if (!f.open(QIODevice::ReadOnly))
     {
+        dir.removeRecursively();
         throw std::runtime_error("opening extension configuration file failed");
         return false;
     }
@@ -150,63 +155,106 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
     QJsonDocument json = QJsonDocument::fromJson(c);
     if (!json.isObject())
     {
+        dir.removeRecursively();
         throw std::runtime_error("extension configuration is expected to be an object:" + QString(c).toStdString());
         return false;
     }
 
     QJsonObject o = json.object();
-    QJsonObject newObj;
+	QVariantMap vm;
     ExtensionPtr e(new Extension);
-    if (o["author"].isString())
+    if (!o["id"].isString())
     {
-        e->setAuthor(o["author"].toString());
-        newObj.insert("author", e->author());
+        dir.removeRecursively();
+        throw std::runtime_error("extension id is required");
+        return false;
     }
-    if (o["name"].isString())
+    e->setId(o["id"].toString());
+
+    auto it = std::find_if(extensions_.begin(), extensions_.end(),
+                           [&](ExtensionPtr ep){ return ep->id() == e->id();});
+    if (extensions_.end() != it)
     {
-        e->setName(o["name"].toString());
-        newObj.insert("name", e->name());
+        dir.removeRecursively();
+        //! \todo extension upgrade
+        throw std::runtime_error("duplicated extension id");
+        return false;
     }
-    if (o["executable"].isString())
+
+    vm.insert("id", e->id());
+    QString newPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/" % e->id();
+    if (!dir.rename(savePath, newPath))
     {
-        e->setExecutable(savePath % o["executable"].toString());
-        newObj.insert("executable", e->executable());
+        dir.removeRecursively();
+        throw std::runtime_error(QString("creating directory %1 failed").arg(newPath).toStdString());
+        return false;
     }
+    savePath = newPath;
+    dir.setPath(savePath);
+
+    if (!o["author"].isString())
+    {
+        dir.removeRecursively();
+        throw std::runtime_error("extension author is required");
+        return false;
+    }
+    e->setAuthor(o["author"].toString());
+    vm.insert("author", e->author());
+    if (!o["name"].isString())
+    {
+        dir.removeRecursively();
+        throw std::runtime_error("extension name is required");
+        return false;
+    }
+    e->setName(o["name"].toString());
+    vm.insert("name", e->name());
+    if (!o["executable"].isString())
+    {
+        dir.removeRecursively();
+        throw std::runtime_error("extension executable is required");
+        return false;
+    }
+    e->setExecutable(savePath % "/" % o["executable"].toString());
+#if defined(Q_OS_WIN)
+	if (!o["executable"].toString().endsWith(".exe", Qt::CaseInsensitive))
+		e->setExecutable(savePath % "/" % o["executable"].toString() % ".exe");
+#endif
+    vm.insert("executable", e->executable());
     if (o["description"].isString())
     {
         e->setDescription(o["description"].toString());
-        newObj.insert("description", e->description());
+        vm.insert("description", e->description());
     }
     if (o["executor"].isString())
     {
         e->setExecutor(o["executor"].toString());
-        newObj.insert("executor", e->executor());
+        vm.insert("executor", e->executor());
     }
     if (o["prefix"].isString())
     {
         e->setPrefix(o["prefix"].toString());
-        newObj.insert("prefix", e->prefix());
+        vm.insert("prefix", e->prefix());
     }
-    if (o["waitIconPath"].isString())
+    if (o["waitIconPath"].isString() && !o["waitIconPath"].toString().isEmpty())
     {
         QString waitIconPath = savePath % "/" % o["waitIconPath"].toString();
         e->setWaitIconPath(waitIconPath);
-        newObj.insert("waitIconPath", waitIconPath);
+        vm.insert("waitIconPath", waitIconPath);
     }
     if (o["waitIconData"].isString())
     {
         e->setWaitIconData(o["waitIconData"].toString());
-        newObj.insert("waitIconData", o["waitIconData"].toString());
+        vm.insert("waitIconData", o["waitIconData"].toString());
     }
     if (o["waitTitle"].isString())
     {
         e->setWaitTitle(o["waitTitle"].toString());
-        newObj.insert("waitTitle", e->waitTitle());
+        vm.insert("waitTitle", e->waitTitle());
     }
     if (o["waitDescription"].isString())
     {
         e->setWaitDescription(o["waitDescription"].toString());
-        newObj.insert("waitDescription", e->waitDescription());
+        vm.insert("waitDescription", e->waitDescription());
     }
     if (o["daemon"].isBool() && o["daemon"].toBool())
         e->runDaemon();
@@ -215,13 +263,16 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
     // cache
     QString extensionsPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/extensions.cfg";
     f.setFileName(extensionsPath);
-
+	c.clear();
     if (!f.open(QIODevice::ReadOnly))
     {
         qDebug() << "opening cached extensions configuration file failed";
     }
-    c = f.readAll();
-    f.close();
+	else
+	{
+		c = f.readAll();
+		f.close();
+	}
 
     if (c.isEmpty())
         json = QJsonDocument::fromJson("[]");
@@ -230,14 +281,15 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
 
     Q_ASSERT (json.isArray());
     QJsonArray array = json.array();
-    array.append(newObj);
-    f.setFileName(extensionsPath);
+    array.append(QJsonObject::fromVariantMap(vm));
+	json.setArray(array);
+	qDebug() << QString(json.toJson());
     if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
+        dir.removeRecursively();
         throw std::runtime_error("opening cached extensions configuration file for writing failed");
         return false;
     }
-    qDebug() << QString(json.toJson());
     f.write(json.toJson());
     f.close();
     return true;

@@ -46,6 +46,10 @@ public:
     void setWaitIcon(const QIcon &waitIcon);
     void setWaitIconPath(const QString& waitIconPath);
     void setWaitIconData(const QString& waitIconData);
+
+    const QString &id() const;
+    void setId(const QString &id);
+
 signals:
     void queried(DerflaActionList &);
 public slots:    
@@ -61,6 +65,7 @@ private:
     QString prefix_;
     QString waitTitle_;
     QString waitDescription_;
+    QString id_;
     QIcon waitIcon_;
     DerflaActionList derflaActions_;
 

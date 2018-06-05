@@ -209,6 +209,16 @@ void Extension::finished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
     emit queried(derflaActions_);
 }
 
+const QString &Extension::id() const
+{
+    return id_;
+}
+
+void Extension::setId(const QString &id)
+{
+    id_ = id;
+}
+
 QString Extension::findProgram()
 {
     QStringList envPaths;
