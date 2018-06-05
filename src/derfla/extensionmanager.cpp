@@ -73,7 +73,7 @@ bool ExtensionManager::loadAllFromCache()
     return true;
 }
 
-bool ExtensionManager::getActions(const QString &input)
+bool ExtensionManager::query(const QString &input)
 {
     QStringList inputs = input.split(QChar(' '));
     if (inputs.length() == 1)

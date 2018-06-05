@@ -11,7 +11,7 @@ public:
     explicit ExtensionManager(QObject *parent = nullptr);
 
     bool loadAllFromCache();
-    bool getActions(const QString& input);
+    bool query(const QString& input);
     bool installExtension(const QString& extensionFile);
 signals:
     void actionUpdated(DerflaActionList& dal);

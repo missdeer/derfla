@@ -36,7 +36,7 @@ void CandidateList::update(const QString &text)
     if (text.isEmpty() && isVisible())
         hide();
 
-    extensionManager_->getActions(text);
+    extensionManager_->query(text);
 }
 
 void CandidateList::populateList()
