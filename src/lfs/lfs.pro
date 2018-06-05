@@ -4,7 +4,7 @@ CONFIG += c++14 console precompile_header
 CONFIG -= app_bundle
 
 PRECOMPILED_HEADER = stdafx.h
-DESTDIR = ../../bin
+DESTDIR = $$PWD/../../bin/lfs
 
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
@@ -46,6 +46,10 @@ win32: {
     }
 
     LIBS += -lVersion -lComctl32 -lOle32 -lGdi32
+
+    copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
+    QMAKE_EXTRA_TARGETS += copy_cfg
+    POST_TARGETDEPS += copy_cfg
 }
 
 DISTFILES += \
