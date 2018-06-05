@@ -48,6 +48,8 @@ bool Extension::query(const QString& input)
         }
         process_->setWorkingDirectory(QFileInfo(executable_).absolutePath());
     }
+	if (process_->state() == QProcess::Running)
+		process_->terminate();
     arguments << input;
     process_->setArguments(arguments);
     process_->start();
@@ -168,8 +170,9 @@ void Extension::finished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
     QByteArray output = process_->readAllStandardOutput();
     // convert json output to action list
     derflaActions_.clear();
-
-    QJsonDocument doc = QJsonDocument::fromJson(output);
+	QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(output, &error);
+	qDebug() << error.errorString();
     if (doc.isArray())
     {
         QJsonArray array = doc.array();

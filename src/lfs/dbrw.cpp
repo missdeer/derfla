@@ -39,7 +39,7 @@ QString DBRW::search(const QString &keyword, int countRequired)
         QJsonArray array;
         for (auto item : fsil)
         {
-            QJsonObject o;
+            QVariantMap o;
             o.insert("title", item->title());
             o.insert("description", item->description());
             o.insert("target", item->target());
@@ -59,7 +59,7 @@ QString DBRW::search(const QString &keyword, int countRequired)
                 buffer.close();
                 o.insert("iconData", QString(bytes.toBase64()));
             }
-            array.append(o);
+            array.append(QJsonObject::fromVariantMap(o));
         }
         QJsonDocument doc(array);
         res = QString(doc.toJson(QJsonDocument::Compact));
