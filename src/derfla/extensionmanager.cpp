@@ -67,13 +67,38 @@ bool ExtensionManager::loadAllFromCache()
         if (o["waitDescription"].isString())
             e->setWaitDescription(o["waitDescription"].toString());
         extensions_.append(e);
+        connect(e.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
     }
 
     return true;
 }
 
-bool ExtensionManager::getActions(DerflaActionList &dal, const QString &prefix, int countRequired)
+bool ExtensionManager::getActions(const QString &input)
 {
+    QStringList inputs = input.split(QChar(' '));
+    if (inputs.length() == 1)
+    {
+        for (auto e : extensions_)
+        {
+            if (e->prefix().isEmpty())
+            {
+                e->query(input);
+            }
+        }
+    }
+    if (inputs.length() > 1)
+    {
+        QString prefix = inputs.at(0);
+        inputs.removeFirst();
+        QString in = inputs.join(QChar(' '));
+        for (auto e : extensions_)
+        {
+            if (e->prefix() == prefix)
+            {
+                e->query(in);
+            }
+        }
+    }
     return true;
 }
 
@@ -168,6 +193,7 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
         newObj.insert("waitDescription", e->waitDescription());
     }
     extensions_.append(e);
+    connect(e.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
     // cache
     QString extensionsPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/extensions.cfg";
     f.setFileName(extensionsPath);
@@ -193,4 +219,9 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
     f.write(json.toJson());
     f.close();
     return true;
+}
+
+void ExtensionManager::extensionQueried(DerflaActionList &dal)
+{
+    emit actionUpdated(dal);
 }

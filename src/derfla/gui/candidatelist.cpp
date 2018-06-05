@@ -24,6 +24,7 @@ CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent
     ui->list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->list->setItemDelegate(new CandidateListDelegate(ui->list));
     connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
+    connect(extensionManager_, &ExtensionManager::actionUpdated, this, &CandidateList::actionUpdated);
 }
 
 CandidateList::~CandidateList()
@@ -36,10 +37,7 @@ void CandidateList::update(const QString &text)
     if (text.isEmpty() && isVisible())
         hide();
 
-    dal_.clear();
-    ui->list->clear();
-    extensionManager_->getActions(dal_, text, 25);
-    populateList();
+    extensionManager_->getActions(text);
 }
 
 void CandidateList::populateList()
@@ -141,6 +139,17 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
 void CandidateList::showEvent(QShowEvent* /*event*/)
 {
     refreshList();
+}
+
+void CandidateList::actionUpdated(DerflaActionList &dal)
+{
+    ui->list->clear();
+    dal_.clear();
+    for(auto da : dal)
+    {
+        dal_.append(da);
+    }
+    populateList();
 }
 
 void CandidateList::onEnter()

@@ -9,7 +9,7 @@ LocalFSItem::LocalFSItem(QObject *parent)
 
 }
 
-QIcon LocalFSItem::icon() const
+const QIcon &LocalFSItem::icon() const
 {
     return icon_;
 }
@@ -19,7 +19,7 @@ void LocalFSItem::setIcon(const QIcon& icon)
     icon_ = icon;
 }
 
-QString LocalFSItem::title() const
+const QString &LocalFSItem::title() const
 {
     return title_;
 }
@@ -29,7 +29,7 @@ void LocalFSItem::setTitle(const QString& title)
     title_ = title;
 }
 
-QString LocalFSItem::description() const
+const QString &LocalFSItem::description() const
 {
     return description_;
 }
@@ -39,7 +39,7 @@ void LocalFSItem::setDescription(const QString& description)
     description_ = description;
 }
 
-QString LocalFSItem::target() const
+const QString &LocalFSItem::target() const
 {
     return target_;
 }
@@ -49,7 +49,7 @@ void LocalFSItem::setTarget(const QString& target)
     target_ = target;
 }
 
-QString LocalFSItem::workingDirectory() const
+const QString &LocalFSItem::workingDirectory() const
 {
     return workingDirectory_;
 }
@@ -63,17 +63,17 @@ void LocalFSItem::setWorkingDirectory(const QString& workingDirectory)
         workingDirectory_ = fi.absolutePath();
 }
 
-LocalFSItemType LocalFSItem::actionType() const
+const QString &LocalFSItem::actionType() const
 {
     return actionType_;
 }
 
-void LocalFSItem::setActionType(const LocalFSItemType& actionType)
+void LocalFSItem::setActionType(const QString &actionType)
 {
     actionType_ = actionType;
 }
 
-QString LocalFSItem::arguments() const
+const QString &LocalFSItem::arguments() const
 {
     return arguments_;
 }

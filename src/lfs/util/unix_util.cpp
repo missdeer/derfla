@@ -113,7 +113,7 @@ namespace util {
                                             (settings.value("Path").toString().isEmpty() ? fi.absolutePath() : settings.value("Path").toString()) ,
                                             timestamp,
                                             fi.lastModified().toMSecsSinceEpoch(),
-                                            (terminal ? "c" : "g")
+                                            (terminal ? "terminalCommand" : "shellExecute")
                                             );
             }
         }

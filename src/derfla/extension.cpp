@@ -18,7 +18,7 @@ Extension::~Extension()
     }
 }
 
-bool Extension::query(const QString& prefix)
+bool Extension::query(const QString& input)
 {
     QStringList arguments;
     if (!process_)
@@ -59,7 +59,7 @@ bool Extension::query(const QString& prefix)
         }
         process_->setWorkingDirectory(QFileInfo(executable_).absolutePath());
     }
-    arguments << prefix;
+    arguments << input;
     process_->setArguments(arguments);
     process_->start();
 	return true;
@@ -200,6 +200,8 @@ void Extension::finished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
                 action->setArguments(o["arguments"].toString());
             if (o["workingDir"].isString())
                 action->setWorkingDirectory(o["workingDir"].toString());
+            if (o["iconPath"].isString())
+                action->setIcon(QIcon(o["iconPath"].toString()));
             if (o["iconData"].isString())
             {
                 QByteArray c = QByteArray::fromBase64(o["iconData"].toString().toUtf8());
@@ -207,8 +209,6 @@ void Extension::finished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
                 if (pixmap.loadFromData(c))
                     action->setIcon(QIcon(pixmap));
             }
-            if (o["iconPath"].isString())
-                action->setIcon(QIcon(o["iconPath"].toString()));
             derflaActions_.append(action);
         }
     }

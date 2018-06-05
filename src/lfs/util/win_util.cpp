@@ -158,7 +158,7 @@ namespace util {
                 w,
                 timestamp,
                 fileInfo.lastModified().toMSecsSinceEpoch(),
-                fileInfo.isDir() ? "g" : "c"
+                fileInfo.isDir() ? "shellExecute" : "terminalCommand"
             );
             return;
         }
@@ -175,7 +175,7 @@ namespace util {
             QDir::toNativeSeparators(QFileInfo(f).absolutePath()),
             timestamp,
             fileInfo.lastModified().toMSecsSinceEpoch(),
-            fileInfo.isDir() ? "g" : "c"
+            fileInfo.isDir() ? "shellExecute" : "terminalCommand"
         );
     }
 

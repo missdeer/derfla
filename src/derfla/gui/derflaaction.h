@@ -3,22 +3,14 @@
 
 #include <QObject>
 
-enum DerflaActionType
-{
-    DAT_UNKNOWN,
-    DAT_CONSOLE,
-    DAT_GUI,
-    // Alfred work flow action types are declared below
-    DAT_SCRIPT, // shell/bash/zsh, perl, php, python, ruby, etc.
-    DAT_OPENURL,
-    DAT_APPLESCRIPT,
-    DAT_SYSTEMWEBSEARCH,
-    DAT_REVEALFILE,
-    DAT_TERMINALCOMMAND,
-    DAT_OPENFILE,
-    DAT_BROWSEINDERFLA,
-    DAT_LAUNCHFILES,
-};
+/*
+ * script
+ * shellExecute
+ * terminalCommand
+ * openUrl
+ * revealFile
+ * browseInDerfla
+ */
 
 class DerflaAction : public QObject
 {

@@ -45,6 +45,7 @@ QString DBRW::search(const QString &keyword, int countRequired)
             o.insert("target", item->target());
             o.insert("arguments", item->arguments());
             o.insert("workingDir", item->workingDirectory());
+            o.insert("actionType", item->actionType());
             QIcon icon = item->icon();
             auto allSizes = icon.availableSizes();
             if (!allSizes.isEmpty())
@@ -190,7 +191,7 @@ bool DBRW::queryActions(LocalFSItemList &fsil, const QString &keyword, int count
             item->setWorkingDirectory(workingDirectory);
             item->setTitle(q.value(titleIndex).toString());
             item->setDescription(q.value(descriptionIndex).toString());
-            item->setActionType(q.value(typeIndex).toString() == "c" ? FSIT_CONSOLE : FSIT_GUI);
+            item->setActionType(q.value(typeIndex).toString());
             auto it = std::find_if(fsil.begin(), fsil.end(), [item](LocalFSItemPtr d) {
                     return item->title() == d->title()
                     && item->description() == d->description();}

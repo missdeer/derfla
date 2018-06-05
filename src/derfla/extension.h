@@ -15,7 +15,7 @@ public:
     explicit Extension(QObject *parent = nullptr);
     ~Extension();
 
-    bool query(const QString& prefix);
+    bool query(const QString& input);
 
     const QString &author() const;
     void setAuthor(const QString &author);

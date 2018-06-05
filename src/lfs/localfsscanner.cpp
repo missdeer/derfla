@@ -175,7 +175,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                             QFileInfo(f).filePath(),
                             timestamp_,
                             fileInfo.lastModified().toMSecsSinceEpoch(),
-                            fileInfo.isDir() ? "g" : "c"
+                            fileInfo.isDir() ? "shellExecute" : "terminalCommand"
                             );
         }
         else if (fileInfo.isDir() && d.recursive)
@@ -218,7 +218,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                             QFileInfo(f).absolutePath(),
                             timestamp_,
                             fileInfo.lastModified().toMSecsSinceEpoch(),
-                            "c"
+                            "terminalCommand"
                             );
         }
     });

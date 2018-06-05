@@ -17,26 +17,26 @@ class LocalFSItem : public QObject
 public:
     explicit LocalFSItem(QObject *parent = 0);
     
-    QIcon icon() const;
+    const QIcon& icon() const;
     void setIcon(const QIcon& icon);
 
-    QString title() const;
+    const QString& title() const;
     void setTitle(const QString& title);
 
-    QString description() const;
+    const QString& description() const;
     void setDescription(const QString& description);
 
-    QString target() const;
+    const QString& target() const;
     void setTarget(const QString& target);
 
-    QString arguments() const;
+    const QString& arguments() const;
     void setArguments(const QString& arguments);
 
-    QString workingDirectory() const;
+    const QString& workingDirectory() const;
     void setWorkingDirectory(const QString& workingDirectory);
 
-    LocalFSItemType actionType() const;
-    void setActionType(const LocalFSItemType& actionType);
+    const QString& actionType() const;
+    void setActionType(const QString& actionType);
 
     bool operator==(const LocalFSItem& da)
     {
@@ -50,7 +50,7 @@ private:
     QString target_;
     QString arguments_;
     QString workingDirectory_;
-    LocalFSItemType actionType_;
+    QString actionType_;
     QUuid id_;
 };
 
