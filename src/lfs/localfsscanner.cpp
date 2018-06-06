@@ -113,7 +113,10 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                               std::placeholders::_8,
                               std::placeholders::_9);
     for(const auto & fi : list)
+    {
+        check_stop;
         util::processFile(d, fi, inserter);
+    }
 
     check_stop;
     if (d.recursive)

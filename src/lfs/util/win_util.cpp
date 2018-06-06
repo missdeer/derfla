@@ -151,15 +151,15 @@ namespace util {
                 desc = f;
 
             inserter(util::extractPNGIconFromFile(fi),
-                fileInfo.baseName(),
-                desc,
-                f,
-                a,
-                w,
-                timestamp,
-                fileInfo.lastModified().toMSecsSinceEpoch(),
-                fileInfo.isDir() ? "shellExecute" : "terminalCommand"
-            );
+                     fileInfo.baseName(),
+                     desc,
+                     f,
+                     a,
+                     w,
+                     timestamp,
+                     fileInfo.lastModified().toMSecsSinceEpoch(),
+                     isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? "terminalCommand" : "shellExecute"
+                                                                                                  );
             return;
         }
 
@@ -168,15 +168,15 @@ namespace util {
         if (desc.isEmpty())
             desc = f;
         inserter(util::extractPNGIconFromFile(fileInfo),
-            fileInfo.fileName(),
-            desc,
-            f,
-            "",
-            QDir::toNativeSeparators(QFileInfo(f).absolutePath()),
-            timestamp,
-            fileInfo.lastModified().toMSecsSinceEpoch(),
-            fileInfo.isDir() ? "shellExecute" : "terminalCommand"
-        );
+                 fileInfo.fileName(),
+                 desc,
+                 f,
+                 "",
+                 QDir::toNativeSeparators(QFileInfo(f).absolutePath()),
+                 timestamp,
+                 fileInfo.lastModified().toMSecsSinceEpoch(),
+                 isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? "terminalCommand" : "shellExecute"
+                                                                                              );
     }
 
     HRESULT resolveShellLink(HWND hwnd, LPCWSTR lpszLinkFile, LPWSTR lpszPath, LPWSTR lpszWorkingDirectory, LPWSTR lpszDescription, LPWSTR lpszArguments)
