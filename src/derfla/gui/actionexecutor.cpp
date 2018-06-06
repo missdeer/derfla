@@ -72,7 +72,7 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
     if (da->scriptExecutor() == "cscript" || da->scriptExecutor() == "wscript")
     {
         // extract resource file
-        QString localPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) % "/" % QUuid::createUuid().toString().mid(1, 16) % ".vbs";
+        QString localPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) % "/derfla-temp.vbs";
         QFile f(localPath);
         if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
             return false;
