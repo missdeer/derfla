@@ -40,6 +40,7 @@ private slots:
     void showInFront();
     void candidateListDone();
     void quit();
+    void onCandidateDelayTimer();
 private:
     const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;

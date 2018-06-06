@@ -165,8 +165,11 @@ void Extension::setWaitIconData(const QString &waitIconData)
     }
 }
 
-void Extension::finished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
+void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
+    if (exitCode != 0)
+        return;
+
     QByteArray output = process_->readAllStandardOutput();
     // convert json output to action list
     derflaActions_.clear();

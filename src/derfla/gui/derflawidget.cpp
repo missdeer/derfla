@@ -89,10 +89,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     trayIcon_->show();
 
     connect(loadingAnimationTimer_, SIGNAL(timeout()), this, SLOT(onLoadingAnimationTimer()));
-    connect(candidateDelayTimer_, &QTimer::timeout, [this](){
-        showCandidateList();
-        waiting();
-    });
+    connect(candidateDelayTimer_, &QTimer::timeout, this, &DerflaWidget::onCandidateDelayTimer);
     candidateDelayTimer_->setSingleShot(true);
 #if defined(Q_OS_WIN)
     hotkeyManager_->registerHotkey("Alt+Space");
@@ -332,6 +329,12 @@ void DerflaWidget::candidateListDone()
 void DerflaWidget::quit()
 {
     qApp->quit();
+}
+
+void DerflaWidget::onCandidateDelayTimer()
+{
+    showCandidateList();
+    waiting();
 }
 
 void DerflaWidget::showCandidateList()
