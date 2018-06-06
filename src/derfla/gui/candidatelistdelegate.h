@@ -7,10 +7,11 @@
 #include <QStyleOptionViewItem>
 
 #define CandidateListItemHeight 60
-#define CandidateListItemWidth 300
+#define CandidateListItemWidth 200
 
 class CandidateListDelegate : public QAbstractItemDelegate
 {
+    Q_OBJECT
 public:
     CandidateListDelegate(QObject *parent = 0);
 
@@ -18,6 +19,9 @@ public:
     QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
 
     virtual ~CandidateListDelegate();
+    void setRecommendSize(const QSize& size);
+private:
+    QSize recommendSize_;
 };
 
 #endif // CANDIDATELISTDELEGATE_H

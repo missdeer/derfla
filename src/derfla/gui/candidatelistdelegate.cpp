@@ -7,6 +7,11 @@ CandidateListDelegate::CandidateListDelegate(QObject *parent)
 
 }
 
+CandidateListDelegate::~CandidateListDelegate()
+{
+
+}
+
 void CandidateListDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
     QRect r = option.rect;
 
@@ -98,10 +103,10 @@ void CandidateListDelegate::paint(QPainter * painter, const QStyleOptionViewItem
 
 QSize CandidateListDelegate::sizeHint(const QStyleOptionViewItem & /*option*/, const QModelIndex & /*index*/) const
 {
-    return QSize(CandidateListItemWidth, CandidateListItemHeight); // very dumb value
+    return QSize(qMax(recommendSize_.width(), CandidateListItemWidth) , CandidateListItemHeight);
 }
 
-CandidateListDelegate::~CandidateListDelegate()
+void CandidateListDelegate::setRecommendSize(const QSize &size)
 {
-
+    recommendSize_ = size;
 }

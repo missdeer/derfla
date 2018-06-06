@@ -29,6 +29,7 @@ public:
     void setActiveWindowFlag(bool value);
     void clear();
     void onEnter();
+    void setInputBoxSize(const QSize& size);
 protected:
     void keyPressEvent(QKeyEvent* event);
     void showEvent(QShowEvent *event);

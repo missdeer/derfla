@@ -170,6 +170,12 @@ void CandidateList::onEnter()
     }
 }
 
+void CandidateList::setInputBoxSize(const QSize &size)
+{
+    CandidateListDelegate* delegate = qobject_cast<CandidateListDelegate*>(ui->list->itemDelegate());
+    delegate->setRecommendSize(size);
+}
+
 bool CandidateList::getActiveWindowFlag() const
 {
     return activeWindowFlag_;

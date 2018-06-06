@@ -478,6 +478,8 @@ bool DerflaWidget::applySkin(const QString& skin)
     QFont f = input_->font();
     f.setFamily(globalDefaultFontFamily);
     input_->setFont(f);
+
+    candidateList_->setInputBoxSize(input_->size());
     
     return true;
 }
