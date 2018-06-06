@@ -48,12 +48,12 @@ private:
     QPixmap midPartBackgroundImage_;
     QPixmap rightPartBackgroundImage_;
     QTimer* loadingAnimationTimer_;
+    QTimer* candidateDelayTimer_;
     CharLineEdit* input_;
     QSystemTrayIcon* trayIcon_;
     ExtensionManager* extensionManager_;
     CandidateList* candidateList_;
     UGlobalHotkeys *hotkeyManager_;
-    void showCandidateList();
     void processKey();
     void doEnter();
     void doTab();
@@ -61,6 +61,7 @@ private:
     bool applySkin(const QString& skin);
     void waiting();
     void stopWaiting();
+    void showCandidateList();
     void hideCandidateList();
     bool loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle, int& cutTop, int& cutBottom);
     bool loadSkinPackage(const QString& skinPath, QString& configurationPath);
