@@ -275,7 +275,8 @@ void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 }
 
 void DerflaWidget::loadSkin()
-{
+{    
+    qDebug() << __FUNCTION__;
     hideCandidateList();
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Load Derfla Skin"),
@@ -382,6 +383,7 @@ void DerflaWidget::doBackTab()
 
 bool DerflaWidget::applySkin(const QString& skin)
 {
+    qDebug() << __FUNCTION__;
     QString s;
     if (!QFileInfo::exists(skin))
     {
@@ -428,7 +430,8 @@ bool DerflaWidget::applySkin(const QString& skin)
             }
         }
     }
-        
+
+    qDebug() << 2;
     QString imagePath;
     QString inputStyle;
     int cutTop = -1, cutBottom = -1;
@@ -437,12 +440,14 @@ bool DerflaWidget::applySkin(const QString& skin)
         return false;
     }
 
+    qDebug() << 3;
     if (!backgroundImage_.load(imagePath))
     {
         qCritical() << "can't load picture from " << imagePath;
         return false;
     }
 
+    qDebug() << 4;
     QSize size = backgroundImage_.size();
 
     if (cutTop >= 0 && cutBottom > cutTop)
@@ -479,6 +484,7 @@ bool DerflaWidget::applySkin(const QString& skin)
     f.setFamily(globalDefaultFontFamily);
     input_->setFont(f);
 
+    qDebug() << 5;
     candidateList_->setInputBoxSize(input_->size());
     
     return true;

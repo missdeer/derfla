@@ -103,10 +103,5 @@ void CandidateListDelegate::paint(QPainter * painter, const QStyleOptionViewItem
 
 QSize CandidateListDelegate::sizeHint(const QStyleOptionViewItem & /*option*/, const QModelIndex & /*index*/) const
 {
-    return QSize(qMax(recommendSize_.width(), CandidateListItemWidth) , CandidateListItemHeight);
-}
-
-void CandidateListDelegate::setRecommendSize(const QSize &size)
-{
-    recommendSize_ = size;
+    return QSize(CandidateListItemWidth, CandidateListItemHeight);
 }

@@ -9,7 +9,6 @@ CandidateListWidget::CandidateListWidget(QWidget *parent)
 
 void CandidateListWidget::keyPressEvent(QKeyEvent *event)
 {
-
     QListWidget::keyPressEvent(event);
     //qDebug() << "CandidateListWidget::keyPressEvent" << event;
     if (event->text().length() > 0)
