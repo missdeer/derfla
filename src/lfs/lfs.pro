@@ -9,6 +9,7 @@ DESTDIR = $$PWD/../../bin/lfs
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../../3rdparty/sqlite3/sqlite3.pri)
+include($$PWD/../../3rdparty/rapidjson/rapidjson.pri)
 include($$PWD/util/util.pri)
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

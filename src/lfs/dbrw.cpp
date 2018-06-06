@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QJsonValue>
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
 #include "dbrw.h"
+
+using namespace rapidjson;
 
 DBRW::DBRW()
 {
@@ -33,19 +34,24 @@ QString DBRW::search(const QString &keyword, int countRequired)
 {
     QString res;
 	LocalFSItemList fsil; 
-	getLFSItems(fsil, keyword, countRequired);
+    getLFSItems(fsil, keyword, countRequired);
+
     if (!fsil.empty())
     {
-        QJsonArray array;
+        Document d;
+        d.Parse("[]");
+        Q_ASSERT(d.IsArray());
+
+        Document::AllocatorType& a = d.GetAllocator();
         for (auto item : fsil)
         {
-            QVariantMap o;
-            o.insert("title", item->title());
-            o.insert("description", item->description());
-            o.insert("target", item->target());
-            o.insert("arguments", item->arguments());
-            o.insert("workingDir", item->workingDirectory());
-            o.insert("actionType", item->actionType());
+            Value o(kObjectType);
+            o.AddMember(Value("title", a), Value(StringRef(item->title().toStdString().c_str()), a), a);
+            o.AddMember(Value("description", a), Value(StringRef(item->description().toStdString().c_str()), a), a);
+            o.AddMember(Value("target", a), Value(StringRef(item->target().toStdString().c_str()), a), a);
+            o.AddMember(Value("arguments", a), Value(StringRef(item->arguments().toStdString().c_str()), a), a);
+            o.AddMember(Value("workingDir", a), Value(StringRef(item->workingDirectory().toStdString().c_str()), a), a);
+            o.AddMember(Value("actionType", a), Value(StringRef(item->actionType().toStdString().c_str()), a), a);
             QIcon icon = item->icon();
             auto allSizes = icon.availableSizes();
             if (!allSizes.isEmpty())
@@ -57,12 +63,16 @@ QString DBRW::search(const QString &keyword, int countRequired)
                 buffer.open(QIODevice::WriteOnly);
                 pixmap.save(&buffer, "PNG");
                 buffer.close();
-                o.insert("iconData", QString(bytes.toBase64()));
+                o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
             }
-            array.append(QJsonObject::fromVariantMap(o));
+            d.PushBack(o, a);
         }
-        QJsonDocument doc(array);
-        res = QString(doc.toJson(QJsonDocument::Compact));
+
+        StringBuffer buffer;
+        Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
+        d.Accept(writer);
+
+        res = QString(buffer.GetString());
     }
 
     return res;
@@ -110,7 +120,7 @@ bool DBRW::insertLFS(const QByteArray &icon, const QString &title, const QString
     Q_ASSERT(db_.isValid());
     Q_ASSERT(db_.isOpen());
     QSqlQuery query(db_);
-	QString sql = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
+    QString sql = "INSERT INTO lfs (icon, title, allocatorescription, target, arguments, working_directory, timestamp, last_modified, type) "
 		"VALUES (:icon, :title, :description, :target, :arguments, :working_directory, :timestamp, :last_modified, :type);";
 	if (!query.prepare(sql))
 		return false;
@@ -143,7 +153,7 @@ bool DBRW::createDatabase()
         }
     }
     QSqlQuery query(db_);
-    return query.exec("CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, description TEXT,target TEXT, arguments TEXT, working_directory TEXT,timestamp DATETIME,last_modified DATETIME, type TEXT);");
+    return query.exec("CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, allocatorescription TEXT,target TEXT, arguments TEXT, working_directory TEXT,timestamp DATETIME,last_modified DATETIME, type TEXT);");
 }
 
 bool DBRW::openDatabase()
