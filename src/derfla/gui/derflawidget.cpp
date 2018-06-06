@@ -280,7 +280,7 @@ void DerflaWidget::loadSkin()
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Load Derfla Skin"),
         "",
-        tr("Derfla Skin Package (*.derflaskin);;Derfla Skin Configuration (*.xml);;All files (*.*)"));
+        tr("Derfla Skin Package (*.derflaskin);;Derfla Skin Configuration (skin.xml);;All files (*.*)"));
     if (!QFile::exists(fileName))
         return;
     if (applySkin(fileName))
