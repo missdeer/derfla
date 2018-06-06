@@ -120,7 +120,7 @@ bool DBRW::insertLFS(const QByteArray &icon, const QString &title, const QString
     Q_ASSERT(db_.isValid());
     Q_ASSERT(db_.isOpen());
     QSqlQuery query(db_);
-    QString sql = "INSERT INTO lfs (icon, title, allocatorescription, target, arguments, working_directory, timestamp, last_modified, type) "
+    QString sql = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
 		"VALUES (:icon, :title, :description, :target, :arguments, :working_directory, :timestamp, :last_modified, :type);";
 	if (!query.prepare(sql))
 		return false;
@@ -153,7 +153,7 @@ bool DBRW::createDatabase()
         }
     }
     QSqlQuery query(db_);
-    return query.exec("CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, allocatorescription TEXT,target TEXT, arguments TEXT, working_directory TEXT,timestamp DATETIME,last_modified DATETIME, type TEXT);");
+    return query.exec("CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, description TEXT,target TEXT, arguments TEXT, working_directory TEXT,timestamp DATETIME,last_modified DATETIME, type TEXT);");
 }
 
 bool DBRW::openDatabase()
