@@ -27,6 +27,7 @@ void Extension::runDaemon()
         program = findProgram();
         arguments << executable_;
     }
+
     QProcess::startDetached(program, arguments, QFileInfo(executable_).absolutePath());
 }
 

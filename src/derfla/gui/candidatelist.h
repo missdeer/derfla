@@ -27,7 +27,7 @@ public:
     int count() const;
     bool getActiveWindowFlag() const;
     void setActiveWindowFlag(bool value);
-
+    void clear();
     void onEnter();
 protected:
     void keyPressEvent(QKeyEvent* event);
@@ -40,6 +40,7 @@ private slots:
 private:
     Ui::CandidateList *ui;
     bool activeWindowFlag_;
+    bool cleared_;
     int itemCount_ ;
     ExtensionManager* extensionManager_;
     ActionExecutor actionExecutor_;

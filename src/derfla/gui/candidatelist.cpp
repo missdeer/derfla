@@ -7,6 +7,7 @@
 CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent)
     : QFrame(parent)
     , ui(new Ui::CandidateList)
+    , cleared_(true)
     , itemCount_(0)
     , extensionManager_(extensionManager)
 {
@@ -35,7 +36,8 @@ void CandidateList::update(const QString &text)
 {
     if (text.isEmpty() && isVisible())
         hide();
-
+    else
+        cleared_ = false;
     extensionManager_->query(text);
 }
 
@@ -176,4 +178,9 @@ bool CandidateList::getActiveWindowFlag() const
 void CandidateList::setActiveWindowFlag(bool value)
 {
     activeWindowFlag_ = value;
+}
+
+void CandidateList::clear()
+{
+    cleared_ = true;
 }
