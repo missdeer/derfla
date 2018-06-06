@@ -170,12 +170,9 @@ void CandidateList::onEnter()
     }
 }
 
-void CandidateList::setInputBoxSize(const QSize &size)
+void CandidateList::setInputBoxSize(const QSize &s)
 {
-    qDebug() << __FUNCTION__;
-    auto s = this->size();
-    qDebug() << s << size;
-    resize(qMax(size.width(), 340), s.height());
+    resize(qMax(s.width(), 700), size().height());
 }
 
 bool CandidateList::getActiveWindowFlag() const
