@@ -27,6 +27,7 @@ private:
     bool openUrl(DerflaActionPtr da);
     bool revealFile(DerflaActionPtr da);
     bool browseInDerfla(DerflaActionPtr da);
+    bool copyText(DerflaActionPtr da);
 
     QString findProgram(const QString& exe);
 };

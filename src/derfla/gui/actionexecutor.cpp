@@ -16,6 +16,7 @@ bool ActionExecutor::operator()(DerflaActionPtr da)
     { "openUrl",         std::bind(&ActionExecutor::openUrl,         this, std::placeholders::_1) },
     { "revealFile",      std::bind(&ActionExecutor::revealFile,      this, std::placeholders::_1) },
     { "browseInDerfla",  std::bind(&ActionExecutor::browseInDerfla,  this, std::placeholders::_1) },
+    { "copyText",        std::bind(&ActionExecutor::copyText,        this, std::placeholders::_1) },
 };
     if (m.find(da->actionType()) == m.end())
         return false;
@@ -64,8 +65,23 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
         connect(e, &QProcess::errorOccurred, this, &ActionExecutor::errorOccurred);
         connect(e, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &ActionExecutor::finished);
 
-        e->start(exe, QStringList() << option << da->target());
+        e->start(exe, QStringList() << option << da->target() << da->arguments().split(QChar(' ')));
     }
+
+#if defined(Q_OS_WIN)
+    if (da->scriptExecutor() == "cscript" || da->scriptExecutor() == "wscript")
+    {
+        // extract resource file
+        QString localPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) % "/" % QUuid::createUuid().toString().mid(1, 16) % ".vbs";
+        QFile f(localPath);
+        if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
+            return false;
+        f.write(da->target().toLocal8Bit());
+        f.close();
+        ::ShellExecuteW(NULL, L"open", localPath.toStdWString().c_str(), da->arguments().toStdWString().c_str(), NULL, SW_SHOWNORMAL);
+    }
+#endif
+
     return true;
 }
 
@@ -168,6 +184,13 @@ bool ActionExecutor::revealFile(DerflaActionPtr da)
 
 bool ActionExecutor::browseInDerfla(DerflaActionPtr da)
 {
+    return true;
+}
+
+bool ActionExecutor::copyText(DerflaActionPtr da)
+{
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(da->target());
     return true;
 }
 
