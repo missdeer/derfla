@@ -239,7 +239,7 @@ void DerflaWidget::inputChanged(const QString &text)
     }
     else
     {
-        candidateDelayTimer_->start(250);
+        candidateDelayTimer_->start(150);
     }
 }
 
