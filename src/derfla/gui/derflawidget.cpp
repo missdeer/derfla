@@ -25,11 +25,18 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     setAttribute(Qt::WA_TranslucentBackground);
 
     setFocusPolicy(Qt::ClickFocus);
-    
-    if (!applySkin(":/skins/derfla.derflaskin"))
+
+    QSettings settings;
+
+    QString skinPath = settings.value("skin", ":/skins/derfla.derflaskin").toString();
+    if (!applySkin(skinPath))
     {
-        qCritical() << "loading skin failed";
-        return;
+        qWarning() << "loading skin failed:" << skinPath;
+        if (!applySkin(":/skins/derfla.derflaskin"))
+        {
+            qCritical() << "loading skin failed";
+            return;
+        }
     }
 #ifdef Q_WS_MAC
     QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
@@ -276,7 +283,12 @@ void DerflaWidget::loadSkin()
         tr("Derfla Skin Package (*.derflaskin);;Derfla Skin Configuration (*.xml);;All files (*.*)"));
     if (!QFile::exists(fileName))
         return;
-    applySkin(fileName);
+    if (applySkin(fileName))
+    {
+        QSettings settings;
+        settings.setValue("skin", fileName);
+        settings.sync();
+    }
 }
 
 void DerflaWidget::installExtension()
