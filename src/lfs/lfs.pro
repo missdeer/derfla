@@ -46,7 +46,7 @@ win32: {
         LIBS += -lz
     }
 
-    LIBS += -lVersion -lComctl32 -lOle32 -lGdi32
+    LIBS += -lVersion -lComctl32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg
