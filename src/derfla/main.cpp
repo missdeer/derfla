@@ -32,12 +32,19 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    auto pathEnv = qgetenv("PATH");
 #if defined(Q_OS_WIN)
     CoInitialize(NULL);
     BOOST_SCOPE_EXIT(void) {
         CoUninitialize();
     } BOOST_SCOPE_EXIT_END
+    pathEnv.append(";" % QDir::toNativeSeparators(a.applicationDirPath()));
+    qputenv("QT_PLUGIN_PATH", QDir::toNativeSeparators(a.applicationDirPath()).toUtf8());
+#else
+    pathEnv.append(":" % a.applicationDirPath());
+    qputenv("QT_PLUGIN_PATH", a.applicationDirPath().toUtf8());
 #endif
+    qputenv("PATH", pathEnv); // so that extensions can use Derfla main executable's Qt binaries
 
     DerflaWidget w;
     w.show();
