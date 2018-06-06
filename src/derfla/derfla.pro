@@ -51,7 +51,6 @@ macx: {
     icon.path = $$PWD
     icon.files += derfla.png
     INSTALLS += icon
-    LIBS+=-L$$PWD/../../3rdparty/zlib-1.2.8 -lz
 
     CONFIG(release, debug|release) : {
     }
@@ -64,30 +63,14 @@ macx: {
 
 win32: {
     win32-msvc* {
-        QMAKE_LFLAGS += "/NODEFAULTLIB:MSVCRT"
-        LIBS += -L$$PWD/../../3rdparty/zlib-1.2.8 -lzlib
     } else {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
-        LIBS += -lz
     }
     QT += winextras
 
     # Windows icons
     RC_FILE = derfla.rc
-    LIBS += -L$$PWD/../../3rdparty/Everything-SDK/lib -lVersion -lComctl32 -lOle32 -lGdi32
-#    INCLUDEPATH += $$PWD/../../3rdparty/Everything-SDK/include \
-#        $$PWD/../../3rdparty/Everything-SDK/ipc
-
-#    contains(QMAKE_HOST.arch, x86_64): LIBS += -lEverything64
-#    else: LIBS += -lEverything32
-
-#    CONFIG(release, debug|release): {
-#        copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Release/skins/)'
-#    } else {
-#        copy_skins.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$OUT_PWD/Debug/skins/)'
-#    }
-#    QMAKE_EXTRA_TARGETS +=  copy_skins
-#    POST_TARGETDEPS += copy_skins
+    LIBS += -lVersion -lComctl32 -lOle32 -lGdi32
 }
 
 RESOURCES += \

@@ -8,7 +8,6 @@ DESTDIR = $$PWD/../../bin/lfs
 
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
-include($$PWD/../../3rdparty/sqlite3/sqlite3.pri)
 include($$PWD/../../3rdparty/rapidjson/rapidjson.pri)
 include($$PWD/util/util.pri)
 # The following define makes your compiler emit warnings if you use
@@ -40,13 +39,12 @@ HEADERS += \
 
 win32: {
     win32-msvc* {
-        QMAKE_LFLAGS += "/NODEFAULTLIB:MSVCRT"
     } else {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
         LIBS += -lz
     }
 
-    LIBS += -lVersion -lComctl32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
+    LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg
