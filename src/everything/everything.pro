@@ -11,7 +11,7 @@ include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../../3rdparty/rapidjson/rapidjson.pri)
 include($$PWD/../../3rdparty/everything/everything.pri)
-include($$PWD/util/util.pri)
+include($$PWD/../util/util.pri)
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
