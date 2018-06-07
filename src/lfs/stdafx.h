@@ -45,12 +45,6 @@
 #include <QStringBuilder>
 #include <QProcess>
 
-// Qt Xml
-#include <QDomDocument>
-
-// Qt Concurrent
-#include <QtConcurrent>
-
 // Qt Sql
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -60,16 +54,6 @@
 
 // Boost
 #include <boost/scope_exit.hpp>
-
-#include "util.h"
-
-#define check_expiration do { \
-    QDate d =  QLocale(QLocale::C).toDate(QString(__DATE__).simplified(), QLatin1String("MMM d yyyy")); \
-    if (d.daysTo(QDate::currentDate()) > 30) { \
-        QMessageBox::critical(NULL, tr("Expired"), tr("This application has been expired, please visit http://www.getderfla.com for a new build."), QMessageBox::Ok ); \
-        qApp->quit(); \
-    } \
-}while(0)
 
 #if defined(Q_OS_WIN)
 #define globalDefaultFontFamily "Microsoft YaHei"

@@ -69,7 +69,7 @@ bool Extension::query(const QString& input)
     }
 	if (process_->state() == QProcess::Running)
 		process_->terminate();
-    arguments << input;
+    arguments << input.split(QChar(' '));
     process_->setArguments(arguments);
     process_->start();
 	return true;

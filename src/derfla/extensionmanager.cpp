@@ -107,13 +107,11 @@ bool ExtensionManager::query(const QString &input)
     if (inputs.length() > 1)
     {
         QString prefix = inputs.at(0);
-        inputs.removeFirst();
-        QString in = inputs.join(QChar(' '));
         for (auto e : extensions_)
         {
             if (e->prefixMatched(prefix))
             {
-                e->query(in);
+                e->query(input);
             }
         }
     }
