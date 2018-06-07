@@ -12,7 +12,7 @@ include($$PWD/../../3rdparty/Boost.pri)
 
 SOURCES += main.cpp\
     derflawidget.cpp \
-    CharLineEdit.cpp \
+    charlineedit.cpp \
     candidatelist.cpp \
     candidatelistdelegate.cpp \
     candidatelistwidget.cpp \
@@ -23,7 +23,7 @@ SOURCES += main.cpp\
 
 HEADERS  += stdafx.h \
     derflawidget.h \
-    CharLineEdit.h \
+    charlineedit.h \
     candidatelist.h \
     candidatelistdelegate.h \
     candidatelistwidget.h \
@@ -35,7 +35,7 @@ HEADERS  += stdafx.h \
 FORMS    += \
     candidatelist.ui
 
-INCLUDEPATH += $$PWD $$PWD/gui $$PWD/executor $$PWD/executil
+INCLUDEPATH += $$PWD
 
 CONFIG(release, debug|release) : {
     DEFINES += QT_NO_DEBUG_OUTPUT=1 QT_NO_INFO_OUTPUT=1
