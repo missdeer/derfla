@@ -98,8 +98,15 @@ bool handleVSOpen(const QStringList& res)
         o.AddMember(Value("workingDir", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
         o.AddMember(Value("actionType", a), Value("script", a), a);
         o.AddMember(Value("scriptExecutor", a), Value("cscript", a), a);
-        QByteArray bytes = util::extractPNGIconFromFile(fi);
-        o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
+        if (fi.isDir())
+        {
+            o.AddMember(Value("iconPath", a), Value(QString(qApp->applicationDirPath() % "/folder.png").toStdString().c_str(), a), a);
+        }
+        else
+        {
+            QByteArray bytes = util::extractPNGIconFromFile(fi);
+            o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
+        }
         d.PushBack(o, a);
     }
     StringBuffer buffer;
@@ -128,8 +135,15 @@ bool handleShellOpen(const QStringList& res)
         o.AddMember(Value("arguments", a), Value("", a), a);
         o.AddMember(Value("workingDir", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
         o.AddMember(Value("actionType", a), Value("shellExecute", a), a);
-        QByteArray bytes = util::extractPNGIconFromFile(fi);
-        o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
+        if (fi.isDir())
+        {
+            o.AddMember(Value("iconPath", a), Value(QString(qApp->applicationDirPath() % "/folder.png").toStdString().c_str(), a), a);
+        }
+        else
+        {
+            QByteArray bytes = util::extractPNGIconFromFile(fi);
+            o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
+        }
         d.PushBack(o, a);
     }
     StringBuffer buffer;
