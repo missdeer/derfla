@@ -23,7 +23,7 @@ bool handleFile(const QStringList& res)
 
         Value o(kObjectType);
         o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
-        o.AddMember(Value("description", a), Value(fi.absolutePath().toStdString().c_str(), a), a);
+        o.AddMember(Value("description", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
         o.AddMember(Value("target", a), Value(QDir::toNativeSeparators(fi.absoluteFilePath()).toStdString().c_str(), a), a);
         o.AddMember(Value("arguments", a), Value("", a), a);
         o.AddMember(Value("workingDir", a), Value("", a), a);
@@ -55,7 +55,7 @@ bool handleDir(const QStringList& res)
 
         Value o(kObjectType);
         o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
-        o.AddMember(Value("description", a), Value(fi.absolutePath().toStdString().c_str(), a), a);
+        o.AddMember(Value("description", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
         o.AddMember(Value("target", a), Value(QDir::toNativeSeparators(fi.absoluteFilePath()).toStdString().c_str(), a), a);
         o.AddMember(Value("arguments", a), Value("", a), a);
         o.AddMember(Value("workingDir", a), Value("", a), a);
@@ -92,7 +92,7 @@ bool handleVSOpen(const QStringList& res)
         args << QDir::toNativeSeparators(fi.absoluteFilePath()) << "1" << "1";
         Value o(kObjectType);
         o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
-        o.AddMember(Value("description", a), Value(fi.absolutePath().toStdString().c_str(), a), a);
+        o.AddMember(Value("description", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
         o.AddMember(Value("target", a), Value(QString(c).toStdString().c_str(), a), a);
         o.AddMember(Value("arguments", a), Value(args.join(QChar(' ')).toStdString().c_str(), a), a);
         o.AddMember(Value("workingDir", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
@@ -123,7 +123,7 @@ bool handleShellOpen(const QStringList& res)
 
         Value o(kObjectType);
         o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
-        o.AddMember(Value("description", a), Value(fi.absolutePath().toStdString().c_str(), a), a);
+        o.AddMember(Value("description", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
         o.AddMember(Value("target", a), Value(QDir::toNativeSeparators(fi.absoluteFilePath()).toStdString().c_str(), a), a);
         o.AddMember(Value("arguments", a), Value("", a), a);
         o.AddMember(Value("workingDir", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
     a.setOrganizationDomain("dfordsoft.com");
     a.setOrganizationName("Derfla");
 
-    if (argc == 2)
+    if (argc == 3)
     {
         QTextStream ts( stdout );
         if (!isEverythingRunning())
