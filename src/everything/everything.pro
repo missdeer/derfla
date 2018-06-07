@@ -48,3 +48,6 @@ win32: {
     QMAKE_EXTRA_TARGETS += copy_cfg copy_everything_exe copy_everything_dll
     POST_TARGETDEPS += copy_cfg copy_everything_exe copy_everything_dll
 }
+
+RESOURCES += \
+    everything.qrc

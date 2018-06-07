@@ -74,6 +74,40 @@ bool handleDir(const QStringList& res)
 
 bool handleVSOpen(const QStringList& res)
 {
+    QFile f(":/open-in-vs.vbs");
+    if (!f.open(QIODevice::ReadOnly))
+        return false;
+    QByteArray c = f.readAll();
+    f.close();
+
+    Document d;
+    d.Parse("[]");
+    Q_ASSERT(d.IsArray());
+    Document::AllocatorType& a = d.GetAllocator();
+    for (const auto& f : res)
+    {
+        QFileInfo fi(f);
+
+        QStringList args;
+        args << QDir::toNativeSeparators(fi.absoluteFilePath()) << "1" << "1";
+        Value o(kObjectType);
+        o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
+        o.AddMember(Value("description", a), Value(fi.absolutePath().toStdString().c_str(), a), a);
+        o.AddMember(Value("target", a), Value(QString(c).toStdString().c_str(), a), a);
+        o.AddMember(Value("arguments", a), Value(args.join(QChar(' ')).toStdString().c_str(), a), a);
+        o.AddMember(Value("workingDir", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
+        o.AddMember(Value("actionType", a), Value("script", a), a);
+        o.AddMember(Value("scriptExecutor", a), Value("cscript", a), a);
+        QByteArray bytes = util::extractPNGIconFromFile(fi);
+        o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
+        d.PushBack(o, a);
+    }
+    StringBuffer buffer;
+    Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
+    d.Accept(writer);
+
+    QTextStream ts( stdout );
+    ts << QString(buffer.GetString());
     return true;
 }
 
