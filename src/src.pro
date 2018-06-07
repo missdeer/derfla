@@ -6,4 +6,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     derfla \
-    lfs
+    lfs \
+    everything

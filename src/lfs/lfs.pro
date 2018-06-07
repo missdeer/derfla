@@ -3,6 +3,7 @@ QT += core gui xml concurrent sql gui-private
 CONFIG += c++14 console precompile_header
 CONFIG -= app_bundle
 
+TARGET = et
 PRECOMPILED_HEADER = stdafx.h
 DESTDIR = $$PWD/../../bin/lfs
 
@@ -43,7 +44,7 @@ win32: {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
         LIBS += -lz
     }
-
+    QT += winextras
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
