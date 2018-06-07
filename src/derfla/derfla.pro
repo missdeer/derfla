@@ -11,29 +11,29 @@ include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
 
 SOURCES += main.cpp\
-        gui/derflawidget.cpp \
-    gui/CharLineEdit.cpp \
-    gui/candidatelist.cpp \
-    gui/candidatelistdelegate.cpp \
-    gui/candidatelistwidget.cpp \
-    gui/derflaaction.cpp \
-    gui/actionexecutor.cpp \
+    derflawidget.cpp \
+    CharLineEdit.cpp \
+    candidatelist.cpp \
+    candidatelistdelegate.cpp \
+    candidatelistwidget.cpp \
+    derflaaction.cpp \
+    actionexecutor.cpp \
     extension.cpp \
     extensionmanager.cpp
 
 HEADERS  += stdafx.h \
-    gui/derflawidget.h \
-    gui/CharLineEdit.h \
-    gui/candidatelist.h \
-    gui/candidatelistdelegate.h \
-    gui/candidatelistwidget.h \
-    gui/derflaaction.h \
-    gui/actionexecutor.h \
+    derflawidget.h \
+    CharLineEdit.h \
+    candidatelist.h \
+    candidatelistdelegate.h \
+    candidatelistwidget.h \
+    derflaaction.h \
+    actionexecutor.h \
     extension.h \
     extensionmanager.h
 
 FORMS    += \
-    gui/candidatelist.ui
+    candidatelist.ui
 
 INCLUDEPATH += $$PWD $$PWD/gui $$PWD/executor $$PWD/executil
 
