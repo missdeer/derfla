@@ -1,30 +1,21 @@
 INCLUDEPATH += $$PWD
+DEPENDPATH += $$PWD
+
+LIBS += -L$$PWD/../../bin -lderflautil
 
 HEADERS += \
+    $$PWD/util_global.h \
+    $$PWD/stdafx.h \
+    $$PWD/directory.h \
     $$PWD/util.h
 
-SOURCES += \
-    $$PWD/util.cpp
-
-unix: !macx: {
-    LIBS += -lz
-
-    SOURCES += \
-        $$PWD/unix_util.cpp
-
-    HEADERS += \
-        $$PWD/unix_util.h
-}
-
 win32: {
-    QT += winextras
-    SOURCES += \
-        $$PWD/win_util.cpp \
-        $$PWD/WinIconProvider.cpp
-
-
     HEADERS += \
         $$PWD/win_util.h \
         $$PWD/WinIconProvider.h
+}
 
+unix: !macx: {
+    HEADERS += \
+        $$PWD/unix_util.h
 }

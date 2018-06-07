@@ -15,7 +15,6 @@ DESTDIR = ../../bin
 DEFINES += UTIL_LIBRARY
 
 include($$PWD/../../3rdparty/Boost.pri)
-include($$PWD/util.pri)
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -28,14 +27,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        derflautil.cpp \
-    directory.cpp
+    directory.cpp \
+    util.cpp
 
 HEADERS += \
-        derflautil.h \
-        util_global.h \ 
+    util_global.h \
     stdafx.h \
-    directory.h
+    directory.h \
+    util.h
 
 unix {
     target.path = /usr/lib
@@ -49,5 +48,23 @@ win32: {
         LIBS += -lz
     }
     QT += winextras
+    SOURCES += \
+        $$PWD/win_util.cpp \
+        $$PWD/WinIconProvider.cpp
+
+
+    HEADERS += \
+        $$PWD/win_util.h \
+        $$PWD/WinIconProvider.h
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
+}
+
+unix: !macx: {
+    LIBS += -lz
+
+    SOURCES += \
+        $$PWD/unix_util.cpp
+
+    HEADERS += \
+        $$PWD/unix_util.h
 }
