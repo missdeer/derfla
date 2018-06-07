@@ -59,7 +59,18 @@ bool ExtensionManager::loadAllFromCache()
         if (o["executor"].isString())
             e->setExecutor(o["executor"].toString());
         if (o["prefix"].isString())
-            e->setPrefix(o["prefix"].toString());
+            e->setPrefix(QStringList() << o["prefix"].toString());
+        if (o["prefix"].isArray())
+        {
+            QJsonArray arr = o["prefix"].toArray();
+            QStringList prefix;
+            for (auto a : arr)
+            {
+                if (a.isString())
+                    prefix << a.toString();
+            }
+            e->setPrefix(prefix);
+        }
         if (o["waitIconPath"].isString())
             e->setWaitIconPath(o["waitIconPath"].toString());
         if (o["waitIconData"].isString())
@@ -69,7 +80,10 @@ bool ExtensionManager::loadAllFromCache()
         if (o["waitDescription"].isString())
             e->setWaitDescription(o["waitDescription"].toString());
         if (o["daemon"].isBool() && o["daemon"].toBool())
+        {
+            e->setDaemon(true);
             e->runDaemon();
+        }
         extensions_.append(e);
         connect(e.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
     }
@@ -84,7 +98,7 @@ bool ExtensionManager::query(const QString &input)
     {
         for (auto e : extensions_)
         {
-            if (e->prefix().isEmpty())
+            if (e->prefixMatched(""))
             {
                 e->query(input);
             }
@@ -97,7 +111,7 @@ bool ExtensionManager::query(const QString &input)
         QString in = inputs.join(QChar(' '));
         for (auto e : extensions_)
         {
-            if (e->prefix() == prefix)
+            if (e->prefixMatched(prefix))
             {
                 e->query(in);
             }
@@ -232,8 +246,20 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
     }
     if (o["prefix"].isString())
     {
-        e->setPrefix(o["prefix"].toString());
-        vm.insert("prefix", e->prefix());
+        e->setPrefix(QStringList() << o["prefix"].toString());
+        vm.insert("prefix", QStringList() << o["prefix"].toString());
+    }
+    if (o["prefix"].isArray())
+    {
+        QJsonArray arr = o["prefix"].toArray();
+        QStringList prefix;
+        for (auto a : arr)
+        {
+            if (a.isString())
+                prefix << a.toString();
+        }
+        e->setPrefix(prefix);
+        vm.insert("prefix", prefix);
     }
     if (o["waitIconPath"].isString() && !o["waitIconPath"].toString().isEmpty())
     {
@@ -257,7 +283,10 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
         vm.insert("waitDescription", e->waitDescription());
     }
     if (o["daemon"].isBool() && o["daemon"].toBool())
+    {
+        e->setDaemon(true);
         e->runDaemon();
+    }
     extensions_.append(e);
     connect(e.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
     // cache

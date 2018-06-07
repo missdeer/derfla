@@ -16,6 +16,7 @@ public:
     ~Extension();
 
     void runDaemon();
+    void stopDaemon();
     bool query(const QString& input);
 
     const QString &author() const;
@@ -33,8 +34,8 @@ public:
     const QString &executor() const;
     void setExecutor(const QString &executor);
 
-    const QString &prefix() const;
-    void setPrefix(const QString &prefix);
+    void setPrefix(const QStringList &prefix);
+    bool prefixMatched(const QString &text);
 
     const QString &waitTitle() const;
     void setWaitTitle(const QString &waitTitle);
@@ -50,6 +51,9 @@ public:
     const QString &id() const;
     void setId(const QString &id);
 
+    bool daemon() const;
+    void setDaemon(bool daemon);
+
 signals:
     void queried(DerflaActionList &);
 public slots:    
@@ -62,11 +66,13 @@ private:
     QString description_;
     QString executable_;
     QString executor_; // php, python, ruby, perl, bash, etc.
-    QString prefix_;
     QString waitTitle_;
     QString waitDescription_;
     QString id_;
+    QStringList prefix_;
     QIcon waitIcon_;
+    bool daemon_;
+
     DerflaActionList derflaActions_;
 
     QString findProgram();

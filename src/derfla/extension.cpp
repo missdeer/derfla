@@ -4,6 +4,7 @@
 Extension::Extension(QObject *parent) 
 	: QObject(parent)
     , process_(nullptr)
+    , daemon_(false)
 {
 
 }
@@ -16,6 +17,9 @@ Extension::~Extension()
             process_->terminate();
         delete process_;
     }
+
+    if (daemon_)
+        stopDaemon();
 }
 
 void Extension::runDaemon()
@@ -27,6 +31,20 @@ void Extension::runDaemon()
         program = findProgram();
         arguments << executable_;
     }
+
+    QProcess::startDetached(program, arguments, QFileInfo(executable_).absolutePath());
+}
+
+void Extension::stopDaemon()
+{
+    QStringList arguments;
+    QString program = executable_;
+    if (!executor_.isEmpty())
+    {
+        program = findProgram();
+        arguments << executable_;
+    }
+    arguments << "/exit";
 
     QProcess::startDetached(program, arguments, QFileInfo(executable_).absolutePath());
 }
@@ -107,14 +125,17 @@ void Extension::setExecutor(const QString &executor)
     executor_ = executor;
 }
 
-const QString &Extension::prefix() const
-{
-    return prefix_;
-}
-
-void Extension::setPrefix(const QString &prefix)
+void Extension::setPrefix(const QStringList &prefix)
 {
     prefix_ = prefix;
+}
+
+bool Extension::prefixMatched(const QString &text)
+{
+    if (text.isEmpty() && prefix_.isEmpty())
+        return true;
+
+    return prefix_.contains(text);
 }
 
 const QString &Extension::waitTitle() const
@@ -214,6 +235,16 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
     }
 
     emit queried(derflaActions_);
+}
+
+bool Extension::daemon() const
+{
+    return daemon_;
+}
+
+void Extension::setDaemon(bool daemon)
+{
+    daemon_ = daemon;
 }
 
 const QString &Extension::id() const
