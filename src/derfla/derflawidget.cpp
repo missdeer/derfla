@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include <private/qzipreader_p.h>
 #include "uglobalhotkeys.h"
-#include "CharLineEdit.h"
+#include "charlineedit.h"
 #include "extensionmanager.h"
 #include "candidatelist.h"
 #include "derflawidget.h"

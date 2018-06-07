@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "CharLineEdit.h"
+#include "charlineedit.h"
 
 
 CharLineEdit::CharLineEdit(QWidget* parent) :
