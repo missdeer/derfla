@@ -8,6 +8,7 @@
 #else
 #include "unix_util.h"
 #endif
+#include "directory.h"
 #include "localfsscanner.h"
 
 using namespace std;

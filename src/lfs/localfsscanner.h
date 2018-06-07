@@ -4,14 +4,7 @@
 #include <QObject>
 #include "dbrw.h"
 
-struct Directory
-{
-    Directory( const QString& d, bool r)
-        : directory(d), recursive(r) 
-    {}
-    QString directory;
-    bool recursive = false;
-};
+struct Directory;
 
 class LocalFSScanner : public QObject
 {

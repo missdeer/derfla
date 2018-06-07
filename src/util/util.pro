@@ -1,17 +1,23 @@
-QT += core gui xml concurrent sql gui-private
+#-------------------------------------------------
+#
+# Project created by QtCreator 2018-06-07T10:58:59
+#
+#-------------------------------------------------
 
-CONFIG += c++14 console precompile_header
-CONFIG -= app_bundle
+QT       += widgets
 
-TARGET = lfs
+TARGET = derflautil
+TEMPLATE = lib
+CONFIG += c++14 precompile_header
 PRECOMPILED_HEADER = stdafx.h
-DESTDIR = $$PWD/../../bin/lfs
+DESTDIR = ../../bin
 
-include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
+DEFINES += UTIL_LIBRARY
+
 include($$PWD/../../3rdparty/Boost.pri)
-include($$PWD/../../3rdparty/rapidjson/rapidjson.pri)
+include($$PWD/util.pri)
 # The following define makes your compiler emit warnings if you use
-# any feature of Qt which as been marked deprecated (the exact warnings
+# any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
@@ -20,22 +26,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-INCLUDEPATH += $$PWD/util
 
 SOURCES += \
-    main.cpp \
-    dbrw.cpp \
-    localfsscanner.cpp \
-    localfsitem.cpp
-
-SUBDIRS += \
-    lfs.pro
+        derflautil.cpp \
+    directory.cpp
 
 HEADERS += \
+        derflautil.h \
+        util_global.h \ 
     stdafx.h \
-    dbrw.h \
-    localfsscanner.h \
-    localfsitem.h
+    directory.h
+
+unix {
+    target.path = /usr/lib
+    INSTALLS += target
+}
 
 win32: {
     win32-msvc* {
@@ -45,15 +50,4 @@ win32: {
     }
     QT += winextras
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
-
-    copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
-    QMAKE_EXTRA_TARGETS += copy_cfg
-    POST_TARGETDEPS += copy_cfg
 }
-
-DISTFILES += \
-    extension.cfg
-
-LIBS += -L$$DESTDIR/.. -lderflautil
-INCLUDEPATH += $$PWD/../util
-DEPENDPATH += $$PWD/../util

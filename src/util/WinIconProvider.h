@@ -1,9 +1,10 @@
 #ifndef __WINICONPROVIDER_H
 #define __WINICONPROVIDER_H
 
+#include "util_global.h"
 #include <QFileIconProvider>
 
-class WinIconProvider : QFileIconProvider
+class  UTILSHARED_EXPORT  WinIconProvider : QFileIconProvider
 {
 public:
 	WinIconProvider();

@@ -1,6 +1,5 @@
 #include "stdafx.h"
-#include "dbrw.h"
-#include "localfsscanner.h"
+#include "directory.h"
 #include "util.h"
 #include "win_util.h"
 

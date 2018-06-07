@@ -12,7 +12,6 @@ typedef QFileIconProvider IconProvider;
 namespace util {
 
 qint64 timestamp = 0;
-
 static QStringList envPaths;
 static QStringList localeNames;
 
