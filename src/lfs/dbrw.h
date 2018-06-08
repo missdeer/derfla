@@ -2,6 +2,8 @@
 #define DBRW_H
 
 #include <QObject>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 #include <functional>
 #include "localfsitem.h"
 

@@ -2,6 +2,7 @@
 #define LocalFSItem_H
 
 #include <QIcon>
+#include <QUuid>
 
 class LocalFSItem
 {

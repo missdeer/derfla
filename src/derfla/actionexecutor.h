@@ -2,11 +2,8 @@
 #define ACTIONEXECUTOR_H
 
 #include <QObject>
+#include <QProcess>
 #include "derflaaction.h"
-
-QT_BEGIN_NAMESPACE
-class QProcess;
-QT_END_NAMESPACE
 
 class ActionExecutor : public QObject
 {

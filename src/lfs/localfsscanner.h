@@ -24,7 +24,6 @@ private:
     DBRW& dbrw_;
     bool stop_ = false;
     qint64 timestamp_ = 0;
-    QThread workerThread_;
     QList<Directory> scanDirectories_;
     void getDirectoriesFromEnvironmentVariable();
     void getBuiltinDirectories();

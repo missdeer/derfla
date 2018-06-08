@@ -1,6 +1,8 @@
 #ifndef DERFLAACTION_H
 #define DERFLAACTION_H
 
+#include <QUuid>
+#include <QIcon>
 
 class DerflaAction
 {

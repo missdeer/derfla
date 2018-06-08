@@ -7,6 +7,7 @@ TARGET = lfs
 PRECOMPILED_HEADER = stdafx.h
 DESTDIR = $$PWD/../../bin/lfs
 
+win32-clang-msvc: CONFIG -= precompile_header
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../../3rdparty/rapidjson/rapidjson.pri)
@@ -39,7 +40,7 @@ HEADERS += \
     localfsitem.h
 
 win32: {
-    win32-msvc* {
+    win32-*msvc* {
     } else {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
     }

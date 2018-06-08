@@ -2,11 +2,8 @@
 #define EXTENSION_H
 
 #include <QObject>
+#include <QProcess>
 #include "derflaaction.h"
-
-QT_BEGIN_NAMESPACE
-class QProcess;
-QT_END_NAMESPACE
 
 class Extension : public QObject
 {

@@ -6,6 +6,8 @@ CONFIG += c++14 precompile_header
 PRECOMPILED_HEADER = stdafx.h
 DESTDIR = ../../bin
 
+win32-clang-msvc: CONFIG -= precompile_header
+
 include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
@@ -62,7 +64,7 @@ macx: {
 }
 
 win32: {
-    win32-msvc* {
+    win32-*msvc* {
     } else {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
     }

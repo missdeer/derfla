@@ -12,6 +12,7 @@ CONFIG += c++14 precompile_header
 PRECOMPILED_HEADER = stdafx.h
 DESTDIR = ../../bin
 
+win32-clang-msvc: CONFIG -= precompile_header
 DEFINES += UTIL_LIBRARY
 
 include($$PWD/../../3rdparty/Boost.pri)
@@ -42,10 +43,9 @@ unix {
 }
 
 win32: {
-    win32-msvc* {
+    win32-*msvc* {
     } else {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
-        LIBS += -lz
     }
     QT += winextras
     SOURCES += \
