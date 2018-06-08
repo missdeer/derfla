@@ -104,7 +104,7 @@ bool ExtensionManager::query(const QString &input)
             }
         }
     }
-    if (inputs.length() > 1)
+    if (inputs.length() > 1 && !inputs.at(1).isEmpty())
     {
         QString prefix = inputs.at(0);
         for (auto e : extensions_)

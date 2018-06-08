@@ -46,9 +46,9 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     connect(candidateList_, &CandidateList::done, this, &DerflaWidget::candidateListDone);
     connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::keyPressed);
 
-    QAction *logoAction = new QAction(tr("Input"), this);
-    logoAction->setIcon(QIcon(":/derfla.ico"));
-    input_->addAction(logoAction, QLineEdit::ActionPosition::TrailingPosition);
+//    QAction *logoAction = new QAction(tr("Input"), this);
+//    logoAction->setIcon(QIcon(":/derfla.ico"));
+//    input_->addAction(logoAction, QLineEdit::ActionPosition::TrailingPosition);
     input_->setObjectName("input");
     input_->setClearButtonEnabled(false);
     connect(input_, &CharLineEdit::keyPressed, this, &DerflaWidget::keyPressEvent);
@@ -152,7 +152,7 @@ void DerflaWidget::paintEvent(QPaintEvent* event)
     {
         painter.drawPixmap(0, 0, leftPartBackgroundImage_);
         painter.drawPixmap(size.width() / 2 - 1, 0, midPartBackgroundImage_);
-        painter.drawPixmap(widgetMinWidth_ - (size.width() / 2 - 1), 0, rightPartBackgroundImage_);
+        painter.drawPixmap(widgetMinWidth_ - (size.width() / 2 ), 0, rightPartBackgroundImage_);
     }
     QWidget::paintEvent(event);
 }

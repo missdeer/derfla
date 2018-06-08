@@ -9,12 +9,15 @@
 
 using namespace rapidjson;
 
+static const int maxCount = 25;
+
 bool handleFile(const QStringList& res)
 {
     Document d;
     d.Parse("[]");
     Q_ASSERT(d.IsArray());
     Document::AllocatorType& a = d.GetAllocator();
+    int count = 0;
     for (const auto& f : res)
     {
         QFileInfo fi(f);
@@ -31,6 +34,8 @@ bool handleFile(const QStringList& res)
         QByteArray bytes = util::extractPNGIconFromFile(fi);
         o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
         d.PushBack(o, a);
+        if (++count >= maxCount)
+            break;
     }
     StringBuffer buffer;
     Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
@@ -47,6 +52,7 @@ bool handleDir(const QStringList& res)
     d.Parse("[]");
     Q_ASSERT(d.IsArray());
     Document::AllocatorType& a = d.GetAllocator();
+    int count = 0;
     for (const auto& f : res)
     {
         QFileInfo fi(f);
@@ -62,6 +68,8 @@ bool handleDir(const QStringList& res)
         o.AddMember(Value("actionType", a), Value("shellExecute", a), a);
         o.AddMember(Value("iconPath", a), Value(QString(qApp->applicationDirPath() % "/folder.png").toStdString().c_str(), a), a);
         d.PushBack(o, a);
+        if (++count >= maxCount)
+            break;
     }
     StringBuffer buffer;
     Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
@@ -84,9 +92,12 @@ bool handleVSOpen(const QStringList& res)
     d.Parse("[]");
     Q_ASSERT(d.IsArray());
     Document::AllocatorType& a = d.GetAllocator();
+    int count = 0;
     for (const auto& f : res)
     {
         QFileInfo fi(f);
+        if (fi.isDir())
+            continue;
 
         QStringList args;
         args << QDir::toNativeSeparators(fi.absoluteFilePath()) << "1" << "1";
@@ -98,16 +109,11 @@ bool handleVSOpen(const QStringList& res)
         o.AddMember(Value("workingDir", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
         o.AddMember(Value("actionType", a), Value("script", a), a);
         o.AddMember(Value("scriptExecutor", a), Value("cscript", a), a);
-        if (fi.isDir())
-        {
-            o.AddMember(Value("iconPath", a), Value(QString(qApp->applicationDirPath() % "/folder.png").toStdString().c_str(), a), a);
-        }
-        else
-        {
-            QByteArray bytes = util::extractPNGIconFromFile(fi);
-            o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
-        }
+        QByteArray bytes = util::extractPNGIconFromFile(fi);
+        o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
         d.PushBack(o, a);
+        if (++count >= maxCount)
+            break;
     }
     StringBuffer buffer;
     Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
@@ -124,6 +130,7 @@ bool handleShellOpen(const QStringList& res)
     d.Parse("[]");
     Q_ASSERT(d.IsArray());
     Document::AllocatorType& a = d.GetAllocator();
+    int count = 0;
     for (const auto& f : res)
     {
         QFileInfo fi(f);
@@ -145,6 +152,8 @@ bool handleShellOpen(const QStringList& res)
             o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
         }
         d.PushBack(o, a);
+        if (++count >= maxCount)
+            break;
     }
     StringBuffer buffer;
     Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
@@ -180,11 +189,17 @@ int main(int argc, char *argv[])
             ts << "everything util is not running.";
             return 1;
         }
+        QString pattern(argv[2]);
+        if (pattern.isEmpty())
+        {
+            ts << "invalid search pattern.";
+            return 2;
+        }
         QStringList res;
-        if (!QuickGetFilesByFileName(QString(argv[2]), res))
+        if (!QuickGetFilesByFileName(pattern, res))
         {
             ts << "searching " << argv[1] << "by everything failed.";
-            return 2;
+            return 3;
         }
 
         QMap<QString, std::function<bool(const QStringList&)>> m = {
@@ -193,17 +208,18 @@ int main(int argc, char *argv[])
         { "vs", std::bind(&handleVSOpen, std::placeholders::_1) },
         { "open", std::bind(&handleShellOpen, std::placeholders::_1) },
     };
-        auto it = m.find(QString(argv[1]));
+        QString cmd(argv[1]);
+        auto it = m.find(cmd);
         if (m.end() == it)
         {
             ts << "unsupported query action";
-            return 3;
+            return 4;
         }
-        auto f = m[QString(argv[1])];
+        auto f = m[cmd];
         if (!f(res))
         {
             ts << "handler failed";
-            return 4;
+            return 5;
         }
     }
 
