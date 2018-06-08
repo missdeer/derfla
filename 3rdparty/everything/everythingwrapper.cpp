@@ -163,5 +163,5 @@ bool QuickGetFilesByFileName(const QString& pattern, QStringList& results, std::
     }
     Everything_Reset();
 
-    return !results.isEmpty();
+    return true;
 }

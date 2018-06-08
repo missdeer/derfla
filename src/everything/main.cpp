@@ -136,7 +136,7 @@ bool handleShellOpen(const QString& pattern)
 {
 	QTextStream ts(stdout);
 	QStringList res;
-	if (!QuickGetFilesByFileName(pattern, res, [](bool){	return true; }, maxCount))
+	if (!QuickGetFilesByFileName(pattern, res, [](bool){ return true; }, maxCount))
 	{
 		ts << "searching " << pattern << "by everything failed.";
 		return false;
@@ -204,8 +204,8 @@ int main(int argc, char *argv[])
         QString pattern(argc == 3 ? argv[2] : argv[3]);
         if (pattern.size() < 2)
         {
-            ts << "invalid search pattern.";
-            return 2;
+            ts << "[]";
+            return 0;
         }
 
 		if (argc == 4)
