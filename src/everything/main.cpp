@@ -11,18 +11,23 @@ using namespace rapidjson;
 
 static const int maxCount = 25;
 
-bool handleFile(const QStringList& res)
+bool handleFile(const QString& pattern)
 {
+	QTextStream ts(stdout);
+	QStringList res;
+	if (!QuickGetFilesByFileName(pattern, res, [](bool isDir){return !isDir; }, maxCount))
+	{
+		ts << "searching " << pattern << "by everything failed.";
+		return false;
+	}
+
     Document d;
     d.Parse("[]");
     Q_ASSERT(d.IsArray());
     Document::AllocatorType& a = d.GetAllocator();
-    int count = 0;
     for (const auto& f : res)
     {
         QFileInfo fi(f);
-        if (!fi.isFile())
-            continue;
 
         Value o(kObjectType);
         o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
@@ -34,30 +39,32 @@ bool handleFile(const QStringList& res)
         QByteArray bytes = util::extractPNGIconFromFile(fi);
         o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
         d.PushBack(o, a);
-        if (++count >= maxCount)
-            break;
     }
     StringBuffer buffer;
     Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
     d.Accept(writer);
 
-    QTextStream ts( stdout );
     ts << QString(buffer.GetString());
     return true;
 }
 
-bool handleDir(const QStringList& res)
+bool handleDir(const QString& pattern)
 {
+	QTextStream ts(stdout);
+	QStringList res;
+	if (!QuickGetFilesByFileName(pattern, res, [](bool isDir){return isDir; }, maxCount))
+	{
+		ts << "searching " << pattern << "by everything failed.";
+		return false;
+	}
+
     Document d;
     d.Parse("[]");
     Q_ASSERT(d.IsArray());
     Document::AllocatorType& a = d.GetAllocator();
-    int count = 0;
     for (const auto& f : res)
     {
         QFileInfo fi(f);
-        if (!fi.isDir())
-            continue;
 
         Value o(kObjectType);
         o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
@@ -68,20 +75,25 @@ bool handleDir(const QStringList& res)
         o.AddMember(Value("actionType", a), Value("shellExecute", a), a);
         o.AddMember(Value("iconPath", a), Value(QString(qApp->applicationDirPath() % "/folder.png").toStdString().c_str(), a), a);
         d.PushBack(o, a);
-        if (++count >= maxCount)
-            break;
     }
     StringBuffer buffer;
     Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
     d.Accept(writer);
 
-    QTextStream ts( stdout );
     ts << QString(buffer.GetString());
     return true;
 }
 
-bool handleVSOpen(const QStringList& res)
+bool handleVSOpen(const QString& pattern)
 {
+	QTextStream ts(stdout);
+	QStringList res;
+	if (!QuickGetFilesByFileName(pattern, res, [](bool isDir){return !isDir; }, maxCount))
+	{
+		ts << "searching " << pattern << "by everything failed.";
+		return false;
+	}
+
     QFile f(":/open-in-vs.vbs");
     if (!f.open(QIODevice::ReadOnly))
         return false;
@@ -92,7 +104,6 @@ bool handleVSOpen(const QStringList& res)
     d.Parse("[]");
     Q_ASSERT(d.IsArray());
     Document::AllocatorType& a = d.GetAllocator();
-    int count = 0;
     for (const auto& f : res)
     {
         QFileInfo fi(f);
@@ -112,25 +123,29 @@ bool handleVSOpen(const QStringList& res)
         QByteArray bytes = util::extractPNGIconFromFile(fi);
         o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
         d.PushBack(o, a);
-        if (++count >= maxCount)
-            break;
     }
     StringBuffer buffer;
     Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
     d.Accept(writer);
 
-    QTextStream ts( stdout );
     ts << QString(buffer.GetString());
     return true;
 }
 
-bool handleShellOpen(const QStringList& res)
+bool handleShellOpen(const QString& pattern)
 {
+	QTextStream ts(stdout);
+	QStringList res;
+	if (!QuickGetFilesByFileName(pattern, res, [](bool){	return true; }, maxCount))
+	{
+		ts << "searching " << pattern << "by everything failed.";
+		return false;
+	}
+
     Document d;
     d.Parse("[]");
     Q_ASSERT(d.IsArray());
     Document::AllocatorType& a = d.GetAllocator();
-    int count = 0;
     for (const auto& f : res)
     {
         QFileInfo fi(f);
@@ -152,14 +167,11 @@ bool handleShellOpen(const QStringList& res)
             o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
         }
         d.PushBack(o, a);
-        if (++count >= maxCount)
-            break;
     }
     StringBuffer buffer;
     Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
     d.Accept(writer);
 
-    QTextStream ts( stdout );
     ts << QString(buffer.GetString());
     return true;
 }
@@ -181,7 +193,7 @@ int main(int argc, char *argv[])
     a.setOrganizationDomain("dfordsoft.com");
     a.setOrganizationName("Derfla");
 
-    if (argc == 3)
+    if (argc == 3 || argc == 4)
     {
         QTextStream ts( stdout );
         if (!isEverythingRunning())
@@ -189,20 +201,22 @@ int main(int argc, char *argv[])
             ts << "everything util is not running.";
             return 1;
         }
-        QString pattern(argv[2]);
-        if (pattern.isEmpty())
+        QString pattern(argc == 3 ? argv[2] : argv[3]);
+        if (pattern.size() < 2)
         {
             ts << "invalid search pattern.";
             return 2;
         }
-        QStringList res;
-        if (!QuickGetFilesByFileName(pattern, res))
-        {
-            ts << "searching " << argv[1] << "by everything failed.";
-            return 3;
-        }
 
-        QMap<QString, std::function<bool(const QStringList&)>> m = {
+		if (argc == 4)
+		{
+			QString options(argv[2]);
+			Everything_SetMatchWholeWord(options.contains(QChar('w'), Qt::CaseInsensitive));
+			Everything_SetMatchCase(options.contains(QChar('c'), Qt::CaseInsensitive));
+			Everything_SetRegex(options.contains(QChar('r'), Qt::CaseInsensitive));
+		}
+
+        QMap<QString, std::function<bool(const QString&)>> m = {
         { "f", std::bind(&handleFile, std::placeholders::_1) },
         { "d", std::bind(&handleDir, std::placeholders::_1) },
         { "vs", std::bind(&handleVSOpen, std::placeholders::_1) },
@@ -213,13 +227,13 @@ int main(int argc, char *argv[])
         if (m.end() == it)
         {
             ts << "unsupported query action";
-            return 4;
+            return 3;
         }
         auto f = m[cmd];
-        if (!f(res))
+        if (!f(pattern))
         {
             ts << "handler failed";
-            return 5;
+            return 4;
         }
     }
 

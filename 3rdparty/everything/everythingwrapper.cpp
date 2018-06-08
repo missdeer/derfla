@@ -124,7 +124,7 @@ QString GetEverythingPath()
     return QString();
 }
 
-bool QuickGetFilesByFileName(const QString& fileName, QStringList& results)
+bool QuickGetFilesByFileName(const QString& pattern, QStringList& results, std::function<bool(bool)> checker, const int count)
 {
     HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS,0);
     if (!everything_hwnd)
@@ -149,14 +149,17 @@ bool QuickGetFilesByFileName(const QString& fileName, QStringList& results)
         return false;
     }
     // find
-    Everything_SetSearch(fileName.toStdWString().c_str());
+    Everything_SetSearch(pattern.toStdWString().c_str());
     Everything_Query(TRUE);
 
-    for(DWORD i=0;i<Everything_GetNumResults();i++)
+    for(DWORD i=0;i<Everything_GetNumResults() && results.size() < count;i++)
     {
         WCHAR path[MAX_PATH] = {0};
         Everything_GetResultFullPathName(i, path, MAX_PATH);
-        results.append(QString::fromStdWString(path));
+		QString f(QString::fromStdWString(path));
+		BOOL isDir = Everything_IsFolderResult(i);
+		if (checker(isDir))
+			results.append(f);
     }
     Everything_Reset();
 

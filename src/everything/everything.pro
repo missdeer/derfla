@@ -38,12 +38,12 @@ win32: {
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
         contains(QMAKE_HOST.arch, x86_64): {
-            copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything64.dll) $$shell_path($$DESTDIR/Everything.dll)'
-            copy_everything_exe.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/exe/Everything64.exe) $$shell_path($$DESTDIR/Everything.exe)'
+            copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything64.dll) $$shell_path($$DESTDIR/Everything64.dll)'
+            copy_everything_exe.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/exe/Everything64.exe) $$shell_path($$DESTDIR/Everything64.exe)'
         }
         else: {
-            copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything32.dll) $$shell_path($$DESTDIR/Everything.dll)'
-            copy_everything_exe.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/exe/Everything32.exe) $$shell_path($$DESTDIR/Everything.exe)'
+            copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything32.dll) $$shell_path($$DESTDIR/Everything32.dll)'
+            copy_everything_exe.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/exe/Everything32.exe) $$shell_path($$DESTDIR/Everything32.exe)'
         }
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg copy_everything_exe copy_everything_dll
