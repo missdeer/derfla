@@ -6,7 +6,7 @@
 	border-style: solid;
 	color: black;
 	qproperty-alignment: AlignLeft;
-	qproperty-geometry: rect(142 35 300 60);}</inputstyle>
-	<cuttop>30</cuttop>
+	qproperty-geometry: rect(142 25 350 60);}</inputstyle>
+	<cuttop>25</cuttop>
 	<cutbottom>155</cutbottom>
 </skin>
