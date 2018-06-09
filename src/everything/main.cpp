@@ -1,19 +1,15 @@
 #include "stdafx.h"
 #include "qtsingleapplication.h"
-#include <rapidjson/document.h>
-#include <rapidjson/writer.h>
-#include <rapidjson/stringbuffer.h>
 #include <QIcon>
 #include "util.h"
 #include "everythingwrapper.h"
-
-using namespace rapidjson;
 
 static const int maxCount = 25;
 
 bool handleFile(const QString& pattern)
 {
 	QTextStream ts(stdout);
+    ts.setCodec("UTF-8");
 	QStringList res;
 	if (!QuickGetFilesByFileName(pattern, res, [](bool isDir){return !isDir; }, maxCount))
 	{
@@ -21,36 +17,33 @@ bool handleFile(const QString& pattern)
 		return false;
 	}
 
-    Document d;
-    d.Parse("[]");
-    Q_ASSERT(d.IsArray());
-    Document::AllocatorType& a = d.GetAllocator();
+    QJsonDocument d = QJsonDocument::fromJson("[]");
+    Q_ASSERT(d.isArray());
+    QJsonArray arr = d.array();
     for (const auto& f : res)
     {
         QFileInfo fi(f);
 
-        Value o(kObjectType);
-        o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
-        o.AddMember(Value("description", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
-        o.AddMember(Value("target", a), Value(QDir::toNativeSeparators(fi.absoluteFilePath()).toStdString().c_str(), a), a);
-        o.AddMember(Value("arguments", a), Value("", a), a);
-        o.AddMember(Value("workingDir", a), Value("", a), a);
-        o.AddMember(Value("actionType", a), Value("revealFile", a), a);
+        QVariantMap m;
+        m.insert("title", fi.fileName());
+        m.insert("description", QDir::toNativeSeparators(fi.absolutePath()));
+        m.insert("target", QDir::toNativeSeparators(fi.absoluteFilePath()));
+        m.insert("arguments", "");
+        m.insert("workingDir", "");
+        m.insert("actionType", "revealFile");
         QByteArray bytes = util::extractPNGIconFromFile(fi);
-        o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
-        d.PushBack(o, a);
+        m.insert("iconData", QString(bytes.toBase64()));
+        arr.append(QJsonObject::fromVariantMap(m));
     }
-    StringBuffer buffer;
-    Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
-    d.Accept(writer);
-
-    ts << QString(buffer.GetString());
+    d.setArray(arr);
+    ts << QString(d.toJson(QJsonDocument::Compact));
     return true;
 }
 
 bool handleDir(const QString& pattern)
 {
 	QTextStream ts(stdout);
+    ts.setCodec("UTF-8");
 	QStringList res;
 	if (!QuickGetFilesByFileName(pattern, res, [](bool isDir){return isDir; }, maxCount))
 	{
@@ -58,35 +51,32 @@ bool handleDir(const QString& pattern)
 		return false;
 	}
 
-    Document d;
-    d.Parse("[]");
-    Q_ASSERT(d.IsArray());
-    Document::AllocatorType& a = d.GetAllocator();
+    QJsonDocument d = QJsonDocument::fromJson("[]");
+    Q_ASSERT(d.isArray());
+    QJsonArray arr = d.array();
     for (const auto& f : res)
     {
         QFileInfo fi(f);
 
-        Value o(kObjectType);
-        o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
-        o.AddMember(Value("description", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
-        o.AddMember(Value("target", a), Value(QDir::toNativeSeparators(fi.absoluteFilePath()).toStdString().c_str(), a), a);
-        o.AddMember(Value("arguments", a), Value("", a), a);
-        o.AddMember(Value("workingDir", a), Value("", a), a);
-        o.AddMember(Value("actionType", a), Value("shellExecute", a), a);
-        o.AddMember(Value("iconPath", a), Value(QString(qApp->applicationDirPath() % "/folder.png").toStdString().c_str(), a), a);
-        d.PushBack(o, a);
+        QVariantMap m;
+        m.insert("title", fi.fileName());
+        m.insert("description", QDir::toNativeSeparators(fi.absolutePath()));
+        m.insert("target", QDir::toNativeSeparators(fi.absoluteFilePath()));
+        m.insert("arguments", "");
+        m.insert("workingDir", "");
+        m.insert("actionType", "shellExecute");
+        m.insert("iconPath", QString(qApp->applicationDirPath() % "/folder.png"));
+        arr.append(QJsonObject::fromVariantMap(m));
     }
-    StringBuffer buffer;
-    Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
-    d.Accept(writer);
-
-    ts << QString(buffer.GetString());
+    d.setArray(arr);
+    ts << QString(d.toJson(QJsonDocument::Compact));
     return true;
 }
 
 bool handleVSOpen(const QString& pattern)
 {
 	QTextStream ts(stdout);
+    ts.setCodec("UTF-8");
 	QStringList res;
 	if (!QuickGetFilesByFileName(pattern, res, [](bool isDir){return !isDir; }, maxCount))
 	{
@@ -100,41 +90,36 @@ bool handleVSOpen(const QString& pattern)
     QByteArray c = f.readAll();
     f.close();
 
-    Document d;
-    d.Parse("[]");
-    Q_ASSERT(d.IsArray());
-    Document::AllocatorType& a = d.GetAllocator();
+    QJsonDocument d = QJsonDocument::fromJson("[]");
+    Q_ASSERT(d.isArray());
+    QJsonArray arr = d.array();
     for (const auto& f : res)
     {
         QFileInfo fi(f);
-        if (fi.isDir())
-            continue;
 
         QStringList args;
         args << QDir::toNativeSeparators(fi.absoluteFilePath()) << "1" << "1";
-        Value o(kObjectType);
-        o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
-        o.AddMember(Value("description", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
-        o.AddMember(Value("target", a), Value(QString(c).toStdString().c_str(), a), a);
-        o.AddMember(Value("arguments", a), Value(args.join(QChar(' ')).toStdString().c_str(), a), a);
-        o.AddMember(Value("workingDir", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
-        o.AddMember(Value("actionType", a), Value("script", a), a);
-        o.AddMember(Value("scriptExecutor", a), Value("cscript", a), a);
+        QVariantMap m;
+        m.insert("title", fi.fileName());
+        m.insert("description", QDir::toNativeSeparators(fi.absolutePath()));
+        m.insert("target", QString(c));
+        m.insert("arguments", args.join(QChar(' ')));
+        m.insert("workingDir", QDir::toNativeSeparators(fi.absolutePath()));
+        m.insert("actionType", "script");
+        m.insert("scriptExecutor", "cscript");
         QByteArray bytes = util::extractPNGIconFromFile(fi);
-        o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
-        d.PushBack(o, a);
+        m.insert("iconData", QString(bytes.toBase64()));
+        arr.append(QJsonObject::fromVariantMap(m));
     }
-    StringBuffer buffer;
-    Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
-    d.Accept(writer);
-
-    ts << QString(buffer.GetString());
+    d.setArray(arr);
+    ts << QString(d.toJson(QJsonDocument::Compact));
     return true;
 }
 
 bool handleShellOpen(const QString& pattern)
 {
 	QTextStream ts(stdout);
+    ts.setCodec("UTF-8");
 	QStringList res;
 	if (!QuickGetFilesByFileName(pattern, res, [](bool){ return true; }, maxCount))
 	{
@@ -142,37 +127,33 @@ bool handleShellOpen(const QString& pattern)
 		return false;
 	}
 
-    Document d;
-    d.Parse("[]");
-    Q_ASSERT(d.IsArray());
-    Document::AllocatorType& a = d.GetAllocator();
+    QJsonDocument d = QJsonDocument::fromJson("[]");
+    Q_ASSERT(d.isArray());
+    QJsonArray arr = d.array();
     for (const auto& f : res)
     {
         QFileInfo fi(f);
 
-        Value o(kObjectType);
-        o.AddMember(Value("title", a), Value(fi.fileName().toStdString().c_str(), a), a);
-        o.AddMember(Value("description", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
-        o.AddMember(Value("target", a), Value(QDir::toNativeSeparators(fi.absoluteFilePath()).toStdString().c_str(), a), a);
-        o.AddMember(Value("arguments", a), Value("", a), a);
-        o.AddMember(Value("workingDir", a), Value(QDir::toNativeSeparators(fi.absolutePath()).toStdString().c_str(), a), a);
-        o.AddMember(Value("actionType", a), Value("shellExecute", a), a);
+        QVariantMap m;
+        m.insert("title", fi.fileName());
+        m.insert("description", QDir::toNativeSeparators(fi.absolutePath()));
+        m.insert("target", QDir::toNativeSeparators(fi.absoluteFilePath()));
+        m.insert("arguments", "");
+        m.insert("workingDir", QDir::toNativeSeparators(fi.absolutePath()));
+        m.insert("actionType", "shellExecute");
         if (fi.isDir())
         {
-            o.AddMember(Value("iconPath", a), Value(QString(qApp->applicationDirPath() % "/folder.png").toStdString().c_str(), a), a);
+            m.insert("iconPath", QString(qApp->applicationDirPath() % "/folder.png"));
         }
         else
         {
             QByteArray bytes = util::extractPNGIconFromFile(fi);
-            o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
+            m.insert("iconData", QString(bytes.toBase64()));
         }
-        d.PushBack(o, a);
+        arr.append(QJsonObject::fromVariantMap(m));
     }
-    StringBuffer buffer;
-    Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
-    d.Accept(writer);
-
-    ts << QString(buffer.GetString());
+    d.setArray(arr);
+    ts << QString(d.toJson(QJsonDocument::Compact));
     return true;
 }
 
