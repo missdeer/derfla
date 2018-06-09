@@ -2,7 +2,7 @@
 #include "extension.h"
 
 Extension::Extension(QObject *parent) 
-	: QObject(parent)
+    : QObject(parent)
     , process_(nullptr)
     , daemon_(false)
 {
@@ -13,8 +13,7 @@ Extension::~Extension()
 {
     if (process_)
     {
-        if (process_->state() == QProcess::Running)
-            process_->terminate();
+        process_->kill();
         delete process_;
     }
 
@@ -67,12 +66,11 @@ bool Extension::query(const QString& input)
         }
         process_->setWorkingDirectory(QFileInfo(executable_).absolutePath());
     }
-	if (process_->state() == QProcess::Running)
-		process_->terminate();
+    process_->kill();
     arguments << input.split(QChar(' '));
     process_->setArguments(arguments);
     process_->start();
-	return true;
+    return true;
 }
 
 const QString &Extension::author() const
@@ -195,9 +193,9 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
     QByteArray output = process_->readAllStandardOutput();
     // convert json output to action list
     derflaActions_.clear();
-	QJsonParseError error;
+    QJsonParseError error;
     QJsonDocument doc = QJsonDocument::fromJson(output, &error);
-	qDebug() << error.errorString();
+    qDebug() << error.errorString();
     if (doc.isArray())
     {
         QJsonArray array = doc.array();
