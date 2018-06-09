@@ -69,16 +69,6 @@
 // Qt Xml
 #include <QDomDocument>
 
-// Qt Concurrent
-#include <QtConcurrent>
-
-// Qt Sql
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlRecord>
-#include <QSqlError>
-#include <QSqlDriver>
-
 // Boost
 #include <boost/scope_exit.hpp>
 

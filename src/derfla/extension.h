@@ -15,6 +15,7 @@ public:
     void runDaemon();
     void stopDaemon();
     bool query(const QString& input);
+    void stopQuery();
 
     const QString &author() const;
     void setAuthor(const QString &author);
@@ -57,7 +58,6 @@ public slots:
     void finished(int, QProcess::ExitStatus);
 
 private:
-    QProcess* process_;
     QString author_;
     QString name_;
     QString description_;
@@ -69,7 +69,7 @@ private:
     QStringList prefix_;
     QIcon waitIcon_;
     bool daemon_;
-
+    QList<QProcess*> processes_;
     DerflaActionList derflaActions_;
 
     QString findProgram();

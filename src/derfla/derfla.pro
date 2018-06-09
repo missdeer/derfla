@@ -1,4 +1,4 @@
-QT       += core gui widgets xml concurrent sql gui-private
+QT       += core gui widgets xml gui-private
 
 TARGET = Derfla
 TEMPLATE = app

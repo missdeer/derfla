@@ -3,7 +3,6 @@
 
 Extension::Extension(QObject *parent) 
     : QObject(parent)
-    , process_(nullptr)
     , daemon_(false)
 {
 
@@ -11,12 +10,7 @@ Extension::Extension(QObject *parent)
 
 Extension::~Extension()
 {
-    if (process_)
-    {
-        process_->kill();
-        delete process_;
-    }
-
+    stopQuery();
     if (daemon_)
         stopDaemon();
 }
@@ -51,26 +45,32 @@ void Extension::stopDaemon()
 bool Extension::query(const QString& input)
 {
     QStringList arguments;
-    if (!process_)
+    QProcess *p = new QProcess;
+    connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
+    if (executor_.isEmpty())
     {
-        process_ = new QProcess;
-        connect(process_, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(finished(int,QProcess::ExitStatus)));
-        if (executor_.isEmpty())
-        {
-            process_->setProgram(executable_);
-        }
-        else
-        {            
-            process_->setProgram(findProgram());
-            arguments << executable_;
-        }
-        process_->setWorkingDirectory(QFileInfo(executable_).absolutePath());
+        p->setProgram(executable_);
     }
-    process_->kill();
+    else
+    {
+        p->setProgram(findProgram());
+        arguments << executable_;
+    }
+    p->setWorkingDirectory(QFileInfo(executable_).absolutePath());
     arguments << input.split(QChar(' '));
-    process_->setArguments(arguments);
-    process_->start();
+    p->setArguments(arguments);
+    p->start();
+    processes_.append(p);
     return true;
+}
+
+void Extension::stopQuery()
+{
+    while (!processes_.isEmpty())
+    {
+        QProcess* p = processes_.first();
+        p->kill();
+    }
 }
 
 const QString &Extension::author() const
@@ -187,10 +187,33 @@ void Extension::setWaitIconData(const QString &waitIconData)
 
 void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
-    if (exitCode != 0)
+    QProcess* p = qobject_cast<QProcess*>(sender());
+    if (!processes_.contains(p))
+    {
+        delete p;
         return;
+    }
+    if (p != processes_.last())
+    {
+        while (p != processes_.first())
+        {
+            processes_.removeFirst();
+        }
+        delete p;
+        processes_.removeFirst();
+        return;        
+    }
 
-    QByteArray output = process_->readAllStandardOutput();
+    // it's the last one
+    processes_.clear();
+    if (exitCode != 0)
+    {
+        delete p;
+        return;
+    }
+
+    QByteArray output = p->readAllStandardOutput();
+    delete p;
     // convert json output to action list
     derflaActions_.clear();
     QJsonParseError error;

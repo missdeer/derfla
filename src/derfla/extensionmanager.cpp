@@ -99,9 +99,9 @@ bool ExtensionManager::query(const QString &input)
         for (auto e : extensions_)
         {
             if (e->prefixMatched(""))
-            {
                 e->query(input);
-            }
+            else
+                e->stopQuery();
         }
     }
     if (inputs.length() > 1 && !inputs.at(1).isEmpty())
@@ -110,9 +110,9 @@ bool ExtensionManager::query(const QString &input)
         for (auto e : extensions_)
         {
             if (e->prefixMatched(prefix))
-            {
                 e->query(input);
-            }
+            else
+                e->stopQuery();
         }
     }
     return true;
