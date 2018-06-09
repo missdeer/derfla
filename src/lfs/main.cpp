@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
         }
         QString res = dbrw.search(QString(argv[1]));
         QTextStream ts( stdout );
+        ts.setCodec("UTF-8");
         ts << res;
         return 0;
     }

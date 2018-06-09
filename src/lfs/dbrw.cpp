@@ -32,50 +32,38 @@ DBRW::~DBRW()
 
 QString DBRW::search(const QString &keyword, int countRequired)
 {
-    QString res;
 	LocalFSItemList fsil; 
     getLFSItems(fsil, keyword, countRequired);
 
-    if (!fsil.empty())
+    QJsonDocument d = QJsonDocument::fromJson("[]");
+    Q_ASSERT(d.isArray());
+    QJsonArray arr = d.array();
+    for (auto item : fsil)
     {
-        Document d;
-        d.Parse("[]");
-        Q_ASSERT(d.IsArray());
-
-        Document::AllocatorType& a = d.GetAllocator();
-        for (auto item : fsil)
+        QVariantMap m;
+        m.insert("title", item->title());
+        m.insert("description", item->description());
+        m.insert("target", item->target());
+        m.insert("arguments", item->arguments());
+        m.insert("workingDir", item->workingDirectory());
+        m.insert("actionType", item->actionType());
+        QIcon icon = item->icon();
+        auto allSizes = icon.availableSizes();
+        if (!allSizes.isEmpty())
         {
-            Value o(kObjectType);
-            o.AddMember(Value("title", a), Value(StringRef(item->title().toStdString().c_str()), a), a);
-            o.AddMember(Value("description", a), Value(StringRef(item->description().toStdString().c_str()), a), a);
-            o.AddMember(Value("target", a), Value(StringRef(item->target().toStdString().c_str()), a), a);
-            o.AddMember(Value("arguments", a), Value(StringRef(item->arguments().toStdString().c_str()), a), a);
-            o.AddMember(Value("workingDir", a), Value(StringRef(item->workingDirectory().toStdString().c_str()), a), a);
-            o.AddMember(Value("actionType", a), Value(StringRef(item->actionType().toStdString().c_str()), a), a);
-            QIcon icon = item->icon();
-            auto allSizes = icon.availableSizes();
-            if (!allSizes.isEmpty())
-            {
-                QSize size = allSizes.at(0);
-                auto pixmap = icon.pixmap(size);
-                QByteArray bytes;
-                QBuffer buffer(&bytes);
-                buffer.open(QIODevice::WriteOnly);
-                pixmap.save(&buffer, "PNG");
-                buffer.close();
-                o.AddMember(Value("iconData", a), Value(QString(bytes.toBase64()).toStdString().c_str(), a), a);
-            }
-            d.PushBack(o, a);
+            QSize size = allSizes.at(0);
+            auto pixmap = icon.pixmap(size);
+            QByteArray bytes;
+            QBuffer buffer(&bytes);
+            buffer.open(QIODevice::WriteOnly);
+            pixmap.save(&buffer, "PNG");
+            buffer.close();
+            m.insert("iconData", bytes.toBase64());
         }
-
-        StringBuffer buffer;
-        Writer<StringBuffer, Document::EncodingType, ASCII<>> writer(buffer);
-        d.Accept(writer);
-
-        res = QString(buffer.GetString());
+        arr.append(QJsonObject::fromVariantMap(m));
     }
-
-    return res;
+    d.setArray(arr);
+    return d.toJson(QJsonDocument::Compact);
 }
 
 bool DBRW::getLFSItems(LocalFSItemList &fsil, const QString& keyword, int countRequired)
