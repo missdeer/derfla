@@ -39,14 +39,6 @@ FORMS    += \
 
 INCLUDEPATH += $$PWD
 
-CONFIG(release, debug|release) : {
-    DEFINES += QT_NO_DEBUG_OUTPUT=1 QT_NO_INFO_OUTPUT=1
-}
-
-unix: !macx: {
-    LIBS += -lz
-}
-
 macx: {
 #    QMAKE_MAC_SDK = macosx10.11
     ICON = derfla.icns
@@ -54,8 +46,6 @@ macx: {
     icon.files += derfla.png
     INSTALLS += icon
 
-    CONFIG(release, debug|release) : {
-    }
     QMAKE_INFO_PLIST = osxInfo.plist
 #    copy_skins.commands = 'cp -R \"$$PWD/skins\" \"$${TARGET}.app/Contents/Resources\"'
 #    QMAKE_EXTRA_TARGETS +=  copy_skins
@@ -64,11 +54,9 @@ macx: {
 }
 
 win32: {
-    win32-*msvc* {
-    } else {
+    win32-g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
     }
-    QT += winextras
 
     # Windows icons
     RC_FILE = derfla.rc

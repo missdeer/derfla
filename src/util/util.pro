@@ -37,21 +37,14 @@ HEADERS += \
     directory.h \
     util.h
 
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
-
 win32: {
-    win32-*msvc* {
-    } else {
+    win32-g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
     }
     QT += winextras
     SOURCES += \
         $$PWD/win_util.cpp \
         $$PWD/WinIconProvider.cpp
-
 
     HEADERS += \
         $$PWD/win_util.h \
@@ -60,8 +53,6 @@ win32: {
 }
 
 unix: !macx: {
-    LIBS += -lz
-
     SOURCES += \
         $$PWD/unix_util.cpp
 

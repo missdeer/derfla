@@ -29,25 +29,23 @@ HEADERS += \
     stdafx.h
 
 win32: {
-    win32-*msvc* {
-    } else {
+    win32-g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
-        LIBS += -lz
     }
-    QT += winextras
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
-        contains(QMAKE_HOST.arch, x86_64): {
-            copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything64.dll) $$shell_path($$DESTDIR/Everything64.dll)'
-            copy_everything_exe.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/exe/Everything64.exe) $$shell_path($$DESTDIR/Everything64.exe)'
-        }
-        else: {
-            copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything32.dll) $$shell_path($$DESTDIR/Everything32.dll)'
-            copy_everything_exe.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/exe/Everything32.exe) $$shell_path($$DESTDIR/Everything32.exe)'
-        }
+    contains(QMAKE_HOST.arch, x86_64): {
+        copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything64.dll) $$shell_path($$DESTDIR/Everything64.dll)'
+        copy_everything_exe.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/exe/Everything64.exe) $$shell_path($$DESTDIR/Everything64.exe)'
+    }
+    else: {
+        copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything32.dll) $$shell_path($$DESTDIR/Everything32.dll)'
+        copy_everything_exe.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/exe/Everything32.exe) $$shell_path($$DESTDIR/Everything32.exe)'
+    }
+    copy_png.commands = '$(COPY_FILE) $$shell_path($$PWD/folder.png) $$shell_path($$DESTDIR)'
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
-    QMAKE_EXTRA_TARGETS += copy_cfg copy_everything_exe copy_everything_dll
-    POST_TARGETDEPS += copy_cfg copy_everything_exe copy_everything_dll
+    QMAKE_EXTRA_TARGETS += copy_png copy_cfg copy_everything_exe copy_everything_dll
+    POST_TARGETDEPS += copy_png copy_cfg copy_everything_exe copy_everything_dll
 }
 
 RESOURCES += \
