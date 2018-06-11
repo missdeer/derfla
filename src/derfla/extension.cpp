@@ -204,18 +204,19 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
         return;        
     }
 
+    derflaActions_.clear();
     // it's the last one
     processes_.clear();
     if (exitCode != 0)
     {
         delete p;
+        emit queried(derflaActions_);
         return;
     }
 
     QByteArray output = p->readAllStandardOutput();
     delete p;
     // convert json output to action list
-    derflaActions_.clear();
     QJsonParseError error;
     QJsonDocument doc = QJsonDocument::fromJson(output, &error);
     qDebug() << error.errorString();

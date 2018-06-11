@@ -91,15 +91,19 @@ bool ExtensionManager::loadAllFromCache()
     return true;
 }
 
-bool ExtensionManager::query(const QString &input)
+void ExtensionManager::query(const QString &input)
 {
+    bool querying = false;
     QStringList inputs = input.split(QChar(' '));
     if (inputs.length() == 1)
     {
         for (auto e : extensions_)
         {
             if (e->prefixMatched(""))
+            {
+                querying = true;
                 e->query(input);
+            }
             else
                 e->stopQuery();
         }
@@ -110,12 +114,17 @@ bool ExtensionManager::query(const QString &input)
         for (auto e : extensions_)
         {
             if (e->prefixMatched(prefix))
+            {
+                querying = true;
                 e->query(input);
+            }
             else
                 e->stopQuery();
         }
     }
-    return true;
+
+    if (!querying)
+        emit emptyAction();
 }
 
 bool ExtensionManager::installExtension(const QString &extensionFile)

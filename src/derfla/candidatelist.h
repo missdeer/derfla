@@ -38,6 +38,7 @@ signals:
     void keyPressedEvent(QKeyEvent* event);
 private slots:
     void actionUpdated(DerflaActionList& dal);
+    void emptyAction();
 private:
     Ui::CandidateList *ui;
     bool activeWindowFlag_;

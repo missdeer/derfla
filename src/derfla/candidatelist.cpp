@@ -25,6 +25,7 @@ CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent
     ui->list->setItemDelegate(new CandidateListDelegate(ui->list));
     connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
     connect(extensionManager_, &ExtensionManager::actionUpdated, this, &CandidateList::actionUpdated);
+    connect(extensionManager_, &ExtensionManager::emptyAction, this, &CandidateList::emptyAction);
 }
 
 CandidateList::~CandidateList()
@@ -150,6 +151,13 @@ void CandidateList::actionUpdated(DerflaActionList &dal)
     {
         dal_.append(da);
     }
+    populateList();
+}
+
+void CandidateList::emptyAction()
+{
+    ui->list->clear();
+    dal_.clear();
     populateList();
 }
 
