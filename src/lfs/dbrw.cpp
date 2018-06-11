@@ -1,10 +1,5 @@
 #include "stdafx.h"
-#include <rapidjson/document.h>
-#include <rapidjson/writer.h>
-#include <rapidjson/stringbuffer.h>
 #include "dbrw.h"
-
-using namespace rapidjson;
 
 DBRW::DBRW()
 {
