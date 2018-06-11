@@ -13,9 +13,95 @@ ExtensionManager::ExtensionManager(QObject *parent)
     }
 }
 
+bool ExtensionManager::loadAllFromLocal()
+{
+    QString extensionPath = qApp->applicationDirPath() % "/extensions";
+    QDir dir(extensionPath);
+    if (!dir.exists())
+        return false;
+
+    dir.setFilter(QDir::Dirs);
+    auto dirs = dir.entryInfoList();
+
+    for (const auto & d : dirs)
+    {
+        QString filePath = d.absoluteFilePath() % "/extension.cfg";
+        QFileInfo fi(filePath);
+        if (fi.exists())
+        {
+            QFile f(filePath);
+            if (!f.open(QIODevice::ReadOnly))
+            {
+                continue;
+            }
+            QByteArray c = f.readAll();
+            f.close();
+
+            QJsonDocument json = QJsonDocument::fromJson(c);
+            if (!json.isObject())
+            {
+                continue;
+            }
+
+            QJsonObject o = json.object();
+            ExtensionPtr e(new Extension);
+            if (o["id"].isString())
+                e->setId(o["id"].toString());
+            if (o["author"].isString())
+                e->setAuthor(o["author"].toString());
+            if (o["name"].isString())
+                e->setName(o["name"].toString());
+            if (o["executable"].isString())
+            {
+                e->setExecutable(d.absoluteFilePath() % "/" % o["executable"].toString());
+#if defined(Q_OS_WIN)
+                if (!o["executable"].toString().endsWith(".exe", Qt::CaseInsensitive))
+                    e->setExecutable(d.absoluteFilePath() % "/" % o["executable"].toString() % ".exe");
+#endif
+                if (!QFile::exists(e->executable()))
+                    continue;
+            }
+            if (o["description"].isString())
+                e->setDescription(o["description"].toString());
+            if (o["executor"].isString())
+                e->setExecutor(o["executor"].toString());
+            if (o["prefix"].isString())
+                e->setPrefix(QStringList() << o["prefix"].toString());
+            if (o["prefix"].isArray())
+            {
+                QJsonArray arr = o["prefix"].toArray();
+                QStringList prefix;
+                for (auto a : arr)
+                {
+                    if (a.isString())
+                        prefix << a.toString();
+                }
+                e->setPrefix(prefix);
+            }
+            if (o["waitIconPath"].isString())
+                e->setWaitIconPath(d.absoluteFilePath() % "/" % o["waitIconPath"].toString());
+            if (o["waitIconData"].isString())
+                e->setWaitIconData(o["waitIconData"].toString());
+            if (o["waitTitle"].isString())
+                e->setWaitTitle(o["waitTitle"].toString());
+            if (o["waitDescription"].isString())
+                e->setWaitDescription(o["waitDescription"].toString());
+            if (o["daemon"].isBool() && o["daemon"].toBool())
+            {
+                e->setDaemon(true);
+                e->runDaemon();
+            }
+            extensions_.append(e);
+            connect(e.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
+        }
+    }
+
+    return true;
+}
+
 bool ExtensionManager::loadAllFromCache()
 {
-    QString extensionsPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/extensions.cfg";
+    QString extensionsPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/extensions/extensions.cfg";
     QFile f(extensionsPath);
 
     if (!f.exists())
@@ -129,7 +215,7 @@ void ExtensionManager::query(const QString &input)
 
 bool ExtensionManager::installExtension(const QString &extensionFile)
 {
-    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/" % QUuid::createUuid().toString().mid(1, 36).toLower();
+    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/extensions/" % QUuid::createUuid().toString().mid(1, 36).toLower();
     QDir dir(savePath);
     if (!dir.exists())
     {
@@ -203,7 +289,7 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
     }
 
     vm.insert("id", e->id());
-    QString newPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/" % e->id();
+    QString newPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/extensions/" % e->id();
     if (!dir.rename(savePath, newPath))
     {
         dir.removeRecursively();
@@ -297,7 +383,7 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
     extensions_.append(e);
     connect(e.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
     // cache
-    QString extensionsPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/extensions.cfg";
+    QString extensionsPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/extension/extensions.cfg";
     f.setFileName(extensionsPath);
 	c.clear();
     if (!f.open(QIODevice::ReadOnly))

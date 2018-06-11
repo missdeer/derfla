@@ -10,6 +10,7 @@ class ExtensionManager : public QObject
 public:
     explicit ExtensionManager(QObject *parent = nullptr);
 
+    bool loadAllFromLocal();
     bool loadAllFromCache();
     void query(const QString& input);
     bool installExtension(const QString& extensionFile);

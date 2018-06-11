@@ -5,7 +5,7 @@ CONFIG -= app_bundle
 
 TARGET = lfs
 PRECOMPILED_HEADER = stdafx.h
-DESTDIR = $$PWD/../../bin/lfs
+DESTDIR = $$PWD/../../bin/extensions/lfs
 
 win32-clang-msvc: CONFIG -= precompile_header
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)

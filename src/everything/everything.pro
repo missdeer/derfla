@@ -5,7 +5,7 @@ CONFIG -= app_bundle
 
 TARGET = et
 PRECOMPILED_HEADER = stdafx.h
-DESTDIR = $$PWD/../../bin/everything
+DESTDIR = $$PWD/../../bin/extensions/everything
 
 win32-clang-msvc: CONFIG -= precompile_header
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
