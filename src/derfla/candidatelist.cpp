@@ -39,6 +39,8 @@ void CandidateList::update(const QString &text)
         hide();
     else
         cleared_ = false;
+
+    dal_.clear();
     extensionManager_->query(text);
 }
 
@@ -73,6 +75,7 @@ remove_duplicated:
             goto remove_duplicated;
         }
 #endif
+        auto oldCount = ui->list->count();
         for (DerflaActionPtr da : dal_)
         {
             QListWidgetItem* item = new QListWidgetItem(ui->list);
@@ -81,6 +84,8 @@ remove_duplicated:
             item->setData(Qt::DecorationRole, da->icon());
             ui->list->addItem(item);
         }
+        for (int i = 0; i < oldCount; i++)
+            delete ui->list->takeItem(0);
         itemCount_ = dal_.length();
         refreshList();
     }
@@ -145,8 +150,6 @@ void CandidateList::showEvent(QShowEvent* /*event*/)
 
 void CandidateList::actionUpdated(DerflaActionList &dal)
 {
-    ui->list->clear();
-    dal_.clear();
     for(auto da : dal)
     {
         dal_.append(da);
