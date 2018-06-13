@@ -5,7 +5,12 @@ CONFIG -= app_bundle
 
 TARGET = lfs
 PRECOMPILED_HEADER = stdafx.h
-DESTDIR = $$PWD/../../bin/extensions/lfs
+
+macx: {
+    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/lfs
+} else {
+    DESTDIR = $$PWD/../../bin/extensions/lfs
+}
 
 win32-clang-msvc: CONFIG -= precompile_header
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
@@ -44,6 +49,12 @@ win32: {
     }
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
+    copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
+    QMAKE_EXTRA_TARGETS += copy_cfg
+    POST_TARGETDEPS += copy_cfg
+}
+
+macx: {
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg
     POST_TARGETDEPS += copy_cfg

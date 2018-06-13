@@ -10,7 +10,12 @@ TARGET = derflautil
 TEMPLATE = lib
 CONFIG += c++14 precompile_header
 PRECOMPILED_HEADER = stdafx.h
-DESTDIR = ../../bin
+
+macx: {
+    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Libs
+} else {
+    DESTDIR = $$PWD/../../bin/
+}
 
 win32-clang-msvc: CONFIG -= precompile_header
 DEFINES += UTIL_LIBRARY

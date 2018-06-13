@@ -1,7 +1,11 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
-LIBS += -L$$PWD/../../bin -lderflautil
+macx: {
+    LIBS += -L$$PWD/../../bin/Derfla.app/Contents/Libs -lderflautil
+} else {
+    LIBS += -L$$PWD/../../bin -lderflautil
+}
 
 HEADERS += \
     $$PWD/util_global.h \

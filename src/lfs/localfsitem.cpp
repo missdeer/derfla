@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "LocalFSItem.h"
+#include "localfsitem.h"
 
 LocalFSItem::LocalFSItem()
     : id_(QUuid::createUuid())

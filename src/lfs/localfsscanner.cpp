@@ -187,7 +187,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
             check_stop;
             scanDirectory(Directory {f, true });
         }
-    });
+    }
 }
 #else
 void LocalFSScanner::getBuiltinDirectories()
