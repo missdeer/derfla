@@ -88,6 +88,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     QMenu* trayiconMenu = new QMenu(this);
     trayiconMenu->addAction(showAction);
     trayiconMenu->addAction(loadSkinAction);
+    trayiconMenu->addAction(installExtensionAction);
     trayiconMenu->addAction(quitAction);
     trayIcon_ = new QSystemTrayIcon(this);
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::trayIconActivated);
