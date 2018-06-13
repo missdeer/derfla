@@ -23,7 +23,13 @@ int main(int argc, char *argv[])
     rl.rlim_cur = qMin(rl.rlim_cur, rl.rlim_max);
     setrlimit(RLIMIT_NOFILE, &rl);
 #endif
+
     SharedTools::QtSingleApplication a("LFS", argc, argv);
+
+#if defined(Q_OS_MAC)
+    void HideDockIcon();
+    HideDockIcon();
+#endif
 
     a.setApplicationName("LFS");
     a.setApplicationVersion("1.0");
