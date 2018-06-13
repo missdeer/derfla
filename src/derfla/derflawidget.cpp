@@ -152,8 +152,8 @@ void DerflaWidget::paintEvent(QPaintEvent* event)
     else
     {
         painter.drawPixmap(0, 0, leftPartBackgroundImage_);
-        painter.drawPixmap(size.width() / 2 - 1, 0, midPartBackgroundImage_);
-        painter.drawPixmap(widgetMinWidth_ - (size.width() / 2 ), 0, rightPartBackgroundImage_);
+        painter.drawPixmap(leftPartBackgroundImage_.width(), 0, midPartBackgroundImage_);
+        painter.drawPixmap(leftPartBackgroundImage_.width() + midPartBackgroundImage_.width(), 0, rightPartBackgroundImage_);
     }
     QWidget::paintEvent(event);
 }
