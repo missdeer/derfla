@@ -45,6 +45,7 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
         { "python",         "-c"},
         { "perl",           "-c"},
         { "zsh",            "-c"},
+        { "lua",            "-e"},
 #if defined(Q_OS_MAC)
         { "applescript(as)","-c"},
         { "applescript(js)","-c"},
