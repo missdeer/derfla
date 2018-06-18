@@ -2,7 +2,11 @@
 #include "qtsingleapplication.h"
 #include <QIcon>
 #include "util.h"
+#if defined(Q_OS_WIN)
 #include "everythingwrapper.h"
+#elif defined(Q_OS_MAC)
+#include "mdfindwrapper.h"
+#endif
 
 static const int maxCount = 25;
 
@@ -177,11 +181,13 @@ int main(int argc, char *argv[])
     if (argc == 3 || argc == 4)
     {
         QTextStream ts( stdout );
+#if defined(Q_OS_WIN)
         if (!isEverythingRunning())
         {
             ts << "everything util is not running.";
             return 1;
         }
+#endif
         QString pattern(argc == 3 ? argv[2] : argv[3]);
         if (pattern.size() < 2)
         {
@@ -192,9 +198,11 @@ int main(int argc, char *argv[])
 		if (argc == 4)
 		{
 			QString options(argv[2]);
+#if defined(Q_OS_WIN)
 			Everything_SetMatchWholeWord(options.contains(QChar('w'), Qt::CaseInsensitive));
 			Everything_SetMatchCase(options.contains(QChar('c'), Qt::CaseInsensitive));
 			Everything_SetRegex(options.contains(QChar('r'), Qt::CaseInsensitive));
+#endif
 		}
 
         QMap<QString, std::function<bool(const QString&)>> m = {

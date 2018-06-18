@@ -10,7 +10,6 @@ DESTDIR = $$PWD/../../bin/extensions/everything
 win32-clang-msvc: CONFIG -= precompile_header
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
-include($$PWD/../../3rdparty/everything/everything.pri)
 include($$PWD/../util/util.pri)
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -28,6 +27,7 @@ HEADERS += \
     stdafx.h
 
 win32: {
+    include($$PWD/../../3rdparty/everything/everything.pri)
     win32-g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
     }
@@ -41,11 +41,23 @@ win32: {
         copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything32.dll) $$shell_path($$DESTDIR/Everything32.dll)'
         copy_everything_exe.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/exe/Everything32.exe) $$shell_path($$DESTDIR/Everything32.exe)'
     }
-    copy_png.commands = '$(COPY_FILE) $$shell_path($$PWD/folder.png) $$shell_path($$DESTDIR)'
-    copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
-    QMAKE_EXTRA_TARGETS += copy_png copy_cfg copy_everything_exe copy_everything_dll
-    POST_TARGETDEPS += copy_png copy_cfg copy_everything_exe copy_everything_dll
+    QMAKE_EXTRA_TARGETS += copy_everything_exe copy_everything_dll
+    POST_TARGETDEPS += copy_everything_exe copy_everything_dll
 }
+
+macx: {
+    OBJECTIVE_HEADERS += \
+        mdfindwrapper.h
+    OBJECTIVE_SOURCES += \
+        mdfindwrapper.mm
+    LIBS+= -framework CoreServices -lobjc
+}
+
+copy_png.commands = '$(COPY_FILE) $$shell_path($$PWD/folder.png) $$shell_path($$DESTDIR)'
+copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
+
+QMAKE_EXTRA_TARGETS += copy_png copy_cfg
+POST_TARGETDEPS += copy_png copy_cfg
 
 RESOURCES += \
     everything.qrc

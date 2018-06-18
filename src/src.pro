@@ -5,12 +5,9 @@ TEMPLATE = subdirs
 SUBDIRS +=  \
     util \
     derfla \
+    everything \
     lfs 
 
 derfla.depends = util
 lfs.depends = util
-
-win32: {
-	SUBDIRS += everything
-    everything.depends = util
-}
+everything.depends = util
