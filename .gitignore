@@ -15,3 +15,9 @@ ipch
 *.VC.db
 Makefile
 .vs
+.qmake.stash
+.qmake.cache
+GeneratedFiles
+debug
+release
+x64
