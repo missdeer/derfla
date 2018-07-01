@@ -1,15 +1,15 @@
-QT += core gui sql
+QT += core gui
 
 CONFIG += c++14 console precompile_header
 CONFIG -= app_bundle
 
-TARGET = lfs
+TARGET = hashdigest
 PRECOMPILED_HEADER = stdafx.h
 
 macx: {
-    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/lfs
+    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/hashdigest
 } else {
-    DESTDIR = $$PWD/../../bin/extensions/lfs
+    DESTDIR = $$PWD/../../bin/extensions/hashdigest
 }
 
 win32-clang-msvc: CONFIG -= precompile_header
@@ -29,16 +29,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += $$PWD/util
 
 SOURCES += \
-    main.cpp \
-    dbrw.cpp \
-    localfsscanner.cpp \
-    localfsitem.cpp
+    main.cpp
 
 HEADERS += \
-    stdafx.h \
-    dbrw.h \
-    localfsscanner.h \
-    localfsitem.h
+    stdafx.h
 
 win32: {
     win32-g++* {
@@ -52,12 +46,9 @@ win32: {
 }
 
 macx: {
-    OBJECTIVE_SOURCES += util.mm
-
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg
     POST_TARGETDEPS += copy_cfg
-    LIBS += -framework AppKit
 }
 
 DISTFILES += \

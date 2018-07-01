@@ -6,7 +6,12 @@ SUBDIRS +=  \
     util \
     derfla \
     everything \
-    lfs 
+    lfs \ 
+    hashdigest \
+    websearch \
+    webdict \
+    calculator \
+    weather
 
 derfla.depends = util
 lfs.depends = util
