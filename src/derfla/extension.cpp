@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <boost/scope_exit.hpp>
 #include "extension.h"
 
 Extension::Extension(QObject *parent) 
@@ -186,9 +187,13 @@ void Extension::setWaitIconData(const QString &waitIconData)
 void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
     QProcess* p = qobject_cast<QProcess*>(sender());
+
+    BOOST_SCOPE_EXIT(p) {
+        delete p;
+    } BOOST_SCOPE_EXIT_END
+
     if (p != subProcess_)
     {
-        delete p;
         return;
     }
 
@@ -197,13 +202,11 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
     subProcess_ = nullptr;
     if (exitCode != 0)
     {
-        delete p;
         emit queried(derflaActions_);
         return;
     }
 
     QByteArray output = p->readAllStandardOutput();
-    delete p;
     // convert json output to action list
     QJsonParseError error;
     QJsonDocument doc = QJsonDocument::fromJson(output, &error);
