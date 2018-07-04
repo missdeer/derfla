@@ -66,11 +66,8 @@ bool Extension::query(const QString& input)
 
 void Extension::stopQuery()
 {
-    while (!processes_.isEmpty())
-    {
-        QProcess* p = processes_.first();
-        p->kill();
-    }
+    // discard output from previous processes
+    processes_.clear();
 }
 
 const QString &Extension::author() const
