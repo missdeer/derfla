@@ -69,7 +69,7 @@ private:
     QStringList prefix_;
     QIcon waitIcon_;
     bool daemon_;
-    QList<QProcess*> processes_;
+    QProcess* subProcess_;
     DerflaActionList derflaActions_;
 
     QString findProgram();

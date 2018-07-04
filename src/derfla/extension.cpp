@@ -4,6 +4,7 @@
 Extension::Extension(QObject *parent) 
     : QObject(parent)
     , daemon_(false)
+    , subProcess_(nullptr)
 {
 
 }
@@ -60,14 +61,14 @@ bool Extension::query(const QString& input)
     arguments << input.split(QChar(' '));
     p->setArguments(arguments);
     p->start();
-    processes_.append(p);
+    subProcess_ = p;
     return true;
 }
 
 void Extension::stopQuery()
 {
     // discard output from previous processes
-    processes_.clear();
+    subProcess_ = nullptr;
 }
 
 const QString &Extension::author() const
@@ -185,25 +186,15 @@ void Extension::setWaitIconData(const QString &waitIconData)
 void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
     QProcess* p = qobject_cast<QProcess*>(sender());
-    if (!processes_.contains(p))
+    if (p != subProcess_)
     {
         delete p;
         return;
     }
-    if (p != processes_.last())
-    {
-        while (p != processes_.first())
-        {
-            processes_.removeFirst();
-        }
-        delete p;
-        processes_.removeFirst();
-        return;        
-    }
 
     derflaActions_.clear();
     // it's the last one
-    processes_.clear();
+    subProcess_ = nullptr;
     if (exitCode != 0)
     {
         delete p;
