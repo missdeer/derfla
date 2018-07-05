@@ -36,6 +36,7 @@ private slots:
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
     void loadSkin();
 	void installExtension();
+    void stayOnTop();
     void onLoadingAnimationTimer();
     void showInFront();
     void candidateListDone();
@@ -55,6 +56,7 @@ private:
     ExtensionManager* extensionManager_;
     CandidateList* candidateList_;
     UGlobalHotkeys *hotkeyManager_;
+    bool stayOnTop_;
     void processKey();
     void doEnter();
     void doTab();

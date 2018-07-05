@@ -15,6 +15,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     , extensionManager_(new ExtensionManager)
     , candidateList_(new CandidateList(extensionManager_))
     , hotkeyManager_(new UGlobalHotkeys)
+    , stayOnTop_(false)
 {
 #if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
@@ -60,20 +61,18 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     connect(quitAction, &QAction::triggered, this, &DerflaWidget::quit);
     addAction(quitAction);
 
-    QAction *clearAction = new QAction(tr("&Clear Input"), this);
-    clearAction->setShortcut(tr("Ctrl+U"));
-    connect(clearAction, &QAction::triggered, input_, &QLineEdit::clear);
-    addAction(clearAction);
-
     QAction *loadSkinAction = new QAction(tr("Load &Skin"), this);
-    loadSkinAction->setShortcut(tr("Ctrl+O"));
     connect(loadSkinAction, &QAction::triggered, this, &DerflaWidget::loadSkin);
     addAction(loadSkinAction);
 
-	QAction *installExtensionAction = new QAction(tr("&Install Extension"), this);
-	installExtensionAction->setShortcut(tr("Ctrl+I"));
+    QAction *installExtensionAction = new QAction(tr("&Install Extension"), this);
 	connect(installExtensionAction, &QAction::triggered, this, &DerflaWidget::installExtension);
 	addAction(installExtensionAction);
+
+    QAction *stayOnTopAction = new QAction(tr("Stay On Top"), this);
+    stayOnTopAction->setCheckable(true);
+    connect(stayOnTopAction, &QAction::triggered, this, &DerflaWidget::stayOnTop);
+    addAction(stayOnTopAction);
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
 
@@ -89,6 +88,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     trayiconMenu->addAction(showAction);
     trayiconMenu->addAction(loadSkinAction);
     trayiconMenu->addAction(installExtensionAction);
+    trayiconMenu->addAction(stayOnTopAction);
     trayiconMenu->addAction(quitAction);
     trayIcon_ = new QSystemTrayIcon(this);
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::trayIconActivated);
@@ -176,7 +176,7 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
             candidateList_->hide();
         else
         {
-            if (input_->text().isEmpty())
+            if (input_->text().isEmpty() && !stayOnTop_)
                 hide();
             else
                 input_->setText("");
@@ -307,6 +307,18 @@ void DerflaWidget::installExtension()
     catch(std::runtime_error& e) {
         QMessageBox::warning(this, tr("Installing extension failed"), QString::fromLatin1(e.what()), QMessageBox::Ok);
     }
+}
+
+void DerflaWidget::stayOnTop()
+{
+    QAction *action = qobject_cast<QAction*>(sender());
+    stayOnTop_ = !stayOnTop_;
+    action->setCheckable(stayOnTop_);
+    if (stayOnTop_)
+        setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    else
+        setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
+    showInFront();
 }
 
 void DerflaWidget::onLoadingAnimationTimer()
