@@ -9,7 +9,6 @@
 DerflaWidget::DerflaWidget(QWidget *parent)
     : QWidget(parent)
     , mouseMovePos_(0, 0)
-    , loadingAnimationTimer_(new QTimer(this))
     , candidateDelayTimer_(new QTimer(this))
     , input_(new CharLineEdit(this))
     , extensionManager_(new ExtensionManager)
@@ -97,7 +96,6 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     trayIcon_->setToolTip(tr("Derfla - Accelerate your keyboard!"));
     trayIcon_->show();
 
-    connect(loadingAnimationTimer_, SIGNAL(timeout()), this, SLOT(onLoadingAnimationTimer()));
     connect(candidateDelayTimer_, &QTimer::timeout, this, &DerflaWidget::onCandidateDelayTimer);
     candidateDelayTimer_->setSingleShot(true);
 #if defined(Q_OS_WIN)
@@ -110,7 +108,6 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 
 DerflaWidget::~DerflaWidget()
 {
-    loadingAnimationTimer_->stop();
     candidateDelayTimer_->stop();
     hotkeyManager_->unregisterHotkey();
 }
@@ -245,7 +242,11 @@ void DerflaWidget::inputChanged(const QString &text)
     }
     else
     {
+#if defined(Q_OS_WIN)
         candidateDelayTimer_->start(200);
+#else
+        candidateDelayTimer_->start(100);
+#endif
     }
 }
 
@@ -321,23 +322,6 @@ void DerflaWidget::stayOnTop()
     showInFront();
 }
 
-void DerflaWidget::onLoadingAnimationTimer()
-{
-    //static int degree = 0;
-    //degree += 36;
-    //if (degree > 360)
-    //    degree -= 360;
-    //QList<QAction*> actions = input_->actions();
-    //if (actions.isEmpty())
-    //    return;
-    //QAction* logoAction = actions.at(0);
-    //QPixmap icon(":/loading.png");
-    //QMatrix rm;
-    //rm.rotate(degree);
-    //icon = icon.transformed(rm);
-    //logoAction->setIcon(icon);
-}
-
 void DerflaWidget::showInFront()
 {
     if (isHidden())
@@ -360,7 +344,6 @@ void DerflaWidget::quit()
 void DerflaWidget::onCandidateDelayTimer()
 {
     showCandidateList();
-    waiting();
 }
 
 void DerflaWidget::showCandidateList()
@@ -498,11 +481,6 @@ bool DerflaWidget::applySkin(const QString& skin)
     return true;
 }
 
-void DerflaWidget::waiting()
-{
-    loadingAnimationTimer_->start(100);
-}
-
 void DerflaWidget::hideCandidateList()
 {
     if (candidateList_->isVisible())
@@ -589,8 +567,6 @@ bool DerflaWidget::loadSkinPackage(const QString& skinPath, QString& configurati
 
 void DerflaWidget::stopWaiting()
 {
-    loadingAnimationTimer_->stop();
-
     QList<QAction*> actions = input_->actions();
     if (actions.isEmpty())
         return;

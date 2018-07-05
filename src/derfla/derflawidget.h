@@ -37,7 +37,6 @@ private slots:
     void loadSkin();
 	void installExtension();
     void stayOnTop();
-    void onLoadingAnimationTimer();
     void showInFront();
     void candidateListDone();
     void quit();
@@ -62,7 +61,6 @@ private:
     void doTab();
     void doBackTab();
     bool applySkin(const QString& skin);
-    void waiting();
     void stopWaiting();
     void showCandidateList();
     void hideCandidateList();
