@@ -69,7 +69,7 @@ void UGlobalHotkeys::registerHotkey(const UKeySequence& keySeq, size_t id) {
     }
 
     if (!RegisterHotKey((HWND)winId(), (int)id, (UINT)winMod, (UINT)key)) {
-        //qDebug() << "Error activating hotkey!";
+        qDebug() << "Error activating hotkey!";
     } else {
         Registered.insert(id);
     }
@@ -150,6 +150,7 @@ void UGlobalHotkeys::onHotkeyPressed(size_t id) {
 bool UGlobalHotkeys::winEvent(MSG * message, long * result) {
     Q_UNUSED(result);
     if (message->message == WM_HOTKEY) {
+        qDebug() << __FUNCTION__;
         size_t id = message->wParam;
         Q_ASSERT(Registered.find(id) != Registered.end() && "Unregistered hotkey");
         emit activated(id);

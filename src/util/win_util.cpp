@@ -357,7 +357,9 @@ namespace util {
 
         if (IMAGE_DOS_SIGNATURE != image_dos_header.e_magic)
         {
+#if !defined(QT_NO_DEBUG)
             qWarning("Sorry, I do not understand this file.\n");
+#endif
             return false;
         }
 
@@ -377,7 +379,9 @@ namespace util {
 
         if (IMAGE_NT_SIGNATURE != ntSignature)
         {
+#if !defined(QT_NO_DEBUG)
             qWarning("Missing NT signature. Unknown file type.\n");
+#endif
             return false;
         }
 
