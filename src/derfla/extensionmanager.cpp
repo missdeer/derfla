@@ -424,14 +424,14 @@ void ExtensionManager::extensionQueried(DerflaActionList &dal)
 
 void ExtensionManager::query(const QString &input)
 {
+    for (auto e : extensions_)
+        e->stopQuery();
+
     QStringList inputs = input.split(QChar(' '));
     QString prefix;
 
     if (inputs.length() > 1)
         prefix = inputs.at(0);
-
-    for (auto e : extensions_)
-        e->stopQuery();
 
     QList<ExtensionPtr> extensions = prefixExtensionMap_.values(prefix);
 
