@@ -7,7 +7,6 @@ Extension::Extension(QObject *parent)
     , daemon_(false)
     , subProcess_(nullptr)
 {
-
 }
 
 Extension::~Extension()
@@ -127,12 +126,9 @@ void Extension::setPrefix(const QStringList &prefix)
     prefix_ = prefix;
 }
 
-bool Extension::prefixMatched(const QString &text)
+const QStringList &Extension::prefix()
 {
-    if (text.isEmpty() && prefix_.isEmpty())
-        return true;
-
-    return prefix_.contains(text);
+    return prefix_;
 }
 
 const QString &Extension::waitTitle() const

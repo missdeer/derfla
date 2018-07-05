@@ -70,7 +70,10 @@ bool ExtensionManager::loadAllFromLocal()
             if (o["executor"].isString())
                 e->setExecutor(o["executor"].toString());
             if (o["prefix"].isString())
+            {
                 e->setPrefix(QStringList() << o["prefix"].toString());
+                prefixExtensionMap_.insert(o["prefix"].toString(), e);
+            }
             if (o["prefix"].isArray())
             {
                 QJsonArray arr = o["prefix"].toArray();
@@ -78,9 +81,17 @@ bool ExtensionManager::loadAllFromLocal()
                 for (auto a : arr)
                 {
                     if (a.isString())
+                    {
                         prefix << a.toString();
+                        prefixExtensionMap_.insert(a.toString(), e);
+                    }
                 }
                 e->setPrefix(prefix);
+            }
+            if (o["prefix"].isNull())
+            {
+                e->setPrefix(QStringList() << "");
+                prefixExtensionMap_.insert("", e);
             }
             if (o["waitIconPath"].isString())
                 e->setWaitIconPath(d.absoluteFilePath() % "/" % o["waitIconPath"].toString());
@@ -149,7 +160,10 @@ bool ExtensionManager::loadAllFromCache()
         if (o["executor"].isString())
             e->setExecutor(o["executor"].toString());
         if (o["prefix"].isString())
+        {
             e->setPrefix(QStringList() << o["prefix"].toString());
+            prefixExtensionMap_.insert(o["prefix"].toString(), e);
+        }
         if (o["prefix"].isArray())
         {
             QJsonArray arr = o["prefix"].toArray();
@@ -157,9 +171,17 @@ bool ExtensionManager::loadAllFromCache()
             for (auto a : arr)
             {
                 if (a.isString())
+                {
                     prefix << a.toString();
+                    prefixExtensionMap_.insert(a.toString(), e);
+                }
             }
             e->setPrefix(prefix);
+        }
+        if (o["prefix"].isNull())
+        {
+            e->setPrefix(QStringList() << "");
+            prefixExtensionMap_.insert("", e);
         }
         if (o["waitIconPath"].isString())
             e->setWaitIconPath(o["waitIconPath"].toString());
@@ -179,42 +201,6 @@ bool ExtensionManager::loadAllFromCache()
     }
 
     return true;
-}
-
-void ExtensionManager::query(const QString &input)
-{
-    bool querying = false;
-    QStringList inputs = input.split(QChar(' '));
-    if (inputs.length() == 1)
-    {
-        for (auto e : extensions_)
-        {
-            if (e->prefixMatched(""))
-            {
-                querying = true;
-                e->query(input);
-            }
-            else
-                e->stopQuery();
-        }
-    }
-    if (inputs.length() > 1 && !inputs.at(1).isEmpty())
-    {
-        QString prefix = inputs.at(0);
-        for (auto e : extensions_)
-        {
-            if (e->prefixMatched(prefix))
-            {
-                querying = true;
-                e->query(input);
-            }
-            else
-                e->stopQuery();
-        }
-    }
-
-    if (!querying)
-        emit emptyAction();
 }
 
 bool ExtensionManager::installExtension(const QString &extensionFile)
@@ -345,6 +331,7 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
     {
         e->setPrefix(QStringList() << o["prefix"].toString());
         vm.insert("prefix", QStringList() << o["prefix"].toString());
+        prefixExtensionMap_.insert(o["prefix"].toString(), e);
     }
     if (o["prefix"].isArray())
     {
@@ -353,10 +340,19 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
         for (auto a : arr)
         {
             if (a.isString())
+            {
                 prefix << a.toString();
+                prefixExtensionMap_.insert(a.toString(), e);
+            }
         }
         e->setPrefix(prefix);
         vm.insert("prefix", prefix);
+    }
+    if (o["prefix"].isNull())
+    {
+        e->setPrefix(QStringList() << "");
+        prefixExtensionMap_.insert("", e);
+        vm.insert("prefix", "");
     }
     if (o["waitIconPath"].isString() && !o["waitIconPath"].toString().isEmpty())
     {
@@ -424,4 +420,24 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
 void ExtensionManager::extensionQueried(DerflaActionList &dal)
 {
     emit actionUpdated(dal);
+}
+
+void ExtensionManager::query(const QString &input)
+{
+    QStringList inputs = input.split(QChar(' '));
+    QString prefix;
+
+    if (inputs.length() > 1)
+        prefix = inputs.at(0);
+
+    for (auto e : extensions_)
+        e->stopQuery();
+
+    QList<ExtensionPtr> extensions = prefixExtensionMap_.values(prefix);
+
+    for (auto e : extensions)
+        e->query(input);
+
+    if (extensions.isEmpty())
+        emit emptyAction();
 }

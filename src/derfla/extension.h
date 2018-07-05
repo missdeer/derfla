@@ -33,7 +33,7 @@ public:
     void setExecutor(const QString &executor);
 
     void setPrefix(const QStringList &prefix);
-    bool prefixMatched(const QString &text);
+    const QStringList &prefix();
 
     const QString &waitTitle() const;
     void setWaitTitle(const QString &waitTitle);

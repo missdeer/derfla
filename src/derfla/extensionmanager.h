@@ -2,6 +2,7 @@
 #define EXTENSIONMANAGER_H
 
 #include <QObject>
+#include <QMultiMap>
 #include "extension.h"
 
 class ExtensionManager : public QObject
@@ -21,6 +22,7 @@ public slots:
     void extensionQueried(DerflaActionList& dal);
 private:
     QList<ExtensionPtr> extensions_;
+    QMultiMap<QString, ExtensionPtr> prefixExtensionMap_;
 };
 
 #endif // ExtensionMANAGER_H
