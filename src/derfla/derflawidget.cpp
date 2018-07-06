@@ -14,7 +14,6 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     , extensionManager_(new ExtensionManager)
     , candidateList_(new CandidateList(extensionManager_))
     , hotkeyManager_(new UGlobalHotkeys)
-    , stayOnTop_(false)
 {
 #if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
@@ -27,6 +26,8 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     setFocusPolicy(Qt::ClickFocus);
 
     QSettings settings;
+
+    stayOnTop_ = settings.value("stayOnTop", false).toBool();
 
     QString skinPath = settings.value("skin", ":/skins/derfla.derflaskin").toString();
     if (!applySkin(skinPath))
@@ -70,6 +71,11 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 
     QAction *stayOnTopAction = new QAction(tr("Stay On Top"), this);
     stayOnTopAction->setCheckable(true);
+    if (stayOnTop_)
+    {
+        stayOnTopAction->setChecked(true);
+        setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    }
     connect(stayOnTopAction, &QAction::triggered, this, &DerflaWidget::stayOnTop);
     addAction(stayOnTopAction);
 
@@ -314,12 +320,16 @@ void DerflaWidget::stayOnTop()
 {
     QAction *action = qobject_cast<QAction*>(sender());
     stayOnTop_ = !stayOnTop_;
-    action->setCheckable(stayOnTop_);
+    action->setChecked(stayOnTop_);
     if (stayOnTop_)
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
     else
         setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
     showInFront();
+
+    QSettings settings;
+    settings.setValue("stayOnTop", stayOnTop_);
+    settings.sync();
 }
 
 void DerflaWidget::showInFront()
