@@ -13,7 +13,7 @@
 
 using namespace std;
 
-#define check_stop do { if (stop_) return;   QThread::yieldCurrentThread(); } while(0)
+#define check_stop do { if (stop_) return;   QThread::yieldCurrentThread(); qApp->processEvents(); } while(0)
 
 LocalFSScanner::LocalFSScanner(DBRW &dbrw, QObject *parent)
     : QObject(parent)

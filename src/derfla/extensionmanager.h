@@ -10,6 +10,7 @@ class ExtensionManager : public QObject
     Q_OBJECT
 public:
     explicit ExtensionManager(QObject *parent = nullptr);
+    ~ExtensionManager();
 
     bool loadAllFromLocal();
     bool loadAllFromCache();

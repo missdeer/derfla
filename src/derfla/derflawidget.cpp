@@ -11,9 +11,9 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     , mouseMovePos_(0, 0)
     , candidateDelayTimer_(new QTimer(this))
     , input_(new CharLineEdit(this))
-    , extensionManager_(new ExtensionManager)
+    , extensionManager_(new ExtensionManager(this))
     , candidateList_(new CandidateList(extensionManager_))
-    , hotkeyManager_(new UGlobalHotkeys)
+    , hotkeyManager_(new UGlobalHotkeys(this))
 {
 #if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );

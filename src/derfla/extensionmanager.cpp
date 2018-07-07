@@ -13,6 +13,12 @@ ExtensionManager::ExtensionManager(QObject *parent)
     }
 }
 
+ExtensionManager::~ExtensionManager()
+{
+    extensions_.clear();
+    prefixExtensionMap_.clear();
+}
+
 bool ExtensionManager::loadAllFromLocal()
 {
 #if defined(Q_OS_MAC)
