@@ -20,8 +20,14 @@ int main(int argc, char *argv[])
     a.setOrganizationDomain("dfordsoft.com");
     a.setOrganizationName("Derfla");
 
+    if (argc < 2)
+    {
+        QTextStream ts(stdout);
+        ts.setCodec("UTF-8");
 
-
+        ts << "invalid arguments";
+        return 1;
+    }
 
     return a.exec();
 }

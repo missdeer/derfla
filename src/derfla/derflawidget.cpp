@@ -45,8 +45,8 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 
     extensionManager_->loadAllFromLocal();
     extensionManager_->loadAllFromCache();
-    connect(candidateList_, &CandidateList::done, this, &DerflaWidget::candidateListDone);
-    connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::keyPressed);
+    connect(candidateList_, &CandidateList::done, this, &DerflaWidget::onCandidateListDone);
+    connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::onKeyPressed);
 
 //    QAction *logoAction = new QAction(tr("Input"), this);
 //    logoAction->setIcon(QIcon(":/derfla.ico"));
@@ -54,19 +54,29 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     input_->setObjectName("input");
     input_->setClearButtonEnabled(false);
     connect(input_, &CharLineEdit::keyPressed, this, &DerflaWidget::keyPressEvent);
-    connect(input_, &QLineEdit::textChanged, this, &DerflaWidget::inputChanged);
+    connect(input_, &QLineEdit::textChanged, this, &DerflaWidget::onInputChanged);
 
     QAction *quitAction = new QAction(tr("E&xit"), this);
     quitAction->setShortcut(tr("Ctrl+Q"));
-    connect(quitAction, &QAction::triggered, this, &DerflaWidget::quit);
+    connect(quitAction, &QAction::triggered, this, &DerflaWidget::onQuit);
     addAction(quitAction);
 
+    QAction *selectFileAction = new QAction(tr("Select File"), this);
+    selectFileAction->setShortcut(tr("Ctrl+O"));
+    connect(selectFileAction, &QAction::triggered, this, &DerflaWidget::onSelectFile);
+    addAction(selectFileAction);
+
+    QAction *selectFolderAction = new QAction(tr("Select Folder"), this);
+    selectFolderAction->setShortcut(tr("Ctrl+D"));
+    connect(selectFolderAction, &QAction::triggered, this, &DerflaWidget::onSelectFolder);
+    addAction(selectFolderAction);
+
     QAction *loadSkinAction = new QAction(tr("Load &Skin"), this);
-    connect(loadSkinAction, &QAction::triggered, this, &DerflaWidget::loadSkin);
+    connect(loadSkinAction, &QAction::triggered, this, &DerflaWidget::onLoadSkin);
     addAction(loadSkinAction);
 
     QAction *installExtensionAction = new QAction(tr("&Install Extension"), this);
-	connect(installExtensionAction, &QAction::triggered, this, &DerflaWidget::installExtension);
+	connect(installExtensionAction, &QAction::triggered, this, &DerflaWidget::onInstallExtension);
 	addAction(installExtensionAction);
 
     QAction *stayOnTopAction = new QAction(tr("Stay On Top"), this);
@@ -76,7 +86,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
         stayOnTopAction->setChecked(true);
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
     }
-    connect(stayOnTopAction, &QAction::triggered, this, &DerflaWidget::stayOnTop);
+    connect(stayOnTopAction, &QAction::triggered, this, &DerflaWidget::onStayOnTop);
     addAction(stayOnTopAction);
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -87,16 +97,18 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 #else
     showAction->setShortcut(tr("Ctrl+Alt+Space"));
 #endif
-    connect(showAction, &QAction::triggered, this, &DerflaWidget::showInFront);
+    connect(showAction, &QAction::triggered, this, &DerflaWidget::onShowInFront);
 
     QMenu* trayiconMenu = new QMenu(this);
     trayiconMenu->addAction(showAction);
+    trayiconMenu->addAction(selectFileAction);
+    trayiconMenu->addAction(selectFolderAction);
     trayiconMenu->addAction(loadSkinAction);
     trayiconMenu->addAction(installExtensionAction);
     trayiconMenu->addAction(stayOnTopAction);
     trayiconMenu->addAction(quitAction);
     trayIcon_ = new QSystemTrayIcon(this);
-    connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::trayIconActivated);
+    connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::onTrayIconActivated);
     trayIcon_->setContextMenu(trayiconMenu);
     trayIcon_->setIcon(QIcon(":/derfla.ico"));
     trayIcon_->setToolTip(tr("Derfla - Accelerate your keyboard!"));
@@ -109,7 +121,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 #else
     hotkeyManager_->registerHotkey("Ctrl+Alt+Space");
 #endif
-    connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::showInFront);
+    connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::onShowInFront);
 }
 
 DerflaWidget::~DerflaWidget()
@@ -170,7 +182,6 @@ void DerflaWidget::moveEvent(QMoveEvent* /*event*/)
 
 void DerflaWidget::keyPressEvent(QKeyEvent *event)
 {
-
     //qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key();
     if (event->key() == Qt::Key_Escape)
     {
@@ -237,7 +248,7 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void DerflaWidget::inputChanged(const QString &text)
+void DerflaWidget::onInputChanged(const QString &text)
 {
     //qDebug() <<  "DerflaWidget::inputChanged:" << input_->text();
     if (text.isEmpty())
@@ -256,7 +267,7 @@ void DerflaWidget::inputChanged(const QString &text)
     }
 }
 
-void DerflaWidget::keyPressed(QKeyEvent *e)
+void DerflaWidget::onKeyPressed(QKeyEvent *e)
 {
 
     //qDebug() << "DerflaWidget::keyPressed" << e;
@@ -267,7 +278,7 @@ void DerflaWidget::keyPressed(QKeyEvent *e)
     qApp->sendEvent(this, e);
 }
 
-void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+void DerflaWidget::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
 
     switch(reason)
@@ -283,7 +294,7 @@ void DerflaWidget::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-void DerflaWidget::loadSkin()
+void DerflaWidget::onLoadSkin()
 {    
     hideCandidateList();
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -300,7 +311,7 @@ void DerflaWidget::loadSkin()
     }
 }
 
-void DerflaWidget::installExtension()
+void DerflaWidget::onInstallExtension()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,
 		tr("Install Derfla Extension"),
@@ -316,7 +327,7 @@ void DerflaWidget::installExtension()
     }
 }
 
-void DerflaWidget::stayOnTop()
+void DerflaWidget::onStayOnTop()
 {
     QAction *action = qobject_cast<QAction*>(sender());
     stayOnTop_ = !stayOnTop_;
@@ -325,14 +336,14 @@ void DerflaWidget::stayOnTop()
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
     else
         setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
-    showInFront();
+    onShowInFront();
 
     QSettings settings;
     settings.setValue("stayOnTop", stayOnTop_);
     settings.sync();
 }
 
-void DerflaWidget::showInFront()
+void DerflaWidget::onShowInFront()
 {
     if (isHidden())
         show();
@@ -340,13 +351,13 @@ void DerflaWidget::showInFront()
     raise();
 }
 
-void DerflaWidget::candidateListDone()
+void DerflaWidget::onCandidateListDone()
 {
     hideCandidateList();
     input_->setText("");
 }
 
-void DerflaWidget::quit()
+void DerflaWidget::onQuit()
 {
     qApp->quit();
 }
@@ -356,12 +367,45 @@ void DerflaWidget::onCandidateDelayTimer()
     showCandidateList();
 }
 
+void DerflaWidget::onSelectFile()
+{
+    if (!isVisible())
+        return;
+    hideCandidateList();
+    QString fileName = QFileDialog::getOpenFileName(this);
+    if (fileName.isEmpty())
+        return;
+
+    QString text = input_->text();
+    if (!text.isEmpty() && !text.endsWith(" "))
+        text.append(" ");
+    text.append(QDir::toNativeSeparators(fileName));
+    input_->setText(text);
+}
+
+void DerflaWidget::onSelectFolder()
+{
+    if (!isVisible())
+        return;
+
+    hideCandidateList();
+    QString fileName = QFileDialog::getExistingDirectory(this);
+    if (fileName.isEmpty())
+        return;
+
+    QString text = input_->text();
+    if (!text.isEmpty() && !text.endsWith(" "))
+        text.append(" ");
+    text.append(QDir::toNativeSeparators(fileName));
+    input_->setText(text);
+}
+
 void DerflaWidget::showCandidateList()
 {
     //candidateList_->show();
     candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
     
-    QString inputText = input_->text();
+    QString inputText = input_->text().trimmed();
 
     candidateList_->update(inputText);
 }

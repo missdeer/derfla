@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     a.setOrganizationName("Derfla");
 
 
-    if (argc != 2)
+    if (argc < 2)
     {
         QTextStream ts(stdout);
         ts.setCodec("UTF-8");
@@ -51,7 +51,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    if (!calculate(argv[1]))
+    QString expression;
+    for (int i = 1; i < argc; i++)
+        expression.append(argv[i]);
+
+    if (!calculate(expression))
         return 1;
 
     return 0;

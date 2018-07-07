@@ -26,21 +26,22 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *event);    
     void moveEvent(QMoveEvent *event);
-
     void keyPressEvent(QKeyEvent* event);
 signals:
 
 private slots:
-    void inputChanged(const QString& text);
-    void keyPressed(QKeyEvent* e);
-    void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
-    void loadSkin();
-	void installExtension();
-    void stayOnTop();
-    void showInFront();
-    void candidateListDone();
-    void quit();
+    void onInputChanged(const QString& text);
+    void onKeyPressed(QKeyEvent* e);
+    void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
+    void onLoadSkin();
+	void onInstallExtension();
+    void onStayOnTop();
+    void onShowInFront();
+    void onCandidateListDone();
+    void onQuit();
     void onCandidateDelayTimer();
+    void onSelectFile();
+    void onSelectFolder();
 private:
     const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;

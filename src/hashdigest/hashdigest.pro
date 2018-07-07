@@ -53,3 +53,6 @@ macx: {
 
 DISTFILES += \
     extension.cfg
+
+RESOURCES += \
+    hashdigest.qrc
