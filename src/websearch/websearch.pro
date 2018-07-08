@@ -57,3 +57,6 @@ macx: {
 
 DISTFILES += \
     extension.cfg
+
+RESOURCES += \
+    websearch.qrc
