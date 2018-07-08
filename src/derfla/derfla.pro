@@ -57,6 +57,10 @@ win32: {
     win32-g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
     }
+    win32-*msvc* {
+        QMAKE_CXXFLAGS_RELEASE += /Zi
+        QMAKE_LFLAGS_RELEASE += /DEBUG
+    }
 
     # Windows icons
     RC_FILE = derfla.rc

@@ -12,7 +12,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     , candidateDelayTimer_(new QTimer(this))
     , input_(new CharLineEdit(this))
     , extensionManager_(new ExtensionManager(this))
-    , candidateList_(new CandidateList(extensionManager_))
+    , candidateList_(new CandidateList(extensionManager_, this))
     , hotkeyManager_(new UGlobalHotkeys(this))
 {
 #if defined(Q_OS_WIN)
