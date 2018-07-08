@@ -21,6 +21,7 @@ win32-clang-msvc: CONFIG -= precompile_header
 DEFINES += UTIL_LIBRARY
 
 include($$PWD/../../3rdparty/Boost.pri)
+include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -45,6 +46,10 @@ HEADERS += \
 win32: {
     win32-g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
+    }
+    win32-*msvc* {
+        QMAKE_CXXFLAGS_RELEASE += /Zi
+        QMAKE_LFLAGS_RELEASE += /DEBUG
     }
     QT += winextras
     SOURCES += \
