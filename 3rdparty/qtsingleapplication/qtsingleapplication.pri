@@ -11,6 +11,6 @@ isEmpty(gotqtlockedfile):include($$PWD/../qtlockedfile/qtlockedfile.pri)
 contains(TEMPLATE, lib): {
     SOURCES += $$PWD/qtsingleapplication.cpp $$PWD/qtlocalpeer.cpp
     win32:contains(CONFIG, shared) {
-        DEFINES += QT_QTSINGLEAPPLICATION_EXPORT=__declspec(dllexport)
+        DEFINES += QT_QTSINGLEAPPLICATION_EXPORT=1
     }
 }

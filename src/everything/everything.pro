@@ -28,7 +28,7 @@ HEADERS += \
 
 win32: {
     include($$PWD/../../3rdparty/everything/everything.pri)
-    win32-g++* {
+    win32-*g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
     }
     win32-*msvc* {

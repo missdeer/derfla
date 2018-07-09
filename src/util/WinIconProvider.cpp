@@ -2,6 +2,7 @@
 #include "win_util.h"
 #include <QtWin>
 #include <CommonControls.h>
+#include <shellapi.h>
 #include "WinIconProvider.h"
 
 // Temporary work around to avoid having to install the latest Windows SDK
