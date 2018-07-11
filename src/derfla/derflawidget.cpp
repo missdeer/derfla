@@ -1,5 +1,11 @@
 #include "stdafx.h"
 #include <private/qzipreader_p.h>
+#if defined(Q_OS_WIN)
+#include "winsparkleautoupdater.h"
+#elif defined(Q_OS_MAC)
+#include "SparkleAutoUpdater.h"
+#include "CocoaInitializer.h"
+#endif
 #include "uglobalhotkeys.h"
 #include "charlineedit.h"
 #include "extensionmanager.h"
@@ -127,6 +133,14 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     hotkeyManager_->registerHotkey("Ctrl+Alt+Space");
 #endif
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::onShowInFront);
+
+
+#if defined(Q_OS_WIN)
+    m_autoUpdater = new WinSparkleAutoUpdater("https://derfla.dfordsoft.com/dl/w/appcast.xml");
+#elif defined(Q_OS_MAC)
+    CocoaInitializer initializer;
+    m_autoUpdater = new SparkleAutoUpdater("https://derfla.dfordsoft.com/dl/m/appcast.xml");
+#endif
 }
 
 DerflaWidget::~DerflaWidget()

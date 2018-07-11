@@ -12,6 +12,7 @@ class ExtensionManager;
 class CharLineEdit;
 class CandidateList;
 class UGlobalHotkeys;
+class AutoUpdater;
 
 class DerflaWidget : public QWidget
 {
@@ -58,6 +59,7 @@ private:
     ExtensionManager* extensionManager_;
     CandidateList* candidateList_;
     UGlobalHotkeys *hotkeyManager_;
+    AutoUpdater* m_autoUpdater;
     bool stayOnTop_;
     void processKey();
     void doEnter();
