@@ -42,6 +42,8 @@ private slots:
     void onCandidateDelayTimer();
     void onSelectFile();
     void onSelectFolder();
+    void onAbout();
+    void onCustomContextMenuRequested(const QPoint &pos);
 private:
     const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;

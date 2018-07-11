@@ -25,6 +25,8 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 
     setFocusPolicy(Qt::ClickFocus);
 
+    setWindowIcon(QIcon(":/derfla.png"));
+
     QSettings settings;
 
     stayOnTop_ = settings.value("stayOnTop", false).toBool();
@@ -56,28 +58,19 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     connect(input_, &CharLineEdit::keyPressed, this, &DerflaWidget::keyPressEvent);
     connect(input_, &QLineEdit::textChanged, this, &DerflaWidget::onInputChanged);
 
-    QAction *quitAction = new QAction(tr("E&xit"), this);
-    quitAction->setShortcut(tr("Ctrl+Q"));
-    connect(quitAction, &QAction::triggered, this, &DerflaWidget::onQuit);
-    addAction(quitAction);
-
     QAction *selectFileAction = new QAction(tr("Select File"), this);
     selectFileAction->setShortcut(tr("Ctrl+O"));
     connect(selectFileAction, &QAction::triggered, this, &DerflaWidget::onSelectFile);
-    addAction(selectFileAction);
 
     QAction *selectFolderAction = new QAction(tr("Select Folder"), this);
     selectFolderAction->setShortcut(tr("Ctrl+D"));
     connect(selectFolderAction, &QAction::triggered, this, &DerflaWidget::onSelectFolder);
-    addAction(selectFolderAction);
 
     QAction *loadSkinAction = new QAction(tr("Load &Skin"), this);
     connect(loadSkinAction, &QAction::triggered, this, &DerflaWidget::onLoadSkin);
-    addAction(loadSkinAction);
 
     QAction *installExtensionAction = new QAction(tr("&Install Extension"), this);
-	connect(installExtensionAction, &QAction::triggered, this, &DerflaWidget::onInstallExtension);
-	addAction(installExtensionAction);
+    connect(installExtensionAction, &QAction::triggered, this, &DerflaWidget::onInstallExtension);
 
     QAction *stayOnTopAction = new QAction(tr("Stay On Top"), this);
     stayOnTopAction->setCheckable(true);
@@ -87,25 +80,36 @@ DerflaWidget::DerflaWidget(QWidget *parent)
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
     }
     connect(stayOnTopAction, &QAction::triggered, this, &DerflaWidget::onStayOnTop);
-    addAction(stayOnTopAction);
 
-    setContextMenuPolicy(Qt::ActionsContextMenu);
+    QAction *quitAction = new QAction(tr("E&xit"), this);
+    quitAction->setShortcut(tr("Ctrl+Q"));
+    connect(quitAction, &QAction::triggered, this, &DerflaWidget::onQuit);
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
 
     QAction *showAction = new QAction(tr("Show"), this);
-#if defined(Q_OS_WIN)
-    showAction->setShortcut(tr("Alt+Space"));
-#else
-    showAction->setShortcut(tr("Ctrl+Alt+Space"));
-#endif
     connect(showAction, &QAction::triggered, this, &DerflaWidget::onShowInFront);
+
+    QAction *aboutAction = new QAction(tr("About"), this);
+    connect(aboutAction, &QAction::triggered, this, &DerflaWidget::onAbout);
+
+    QAction *homepageAction = new QAction(tr("Homepage"), this);
+    connect(homepageAction, &QAction::triggered, [](){
+        QDesktopServices::openUrl(QUrl("https://derfla.dfordsoft.com"));
+    });
 
     QMenu* trayiconMenu = new QMenu(this);
     trayiconMenu->addAction(showAction);
+    trayiconMenu->addAction(aboutAction);
+    trayiconMenu->addAction(homepageAction);
+    trayiconMenu->addSeparator();
     trayiconMenu->addAction(selectFileAction);
     trayiconMenu->addAction(selectFolderAction);
+    trayiconMenu->addSeparator();
     trayiconMenu->addAction(loadSkinAction);
     trayiconMenu->addAction(installExtensionAction);
     trayiconMenu->addAction(stayOnTopAction);
+    trayiconMenu->addSeparator();
     trayiconMenu->addAction(quitAction);
     trayIcon_ = new QSystemTrayIcon(this);
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::onTrayIconActivated);
@@ -114,6 +118,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     trayIcon_->setToolTip(tr("Derfla - Accelerate your keyboard!"));
     trayIcon_->show();
 
+    connect(this, &QWidget::customContextMenuRequested, this, &DerflaWidget::onCustomContextMenuRequested);
     connect(candidateDelayTimer_, &QTimer::timeout, this, &DerflaWidget::onCandidateDelayTimer);
     candidateDelayTimer_->setSingleShot(true);
 #if defined(Q_OS_WIN)
@@ -398,6 +403,21 @@ void DerflaWidget::onSelectFolder()
         text.append(" ");
     text.append(QDir::toNativeSeparators(fileName));
     input_->setText(text);
+}
+
+void DerflaWidget::onAbout()
+{
+    QMessageBox::about(this, tr("Derfla"), tr(
+                           "Derfla is a productivity application for Windows, which boosts your efficiency with hotkeys, keywords, text expansion and more. "
+                           "Search your Windows and the web, and be more productive with custom actions to control your Windows.\r\n\r\n"
+                           "Contact me at missdeer@dfordsoft.com if you have any problem about this tool. Built at " __DATE__ " " __TIME__
+                           ));
+}
+
+void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)
+{
+    auto menu = trayIcon_->contextMenu();
+    menu->exec(mapToGlobal(pos));
 }
 
 void DerflaWidget::showCandidateList()
