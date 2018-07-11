@@ -110,3 +110,6 @@ win32: {
 
 RESOURCES += \
     derfla.qrc
+
+DISTFILES += \
+    rc/updater-dsa-pub.pem
