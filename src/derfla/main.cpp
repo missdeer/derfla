@@ -2,6 +2,29 @@
 #include "derflawidget.h"
 #include "qtsingleapplication.h"
 
+#if defined(Q_OS_WIN)
+class AppMutex {
+public:
+    AppMutex() {
+#if defined(_WIN64)
+        m_hMutex = ::CreateMutexW(NULL, FALSE, L"Derfla-x86_64" );
+#else
+        m_hMutex = ::CreateMutexW(NULL, FALSE, L"Derfla-x86" );
+#endif
+    }
+    ~AppMutex() {
+        if (m_hMutex)
+        {
+            ::ReleaseMutex(m_hMutex);
+        }
+    }
+private:
+    HANDLE m_hMutex;
+};
+
+static AppMutex g_am;
+#endif
+
 int main(int argc, char *argv[])
 {
 #if !defined(Q_OS_WIN)
@@ -25,7 +48,7 @@ int main(int argc, char *argv[])
     }
 
     QDate d =  QLocale(QLocale::C).toDate(QString(__DATE__).simplified(), QLatin1String("MMM d yyyy"));
-    if (d.daysTo(QDate::currentDate()) > 30)
+    if (d.daysTo(QDate::currentDate()) > 60)
     {
         QMessageBox::critical(NULL, QObject::tr("Expired"), QObject::tr("This application has been expired, please visit http://www.getderfla.com for a new build."), QMessageBox::Ok );
         return 1;
