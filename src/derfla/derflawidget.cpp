@@ -279,7 +279,7 @@ void DerflaWidget::onInputChanged(const QString &text)
     else
     {
 #if defined(Q_OS_WIN)
-        candidateDelayTimer_->start(100);
+        candidateDelayTimer_->start(0);
 #else
         candidateDelayTimer_->start(100);
 #endif
