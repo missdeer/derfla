@@ -6,5 +6,8 @@
         <file>skins/derfla.derflaskin</file>
         <file>terminal.png</file>
         <file>rc/updater-dsa-pub.pem</file>
+        <file>rc/images/extension.png</file>
+        <file>rc/images/general.png</file>
+        <file>rc/images/skin.png</file>
     </qresource>
 </RCC>

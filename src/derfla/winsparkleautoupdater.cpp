@@ -17,6 +17,8 @@ WinSparkleAutoUpdater::WinSparkleAutoUpdater(const QString &url)
     // provide the key using Windows resource.
     win_sparkle_set_dsa_pub_pem(reinterpret_cast<const char *>(QResource(":/rc/updater-dsa-pub.pem").data()));
 
+    win_sparkle_set_automatic_check_for_updates(1);
+    win_sparkle_set_update_check_interval(24*3600);
     // Initialize the updater and possibly show some UI
     win_sparkle_init();
 }

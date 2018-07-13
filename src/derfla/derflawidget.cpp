@@ -10,6 +10,7 @@
 #include "charlineedit.h"
 #include "extensionmanager.h"
 #include "candidatelist.h"
+#include "preferencedialog.h"
 #include "derflawidget.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent)
@@ -104,6 +105,9 @@ DerflaWidget::DerflaWidget(QWidget *parent)
         QDesktopServices::openUrl(QUrl("https://derfla.dfordsoft.com"));
     });
 
+    QAction *preferenceAction = new QAction(tr("Preference..."), this);
+    connect(preferenceAction, &QAction::triggered, this, &DerflaWidget::onPreference);
+
     QMenu* trayiconMenu = new QMenu(this);
     trayiconMenu->addAction(showAction);
     trayiconMenu->addAction(aboutAction);
@@ -115,6 +119,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     trayiconMenu->addAction(loadSkinAction);
     trayiconMenu->addAction(installExtensionAction);
     trayiconMenu->addAction(stayOnTopAction);
+    trayiconMenu->addAction(preferenceAction);
     trayiconMenu->addSeparator();
     trayiconMenu->addAction(quitAction);
     trayIcon_ = new QSystemTrayIcon(this);
@@ -426,6 +431,12 @@ void DerflaWidget::onAbout()
                            "Search your Windows and the web, and be more productive with custom actions to control your Windows.\r\n\r\n"
                            "Contact me at missdeer@dfordsoft.com if you have any problem about this tool. Built at " __DATE__ " " __TIME__
                            ));
+}
+
+void DerflaWidget::onPreference()
+{
+    PreferenceDialog dlg(this);
+    dlg.exec();
 }
 
 void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)

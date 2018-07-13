@@ -65,6 +65,12 @@
 #include <QFileIconProvider>
 #include <QLineEdit>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QCheckBox>
+#include <QSlider>
+#include <QSpinBox>
+#include <QKeySequenceEdit>
+#include <QLabel>
 
 // Qt Xml
 #include <QDomDocument>

@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     actionexecutor.cpp \
     extension.cpp \
     extensionmanager.cpp \
-    autoupdater.cpp
+    autoupdater.cpp \
+    preferencedialog.cpp
 
 HEADERS  += stdafx.h \
     derflawidget.h \
@@ -35,10 +36,12 @@ HEADERS  += stdafx.h \
     actionexecutor.h \
     extension.h \
     extensionmanager.h \
-    autoupdater.h
+    autoupdater.h \
+    preferencedialog.h
 
 FORMS    += \
-    candidatelist.ui
+    candidatelist.ui \
+    preferencedialog.ui
 
 INCLUDEPATH += $$PWD
 
