@@ -16,7 +16,7 @@ signals:
 
 public slots:
     void errorOccurred();
-    void finished(int exitCode, QProcess::ExitStatus status);
+    void finished(int, QProcess::ExitStatus);
 private:
     bool runScript(DerflaActionPtr da);
     bool shellExecute(DerflaActionPtr da);

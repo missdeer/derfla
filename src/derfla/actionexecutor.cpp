@@ -30,7 +30,7 @@ void ActionExecutor::errorOccurred()
 
 }
 
-void ActionExecutor::finished(int exitCode, QProcess::ExitStatus status)
+void ActionExecutor::finished(int , QProcess::ExitStatus )
 {
     QProcess* e = qobject_cast<QProcess*>(sender());
     e->deleteLater();
