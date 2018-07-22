@@ -72,8 +72,9 @@ macx: {
     QMAKE_OBJECTIVE_CFLAGS += -F$$PWD/../../3rdparty/Sparkle
 
     QMAKE_POST_LINK = mkdir -p $$DESTDIR/Derfla.app/Contents/Frameworks && \
-        rm -rf UMLGen.app/Contents/Frameworks/Sparkle.framework && \
-        cp -avf $$PWD/../../3rdparty/Sparkle/Sparkle.framework $$DESTDIR/Derfla.app/Contents/Frameworks
+        rm -rf $$DESTDIR/Derfla.app/Contents/Frameworks/Sparkle.framework && \
+        cp -avf $$PWD/../../3rdparty/Sparkle/Sparkle.framework $$DESTDIR/Derfla.app/Contents/Frameworks && \
+        install_name_tool -change libderflautil.1.dylib @executable_path/../Libs/libderflautil.1.dylib $$DESTDIR/Derfla.app/Contents/MacOS/Derfla
 
     QMAKE_INFO_PLIST = osxInfo.plist
 #    copy_skins.commands = 'cp -R \"$$PWD/skins\" \"$${TARGET}.app/Contents/Resources\"'

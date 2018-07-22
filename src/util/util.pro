@@ -69,3 +69,8 @@ unix: !macx: {
     HEADERS += \
         $$PWD/unix_util.h
 }
+
+macx: {
+    OBJECTIVE_SOURCES += mac_util.mm
+    LIBS += -framework AppKit
+}

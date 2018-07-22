@@ -26,11 +26,6 @@ int main(int argc, char *argv[])
 
     SharedTools::QtSingleApplication a("LFS", argc, argv);
 
-#if defined(Q_OS_MAC)
-    void HideDockIcon();
-    HideDockIcon();
-#endif
-
     a.setApplicationName("LFS");
     a.setApplicationVersion("1.0");
     a.setOrganizationDomain("dfordsoft.com");

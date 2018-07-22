@@ -5,7 +5,11 @@ CONFIG -= app_bundle
 
 TARGET = et
 PRECOMPILED_HEADER = stdafx.h
-DESTDIR = $$PWD/../../bin/extensions/everything
+macx: {
+    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/everything
+} else {
+    DESTDIR = $$PWD/../../bin/extensions/everything
+}
 
 win32-clang-msvc: CONFIG -= precompile_header
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)

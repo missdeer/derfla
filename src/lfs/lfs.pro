@@ -56,12 +56,9 @@ win32: {
 }
 
 macx: {
-    OBJECTIVE_SOURCES += util.mm
-
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg
     POST_TARGETDEPS += copy_cfg
-    LIBS += -framework AppKit
 }
 
 DISTFILES += \
