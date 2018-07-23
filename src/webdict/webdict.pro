@@ -1,4 +1,4 @@
-QT += core gui
+QT += core gui network
 
 CONFIG += c++14 console precompile_header
 CONFIG -= app_bundle
@@ -29,10 +29,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += $$PWD/util
 
 SOURCES += \
-    main.cpp
+    main.cpp \
+    youdao.cpp
 
 HEADERS += \
-    stdafx.h
+    stdafx.h \
+    youdao.h
 
 win32: {
     win32-*g++* {
@@ -57,3 +59,6 @@ macx: {
 
 DISTFILES += \
     extension.cfg
+
+RESOURCES += \
+    webdict.qrc

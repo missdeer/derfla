@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "qtsingleapplication.h"
 #include <QIcon>
+#include "youdao.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
@@ -20,13 +21,23 @@ int main(int argc, char *argv[])
     a.setOrganizationDomain("dfordsoft.com");
     a.setOrganizationName("Derfla");
     
-    if (argc != 2)
+    if (argc < 3)
     {
         QTextStream ts(stdout);
         ts.setCodec("UTF-8");
 
         ts << "invalid arguments";
         return 1;
+    }
+
+    QString cmd(argv[1]);
+    QStringList input;
+    for (int i = 2; i < argc; i++) {
+        input.append(QString(argv[i]));
+    }
+    if (cmd == "dict" || cmd == "yd" || cmd == "youdao") {
+        Youdao* yd = new Youdao;
+        yd->query(input.join(' '));
     }
 
     return a.exec();
