@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include <functional>
-#include "plistparser.h"
 #include "dbrw.h"
 #include "util.h"
 #if defined(Q_OS_WIN)
 #include "win_util.h"
 #elif defined(Q_OS_MAC)
+#include "plistparser.h"
 #else
 #include "unix_util.h"
 #endif
