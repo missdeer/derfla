@@ -121,7 +121,7 @@ bool ActionExecutor::terminalCommand(DerflaActionPtr da)
                     SW_SHOWNORMAL);
 
 #elif defined(Q_OS_MAC)
-    QString cmdline = QString("osascript -e 'tell application \"Terminal\" to do script \"%1 %2\"'").arg(da->target()).arg(da->arguments());
+    QString cmdline = QString("/usr/bin/osascript -e 'tell application \"Terminal\" to do script \"%1 %2\"'").arg(da->target()).arg(da->arguments());
     system(cmdline.toStdString().c_str());
 #else
     // console application, running in a terminal

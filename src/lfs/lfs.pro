@@ -56,6 +56,7 @@ win32: {
 }
 
 macx: {
+    include($$PWD/../../3rdparty/qtplist/qtplist.pri)
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg
     POST_TARGETDEPS += copy_cfg

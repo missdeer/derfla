@@ -184,9 +184,7 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
     QProcess* p = qobject_cast<QProcess*>(sender());
 
-    BOOST_SCOPE_EXIT(p) {
-        delete p;
-    } BOOST_SCOPE_EXIT_END
+    p->deleteLater();
 
     if (p != subProcess_)
     {

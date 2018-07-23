@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <functional>
+#include "plistparser.h"
 #include "dbrw.h"
 #include "util.h"
 #if defined(Q_OS_WIN)
@@ -44,6 +45,9 @@ void LocalFSScanner::scan()
     timestamp_ = QDateTime::currentDateTime().toMSecsSinceEpoch();
     util::timestamp = timestamp_;
 
+#if defined(Q_OS_MAC)
+    scanDockIcons();
+#endif
     scanDirectories_.clear();
 
     getBuiltinDirectories();
@@ -186,6 +190,84 @@ void LocalFSScanner::scanDirectory(const Directory &d)
         {
             check_stop;
             scanDirectory(Directory {f, true });
+        }
+    }
+}
+
+void LocalFSScanner::scanDockIcons()
+{
+    auto homePath = qgetenv("HOME");
+    QProcess *p = new QProcess;
+    connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
+    p->setProgram("/usr/bin/plutil");
+    p->setArguments(QStringList() << "-convert"
+                   << "xml1"
+                   << homePath + "/Library/Preferences/com.apple.dock.plist"
+                   <<"-o"
+                   <<"-");
+    p->start();
+}
+
+void LocalFSScanner::finished(int exitCode, QProcess::ExitStatus )
+{
+    QProcess* p = qobject_cast<QProcess*>(sender());
+
+    p->deleteLater();
+
+    if (exitCode != 0)
+        return;
+
+
+    QByteArray output = p->readAllStandardOutput();
+
+    QBuffer buf(&output);
+    QVariantMap rootMap = PListParser::parsePList(&buf).toMap();
+
+    auto it = rootMap.find("persistent-apps");
+    if (rootMap.end() != it) {
+        auto papps = it.value();
+        if (papps.canConvert<QVariantList>()) {
+            auto it = papps.value<QSequentialIterable>();
+            for (const QVariant& v : it) {
+                auto item = v.toMap();
+                auto tileDataIt = item.find("tile-data");
+                if (item.end() == tileDataIt)
+                    continue;
+
+                auto tileData = tileDataIt.value().toMap();
+
+                auto fileLabelIt = tileData.find("file-label");
+                if (tileData.end() == fileLabelIt)
+                    continue;
+                QString fileLabel = fileLabelIt.value().toString();
+
+                auto fileDataIt = tileData.find("file-data");
+                if (tileData.end() == fileDataIt)
+                    continue;
+
+                auto fileData = fileDataIt.value().toMap();
+                auto cfurlIt = fileData.find("_CFURLString");
+                if (fileData.end() == cfurlIt)
+                    continue;
+                QString cfurl = cfurlIt.value().toString();
+
+                if (cfurl.startsWith("file://") && cfurl.endsWith(".app/")) {
+                    cfurl = cfurl.right(cfurl.length() - 7);
+                    cfurl = cfurl.left(cfurl.length() - 1);
+
+                    QFileInfo fileInfo(cfurl);
+                    dbrw_.insertLFS(util::extractPNGIconFromFile(fileInfo),
+                                    fileLabel,
+                                    fileLabel,
+                                    cfurl,
+                                    "",
+                                    fileInfo.filePath(),
+                                    timestamp_,
+                                    fileInfo.lastModified().toMSecsSinceEpoch(),
+                                    "shellExecute"
+                                    );
+                }
+            }
         }
     }
 }
