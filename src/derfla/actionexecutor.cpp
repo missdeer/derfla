@@ -4,12 +4,7 @@
 ActionExecutor::ActionExecutor(QObject *parent)
     : QObject(parent)
 {
-
-}
-
-bool ActionExecutor::operator()(DerflaActionPtr da)
-{
-    QMap<QString, std::function<bool(DerflaActionPtr)>> m = {
+    actionExecutorMap_ = {
     { "script",          std::bind(&ActionExecutor::runScript,       this, std::placeholders::_1) },
     { "shellExecute",    std::bind(&ActionExecutor::shellExecute,    this, std::placeholders::_1) },
     { "terminalCommand", std::bind(&ActionExecutor::terminalCommand, this, std::placeholders::_1) },
@@ -18,10 +13,15 @@ bool ActionExecutor::operator()(DerflaActionPtr da)
     { "browseInDerfla",  std::bind(&ActionExecutor::browseInDerfla,  this, std::placeholders::_1) },
     { "copyText",        std::bind(&ActionExecutor::copyText,        this, std::placeholders::_1) },
 };
-    if (m.find(da->actionType()) == m.end())
+
+}
+
+bool ActionExecutor::operator()(DerflaActionPtr da)
+{
+    if (actionExecutorMap_.find(da->actionType()) == actionExecutorMap_.end())
         return false;
 
-    auto f = m[da->actionType()];
+    auto f = actionExecutorMap_[da->actionType()];
     return f(da);
 }
 

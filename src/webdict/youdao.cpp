@@ -55,11 +55,80 @@ void Youdao::onFinished()
         qApp->exit(errorCode);
         return;
     }
-    auto translation = o["translation"];
-    auto basic = o["basic"];
-    auto query = o["query"];
-    auto web = o["web"];
 
+    QJsonDocument d = QJsonDocument::fromJson("[]");
+    Q_ASSERT(d.isArray());
+    QJsonArray arr = d.array();
+
+    auto query = o["query"].toString();
+    auto translation = o["translation"].toArray();
+    QStringList trans;
+    for (auto t : translation)
+    {
+        trans.append(t.toString());
+    }
+    auto basic = o["basic"].toObject();
+    if (basic["phonetic"].isString())
+        trans.append("[" + basic["phonetic"].toString() +"]");
+    if (basic["us-phonetic"].isString())
+        trans.append("[" + basic["us-phonetic"].toString() +"]");
+    if (basic["uk-phonetic"].isString())
+        trans.append("[" + basic["uk-phonetic"].toString() +"]");
+
+    QByteArray iconData;
+    QFile icon(":/images/youdao.png");
+    if (icon.open(QIODevice::ReadOnly))
+    {
+        auto bytes = icon.readAll();
+        icon.close();
+        iconData = bytes.toBase64();
+    }
+
+    QVariantMap m;
+    m.insert("title", trans.join(", ") );
+    m.insert("target", query );
+    m.insert("actionType", "copyText");
+    if (!iconData.isEmpty())
+        m.insert("iconData", iconData);
+    arr.append(QJsonObject::fromVariantMap(m));
+
+    auto explains = basic["explains"].toArray();
+    for (auto e : explains)
+    {
+        auto i = e.toString();
+        QVariantMap m;
+        m.insert("title", i );
+        m.insert("target", query );
+        m.insert("actionType", "copyText");
+        if (!iconData.isEmpty())
+            m.insert("iconData", iconData);
+        arr.append(QJsonObject::fromVariantMap(m));
+    }
+
+    auto web = o["web"].toArray();
+    for (auto w : web)
+    {
+        auto i = w.toObject();
+        QString key = i["key"].toString();
+        auto values = i["value"].toArray();
+        QStringList value;
+        for (auto v : values)
+        {
+            value.append(v.toString());
+        }
+        QVariantMap m;
+        m.insert("title", value.join(", ") );
+        m.insert("target", "Web explain of " + query );
+        m.insert("actionType", "copyText");
+        if (!iconData.isEmpty())
+            m.insert("iconData", iconData);
+        arr.append(QJsonObject::fromVariantMap(m));
+    }
+
+    d.setArray(arr);
+    QTextStream ts(stdout);
+    ts.setCodec("UTF-8");
+    ts << QString(d.toJson(QJsonDocument::Compact));
     qApp->exit(0);
 }
 

@@ -27,6 +27,8 @@ private:
     bool copyText(DerflaActionPtr da);
 
     QString findProgram(const QString& exe);
+
+    QMap<QString, std::function<bool(DerflaActionPtr)>> actionExecutorMap_;
 };
 
 #endif // ACTIONEXECUTOR_H

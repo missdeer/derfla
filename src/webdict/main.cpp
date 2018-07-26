@@ -38,7 +38,8 @@ int main(int argc, char *argv[])
     if (cmd == "dict" || cmd == "yd" || cmd == "youdao") {
         Youdao* yd = new Youdao;
         yd->query(input.join(' '));
+        return a.exec();
     }
 
-    return a.exec();
+    return -1;
 }
