@@ -71,12 +71,12 @@ void Youdao::onFinished()
     if (basic["phonetic"].isString())
         trans.append("[" + basic["phonetic"].toString() +"]");
     if (basic["us-phonetic"].isString())
-        trans.append("[" + basic["us-phonetic"].toString() +"]");
+        trans.append("US [" + basic["us-phonetic"].toString() +"]");
     if (basic["uk-phonetic"].isString())
-        trans.append("[" + basic["uk-phonetic"].toString() +"]");
+        trans.append("UK [" + basic["uk-phonetic"].toString() +"]");
 
     QByteArray iconData;
-    QFile icon(":/images/youdao.png");
+    QFile icon(":/rc/images/youdao.png");
     if (icon.open(QIODevice::ReadOnly))
     {
         auto bytes = icon.readAll();
@@ -85,8 +85,9 @@ void Youdao::onFinished()
     }
 
     QVariantMap m;
-    m.insert("title", trans.join(", ") );
-    m.insert("target", query );
+    m.insert("title", trans.join("; ") );
+    m.insert("target", trans.join("; ") );
+    m.insert("description", "[Translation] " + query );
     m.insert("actionType", "copyText");
     if (!iconData.isEmpty())
         m.insert("iconData", iconData);
@@ -98,7 +99,8 @@ void Youdao::onFinished()
         auto i = e.toString();
         QVariantMap m;
         m.insert("title", i );
-        m.insert("target", query );
+        m.insert("target", i );
+        m.insert("description", "[Explain] " + query );
         m.insert("actionType", "copyText");
         if (!iconData.isEmpty())
             m.insert("iconData", iconData);
@@ -117,8 +119,9 @@ void Youdao::onFinished()
             value.append(v.toString());
         }
         QVariantMap m;
-        m.insert("title", value.join(", ") );
-        m.insert("target", "Web explain of " + query );
+        m.insert("title", value.join("; ") );
+        m.insert("target", value.join("; ") );
+        m.insert("description", "[Web] " + key );
         m.insert("actionType", "copyText");
         if (!iconData.isEmpty())
             m.insert("iconData", iconData);
