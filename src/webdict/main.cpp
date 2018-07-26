@@ -2,6 +2,7 @@
 #include "qtsingleapplication.h"
 #include <QIcon>
 #include "youdao.h"
+#include "bing.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
@@ -38,6 +39,12 @@ int main(int argc, char *argv[])
     if (cmd == "dict" || cmd == "yd" || cmd == "youdao") {
         Youdao* yd = new Youdao;
         yd->query(input.join(' '));
+        return a.exec();
+    }
+
+    if (cmd == "dict" || cmd == "bing"){
+        Bing* bing = new Bing;
+        bing->query(input.join(' '));
         return a.exec();
     }
 

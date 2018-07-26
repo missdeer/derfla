@@ -30,11 +30,13 @@ INCLUDEPATH += $$PWD/util
 
 SOURCES += \
     main.cpp \
-    youdao.cpp
+    youdao.cpp \
+    bing.cpp
 
 HEADERS += \
     stdafx.h \
-    youdao.h
+    youdao.h \
+    bing.h
 
 win32: {
     win32-*g++* {
