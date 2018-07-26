@@ -2,6 +2,7 @@
 #define ACTIONEXECUTOR_H
 
 #include <QObject>
+#include <QMap>
 #include <QProcess>
 #include "derflaaction.h"
 
