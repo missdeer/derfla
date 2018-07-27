@@ -59,21 +59,56 @@ void Bing::onFinished()
     }
 
     auto pronunciation = o["pronunciation"].toObject();
+    QStringList pron;
     auto us = pronunciation["AmE"];
+    if (!us.isNull())
+        pron.append("US [" + us.toString() + "]");
     auto uk = pronunciation["BrE"];
+    if (!uk.isNull())
+        pron.append("UK [" + uk.toString() + "]");
+    if (!pron.isEmpty())
+    {
+        QVariantMap m;
+        m.insert("title", pron.join("; ") );
+        m.insert("target", pron.join("; ") );
+        m.insert("description", "[Pronounce] " + query );
+        m.insert("actionType", "copyText");
+        if (!iconData.isEmpty())
+            m.insert("iconData", iconData);
+        arr.append(QJsonObject::fromVariantMap(m));
+    }
+
     auto defs = o["defs"].toArray();
     for (auto def : defs)
     {
         auto d = def.toObject();
         QString pos = d["pos"].toString();
         QString define = d["def"].toString();
+
+        QVariantMap m;
+        m.insert("title", pos + " " + define );
+        m.insert("target", pos + " " + define );
+        m.insert("description", "[Explain] " + query );
+        m.insert("actionType", "copyText");
+        if (!iconData.isEmpty())
+            m.insert("iconData", iconData);
+        arr.append(QJsonObject::fromVariantMap(m));
     }
     auto sams = o["sams"].toArray();
     for (auto sam : sams)
     {
         auto s = sam.toObject();
-        QString eng = d["eng"].toString();
-        QString chn = d["chn"].toString();
+        QString eng = s["eng"].toString();
+        QString chn = s["chn"].toString();
+
+        QVariantMap m;
+        m.insert("title", chn );
+        m.insert("target", chn );
+        m.insert("description", "[Sample] " + eng );
+        m.insert("actionType", "copyText");
+        if (!iconData.isEmpty())
+            m.insert("iconData", iconData);
+        arr.append(QJsonObject::fromVariantMap(m));
     }
 
     d.setArray(arr);
