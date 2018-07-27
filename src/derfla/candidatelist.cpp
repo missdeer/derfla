@@ -118,8 +118,24 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
     switch(event->key())
     {
     case Qt::Key_Up:
+        if (ui->list->currentRow() == 0)
+        {
+            event->ignore();
+        }
+        else
+        {
+            qApp->sendEvent(ui->list, event);
+        }
+        break;
     case Qt::Key_Down:
-        qApp->sendEvent(ui->list, event);
+        if (ui->list->currentRow() == ui->list->count() -1)
+        {
+            event->ignore();
+        }
+        else
+        {
+            qApp->sendEvent(ui->list, event);
+        }
         break;
     default:
         event->ignore();
