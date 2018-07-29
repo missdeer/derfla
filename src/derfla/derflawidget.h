@@ -13,13 +13,14 @@ class CharLineEdit;
 class CandidateList;
 class UGlobalHotkeys;
 class AutoUpdater;
+class SkinManager;
 
 class DerflaWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit DerflaWidget(QWidget *parent = 0);
+    explicit DerflaWidget(QWidget *parent = nullptr);
     ~DerflaWidget();
 protected:
     void mouseMoveEvent(QMouseEvent *event);
@@ -49,18 +50,15 @@ private slots:
 private:
     const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;
-    QPixmap backgroundImage_;
-    QPixmap leftPartBackgroundImage_;
-    QPixmap midPartBackgroundImage_;
-    QPixmap rightPartBackgroundImage_;
-    QTimer* loadingAnimationTimer_;
+
     QTimer* candidateDelayTimer_;
     CharLineEdit* input_;
     QSystemTrayIcon* trayIcon_;
     ExtensionManager* extensionManager_;
     CandidateList* candidateList_;
     UGlobalHotkeys *hotkeyManager_;
-    AutoUpdater* m_autoUpdater;
+    AutoUpdater* autoUpdater_;
+    SkinManager* skinManager_;
     bool stayOnTop_;
     void processKey();
     void doEnter();
@@ -70,8 +68,6 @@ private:
     void stopWaiting();
     void showCandidateList();
     void hideCandidateList();
-    bool loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle, int& cutTop, int& cutBottom);
-    bool loadSkinPackage(const QString& skinPath, QString& configurationPath);
 };
 
 #endif // DerflaWidget_H

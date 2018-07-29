@@ -6,6 +6,7 @@
 #include "SparkleAutoUpdater.h"
 #include "CocoaInitializer.h"
 #endif
+#include "skinmanager.h"
 #include "uglobalhotkeys.h"
 #include "charlineedit.h"
 #include "extensionmanager.h"
@@ -21,6 +22,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     , extensionManager_(new ExtensionManager(this))
     , candidateList_(new CandidateList(extensionManager_, this))
     , hotkeyManager_(new UGlobalHotkeys(this))
+    , skinManager_(new SkinManager)
 {
 #if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
@@ -144,7 +146,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     m_autoUpdater = new WinSparkleAutoUpdater("https://derfla.dfordsoft.com/dl/w/appcast.xml");
 #elif defined(Q_OS_MAC)
     CocoaInitializer initializer;
-    m_autoUpdater = new SparkleAutoUpdater("https://derfla.dfordsoft.com/dl/m/appcast.xml");
+    autoUpdater_ = new SparkleAutoUpdater("https://derfla.dfordsoft.com/dl/m/appcast.xml");
 #endif
 }
 
@@ -152,6 +154,7 @@ DerflaWidget::~DerflaWidget()
 {
     candidateDelayTimer_->stop();
     hotkeyManager_->unregisterHotkey();
+    delete skinManager_;
 }
 
 void DerflaWidget::mouseMoveEvent(QMouseEvent *event)
@@ -185,15 +188,15 @@ void DerflaWidget::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     style()->drawPrimitive(QStyle::PE_Widget, &styleOption, &painter, this);
-    QSize size(backgroundImage_.size());
+    QSize size(skinManager_->backgroundImage().size());
 
     if (size.width() > widgetMinWidth_)
-        painter.drawPixmap(0, 0, backgroundImage_);
+        painter.drawPixmap(0, 0, skinManager_->backgroundImage());
     else
     {
-        painter.drawPixmap(0, 0, leftPartBackgroundImage_);
-        painter.drawPixmap(leftPartBackgroundImage_.width(), 0, midPartBackgroundImage_);
-        painter.drawPixmap(leftPartBackgroundImage_.width() + midPartBackgroundImage_.width(), 0, rightPartBackgroundImage_);
+        painter.drawPixmap(0, 0, skinManager_->leftPartBackgroundImage());
+        painter.drawPixmap(skinManager_->leftPartBackgroundImage().width(), 0, skinManager_->midPartBackgroundImage());
+        painter.drawPixmap(skinManager_->leftPartBackgroundImage().width() + skinManager_->midPartBackgroundImage().width(), 0, skinManager_->rightPartBackgroundImage());
     }
     QWidget::paintEvent(event);
 }
@@ -484,99 +487,13 @@ void DerflaWidget::doBackTab()
 
 bool DerflaWidget::applySkin(const QString& skin)
 {
-    QString s;
-    if (!QFileInfo::exists(skin))
-    {
-        if (applySkin(QString(":/skins/%1.derflaskin").arg(skin)))
-            return true;
-        // load by skin name 
-        s = QApplication::applicationDirPath();
-        const QString skinPath = QString("/skins/%1.xml").arg(skin);
-#if defined(Q_OS_MAC)
-        QDir d(s);
-        d.cdUp();
-        d.cd("Resources");
-        s = d.absolutePath() + skinPath;
-#else
-        s += skinPath;
-#endif
-        if (!QFile::exists(s))
-        {
-            // load by skin package - *.derflaskin, should be decompressed first
-            int index = s.lastIndexOf(".xml");
-            Q_ASSERT(index > 0);
-            s.remove(index, 4);
-            s.append(".derflaskin");
-            if (!loadSkinPackage(s, s))
-            {
-                return false;
-            }
-        }
-    }
-    else
-    {
-        QFileInfo fi(skin);
-        if (fi.suffix() == "xml")
-        {
-            // load by skin configuration file - *.xml
-            s = skin;
-        }
-        else
-        {
-            // load by skin package - *.derflaskin, should be decompressed first
-            if (!loadSkinPackage(skin, s))
-            {
-                return false;
-            }
-        }
-    }
-
-    QString imagePath;
-    QString inputStyle;
-    int cutTop = -1, cutBottom = -1;
-    if (!loadSkinConfiguration(s, imagePath, inputStyle, cutTop, cutBottom))
-    {
+    if (!skinManager_->applySkin(skin))
         return false;
-    }
 
-    if (!backgroundImage_.load(imagePath))
-    {
-        qCritical() << "can't load picture from " << imagePath;
-        return false;
-    }
-
-    QSize size = backgroundImage_.size();
-
-    if (cutTop >= 0 && cutBottom > cutTop)
-    {
-        QPixmap topPartBackgroundImage = backgroundImage_.copy(0, 0, size.width(), cutTop);
-        QPixmap cutPartBackgroundImage = backgroundImage_.copy(0, cutTop, size.width(), cutBottom - cutTop);
-        QPixmap bottomPartBackgroundImage = backgroundImage_.copy(0, cutBottom, size.width(), size.height() - cutBottom);
-        size.setHeight(size.height() - (cutBottom - cutTop));
-        qDebug() << topPartBackgroundImage.size() << cutPartBackgroundImage.size() << bottomPartBackgroundImage.size() << size << backgroundImage_.size();
-        QPixmap t(size);
-        t.fill(Qt::transparent);
-        QPainter painter(&t);
-        painter.drawPixmap(0, 0, size.width(), cutTop, topPartBackgroundImage);
-        painter.drawPixmap(0, cutTop, size.width(), size.height()- cutTop, bottomPartBackgroundImage);
-        backgroundImage_ = t.copy(0, 0, size.width(), size.height());
-    }
-
-    if (size.width() < widgetMinWidth_)
-    {
-        leftPartBackgroundImage_ = backgroundImage_.copy(0, 0,
-                                                         size.width() / 2 -1, size.height());
-        midPartBackgroundImage_ = backgroundImage_.copy(size.width() / 2 - 1, 0,
-                                                        2, size.height()).scaled(widgetMinWidth_ - (size.width() - 2), size.height());
-        rightPartBackgroundImage_ = backgroundImage_.copy(size.width() / 2 + 1, 0,
-                                                          size.width() / 2 - 1, size.height());
-
-        size.setWidth(widgetMinWidth_);
-    }
     resize(1, 1);
-    resize(size);
+    resize(skinManager_->size());
 
-    input_->setStyleSheet(inputStyle);
+    input_->setStyleSheet(skinManager_->inputStyle());
     QFont f = input_->font();
     f.setFamily(globalDefaultFontFamily);
     input_->setFont(f);
@@ -590,84 +507,6 @@ void DerflaWidget::hideCandidateList()
 {
     if (candidateList_->isVisible())
         candidateList_->hide();
-}
-
-bool DerflaWidget::loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle, int& cutTop, int& cutBottom)
-{
-    QDomDocument doc;
-    QFile file(configurationPath);
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        qCritical() << "can't open skin configuration file" << configurationPath;
-        return false;
-    }
-
-    if (!doc.setContent(&file))
-    {
-        qCritical() << "can't parse skin configuration file" << configurationPath;
-        file.close();
-        return false;
-    }
-    file.close();
-
-    QDomElement docElem = doc.documentElement();
-    QDomElement imageElem = docElem.firstChildElement("image");
-    if (imageElem.isNull())
-    {
-        qCritical() << "missing image element in skin configuration file" << configurationPath;
-        return false;
-    }
-    
-    QFileInfo cfg(configurationPath);
-
-    bgImagePath = QString("%1/%2").arg(cfg.absolutePath()).arg(imageElem.text());
-
-    QDomElement issElem = docElem.firstChildElement("inputstyle");
-    if (issElem.isNull())
-    {
-        qCritical() << "missing inputstyle element in skin configuration file" << configurationPath;
-        return false;
-    }
-    inputStyle = issElem.text();
-
-    QDomElement cutTopElem = docElem.firstChildElement("cuttop");
-    if (!cutTopElem.isNull())
-    {
-        cutTop = cutTopElem.text().toInt();
-    }
-    QDomElement cutBottomElem = docElem.firstChildElement("cutbottom");
-    if (!cutBottomElem.isNull())
-    {
-        cutBottom = cutBottomElem.text().toInt();
-    }
-
-    return true;
-}
-
-bool DerflaWidget::loadSkinPackage(const QString& skinPath, QString& configurationPath)
-{
-    QString dirName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/SkinTmp";
-    QDir dir(dirName);
-    dir.removeRecursively();
-    dir.mkpath(dirName);
-    QZipReader zr(skinPath);
-    bool res = zr.extractAll(dirName);
-    if (!res)
-    {
-        qCritical() << "extracting" << skinPath << "to" << dirName << "failed";
-        return false;
-    }
-    configurationPath = dirName % "/skin.xml";
-    if (QFile::exists(configurationPath))
-        return true;
-
-    configurationPath = dirName % "/" % QFileInfo(skinPath).completeBaseName() % ".xml";
-    if (QFile::exists(configurationPath))
-        return true;
-
-    configurationPath.clear();
-    qCritical() << "can't find configuration file in skin package" << skinPath;
-    return false;
 }
 
 void DerflaWidget::stopWaiting()
