@@ -3,6 +3,11 @@
 #include <QIcon>
 #include "util.h"
 
+void queryLocationWeather(const QString& location)
+{
+
+}
+
 int main(int argc, char *argv[])
 {
 #if !defined(Q_OS_WIN)
@@ -20,7 +25,7 @@ int main(int argc, char *argv[])
     a.setOrganizationDomain("dfordsoft.com");
     a.setOrganizationName("Derfla");
 
-    if (argc != 2)
+    if (argc != 3)
     {
         QTextStream ts(stdout);
         ts.setCodec("UTF-8");
@@ -29,5 +34,20 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    return a.exec();
+    QString cmd(argv[1]);
+    if (cmd != "w" || cmd != "weather")
+    {
+        QTextStream ts(stdout);
+        ts.setCodec("UTF-8");
+
+        ts << "invalid arguments";
+        return 2;
+    }
+
+    QString location(argv[2]);
+    {
+        queryLocationWeather(location);
+        a.exec();
+    }
+    return -1;
 }
