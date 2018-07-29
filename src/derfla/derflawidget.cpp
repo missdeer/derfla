@@ -324,7 +324,13 @@ void DerflaWidget::onLoadSkin()
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Load Derfla Skin"),
         "",
-        tr("Derfla Skin Package (*.derflaskin);;Derfla Skin Configuration (skin.xml);;All files (*.*)"));
+        tr("Derfla Skin Package (*.derflaskin);;"
+           "Derfla Skin Configuration (*.xml);;"
+           "Baidu Input Method Skin File (*.bps);;"
+           "Sogou Input Method for Windows Skin File (*.ssf);;"
+           "Sogou Input Method for macOS Skin File (*.mssf);;"
+           "All Supported Files (*.derflaskin *.xml *.bps *.ssf *.mssf);;"
+           "All files (*.*)"));
     if (!QFile::exists(fileName))
         return;
     if (applySkin(fileName))
