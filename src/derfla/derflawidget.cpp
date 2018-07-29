@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include <private/qzipreader_p.h>
-#if defined(Q_OS_WIN)
-#include "winsparkleautoupdater.h"
-#elif defined(Q_OS_MAC)
-#include "SparkleAutoUpdater.h"
-#include "CocoaInitializer.h"
-#endif
+#include "autoupdater.h"
 #include "skinmanager.h"
 #include "uglobalhotkeys.h"
 #include "charlineedit.h"
@@ -142,12 +137,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::onShowInFront);
 
 
-#if defined(Q_OS_WIN)
-    m_autoUpdater = new WinSparkleAutoUpdater("https://derfla.dfordsoft.com/dl/w/appcast.xml");
-#elif defined(Q_OS_MAC)
-    CocoaInitializer initializer;
-    autoUpdater_ = new SparkleAutoUpdater("https://derfla.dfordsoft.com/dl/m/appcast.xml");
-#endif
+    autoUpdater_ = AutoUpdater::createAutoUpdate();
 }
 
 DerflaWidget::~DerflaWidget()
