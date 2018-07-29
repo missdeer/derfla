@@ -10,8 +10,6 @@ public:
     SkinManager();
 
     bool applySkin(const QString& skin);
-    bool loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle, int& cutTop, int& cutBottom);
-    bool loadSkinPackage(const QString& skinPath, QString& configurationPath);
 
     const QPixmap &backgroundImage() const;
 
@@ -33,6 +31,9 @@ private:
     QPixmap rightPartBackgroundImage_;
     QString inputStyle_;
     QSize size_;
+
+    bool loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle, int& cutTop, int& cutBottom);
+    bool loadSkinPackage(const QString& skinPath, QString& configurationPath);
 };
 
 #endif // SKINMANAGER_H
