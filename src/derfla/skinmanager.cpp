@@ -7,7 +7,7 @@ SkinManager::SkinManager()
 
 }
 
-bool SkinManager::applySkin(const QString &skin)
+bool SkinManager::applyDerflaSkin(const QString &skin)
 {
     QString s;
     if (!QFileInfo::exists(skin))
@@ -32,7 +32,7 @@ bool SkinManager::applySkin(const QString &skin)
             Q_ASSERT(index > 0);
             s.remove(index, 4);
             s.append(".derflaskin");
-            if (!loadSkinPackage(s, s))
+            if (!loadDerflaSkinPackage(s, s))
             {
                 return false;
             }
@@ -49,7 +49,7 @@ bool SkinManager::applySkin(const QString &skin)
         else
         {
             // load by skin package - *.derflaskin, should be decompressed first
-            if (!loadSkinPackage(skin, s))
+            if (!loadDerflaSkinPackage(skin, s))
             {
                 return false;
             }
@@ -58,7 +58,7 @@ bool SkinManager::applySkin(const QString &skin)
 
     QString imagePath;
     int cutTop = -1, cutBottom = -1;
-    if (!loadSkinConfiguration(s, imagePath, inputStyle_, cutTop, cutBottom))
+    if (!loadDerflaSkinConfiguration(s, imagePath, inputStyle_, cutTop, cutBottom))
     {
         return false;
     }
@@ -101,7 +101,7 @@ bool SkinManager::applySkin(const QString &skin)
     return true;
 }
 
-bool SkinManager::loadSkinConfiguration(const QString &configurationPath, QString &bgImagePath, QString &inputStyle, int &cutTop, int &cutBottom)
+bool SkinManager::loadDerflaSkinConfiguration(const QString &configurationPath, QString &bgImagePath, QString &inputStyle, int &cutTop, int &cutBottom)
 {
     QDomDocument doc;
     QFile file(configurationPath);
@@ -153,7 +153,7 @@ bool SkinManager::loadSkinConfiguration(const QString &configurationPath, QStrin
     return true;
 }
 
-bool SkinManager::loadSkinPackage(const QString &skinPath, QString &configurationPath)
+bool SkinManager::loadDerflaSkinPackage(const QString &skinPath, QString &configurationPath)
 {
     QString dirName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) % "/SkinTmp";
     QDir dir(dirName);
@@ -207,4 +207,37 @@ const QString &SkinManager::inputStyle() const
 const QSize &SkinManager::size() const
 {
     return size_;
+}
+
+bool SkinManager::applySogouSkin(const QString &skin)
+{
+    return false;
+}
+
+bool SkinManager::applySogouMacSkin(const QString &skin)
+{
+    return false;
+}
+
+bool SkinManager::applyBaiduSkin(const QString &skin)
+{
+    return false;
+}
+
+bool SkinManager::applySkin(const QString &skin)
+{
+    QFileInfo fi(skin);
+    if (fi.suffix().toLower() == "xml" || fi.suffix().toLower() == "derflaskin")
+        return applyDerflaSkin(skin);
+
+    if (fi.suffix().toLower() == "bps")
+        return applyBaiduSkin(skin);
+
+    if (fi.suffix().toLower() == "ssf")
+        return applySogouSkin(skin);
+
+    if (fi.suffix().toLower() == "mssf")
+        return applySogouMacSkin(skin);
+
+    return false;
 }

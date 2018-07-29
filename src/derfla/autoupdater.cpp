@@ -1,7 +1,4 @@
-/*
- * Copyright (C) 2008 Remko Troncon
- */
-
+#include "stdafx.h"
 #include "autoupdater.h"
 
 AutoUpdater::~AutoUpdater()

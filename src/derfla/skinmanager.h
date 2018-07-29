@@ -32,8 +32,12 @@ private:
     QString inputStyle_;
     QSize size_;
 
-    bool loadSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle, int& cutTop, int& cutBottom);
-    bool loadSkinPackage(const QString& skinPath, QString& configurationPath);
+    bool applySogouSkin(const QString& skin);
+    bool applySogouMacSkin(const QString& skin);
+    bool applyBaiduSkin(const QString& skin);
+    bool applyDerflaSkin(const QString& skin);
+    bool loadDerflaSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle, int& cutTop, int& cutBottom);
+    bool loadDerflaSkinPackage(const QString& skinPath, QString& configurationPath);
 };
 
 #endif // SKINMANAGER_H

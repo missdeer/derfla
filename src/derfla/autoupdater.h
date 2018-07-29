@@ -1,7 +1,3 @@
-/*
- * Copyright (C) 2008 Remko Troncon
- */
-
 #ifndef AUTOUPDATER_H
 #define AUTOUPDATER_H
 
