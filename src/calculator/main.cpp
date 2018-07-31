@@ -45,8 +45,7 @@ bool calculate(const QString& expression)
     } else if (result.isNan())
         return false;
 
-    Quantity q = m_evaluator->getVariable(QLatin1String("ans")).value();
-    QString strToCopy(NumberFormatter::format(q));
+    QString strToCopy(NumberFormatter::format(result));
     strToCopy.replace(QChar(0x2212), QChar('-'));
 
     QVariantMap m;
