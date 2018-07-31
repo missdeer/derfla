@@ -26,13 +26,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-INCLUDEPATH += $$PWD/util
+INCLUDEPATH += $$PWD $$PWD/core $$PWD/math
 
 SOURCES += \
-    main.cpp
+    $$PWD/main.cpp \
+    $$PWD/core/*.cpp \
+    $$PWD/math/*.c \
+    $$PWD/math/*.cpp
 
 HEADERS += \
-    stdafx.h
+    $$PWD/stdafx.h \
+    $$PWD/core/*.h \
+    $$PWD/math/*.h
+
+DEFINES += SPEEDCRUNCH_VERSION=\\\"master\\\"
+DEFINES += QT_USE_QSTRINGBUILDER
 
 win32: {
     win32-*g++* {
@@ -42,6 +50,7 @@ win32: {
         QMAKE_CXXFLAGS_RELEASE += /Zi
         QMAKE_LFLAGS_RELEASE += /DEBUG
     }
+    DEFINES += _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_WARNINGS _SCL_SECURE_NO_WARNINGS
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
@@ -57,3 +66,6 @@ macx: {
 
 DISTFILES += \
     extension.cfg
+
+RESOURCES += \
+    calculator.qrc
