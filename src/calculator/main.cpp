@@ -1,6 +1,16 @@
 #include "stdafx.h"
 #include "qtsingleapplication.h"
 #include <QIcon>
+#include "core/constants.h"
+#include "core/evaluator.h"
+#include "core/functions.h"
+#include "core/numberformatter.h"
+#include "core/settings.h"
+#include "core/session.h"
+#include "core/variable.h"
+#include "core/sessionhistory.h"
+#include "core/userfunction.h"
+#include "math/floatconfig.h"
 #include "util.h"
 
 bool calculate(const QString& expression)
@@ -12,12 +22,45 @@ bool calculate(const QString& expression)
     Q_ASSERT(d.isArray());
     QJsonArray arr = d.array();
 
+    Session* m_session = new Session();
+    Evaluator*    m_evaluator = Evaluator::instance();
+    m_evaluator->setSession(m_session);
+    m_evaluator->initializeBuiltInVariables();
+
+    QString expr = m_evaluator->autoFix(expression);
+
+    if (expr.isEmpty())
+        return false;
+
+    m_evaluator->setExpression(expr);
+    Quantity result = m_evaluator->evalUpdateAns();
+
+    if (!m_evaluator->error().isEmpty()) {
+        ts << m_evaluator->error();
+        return false;
+    }
+
+    if (m_evaluator->isUserFunctionAssign()) {
+        result = CMath::nan();
+    } else if (result.isNan())
+        return false;
+
+    Quantity q = m_evaluator->getVariable(QLatin1String("ans")).value();
+    QString strToCopy(NumberFormatter::format(q));
+    strToCopy.replace(QChar(0x2212), QChar('-'));
+
     QVariantMap m;
-    m.insert("title", expression);
-    m.insert("description", QString("Calculate result of expression: %1").arg(expression));
-    m.insert("target", expression);
+    m.insert("title", QString("Result: %1").arg(strToCopy));
+    m.insert("description", QString("Expr: %1").arg(expression));
+    m.insert("target", strToCopy);
     m.insert("actionType", "copyText");
-    m.insert("iconPath", QString(qApp->applicationDirPath() % "/folder.png"));
+    QFile icon(":/calculator.png");
+    if (icon.open(QIODevice::ReadOnly))
+    {
+        auto bytes = icon.readAll();
+        icon.close();
+        m.insert("iconData", bytes.toBase64());
+    }
     arr.append(QJsonObject::fromVariantMap(m));
 
     d.setArray(arr);
