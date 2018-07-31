@@ -37,14 +37,14 @@ int main(int argc, char *argv[])
         input.append(QString(argv[i]));
     }
     if (cmd == "dict" || cmd == "yd" || cmd == "youdao") {
-        Youdao* yd = new Youdao;
-        yd->query(input.join(' '));
+        Youdao yd;
+        yd.query(input.join(' '));
         return a.exec();
     }
 
     if (cmd == "dict" || cmd == "bing"){
-        Bing* bing = new Bing;
-        bing->query(input.join(' '));
+        Bing bing;
+        bing.query(input.join(' '));
         return a.exec();
     }
 

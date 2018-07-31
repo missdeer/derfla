@@ -1,12 +1,8 @@
 #include "stdafx.h"
 #include "qtsingleapplication.h"
 #include <QIcon>
+#include "heweather.h"
 #include "util.h"
-
-void queryLocationWeather(const QString& location)
-{
-
-}
 
 int main(int argc, char *argv[])
 {
@@ -35,7 +31,7 @@ int main(int argc, char *argv[])
     }
 
     QString cmd(argv[1]);
-    if (cmd != "w" || cmd != "weather")
+    if (cmd != "w" && cmd != "weather")
     {
         QTextStream ts(stdout);
         ts.setCodec("UTF-8");
@@ -46,8 +42,9 @@ int main(int argc, char *argv[])
 
     QString location(argv[2]);
     {
-        queryLocationWeather(location);
-        a.exec();
+        Heweather he;
+        he.forecast(location);
+        return a.exec();
     }
     return -1;
 }

@@ -29,10 +29,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += $$PWD/util
 
 SOURCES += \
-    main.cpp
+    main.cpp \
+    heweather.cpp
 
 HEADERS += \
-    stdafx.h
+    stdafx.h \
+    heweather.h
 
 win32: {
     win32-*g++* {
@@ -57,3 +59,6 @@ macx: {
 
 DISTFILES += \
     extension.cfg
+
+RESOURCES += \
+    weather.qrc
