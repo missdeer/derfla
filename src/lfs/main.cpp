@@ -46,7 +46,14 @@ int main(int argc, char *argv[])
             a.sendMessage("/exit");
             return 0;
         }
+#if defined(Q_OS_WIN)
+        int nArgs = 0;
+
+        LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+        QString res = dbrw.search(QString::fromWCharArray(szArglist[1]));
+#else
         QString res = dbrw.search(QString(argv[1]));
+#endif
         QTextStream ts( stdout );
         ts.setCodec("UTF-8");
         ts << res;

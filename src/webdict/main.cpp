@@ -33,9 +33,19 @@ int main(int argc, char *argv[])
 
     QString cmd(argv[1]);
     QStringList input;
+
+#if defined(Q_OS_WIN)
+    int nArgs = 0;
+
+    LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+    for (int i = 2; i < argc; i++) {
+        input.append(QString::fromWCharArray(szArglist[i]));
+    }
+#else
     for (int i = 2; i < argc; i++) {
         input.append(QString(argv[i]));
     }
+#endif
     if (cmd == "dict" || cmd == "yd" || cmd == "youdao") {
         Youdao yd;
         yd.query(input.join(' '));

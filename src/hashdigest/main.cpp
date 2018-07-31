@@ -150,6 +150,12 @@ int main(int argc, char *argv[])
         {"keccak512" , QCryptographicHash::Keccak_512 },
     };
 
+#if defined(Q_OS_WIN)
+    int nArgs = 0;
+
+    LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+#endif
+
     auto it = algo.find(QString(argv[1]));
     if (algo.end() == it)
     {
@@ -161,15 +167,25 @@ int main(int argc, char *argv[])
 
     if (argc == 3)
     {
+
+#if defined(Q_OS_WIN)
+        data = QString::fromWCharArray(szArglist[2]);
+#else
         data = argv[2];
+#endif
         if (QFile::exists(data))
             option = "f";
     }
 
     if (argc == 4)
     {
+#if defined(Q_OS_WIN)
+        option = QString::fromWCharArray(szArglist[2]);
+        data = QString::fromWCharArray(szArglist[3]);
+#else
         option = argv[2];
         data = argv[3];
+#endif
         if (option.toLower() != "f" || !QFile::exists(data))
             option.clear();
     }

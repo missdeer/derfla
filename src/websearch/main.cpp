@@ -144,11 +144,22 @@ int main(int argc, char *argv[])
     {
         auto f = it.value();
         QString keyword;
+#if defined(Q_OS_WIN)
+        int nArgs = 0;
+
+        LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+        for (int i = 2; i < argc; i++)
+        {
+            keyword.append(QString::fromWCharArray(szArglist[i]));
+            keyword.append(' ');
+        }
+#else
         for (int i = 2; i < argc; i++)
         {
             keyword.append(argv[i]);
             keyword.append(' ');
         }
+#endif
         if (!f(keyword.trimmed()))
             return 1;
     }

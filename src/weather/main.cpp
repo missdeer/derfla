@@ -40,11 +40,15 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+#if defined(Q_OS_WIN)
+    int nArgs = 0;
+
+    LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+    QString location(QString::fromWCharArray( szArglist[2]));
+#else
     QString location(argv[2]);
-    {
-        Heweather he;
-        he.forecast(location);
-        return a.exec();
-    }
-    return -1;
+#endif
+    Heweather he;
+    he.forecast(location);
+    return a.exec();
 }

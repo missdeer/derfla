@@ -187,8 +187,14 @@ int main(int argc, char *argv[])
             ts << "everything util is not running.";
             return 1;
         }
-#endif
+
+        int nArgs = 0;
+
+        LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+        QString pattern = QString::fromWCharArray(argc == 3 ? szArglist[2] : szArglist[3]);
+#else
         QString pattern(argc == 3 ? argv[2] : argv[3]);
+#endif
         if (pattern.size() < 2)
         {
             ts << "[]";
