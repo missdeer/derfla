@@ -153,6 +153,7 @@ int main(int argc, char *argv[])
             keyword.append(QString::fromWCharArray(szArglist[i]));
             keyword.append(' ');
         }
+        LocalFree(szArglist);
 #else
         for (int i = 2; i < argc; i++)
         {

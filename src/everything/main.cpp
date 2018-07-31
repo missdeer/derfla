@@ -192,6 +192,7 @@ int main(int argc, char *argv[])
 
         LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
         QString pattern = QString::fromWCharArray(argc == 3 ? szArglist[2] : szArglist[3]);
+        LocalFree(szArglist);
 #else
         QString pattern(argc == 3 ? argv[2] : argv[3]);
 #endif

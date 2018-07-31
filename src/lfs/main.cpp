@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
 
         LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
         QString res = dbrw.search(QString::fromWCharArray(szArglist[1]));
+        LocalFree(szArglist);
 #else
         QString res = dbrw.search(QString(argv[1]));
 #endif

@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 
     LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
     QString location(QString::fromWCharArray( szArglist[2]));
+    LocalFree(szArglist);
 #else
     QString location(argv[2]);
 #endif

@@ -170,6 +170,7 @@ int main(int argc, char *argv[])
 
 #if defined(Q_OS_WIN)
         data = QString::fromWCharArray(szArglist[2]);
+        LocalFree(szArglist);
 #else
         data = argv[2];
 #endif
@@ -182,6 +183,7 @@ int main(int argc, char *argv[])
 #if defined(Q_OS_WIN)
         option = QString::fromWCharArray(szArglist[2]);
         data = QString::fromWCharArray(szArglist[3]);
+        LocalFree(szArglist);
 #else
         option = argv[2];
         data = argv[3];

@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
     for (int i = 2; i < argc; i++) {
         input.append(QString::fromWCharArray(szArglist[i]));
     }
+    LocalFree(szArglist);
 #else
     for (int i = 2; i < argc; i++) {
         input.append(QString(argv[i]));
