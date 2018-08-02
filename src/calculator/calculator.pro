@@ -44,13 +44,13 @@ DEFINES += QT_USE_QSTRINGBUILDER
 
 win32: {
     win32-*g++* {
-        DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
+        DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600 STRSAFE_NO_DEPRECATE
     }
     win32-*msvc* {
         QMAKE_CXXFLAGS_RELEASE += /Zi
         QMAKE_LFLAGS_RELEASE += /DEBUG
     }
-    DEFINES += _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_WARNINGS _SCL_SECURE_NO_WARNINGS
+    DEFINES += _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_WARNINGS _SCL_SECURE_NO_WARNINGS 
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'

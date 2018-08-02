@@ -101,7 +101,7 @@ public:
     static const Quantity newton();
     static const Quantity hertz();
     static const Quantity steradian();
-    static const Quantity pascal();
+    static const Quantity pascalx();
     static const Quantity joule();
     static const Quantity watt();
     static const Quantity coulomb();

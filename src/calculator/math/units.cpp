@@ -76,7 +76,7 @@ void Units::initTable()
     pushUnit(joule(), "newton meter");                          // energy or torque
     pushUnit(newton(), "newton");                               // force
     pushUnit(watt(), "watt");                                   // power
-    pushUnit(pascal(), "pascal");                               // pressure or energy density
+    pushUnit(pascalx(), "pascal");                               // pressure or energy density
     pushUnit(coulomb(), "coulomb");                             // charge
     pushUnit(volt(), "volt");                                   // electrical potential
     pushUnit(ohm(), "ohm");                                     // el. resistance
@@ -97,7 +97,7 @@ void Units::initTable()
     pushUnit(joule()/mole()/kelvin(), "joule/(mole kelvin");            // molar heat capacity
     pushUnit(mole()/second()/cbmeter(), "mole/(second meter³)");        // catalytic activity
     pushUnit(newton()/meter(), "newton/meter");                 // surface tension
-    pushUnit(pascal()*second(), "pascal second");               // dynamic viscosity
+    pushUnit(pascalx()*second(), "pascal second");               // dynamic viscosity
     pushUnit(volt()/meter(), "volt/meter");                     // el. field
     pushUnit(watt()/meter()/kelvin(), "watt/(meter kelvin)");   // thermal conductivity
     pushUnit(watt()/sqmeter(), "watt/meter²");                  // heat flux
@@ -228,7 +228,7 @@ const QList<Unit> Units::getList()
     ADD_UNIT(hertz);
     ADD_UNIT(joule);
     ADD_UNIT(watt);
-    ADD_UNIT(pascal);
+    ADD_UNIT(pascalx);
     ADD_UNIT(coulomb);
     ADD_UNIT(volt);
     ADD_UNIT(ohm);
@@ -377,7 +377,7 @@ UNIT_CACHE(yobi, kibi()*zebi())
 
 UNIT_CACHE(newton,              meter() * kilogram() / (second()*second()))
 UNIT_CACHE(hertz,               Quantity(1) / second())
-UNIT_CACHE(pascal,              newton() / sqmeter())
+UNIT_CACHE(pascalx,              newton() / sqmeter())
 UNIT_CACHE(joule,               newton() * meter())
 UNIT_CACHE(watt,                joule() / second())
 UNIT_CACHE(coulomb,             ampere() * second())
@@ -454,7 +454,7 @@ UNIT_CACHE(ppm,                 HNumber("1e-6"))
 UNIT_CACHE(ppb,                 HNumber("1e-9"))
 UNIT_CACHE(karat,               Rational(1,24).toHNumber()) // Do not confuse with carat above.
 
-UNIT_CACHE(bar,                 HNumber("1e5") * pascal())
+UNIT_CACHE(bar,                 HNumber("1e5") * pascalx())
 UNIT_CACHE(atmosphere,          HNumber("1.01325") * bar())
 UNIT_CACHE(torr,                atmosphere() / HNumber(760))
 UNIT_CACHE(pounds_per_sqinch,   pound() * gravity() / (inch()*inch()))
