@@ -85,7 +85,7 @@ void Heweather::onFinished()
         auto forecast = f.toObject();
 
         QVariantMap m;
-        QString title = QString("白天：%1，夜间：%2，气温：%3℃~%4℃")
+        QString title = QString(tr("Day: %1, Night: %2, Tempe: %3℃~%4℃"))
                 .arg(forecast["cond_txt_d"].toString())
                 .arg(forecast["cond_txt_n"].toString())
                 .arg(forecast["tmp_min"].toString())
@@ -93,7 +93,7 @@ void Heweather::onFinished()
         m.insert("title", title );
         m.insert("target", title );
 
-        QString description = QString("%1 %2 %3 %4级")
+        QString description = QString(tr("%1 %2 %3 %4L"))
                 .arg(forecast["date"].toString())
                 .arg(location)
                 .arg(forecast["wind_dir"].toString())

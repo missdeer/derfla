@@ -49,8 +49,8 @@ bool calculate(const QString& expression)
     strToCopy.replace(QChar(0x2212), QChar('-'));
 
     QVariantMap m;
-    m.insert("title", QString("Result: %1").arg(strToCopy));
-    m.insert("description", QString("Expr: %1").arg(expression));
+    m.insert("title", QString(QObject::tr("Result: %1")).arg(strToCopy));
+    m.insert("description", QString(QObject::tr("Expr: %1")).arg(expression));
     m.insert("target", strToCopy);
     m.insert("actionType", "copyText");
     QFile icon(":/calculator.png");
