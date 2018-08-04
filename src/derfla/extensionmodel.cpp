@@ -1,0 +1,89 @@
+#include "stdafx.h"
+#include "extensionmodel.h"
+
+ExtensionModel::ExtensionModel(const QList<ExtensionPtr> &extensions, QObject *parent)
+    : QAbstractTableModel(parent)
+    , extensions_(extensions)
+{
+
+}
+
+QModelIndex ExtensionModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (!hasIndex(row, column, parent))
+            return QModelIndex();
+
+    return createIndex(row, column);
+}
+
+int ExtensionModel::rowCount(const QModelIndex &) const
+{
+    return extensions_.size();
+}
+
+int ExtensionModel::columnCount(const QModelIndex &) const
+{
+    return 7;
+}
+
+QVariant ExtensionModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (index.row() < 0 || index.row() >= extensions_.size())
+        return QVariant();
+
+    auto e = extensions_[index.row()];
+    switch(index.column())
+    {
+    case 0:
+        return e->id();
+    case 1:
+        return e->name();
+    case 2:
+        return e->author();
+    case 3:
+        return e->description();
+    case 4:
+        return e->daemon();
+    case 5:
+        return QFileInfo(e->executable()).fileName();
+    case 6:
+        return QFileInfo(e->executor()).fileName();
+    }
+
+    return QVariant();
+}
+
+Qt::ItemFlags ExtensionModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    return QAbstractItemModel::flags(index);
+}
+
+QVariant ExtensionModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        QMap<int, QString> m = {
+            {0, tr("Id")},
+            {1, tr("Name")},
+            {2, tr("Author")},
+            {3, tr("Description")},
+            {4, tr("Daemon")},
+            {5, tr("Executable")},
+            {6, tr("Executor")},
+        };
+        auto it = m.find(section);
+        if (it != m.end())
+            return QVariant(it.value());
+    }
+
+    return QVariant();
+}

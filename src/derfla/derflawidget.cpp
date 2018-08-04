@@ -18,6 +18,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     , candidateList_(new CandidateList(extensionManager_, this))
     , hotkeyManager_(new UGlobalHotkeys(this))
     , skinManager_(new SkinManager)
+    , autoUpdater_(nullptr)
 {
 #if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
@@ -33,6 +34,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 
     QSettings settings;
 
+    candidateDelayInterval_ = settings.value("interval", 0).toInt();
     stayOnTop_ = settings.value("stayOnTop", false).toBool();
 
     QString skinPath = settings.value("skin", ":/skins/derfla.derflaskin").toString();
@@ -76,14 +78,14 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     QAction *installExtensionAction = new QAction(tr("&Install Extension"), this);
     connect(installExtensionAction, &QAction::triggered, this, &DerflaWidget::onInstallExtension);
 
-    QAction *stayOnTopAction = new QAction(tr("Stay On Top"), this);
-    stayOnTopAction->setCheckable(true);
+    stayOnTopAction_ = new QAction(tr("Stay On Top"), this);
+    stayOnTopAction_->setCheckable(true);
     if (stayOnTop_)
     {
-        stayOnTopAction->setChecked(true);
+        stayOnTopAction_->setChecked(true);
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
     }
-    connect(stayOnTopAction, &QAction::triggered, this, &DerflaWidget::onStayOnTop);
+    connect(stayOnTopAction_, &QAction::triggered, this, &DerflaWidget::onStayOnTop);
 
     QAction *quitAction = new QAction(tr("E&xit"), this);
     quitAction->setShortcut(tr("Ctrl+Q"));
@@ -115,7 +117,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     trayiconMenu->addSeparator();
     trayiconMenu->addAction(loadSkinAction);
     trayiconMenu->addAction(installExtensionAction);
-    trayiconMenu->addAction(stayOnTopAction);
+    trayiconMenu->addAction(stayOnTopAction_);
     trayiconMenu->addAction(preferenceAction);
     trayiconMenu->addSeparator();
     trayiconMenu->addAction(quitAction);
@@ -129,15 +131,13 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     connect(this, &QWidget::customContextMenuRequested, this, &DerflaWidget::onCustomContextMenuRequested);
     connect(candidateDelayTimer_, &QTimer::timeout, this, &DerflaWidget::onCandidateDelayTimer);
     candidateDelayTimer_->setSingleShot(true);
-#if defined(Q_OS_WIN)
-    hotkeyManager_->registerHotkey("Alt+Space");
-#else
-    hotkeyManager_->registerHotkey("Ctrl+Alt+Space");
-#endif
+
+    QString keySequence = settings.value("hotkey", "Alt+Space").toString();
+    hotkeyManager_->registerHotkey(keySequence, 0x19900512);
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::onShowInFront);
 
-
-    autoUpdater_ = AutoUpdater::createAutoUpdate();
+    if (settings.value("autoupdate", true).toBool())
+        autoUpdater_ = AutoUpdater::createAutoUpdate();
 }
 
 DerflaWidget::~DerflaWidget()
@@ -276,11 +276,7 @@ void DerflaWidget::onInputChanged(const QString &text)
     }
     else
     {
-#if defined(Q_OS_WIN)
-        candidateDelayTimer_->start(0);
-#else
-        candidateDelayTimer_->start(100);
-#endif
+        candidateDelayTimer_->start(candidateDelayInterval_);
     }
 }
 
@@ -434,8 +430,40 @@ void DerflaWidget::onAbout()
 
 void DerflaWidget::onPreference()
 {
-    PreferenceDialog dlg(this);
-    dlg.exec();
+    PreferenceDialog dlg(extensionManager_->extensions(), this);
+    if (dlg.exec() == QDialog::Accepted)
+    {
+        QSettings settings;
+
+        candidateDelayInterval_ = settings.value("interval", 0).toInt();
+
+        QString skinPath = settings.value("skin", ":/skins/derfla.derflaskin").toString();
+        if (!applySkin(skinPath))
+        {
+            qWarning() << "loading skin failed:" << skinPath;
+            if (!applySkin(":/skins/derfla.derflaskin"))
+            {
+                qCritical() << "loading skin failed";
+                return;
+            }
+        }
+
+        stayOnTop_ = settings.value("stayOnTop", false).toBool();
+        stayOnTopAction_->setChecked(stayOnTop_);
+        if (stayOnTop_)
+            setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+        else
+            setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
+
+        onShowInFront();
+
+        delete autoUpdater_;
+        if (settings.value("autoupdate", true).toBool())
+            autoUpdater_ = AutoUpdater::createAutoUpdate();
+
+        QString keySequence = settings.value("hotkey", "Alt+Space").toString();
+        hotkeyManager_->registerHotkey(keySequence, 0x19900512);
+    }
 }
 
 void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)

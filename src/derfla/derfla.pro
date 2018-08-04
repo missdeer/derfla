@@ -25,7 +25,9 @@ SOURCES += main.cpp\
     extensionmanager.cpp \
     autoupdater.cpp \
     preferencedialog.cpp \
-    skinmanager.cpp
+    skinmanager.cpp \
+    extensionmodel.cpp \
+    booleaneditor.cpp
 
 HEADERS  += stdafx.h \
     derflawidget.h \
@@ -39,7 +41,9 @@ HEADERS  += stdafx.h \
     extensionmanager.h \
     autoupdater.h \
     preferencedialog.h \
-    skinmanager.h
+    skinmanager.h \
+    extensionmodel.h \
+    booleaneditor.h
 
 FORMS    += \
     candidatelist.ui \

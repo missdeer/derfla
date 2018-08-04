@@ -57,9 +57,12 @@ private:
     ExtensionManager* extensionManager_;
     CandidateList* candidateList_;
     UGlobalHotkeys *hotkeyManager_;
-    AutoUpdater* autoUpdater_;
     SkinManager* skinManager_;
+    AutoUpdater* autoUpdater_;
+    QAction *stayOnTopAction_;
+    int candidateDelayInterval_;
     bool stayOnTop_;
+
     void processKey();
     void doEnter();
     void doTab();

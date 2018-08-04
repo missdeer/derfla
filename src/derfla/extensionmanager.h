@@ -16,6 +16,8 @@ public:
     bool loadAllFromCache();
     void query(const QString& input);
     bool installExtension(const QString& extensionFile);
+    const QList<ExtensionPtr>& extensions() const;
+
 signals:
     void emptyAction();
     void actionUpdated(DerflaActionList& dal);

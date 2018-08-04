@@ -71,6 +71,8 @@
 #include <QSpinBox>
 #include <QKeySequenceEdit>
 #include <QLabel>
+#include <QComboBox>
+#include <QListView>
 
 // Qt Xml
 #include <QDomDocument>

@@ -428,6 +428,11 @@ void ExtensionManager::extensionQueried(DerflaActionList &dal)
     emit actionUpdated(dal);
 }
 
+const QList<ExtensionPtr> &ExtensionManager::extensions() const
+{
+    return extensions_;
+}
+
 void ExtensionManager::query(const QString &input)
 {
     for (auto e : extensions_)
