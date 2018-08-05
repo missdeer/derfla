@@ -492,8 +492,8 @@ void DerflaWidget::onPreference()
             }
 
             // Now install the login item, if needed.
-            QStringList args;
-            args << "-e tell application \"System Events\" to make login item at end " +
+            args.clear();
+            args << "-e tell application \"System Events\" to make login item at end "
                     "with properties {path:\"" + absolutePath + "\", hidden:false}";
 
             QProcess::execute("osascript", args);

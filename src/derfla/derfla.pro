@@ -81,7 +81,8 @@ macx: {
         rm -rf $$DESTDIR/Derfla.app/Contents/Frameworks/Sparkle.framework && \
         cp -avf $$PWD/../../3rdparty/Sparkle/Sparkle.framework $$DESTDIR/Derfla.app/Contents/Frameworks && \
         install_name_tool -change libderflautil.1.dylib @executable_path/../Libs/libderflautil.1.dylib $$DESTDIR/Derfla.app/Contents/MacOS/Derfla && \
-        cp -avf $$PWD/skins  $$DESTDIR/Derfla.app/Contents/Resources
+        cp -avf $$PWD/skins  $$DESTDIR/Derfla.app/Contents/Resources && \
+        cp $$PWD/rc/updater-dsa-pub.pem $$DESTDIR/Derfla.app/Contents/Resources/dsa_pub.pem
 
     QMAKE_INFO_PLIST = osxInfo.plist
 }

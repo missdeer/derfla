@@ -22,5 +22,7 @@
     <string>Copyright © 2016 - 2018 DForD Software. All rights reserved.</string>
     <key>LSUIElement</key>
     <true/>
+    <key>SUPublicDSAKeyFile</key>
+    <string>dsa_pub.pem</string>
 </dict>
 </plist>
