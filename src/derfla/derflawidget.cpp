@@ -87,6 +87,9 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     }
     connect(stayOnTopAction_, &QAction::triggered, this, &DerflaWidget::onStayOnTop);
 
+    QAction *checkUpdatesAction = new  QAction(tr("Check Updates..."), this);
+    connect(checkUpdatesAction, &QAction::triggered, this, &DerflaWidget::onCheckUpdates);
+
     QAction *quitAction = new QAction(tr("E&xit"), this);
     quitAction->setShortcut(tr("Ctrl+Q"));
     connect(quitAction, &QAction::triggered, this, &DerflaWidget::onQuit);
@@ -118,6 +121,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     trayiconMenu->addAction(loadSkinAction);
     trayiconMenu->addAction(installExtensionAction);
     trayiconMenu->addAction(stayOnTopAction_);
+    trayiconMenu->addAction(checkUpdatesAction);
     trayiconMenu->addAction(preferenceAction);
     trayiconMenu->addSeparator();
     trayiconMenu->addAction(quitAction);
@@ -136,8 +140,9 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     hotkeyManager_->registerHotkey(keySequence, 0x19900512);
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::onShowInFront);
 
+    autoUpdater_ = AutoUpdater::createAutoUpdate();
     if (settings.value("autoupdate", true).toBool())
-        autoUpdater_ = AutoUpdater::createAutoUpdate();
+        autoUpdater_->checkForUpdates();
 }
 
 DerflaWidget::~DerflaWidget()
@@ -457,13 +462,24 @@ void DerflaWidget::onPreference()
 
         onShowInFront();
 
-        delete autoUpdater_;
-        if (settings.value("autoupdate", true).toBool())
-            autoUpdater_ = AutoUpdater::createAutoUpdate();
+#if defined(Q_OS_WIN)
+        if (settings.value("autostart", false).toBool())
+        {
 
+        }
+        else
+        {
+
+        }
+#endif
         QString keySequence = settings.value("hotkey", "Alt+Space").toString();
         hotkeyManager_->registerHotkey(keySequence, 0x19900512);
     }
+}
+
+void DerflaWidget::onCheckUpdates()
+{
+    autoUpdater_->checkForUpdates();
 }
 
 void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)

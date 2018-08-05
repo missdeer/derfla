@@ -47,6 +47,12 @@ PreferenceDialog::PreferenceDialog(const QList<ExtensionPtr>& extensions, QWidge
     cbAutoUpdate_->setChecked(settings.value("autoupdate", true).toBool());
     gl->addWidget(cbAutoUpdate_);
 
+#if defined(Q_OS_WIN)
+    cbStartWithSystem_ = new QCheckBox(tr("Start with system"), ui->generalPage);
+    cbStartWithSystem_->setChecked(settings.value("autostart", false).toBool());
+    gl->addWidget(cbStartWithSystem_);
+#endif
+
     gl->addStretch(1);
 
     ui->generalPage->setLayout(gl);
@@ -115,7 +121,9 @@ void PreferenceDialog::on_buttonBox_accepted()
                        #endif
                            % cbSkins_->currentText()));
     settings.setValue("autoupdate", cbAutoUpdate_->isChecked());
-
+#if defined (Q_OS_WIN)
+    settings.setValue("autostart", cbStartWithSystem_->isChecked());
+#endif
     settings.sync();
     QDialog::accept();
 }

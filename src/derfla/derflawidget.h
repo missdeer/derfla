@@ -46,6 +46,7 @@ private slots:
     void onSelectFolder();
     void onAbout();
     void onPreference();
+    void onCheckUpdates();
     void onCustomContextMenuRequested(const QPoint &pos);
 private:
     const int widgetMinWidth_ = 450;

@@ -30,6 +30,7 @@ private slots:
 private:
     Ui::PreferenceDialog *ui;
     QCheckBox* cbStayOnTop_;
+    QCheckBox* cbStartWithSystem_;
     QSlider* sliderInterval_;
     QSpinBox* sbInterval_;
     QKeySequenceEdit* hotkeyEditor_;
