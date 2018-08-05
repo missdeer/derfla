@@ -80,13 +80,10 @@ macx: {
     QMAKE_POST_LINK = mkdir -p $$DESTDIR/Derfla.app/Contents/Frameworks && \
         rm -rf $$DESTDIR/Derfla.app/Contents/Frameworks/Sparkle.framework && \
         cp -avf $$PWD/../../3rdparty/Sparkle/Sparkle.framework $$DESTDIR/Derfla.app/Contents/Frameworks && \
-        install_name_tool -change libderflautil.1.dylib @executable_path/../Libs/libderflautil.1.dylib $$DESTDIR/Derfla.app/Contents/MacOS/Derfla
+        install_name_tool -change libderflautil.1.dylib @executable_path/../Libs/libderflautil.1.dylib $$DESTDIR/Derfla.app/Contents/MacOS/Derfla && \
+        cp -avf $$PWD/skins  $$DESTDIR/Derfla.app/Contents/Resources
 
     QMAKE_INFO_PLIST = osxInfo.plist
-#    copy_skins.commands = 'cp -R \"$$PWD/skins\" \"$${TARGET}.app/Contents/Resources\"'
-#    QMAKE_EXTRA_TARGETS +=  copy_skins
-#    POST_TARGETDEPS += copy_skins
-#    QMAKE_POST_LINK += $$quote(cp -R \"$$PWD/skins\" \"$${TARGET}.app/Contents/Resources\")
 }
 
 win32: {
@@ -113,9 +110,10 @@ win32: {
     else: {
         copy_winsparkle.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/WinSparkle/Release/WinSparkle.dll) $$shell_path($$DESTDIR)'
     }
+    copy_skin.command = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$DESTDIR)'
 
-    QMAKE_EXTRA_TARGETS += copy_winsparkle
-    POST_TARGETDEPS += copy_winsparkle
+    QMAKE_EXTRA_TARGETS += copy_winsparkle copy_skin
+    POST_TARGETDEPS += copy_winsparkle copy_skin
 }
 
 RESOURCES += \

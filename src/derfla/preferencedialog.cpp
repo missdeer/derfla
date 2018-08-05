@@ -68,7 +68,11 @@ PreferenceDialog::PreferenceDialog(const QList<ExtensionPtr>& extensions, QWidge
     cbSkins_ = new QComboBox(ui->skinPage);
     cbSkins_->addItem(":/skins/derfla.derflaskin");
 
+#if defined(Q_OS_MAC)
+    QDir dir(qApp->applicationDirPath() % "/../Resources/skins/");
+#else
     QDir dir(qApp->applicationDirPath() % "/skins");
+#endif
     auto eil = dir.entryInfoList(QStringList() << "*.derflaskin" << "*.ssf" << "*.mssf" << "*.bps", QDir::Files);
     for (const auto& fi : eil)
     {
@@ -101,7 +105,15 @@ void PreferenceDialog::on_buttonBox_accepted()
     settings.setValue("stayOnTop", cbStayOnTop_->isChecked());
     settings.setValue("interval", sliderInterval_->value());
     settings.setValue("hotkey", hotkeyEditor_->keySequence().toString());
-    settings.setValue("skin", cbSkins_->currentIndex() == 0 ? cbSkins_->currentText() : (qApp->applicationDirPath() % "/skins/" % cbSkins_->currentText()));
+    settings.setValue("skin", cbSkins_->currentIndex() == 0 ?
+                          cbSkins_->currentText() :
+                          (qApp->applicationDirPath() %
+                       #if defined(Q_OS_MAC)
+                           "/../Resources/skins/"
+                       #else
+                           "/skins/"
+                       #endif
+                           % cbSkins_->currentText()));
     settings.setValue("autoupdate", cbAutoUpdate_->isChecked());
 
     settings.sync();
