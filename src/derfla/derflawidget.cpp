@@ -462,16 +462,63 @@ void DerflaWidget::onPreference()
 
         onShowInFront();
 
-#if defined(Q_OS_WIN)
         if (settings.value("autostart", false).toBool())
         {
+#if defined(Q_OS_WIN)
+            QString key = "Derfla";
+            QSettings registrySettings(
+                "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                QSettings::NativeFormat);
+            registrySettings.remove(key);
+            registrySettings.setValue(key, QDir::toNativeSeparators(qApp->applicationFilePath()));
+            registrySettings.sync();
+#elif defined(Q_OS_MAC)
+            // Remove any existing login entry for this app first, in case there was one
+            // from a previous installation, that may be under a different launch path.
 
+            QStringList args;
+            args << "-e tell application \"System Events\" to delete login item\"Derfla\"";
+
+            QProcess::execute("osascript", args);
+
+            QDir dir(qApp->applicationDirPath());
+            dir.cdUp();
+            dir.cdUp();
+            QString absolutePath = dir.absolutePath();
+            // absolutePath will contain a "/" at the end,
+            // but we want the clean path to the .app bundle
+            if ( absolutePath.length() > 0 && absolutePath.right(1) == "/" ) {
+                absolutePath.chop(1);
+            }
+
+            // Now install the login item, if needed.
+            QStringList args;
+            args << "-e tell application \"System Events\" to make login item at end " +
+                    "with properties {path:\"" + absolutePath + "\", hidden:false}";
+
+            QProcess::execute("osascript", args);
+#endif
         }
         else
         {
+#if defined(Q_OS_WIN)
+            QString key = "Derfla";
+            QSettings registrySettings(
+                "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                QSettings::NativeFormat);
+            registrySettings.remove(key);
+            registrySettings.sync();
+#elif defined(Q_OS_MAC)
+            // Remove any existing login entry for this app first, in case there was one
+            // from a previous installation, that may be under a different launch path.
 
-        }
+            QStringList args;
+            args << "-e tell application \"System Events\" to delete login item\"Derfla\"";
+
+            QProcess::execute("osascript", args);
 #endif
+        }
+
         QString keySequence = settings.value("hotkey", "Alt+Space").toString();
         hotkeyManager_->registerHotkey(keySequence, 0x19900512);
     }
