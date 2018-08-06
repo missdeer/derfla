@@ -33,10 +33,11 @@ private:
     QCheckBox* cbStartWithSystem_;
     QSlider* sliderInterval_;
     QSpinBox* sbInterval_;
-    QKeySequenceEdit* hotkeyEditor_;
+    QKeySequenceEdit* edtHotkey_;
     QCheckBox* cbAutoUpdate_;
     QTableView* listExtensions_;
     QComboBox* cbSkins_;
+    QWidget* previewSkin_;
 };
 
 #endif // PREFERENCEDIALOG_H

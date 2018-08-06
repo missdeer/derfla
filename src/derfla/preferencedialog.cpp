@@ -36,11 +36,11 @@ PreferenceDialog::PreferenceDialog(const QList<ExtensionPtr>& extensions, QWidge
     QHBoxLayout* hl = new QHBoxLayout(ui->generalPage);
     QLabel* l = new QLabel(tr("Global Hotkey:"), ui->generalPage);
     hl->addWidget(l);
-    hotkeyEditor_ = new QKeySequenceEdit(ui->generalPage);
-    hotkeyEditor_->setKeySequence(QKeySequence(settings.value("hotkey", "Alt+Space").toString()));
-    connect(hotkeyEditor_, &QKeySequenceEdit::keySequenceChanged, this, &PreferenceDialog::onKeySequenceChanged);
+    edtHotkey_ = new QKeySequenceEdit(ui->generalPage);
+    edtHotkey_->setKeySequence(QKeySequence(settings.value("hotkey", "Alt+Space").toString()));
+    connect(edtHotkey_, &QKeySequenceEdit::keySequenceChanged, this, &PreferenceDialog::onKeySequenceChanged);
 
-    hl->addWidget(hotkeyEditor_);
+    hl->addWidget(edtHotkey_);
     gl->addLayout(hl);
 
     cbAutoUpdate_ = new QCheckBox(tr("Auto Update"), ui->generalPage);
@@ -93,6 +93,9 @@ PreferenceDialog::PreferenceDialog(const QList<ExtensionPtr>& extensions, QWidge
     connect(cbSkins_, &QComboBox::currentTextChanged, this, &PreferenceDialog::onCurrentSkinChanged);
     gl3->addWidget(cbSkins_);
 
+    previewSkin_ = new QWidget(ui->skinPage);
+    gl3->addWidget(previewSkin_);
+
     gl3->addStretch(1);
     ui->skinPage->setLayout(gl3);
 
@@ -110,7 +113,7 @@ void PreferenceDialog::on_buttonBox_accepted()
 
     settings.setValue("stayOnTop", cbStayOnTop_->isChecked());
     settings.setValue("interval", sliderInterval_->value());
-    settings.setValue("hotkey", hotkeyEditor_->keySequence().toString());
+    settings.setValue("hotkey", edtHotkey_->keySequence().toString());
     settings.setValue("skin", cbSkins_->currentIndex() == 0 ?
                           cbSkins_->currentText() :
                           (qApp->applicationDirPath() %

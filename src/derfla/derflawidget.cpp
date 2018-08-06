@@ -572,7 +572,7 @@ bool DerflaWidget::applySkin(const QString& skin)
         return false;
 
     resize(1, 1);
-    resize(skinManager_->size());
+    resize(skinManager_->skinSize());
 
     input_->setStyleSheet(skinManager_->inputStyle());
     QFont f = input_->font();

@@ -30,5 +30,5 @@ WinSparkleAutoUpdater::~WinSparkleAutoUpdater()
 
 void WinSparkleAutoUpdater::checkForUpdates()
 {
-    win_sparkle_check_update_with_ui();
+    win_sparkle_check_update_without_ui();
 }

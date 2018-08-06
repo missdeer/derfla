@@ -21,7 +21,7 @@ public:
 
     const QString &inputStyle() const;
 
-    const QSize &size() const;
+    const QSize &skinSize() const;
 
 private:
     const int widgetMinWidth_ = 450;
@@ -30,14 +30,14 @@ private:
     QPixmap midPartBackgroundImage_;
     QPixmap rightPartBackgroundImage_;
     QString inputStyle_;
-    QSize size_;
+    QSize skinSize_;
 
-    bool applySogouSkin(const QString& skin);
-    bool applySogouMacSkin(const QString& skin);
-    bool applyBaiduSkin(const QString& skin);
-    bool applyDerflaSkin(const QString& skin);
-    bool loadDerflaSkinConfiguration(const QString& configurationPath, QString& bgImagePath, QString& inputStyle, int& cutTop, int& cutBottom);
-    bool loadDerflaSkinPackage(const QString& skinPath, QString& configurationPath);
+    bool applySogouSkin(const QString& skinPath);
+    bool applySogouMacSkin(const QString& skinPath);
+    bool applyBaiduSkin(const QString& skinPath);
+    bool applyDerflaSkin(const QString& skinPath);
+    bool loadDerflaSkinPackage(const QString& skinPath, int &cutTop, int &cutBottom);
+    bool loadDerflaSkinConfigurationFile(const QString& skinPath, int &cutTop, int &cutBottom);
 };
 
 #endif // SKINMANAGER_H
