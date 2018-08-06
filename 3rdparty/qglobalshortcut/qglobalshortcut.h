@@ -24,6 +24,7 @@ public:
 
     QKeySequence key() const;
     void setKey(const QKeySequence& keyseq);
+    void unsetKey();
     //bool isEnabled() const;    void setEnabled(bool on);
 
 signals:
@@ -31,7 +32,6 @@ signals:
 
 private:
     QKeySequence keyseq_;
-    void unsetKey();
     void initialize();
 
 private:

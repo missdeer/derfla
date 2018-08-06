@@ -447,10 +447,15 @@ void DerflaWidget::onAbout()
 
 void DerflaWidget::onPreference()
 {
+#if defined(Q_OS_WIN)
+    hotkeyManager_->unsetKey();
+#else
+    hotkeyManager_->unregisterHotkey();
+#endif
     PreferenceDialog dlg(extensionManager_->extensions(), this);
+    QSettings settings;
     if (dlg.exec() == QDialog::Accepted)
     {
-        QSettings settings;
 
         candidateDelayInterval_ = settings.value("interval", 0).toInt();
 
@@ -531,13 +536,13 @@ void DerflaWidget::onPreference()
 #endif
         }
 
-        QString keySequence = settings.value("hotkey", "Alt+Space").toString();
-#if defined(Q_OS_WIN)
-        hotkeyManager_->setKey(QKeySequence(keySequence));
-#else
-        hotkeyManager_->registerHotkey(keySequence);
-#endif
     }
+    QString keySequence = settings.value("hotkey", "Alt+Space").toString();
+#if defined(Q_OS_WIN)
+    hotkeyManager_->setKey(QKeySequence(keySequence));
+#else
+    hotkeyManager_->registerHotkey(keySequence);
+#endif
 }
 
 void DerflaWidget::onCheckUpdates()
