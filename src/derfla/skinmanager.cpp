@@ -7,18 +7,8 @@ SkinManager::SkinManager()
 
 }
 
-bool SkinManager::applyDerflaSkin(const QString &skinPath)
+void SkinManager::makeSkinImages(int cutTop, int cutBottom)
 {
-    int cutTop = -1, cutBottom = -1;
-    QFileInfo fi(skinPath);
-    if ((fi.suffix().toLower() == "derflaskin" && !loadDerflaSkinPackage(skinPath, cutTop, cutBottom))
-            || (fi.suffix().toLower() == "xml" && !loadDerflaSkinConfigurationFile(skinPath, cutTop, cutBottom)))
-    {
-        // load by skin package - *.derflaskin, should be decompressed first
-        // load by skin configuration file - *.xml
-        return false;
-    }
-
     if (cutTop >= 0 && cutBottom > cutTop)
     {
         QPixmap topPartBackgroundImage = backgroundImage_.copy(0, 0, skinSize_.width(), cutTop);
@@ -45,6 +35,21 @@ bool SkinManager::applyDerflaSkin(const QString &skinPath)
 
         skinSize_.setWidth(widgetMinWidth_);
     }
+}
+
+bool SkinManager::applyDerflaSkin(const QString &skinPath)
+{
+    int cutTop = -1, cutBottom = -1;
+    QFileInfo fi(skinPath);
+    if ((fi.suffix().toLower() == "derflaskin" && !loadDerflaSkinPackage(skinPath, cutTop, cutBottom))
+            || (fi.suffix().toLower() == "xml" && !loadDerflaSkinConfigurationFile(skinPath, cutTop, cutBottom)))
+    {
+        // load by skin package - *.derflaskin, should be decompressed first
+        // load by skin configuration file - *.xml
+        return false;
+    }
+
+    makeSkinImages(cutTop, cutBottom);
 
     return true;
 }
@@ -167,6 +172,118 @@ bool SkinManager::loadDerflaSkinConfigurationFile(const QString &skinPath, int &
     return true;
 }
 
+bool SkinManager::applySogouSkin(const QString &skinPath)
+{
+    int cutTop = -1, cutBottom = -1;
+    QFileInfo fi(skinPath);
+    if (fi.suffix().toLower() == "ssf" && !loadSogouSkinPackage(skinPath, cutTop, cutBottom))
+    {
+        // load by skin package - *.ssf, should be decompressed first
+        return false;
+    }
+
+    makeSkinImages(cutTop, cutBottom);
+    return false;
+}
+
+bool SkinManager::loadSogouSkinPackage(const QString &skinPath, int &cutTop, int &cutBottom)
+{
+    QZipReader zr(skinPath);
+
+    auto fil = zr.fileInfoList();
+    for (auto & fi : fil)
+    {
+        if (fi.filePath == "skin.ini")
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool SkinManager::applySogouMacSkin(const QString &skinPath)
+{
+    int cutTop = -1, cutBottom = -1;
+    QFileInfo fi(skinPath);
+    if (fi.suffix().toLower() == "mssf" && !loadSogouMacSkinPackage(skinPath, cutTop, cutBottom))
+    {
+        // load by skin package - *.mssf, should be decompressed first
+        return false;
+    }
+
+    makeSkinImages(cutTop, cutBottom);
+    return false;
+}
+
+bool SkinManager::loadSogouMacSkinPackage(const QString &skinPath, int &cutTop, int &cutBottom)
+{
+    QZipReader zr(skinPath);
+
+    auto skinData = zr.fileData("skin");
+    QBuffer buffer(&skinData);
+    QZipReader zr2(&buffer);
+
+    auto fil = zr2.fileInfoList();
+    for (auto & fi : fil)
+    {
+        if (fi.filePath == "skin.plist")
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool SkinManager::applyBaiduSkin(const QString &skinPath)
+{
+    int cutTop = -1, cutBottom = -1;
+    QFileInfo fi(skinPath);
+    if (fi.suffix().toLower() == "bps" && !loadBaiduSkinPackage(skinPath, cutTop, cutBottom))
+    {
+        // load by skin package - *.bps, should be decompressed first
+        return false;
+    }
+
+    makeSkinImages(cutTop, cutBottom);
+    return false;
+}
+
+bool SkinManager::loadBaiduSkinPackage(const QString &skinPath, int &cutTop, int &cutBottom)
+{
+    QZipReader zr(skinPath);
+
+    auto fil = zr.fileInfoList();
+    for (auto & fi : fil)
+    {
+        if (fi.filePath == "Candidate.ini")
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool SkinManager::applySkin(const QString &skin)
+{
+    QMap<QString, std::function<bool(const QString&)>> m = {
+    { "xml",        std::bind(&SkinManager::applyDerflaSkin,   this, std::placeholders::_1)},
+    { "derflaskin", std::bind(&SkinManager::applyDerflaSkin,   this, std::placeholders::_1)},
+    { "bps",        std::bind(&SkinManager::applyBaiduSkin,    this, std::placeholders::_1)},
+    { "ssf",        std::bind(&SkinManager::applySogouSkin,    this, std::placeholders::_1)},
+    { "mssf",       std::bind(&SkinManager::applySogouMacSkin, this, std::placeholders::_1)},
+};
+    QFileInfo fi(skin);
+    auto it = m.find(fi.suffix().toLower());
+    if (m.end() != it)
+    {
+        auto f = it.value();
+        return f(skin);
+    }
+
+    return false;
+}
+
 const QPixmap &SkinManager::backgroundImage() const
 {
     return backgroundImage_;
@@ -195,39 +312,4 @@ const QString &SkinManager::inputStyle() const
 const QSize &SkinManager::skinSize() const
 {
     return skinSize_;
-}
-
-bool SkinManager::applySogouSkin(const QString &skinPath)
-{
-    return false;
-}
-
-bool SkinManager::applySogouMacSkin(const QString &skinPath)
-{
-    return false;
-}
-
-bool SkinManager::applyBaiduSkin(const QString &skinPath)
-{
-    return false;
-}
-
-bool SkinManager::applySkin(const QString &skin)
-{
-    QMap<QString, std::function<bool(const QString&)>> m = {
-    { "xml",        std::bind(&SkinManager::applyDerflaSkin,   this, std::placeholders::_1)},
-    { "derflaskin", std::bind(&SkinManager::applyDerflaSkin,   this, std::placeholders::_1)},
-    { "bps",        std::bind(&SkinManager::applyBaiduSkin,    this, std::placeholders::_1)},
-    { "ssf",        std::bind(&SkinManager::applySogouSkin,    this, std::placeholders::_1)},
-    { "mssf",       std::bind(&SkinManager::applySogouMacSkin, this, std::placeholders::_1)},
-};
-    QFileInfo fi(skin);
-    auto it = m.find(fi.suffix().toLower());
-    if (m.end() != it)
-    {
-        auto f = it.value();
-        return f(skin);
-    }
-
-    return false;
 }

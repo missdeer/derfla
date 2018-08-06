@@ -33,11 +33,15 @@ private:
     QSize skinSize_;
 
     bool applySogouSkin(const QString& skinPath);
+    bool loadSogouSkinPackage(const QString& skinPath, int &cutTop, int &cutBottom);
     bool applySogouMacSkin(const QString& skinPath);
+    bool loadSogouMacSkinPackage(const QString& skinPath, int &cutTop, int &cutBottom);
     bool applyBaiduSkin(const QString& skinPath);
+    bool loadBaiduSkinPackage(const QString& skinPath, int &cutTop, int &cutBottom);
     bool applyDerflaSkin(const QString& skinPath);
     bool loadDerflaSkinPackage(const QString& skinPath, int &cutTop, int &cutBottom);
     bool loadDerflaSkinConfigurationFile(const QString& skinPath, int &cutTop, int &cutBottom);
+    void makeSkinImages(int cutTop, int cutBottom);
 };
 
 #endif // SKINMANAGER_H
