@@ -2,7 +2,11 @@
 #include <private/qzipreader_p.h>
 #include "autoupdater.h"
 #include "skinmanager.h"
+#if defined(Q_OS_WIN)
+#include "qglobalshortcut.h"
+#else
 #include "uglobalhotkeys.h"
+#endif
 #include "charlineedit.h"
 #include "extensionmanager.h"
 #include "candidatelist.h"
@@ -16,7 +20,11 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     , input_(new CharLineEdit(this))
     , extensionManager_(new ExtensionManager(this))
     , candidateList_(new CandidateList(extensionManager_, this))
+    #if defined(Q_OS_WIN)
+    , hotkeyManager_(new QGlobalShortcut(this))
+    #else
     , hotkeyManager_(new UGlobalHotkeys(this))
+    #endif
     , skinManager_(new SkinManager)
     , autoUpdater_(nullptr)
 {
@@ -137,8 +145,13 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     candidateDelayTimer_->setSingleShot(true);
 
     QString keySequence = settings.value("hotkey", "Alt+Space").toString();
-    hotkeyManager_->registerHotkey(keySequence, 0x19900512);
+#if defined(Q_OS_WIN)
+    hotkeyManager_->setKey(QKeySequence(keySequence));
+    connect(hotkeyManager_, &QGlobalShortcut::activated, this,  &DerflaWidget::onShowInFront);
+#else
+    hotkeyManager_->registerHotkey(keySequence);
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::onShowInFront);
+#endif
 
     autoUpdater_ = AutoUpdater::createAutoUpdate();
     if (settings.value("autoupdate", true).toBool())
@@ -148,7 +161,6 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 DerflaWidget::~DerflaWidget()
 {
     candidateDelayTimer_->stop();
-    hotkeyManager_->unregisterHotkey();
     delete skinManager_;
 }
 
@@ -520,7 +532,11 @@ void DerflaWidget::onPreference()
         }
 
         QString keySequence = settings.value("hotkey", "Alt+Space").toString();
-        hotkeyManager_->registerHotkey(keySequence, 0x19900512);
+#if defined(Q_OS_WIN)
+        hotkeyManager_->setKey(QKeySequence(keySequence));
+#else
+        hotkeyManager_->registerHotkey(keySequence);
+#endif
     }
 }
 

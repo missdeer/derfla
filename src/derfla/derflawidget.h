@@ -12,6 +12,7 @@ class ExtensionManager;
 class CharLineEdit;
 class CandidateList;
 class UGlobalHotkeys;
+class QGlobalShortcut;
 class AutoUpdater;
 class SkinManager;
 
@@ -57,7 +58,11 @@ private:
     QSystemTrayIcon* trayIcon_;
     ExtensionManager* extensionManager_;
     CandidateList* candidateList_;
+#if defined (Q_OS_WIN)
+    QGlobalShortcut *hotkeyManager_;
+#else
     UGlobalHotkeys *hotkeyManager_;
+#endif
     SkinManager* skinManager_;
     AutoUpdater* autoUpdater_;
     QAction *stayOnTopAction_;

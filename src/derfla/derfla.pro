@@ -8,7 +8,7 @@ DESTDIR = ../../bin
 
 win32-clang-msvc: CONFIG -= precompile_header
 
-include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
+!win32: include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../util/util.pri)
@@ -95,6 +95,7 @@ win32: {
         QMAKE_CXXFLAGS_RELEASE += /Zi
         QMAKE_LFLAGS_RELEASE += /DEBUG
     }
+    include($$PWD/../../3rdparty/qglobalshortcut/qglobalshortcut.pri)
     include($$PWD/../../3rdparty/WinSparkle/winsparkle.pri)
     SOURCES += \
         winsparkleautoupdater.cpp

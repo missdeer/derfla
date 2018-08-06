@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "uglobalhotkeys.h"
 #include "extensionmodel.h"
 #include "booleaneditor.h"
 #include "preferencedialog.h"
@@ -136,8 +135,6 @@ void PreferenceDialog::onKeySequenceChanged(const QKeySequence &keySequence)
     QSettings settings;
     if (keySequence == QKeySequence(settings.value("hotkey", "Alt+Space").toString()))
         return;
-
-    UGlobalHotkeys ghk;
 }
 
 void PreferenceDialog::onCurrentSkinChanged(const QString &name)
