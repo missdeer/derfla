@@ -322,10 +322,6 @@ namespace util {
 
     bool isConsoleApplication(const QString& path)
     {
-        HANDLE hImage;
-
-        //DWORD  bytes;
-        //DWORD  iSection;
         DWORD  SectionOffset;
         DWORD  CoffHeaderOffset;
         DWORD  MoreDosHeader[16];
@@ -335,12 +331,11 @@ namespace util {
         IMAGE_DOS_HEADER      image_dos_header;
         IMAGE_FILE_HEADER     image_file_header;
         IMAGE_OPTIONAL_HEADER image_optional_header;
-        //IMAGE_SECTION_HEADER  image_section_header;
         
         /*
         *  Open the reference file.
         */
-        hImage = CreateFile(path.toStdWString().c_str(),
+        HANDLE hImage = CreateFile(path.toStdWString().c_str(),
             GENERIC_READ,
             FILE_SHARE_READ,
             NULL,
@@ -353,6 +348,9 @@ namespace util {
             return false;
         }
 
+        BOOST_SCOPE_EXIT(hImage) {
+            CloseHandle(hImage);
+        } BOOST_SCOPE_EXIT_END
         /*
         *  Read the MS-DOS image header.
         */
