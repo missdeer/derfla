@@ -43,20 +43,25 @@ namespace util {
         DWORD  verHandle = NULL;
         DWORD  verSize = GetFileVersionInfoSize(f.toStdWString().c_str(), &verHandle);
 
+        BOOST_SCOPE_EXIT(verHandle) {
+            CloseHandle((HANDLE)verHandle);
+        } BOOST_SCOPE_EXIT_END
+
         if (!verSize)
         {
             return;
         }
         LPSTR verData = new char[verSize];
-        BOOST_SCOPE_EXIT(verData) {
-            delete verData;
-        } BOOST_SCOPE_EXIT_END
+        ZeroMemory(verData, verSize);
 
-            if (!GetFileVersionInfo(f.toStdWString().c_str(), verHandle, verSize, verData))
-            {
-                return;
-            }
-        HRESULT hr;
+        BOOST_SCOPE_EXIT(verData) {
+            delete[] verData;
+        } BOOST_SCOPE_EXIT_END
+        if (!GetFileVersionInfo(f.toStdWString().c_str(), verHandle, verSize, verData))
+        {
+            return;
+        }
+        HRESULT hr = S_OK;
 
         struct LANGANDCODEPAGE {
             WORD wLanguage;
@@ -85,7 +90,7 @@ namespace util {
                 // TODO: write error handler.
             }
 
-            LPBYTE lpBuffer = NULL;
+            LPBYTE lpBuffer = nullptr;
             // Retrieve file description for language and code page "i".
             VerQueryValue(verData,
                 SubBlock,
@@ -111,7 +116,7 @@ namespace util {
             BOOST_SCOPE_EXIT(pwszArguments) {
                 delete pwszArguments;
             } BOOST_SCOPE_EXIT_END
-                HRESULT hr = resolveShellLink(NULL, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
+            HRESULT hr = resolveShellLink(NULL, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
             if (FAILED(hr))
                 return;
             QRegExp r("%([^%]+)%");
@@ -372,8 +377,7 @@ namespace util {
         /*
         *  Get actual COFF header.
         */
-        CoffHeaderOffset = AbsoluteSeek(hImage, image_dos_header.e_lfanew) +
-            sizeof(ULONG);
+        CoffHeaderOffset = AbsoluteSeek(hImage, image_dos_header.e_lfanew) + sizeof(ULONG);
 
         ReadBytes(hImage, &ntSignature, sizeof(ULONG));
 
