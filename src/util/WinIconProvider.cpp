@@ -177,25 +177,23 @@ QIcon WinIconProvider::icon(const QFileInfo& info) const
 
 bool WinIconProvider::addIconFromImageList(int imageListIndex, int iconIndex, QIcon& icon) const
 {
-	HICON hIcon = 0;
-	IImageList* imageList;
+    IImageList* imageList = nullptr;
 #if !defined(_MSC_VER)
     // For MinGW:
     static const IID iID_IImageList = {0x46eb5926, 0x582e, 0x4017, {0x9f, 0xdf, 0xe8, 0x99, 0x8d, 0xaa, 0x9, 0x50}};
-    HRESULT hResult = SHGetImageList(imageListIndex, iID_IImageList, (void**)&imageList);
-#else
-	HRESULT hResult = SHGetImageList(imageListIndex, IID_IImageList, (void**)&imageList);
 #endif
+    HRESULT hResult = SHGetImageList(imageListIndex, IID_IImageList, (void**)&imageList);
 	if (hResult == S_OK)
 	{
+        HICON hIcon = nullptr;
 		hResult = ((IImageList*)imageList)->GetIcon(iconIndex, ILD_TRANSPARENT, &hIcon);
+        if (hResult == S_OK && hIcon)
+        {
+            icon.addPixmap(QtWin::fromHICON(hIcon));
+            DestroyIcon(hIcon);
+        }
 		imageList->Release();
-	}
-	if (hResult == S_OK && hIcon)
-	{
-        icon.addPixmap(QtWin::fromHICON(hIcon));
-		DestroyIcon(hIcon);
-	}
+    }
 
 	return SUCCEEDED(hResult);
 }

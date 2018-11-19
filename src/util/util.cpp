@@ -26,7 +26,8 @@ QByteArray extractPNGIconFromFile(const QFileInfo &fi)
     {
         QBuffer buf(&bytes);
         buf.open(QIODevice::WriteOnly);
-        pixmap.save(&buf, "PNG");    
+        pixmap.save(&buf, "PNG");
+        buf.close();
     }
 #else
     Q_UNUSED(fi);
@@ -44,7 +45,8 @@ QByteArray extractPNGFromIcon(const QString &filePath)
     {
         QBuffer buf(&bytes);
         buf.open(QIODevice::WriteOnly);
-        pixmap.save(&buf, "PNG");        
+        pixmap.save(&buf, "PNG");
+        buf.close();
     }
     else
     {
