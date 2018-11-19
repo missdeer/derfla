@@ -348,7 +348,7 @@ namespace util {
             return false;
         }
 
-        BOOST_SCOPE_EXIT(hImage) {
+        BOOST_SCOPE_EXIT(&hImage) {
             CloseHandle(hImage);
         } BOOST_SCOPE_EXIT_END
         /*
