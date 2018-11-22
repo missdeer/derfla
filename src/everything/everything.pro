@@ -39,6 +39,7 @@ win32: {
         QMAKE_CXXFLAGS_RELEASE += /Zi
         QMAKE_LFLAGS_RELEASE += /DEBUG
     }
+    RC_FILE = everything.rc
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
     contains(QMAKE_HOST.arch, x86_64): {
