@@ -112,7 +112,7 @@ win32: {
     else: {
         copy_winsparkle.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/WinSparkle/Release/WinSparkle.dll) $$shell_path($$DESTDIR)'
     }
-    copy_skin.command = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$DESTDIR)'
+    copy_skin.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$DESTDIR/skins)'
 
     QMAKE_EXTRA_TARGETS += copy_winsparkle copy_skin
     POST_TARGETDEPS += copy_winsparkle copy_skin
