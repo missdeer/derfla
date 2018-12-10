@@ -29,7 +29,7 @@ win32-*msvc* : {
         message(Boost Library libs detected in BOOST_LIBS = $$_BOOST_LIBS)
         LIBS += -L$$_BOOST_LIBS
     }
-} else {
+} else: !macx {
     INCLUDEPATH += /usr/local/include
     LIBS += -L/usr/local/lib
 

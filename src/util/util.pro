@@ -73,5 +73,5 @@ unix: !macx: {
 
 macx: {
     OBJECTIVE_SOURCES += mac_util.mm
-    LIBS += -framework AppKit
+    LIBS += /usr/local/lib -framework AppKit
 }
