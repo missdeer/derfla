@@ -2,7 +2,7 @@ QT       += core gui widgets xml gui-private
 
 TARGET = Derfla
 TEMPLATE = app
-CONFIG += c++14 precompile_header
+CONFIG += c++17 precompile_header
 PRECOMPILED_HEADER = stdafx.h
 DESTDIR = ../../bin
 
@@ -11,6 +11,9 @@ win32-clang-msvc: CONFIG -= precompile_header
 !win32: include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
+
+# workaround for non-MSVC mkspec on 5.12
+equals(QT_MINOR_VERSION, 12): !win32-*msvc: LIBS += /usr/local/lib
 include($$PWD/../util/util.pri)
 
 SOURCES += main.cpp\

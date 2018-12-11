@@ -1,6 +1,6 @@
 QT += core gui sql
 
-CONFIG += c++14 console precompile_header
+CONFIG += c++17 console precompile_header
 CONFIG -= app_bundle
 
 TARGET = lfs
@@ -15,6 +15,9 @@ macx: {
 win32-clang-msvc: CONFIG -= precompile_header
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
+
+# workaround for non-MSVC mkspec on 5.12
+equals(QT_MINOR_VERSION, 12): !win32-*msvc: LIBS += /usr/local/lib
 include($$PWD/../util/util.pri)
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

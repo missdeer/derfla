@@ -8,7 +8,7 @@ QT       += widgets
 
 TARGET = derflautil
 TEMPLATE = lib
-CONFIG += c++14 precompile_header
+CONFIG += c++17 precompile_header
 PRECOMPILED_HEADER = stdafx.h
 
 macx: {
@@ -43,6 +43,8 @@ HEADERS += \
     directory.h \
     util.h
 
+# workaround for non-MSVC mkspec on 5.12
+equals(QT_MINOR_VERSION, 12): !win32-*msvc: LIBS += /usr/local/lib
 win32: {
     win32-*g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
@@ -73,5 +75,5 @@ unix: !macx: {
 
 macx: {
     OBJECTIVE_SOURCES += mac_util.mm
-    LIBS += /usr/local/lib -framework AppKit
+    LIBS += -framework AppKit
 }
