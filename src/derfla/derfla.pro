@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     preferencedialog.cpp \
     skinmanager.cpp \
     extensionmodel.cpp \
-    booleaneditor.cpp
+    booleaneditor.cpp \
+    qrcodedialog.cpp
 
 HEADERS  += stdafx.h \
     derflawidget.h \
@@ -46,11 +47,13 @@ HEADERS  += stdafx.h \
     preferencedialog.h \
     skinmanager.h \
     extensionmodel.h \
-    booleaneditor.h
+    booleaneditor.h \
+    qrcodedialog.h
 
 FORMS    += \
     candidatelist.ui \
-    preferencedialog.ui
+    preferencedialog.ui \
+    qrcodedialog.ui
 
 INCLUDEPATH += $$PWD
 

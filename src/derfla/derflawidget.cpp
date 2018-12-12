@@ -11,6 +11,7 @@
 #include "extensionmanager.h"
 #include "candidatelist.h"
 #include "preferencedialog.h"
+#include "qrcodedialog.h"
 #include "derflawidget.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent)
@@ -118,6 +119,26 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     QAction *preferenceAction = new QAction(tr("Preference..."), this);
     connect(preferenceAction, &QAction::triggered, this, &DerflaWidget::onPreference);
 
+    QMenu* donateMenu = new QMenu(tr("Donate"), this);
+    QAction *donateViaPaypalAction = new QAction(tr("Via Paypal..."), this);
+    connect(donateViaPaypalAction, &QAction::triggered, [](){
+        QDesktopServices::openUrl(QUrl("https://www.paypal.me/dfordsoft"));
+    });
+    donateMenu->addAction(donateViaPaypalAction);
+
+    QAction *donateViaAlipayAction = new QAction(tr("Via Alipay..."), this);
+    connect(donateViaAlipayAction, &QAction::triggered, [this](){
+        QrcodeDialog dlg(true, this);
+        dlg.exec();
+    });
+    donateMenu->addAction(donateViaAlipayAction);
+    QAction *donateViaWeChatAction = new QAction(tr("Via WeChat Pay..."), this);
+    connect(donateViaWeChatAction, &QAction::triggered, [this](){
+        QrcodeDialog dlg(false, this);
+        dlg.exec();
+    });
+    donateMenu->addAction(donateViaWeChatAction);
+
     QMenu* trayiconMenu = new QMenu(this);
     trayiconMenu->addAction(showAction);
     trayiconMenu->addAction(aboutAction);
@@ -131,6 +152,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     trayiconMenu->addAction(stayOnTopAction_);
     trayiconMenu->addAction(checkUpdatesAction);
     trayiconMenu->addAction(preferenceAction);
+    trayiconMenu->addMenu(donateMenu);
     trayiconMenu->addSeparator();
     trayiconMenu->addAction(quitAction);
     trayIcon_ = new QSystemTrayIcon(this);
