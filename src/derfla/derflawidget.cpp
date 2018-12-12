@@ -120,19 +120,19 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     connect(preferenceAction, &QAction::triggered, this, &DerflaWidget::onPreference);
 
     QMenu* donateMenu = new QMenu(tr("Donate"), this);
-    QAction *donateViaPaypalAction = new QAction(tr("Via Paypal..."), this);
+    QAction *donateViaPaypalAction = new QAction(QIcon(":rc/paypal.png"), tr("Via Paypal..."), this);
     connect(donateViaPaypalAction, &QAction::triggered, [](){
         QDesktopServices::openUrl(QUrl("https://www.paypal.me/dfordsoft"));
     });
     donateMenu->addAction(donateViaPaypalAction);
 
-    QAction *donateViaAlipayAction = new QAction(tr("Via Alipay..."), this);
+    QAction *donateViaAlipayAction = new QAction(QIcon(":rc/alipay.png"), tr("Via Alipay..."), this);
     connect(donateViaAlipayAction, &QAction::triggered, [this](){
         QrcodeDialog dlg(true, this);
         dlg.exec();
     });
     donateMenu->addAction(donateViaAlipayAction);
-    QAction *donateViaWeChatAction = new QAction(tr("Via WeChat Pay..."), this);
+    QAction *donateViaWeChatAction = new QAction(QIcon(":rc/wechat.png"), tr("Via WeChat Pay..."), this);
     connect(donateViaWeChatAction, &QAction::triggered, [this](){
         QrcodeDialog dlg(false, this);
         dlg.exec();

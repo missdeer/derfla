@@ -16,6 +16,7 @@ QrcodeDialog::QrcodeDialog(bool alipay, QWidget *parent) :
         setWindowTitle(tr("Scan by WeChat"));
         ui->label->setPixmap(QPixmap(":rc/qrcode/wepay.jpg"));
     }
+    setFixedSize(size());
 }
 
 QrcodeDialog::~QrcodeDialog()
