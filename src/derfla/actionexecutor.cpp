@@ -12,9 +12,6 @@ ActionExecutor::ActionExecutor(QObject *parent)
     { "revealFile",         std::bind(&ActionExecutor::revealFile,         this, std::placeholders::_1) },
     { "browseInDerfla",     std::bind(&ActionExecutor::browseInDerfla,     this, std::placeholders::_1) },
     { "copyText",           std::bind(&ActionExecutor::copyText,           this, std::placeholders::_1) },
-    { "donateViaPaypal",    std::bind(&ActionExecutor::donateViaPaypal,    this, std::placeholders::_1) },
-    { "donateViaAlipay",    std::bind(&ActionExecutor::donateViaAlipay,    this, std::placeholders::_1) },
-    { "donateViaWeChatPay", std::bind(&ActionExecutor::donateViaWeChatPay, this, std::placeholders::_1) },
 };
 
 }
@@ -196,24 +193,6 @@ bool ActionExecutor::copyText(DerflaActionPtr da)
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(da->target());
-    return true;
-}
-
-bool ActionExecutor::donateViaPaypal(DerflaActionPtr )
-{
-    emit viaPaypal();
-    return true;
-}
-
-bool ActionExecutor::donateViaAlipay(DerflaActionPtr )
-{
-    emit viaAlipay();
-    return true;
-}
-
-bool ActionExecutor::donateViaWeChatPay(DerflaActionPtr)
-{
-    emit viaWeChatPay();
     return true;
 }
 

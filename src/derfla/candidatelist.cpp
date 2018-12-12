@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "qrcodedialog.h"
 #include "extensionmanager.h"
 #include "candidatelistdelegate.h"
 #include "candidatelist.h"
@@ -27,9 +26,6 @@ CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent
     connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
     connect(extensionManager_, &ExtensionManager::actionUpdated, this, &CandidateList::onActionUpdated);
     connect(extensionManager_, &ExtensionManager::emptyAction, this, &CandidateList::onEmptyAction);
-    connect(&actionExecutor_, &ActionExecutor::viaPaypal, this, &CandidateList::viaPaypal);
-    connect(&actionExecutor_, &ActionExecutor::viaAlipay, this, &CandidateList::viaAlipay);
-    connect(&actionExecutor_, &ActionExecutor::viaWeChatPay, this, &CandidateList::viaWeChatPay);
 }
 
 CandidateList::~CandidateList()
@@ -193,17 +189,33 @@ void CandidateList::createDonateDerflaActions()
     daPaypal->setTitle(tr("Donate to support me"));
     daPaypal->setDescription(tr("Donate via Paypal"));
     daPaypal->setIcon(QIcon(":rc/paypal.png"));
-    daPaypal->setActionType("donateViaPaypal");
+    daPaypal->setActionType("openUrl");
+    daPaypal->setTarget("https://www.paypal.me/dfordsoft");
+
+#if defined (Q_OS_MAC)
+    QDir dir(QCoreApplication::applicationDirPath());
+    dir.cdUp();
+    dir.cd("Tools");
+    QString target = dir.absolutePath() + "/donate";
+#elif defined (Q_OS_WIN)
+    QString target = QCoreApplication::applicationDirPath() + "/donate.exe";
+#else
+    QString target = QCoreApplication::applicationDirPath() + "/donate";
+#endif
     DerflaActionPtr daAlipay(new DerflaAction);
     daAlipay->setTitle(tr("Donate to support me"));
     daAlipay->setDescription(tr("Donate via Alipay"));
     daAlipay->setIcon(QIcon(":rc/alipay.png"));
-    daAlipay->setActionType("donateViaAlipay");
+    daAlipay->setActionType("shellExecute");
+    daAlipay->setTarget(target);
+    daAlipay->setTarget("--alipay");
     DerflaActionPtr daWeChatPay(new DerflaAction);
     daWeChatPay->setTitle(tr("Donate to support me"));
     daWeChatPay->setDescription(tr("Donate via WeChat pay"));
     daWeChatPay->setIcon(QIcon(":rc/wechat.png"));
-    daWeChatPay->setActionType("donateViaWeChatPay");
+    daWeChatPay->setActionType("shellExecute");
+    daWeChatPay->setTarget(target);
+    daWeChatPay->setTarget("--wechat");
     dalDonate_ << daPaypal << daAlipay << daWeChatPay;
 }
 
@@ -227,6 +239,21 @@ void CandidateList::onEnter()
 void CandidateList::setInputBoxSize(const QSize &s)
 {
     resize(qMax(s.width(), 700), size().height());
+}
+
+void CandidateList::donateViaPaypal()
+{
+    actionExecutor_(dalDonate_[0]);
+}
+
+void CandidateList::donateViaAlipay()
+{
+    actionExecutor_(dalDonate_[1]);
+}
+
+void CandidateList::donateViaWeChatPay()
+{
+    actionExecutor_(dalDonate_[2]);
 }
 
 bool CandidateList::getActiveWindowFlag() const

@@ -14,9 +14,7 @@ public:
 
     bool operator()(DerflaActionPtr da);
 signals:
-    void viaPaypal();
-    void viaAlipay();
-    void viaWeChatPay();
+
 public slots:
     void errorOccurred();
     void finished(int, QProcess::ExitStatus);
@@ -28,9 +26,6 @@ private:
     bool revealFile(DerflaActionPtr da);
     bool browseInDerfla(DerflaActionPtr);
     bool copyText(DerflaActionPtr da);
-    bool donateViaPaypal(DerflaActionPtr);
-    bool donateViaAlipay(DerflaActionPtr);
-    bool donateViaWeChatPay(DerflaActionPtr );
 
     QString findProgram(const QString& exe);
 

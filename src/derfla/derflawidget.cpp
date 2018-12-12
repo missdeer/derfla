@@ -11,7 +11,6 @@
 #include "extensionmanager.h"
 #include "candidatelist.h"
 #include "preferencedialog.h"
-#include "qrcodedialog.h"
 #include "derflawidget.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent)
@@ -64,9 +63,6 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     extensionManager_->loadAllFromCache();
     connect(candidateList_, &CandidateList::done, this, &DerflaWidget::onCandidateListDone);
     connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::onKeyPressed);
-    connect(candidateList_, &CandidateList::viaPaypal, this, &DerflaWidget::onDonateViaPaypal, Qt::QueuedConnection);
-    connect(candidateList_, &CandidateList::viaAlipay, this, &DerflaWidget::onDonateViaAlipay, Qt::QueuedConnection);
-    connect(candidateList_, &CandidateList::viaWeChatPay, this, &DerflaWidget::onDonateViaWeChatPay, Qt::QueuedConnection);
 //    QAction *logoAction = new QAction(tr("Input"), this);
 //    logoAction->setIcon(QIcon(":/derfla.ico"));
 //    input_->addAction(logoAction, QLineEdit::ActionPosition::TrailingPosition);
@@ -123,15 +119,15 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 
     QMenu* donateMenu = new QMenu(tr("Donate"), this);
     QAction *donateViaPaypalAction = new QAction(QIcon(":rc/paypal.png"), tr("Via Paypal..."), this);
-    connect(donateViaPaypalAction, &QAction::triggered, this, &DerflaWidget::onDonateViaPaypal);
+    connect(donateViaPaypalAction, &QAction::triggered, candidateList_, &CandidateList::donateViaPaypal);
     donateMenu->addAction(donateViaPaypalAction);
 
     QAction *donateViaAlipayAction = new QAction(QIcon(":rc/alipay.png"), tr("Via Alipay..."), this);
-    connect(donateViaAlipayAction, &QAction::triggered, this, &DerflaWidget::onDonateViaAlipay);
+    connect(donateViaAlipayAction, &QAction::triggered, candidateList_, &CandidateList::donateViaAlipay);
     donateMenu->addAction(donateViaAlipayAction);
 
     QAction *donateViaWeChatAction = new QAction(QIcon(":rc/wechat.png"), tr("Via WeChat Pay..."), this);
-    connect(donateViaWeChatAction, &QAction::triggered, this, &DerflaWidget::onDonateViaWeChatPay);
+    connect(donateViaWeChatAction, &QAction::triggered, candidateList_, &CandidateList::donateViaWeChatPay);
     donateMenu->addAction(donateViaWeChatAction);
 
     QMenu* trayiconMenu = new QMenu(this);
@@ -571,23 +567,6 @@ void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)
 {
     auto menu = trayIcon_->contextMenu();
     menu->exec(mapToGlobal(pos));
-}
-
-void DerflaWidget::onDonateViaPaypal()
-{
-    QDesktopServices::openUrl(QUrl("https://www.paypal.me/dfordsoft"));
-}
-
-void DerflaWidget::onDonateViaAlipay()
-{
-    QrcodeDialog dlg(true, this);
-    dlg.open();
-}
-
-void DerflaWidget::onDonateViaWeChatPay()
-{
-    QrcodeDialog dlg(false, this);
-    dlg.open();
 }
 
 void DerflaWidget::showCandidateList()

@@ -20,7 +20,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="derfla.qrc">:/rc/qrcode/alipay.jpg</pixmap>
+      <pixmap resource="donate.qrc">:/rc/qrcode/alipay.jpg</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -30,7 +30,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="derfla.qrc"/>
+  <include location="donate.qrc"/>
  </resources>
  <connections/>
 </ui>

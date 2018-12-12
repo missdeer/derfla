@@ -9,24 +9,24 @@
         <translation>框架</translation>
     </message>
     <message>
-        <location filename="../candidatelist.cpp" line="193"/>
-        <location filename="../candidatelist.cpp" line="198"/>
-        <location filename="../candidatelist.cpp" line="203"/>
+        <location filename="../candidatelist.cpp" line="189"/>
+        <location filename="../candidatelist.cpp" line="206"/>
+        <location filename="../candidatelist.cpp" line="213"/>
         <source>Donate to support me</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../candidatelist.cpp" line="194"/>
+        <location filename="../candidatelist.cpp" line="190"/>
         <source>Donate via Paypal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../candidatelist.cpp" line="199"/>
+        <location filename="../candidatelist.cpp" line="207"/>
         <source>Donate via Alipay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../candidatelist.cpp" line="204"/>
+        <location filename="../candidatelist.cpp" line="214"/>
         <source>Donate via WeChat pay</source>
         <translation type="unfinished"></translation>
     </message>
@@ -34,132 +34,132 @@
 <context>
     <name>DerflaWidget</name>
     <message>
-        <location filename="../derflawidget.cpp" line="78"/>
+        <location filename="../derflawidget.cpp" line="74"/>
         <source>Select File</source>
         <translation>选择文件</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="79"/>
+        <location filename="../derflawidget.cpp" line="75"/>
         <source>Ctrl+O</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="82"/>
+        <location filename="../derflawidget.cpp" line="78"/>
         <source>Select Folder</source>
         <translation>选择文件夹</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="83"/>
+        <location filename="../derflawidget.cpp" line="79"/>
         <source>Ctrl+D</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="86"/>
+        <location filename="../derflawidget.cpp" line="82"/>
         <source>Load &amp;Skin</source>
         <translation>载入皮肤(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="89"/>
+        <location filename="../derflawidget.cpp" line="85"/>
         <source>&amp;Install Extension</source>
         <translation>安装扩展(&amp;I)</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="92"/>
+        <location filename="../derflawidget.cpp" line="88"/>
         <source>Stay On Top</source>
         <translation>停在最上层</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="101"/>
+        <location filename="../derflawidget.cpp" line="97"/>
         <source>Check Updates...</source>
         <translation>检查更新...</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="104"/>
+        <location filename="../derflawidget.cpp" line="100"/>
         <source>E&amp;xit</source>
         <translation>退出(&amp;X)</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="105"/>
+        <location filename="../derflawidget.cpp" line="101"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="110"/>
+        <location filename="../derflawidget.cpp" line="106"/>
         <source>Show</source>
         <translation>显示</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="113"/>
+        <location filename="../derflawidget.cpp" line="109"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="116"/>
+        <location filename="../derflawidget.cpp" line="112"/>
         <source>Homepage</source>
         <translation>主页</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="121"/>
+        <location filename="../derflawidget.cpp" line="117"/>
         <source>Preference...</source>
         <translation>偏好设置...</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="124"/>
+        <location filename="../derflawidget.cpp" line="120"/>
         <source>Donate</source>
         <translation>捐助</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="125"/>
+        <location filename="../derflawidget.cpp" line="121"/>
         <source>Via Paypal...</source>
         <translation>通过Paypal...</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="129"/>
+        <location filename="../derflawidget.cpp" line="125"/>
         <source>Via Alipay...</source>
         <translation>通过支付宝...</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="133"/>
+        <location filename="../derflawidget.cpp" line="129"/>
         <source>Via WeChat Pay...</source>
         <translation>通过微信支付...</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="157"/>
+        <location filename="../derflawidget.cpp" line="153"/>
         <source>Derfla - Accelerate your keyboard!</source>
         <translation>Derfla - 加速你的键盘！</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="348"/>
+        <location filename="../derflawidget.cpp" line="344"/>
         <source>Load Derfla Skin</source>
         <translation>载入Derfla皮肤</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="350"/>
+        <location filename="../derflawidget.cpp" line="346"/>
         <source>Derfla Skin Package (*.derflaskin);;Derfla Skin Configuration (*.xml);;Baidu Input Method Skin File (*.bps);;Sogou Input Method for Windows Skin File (*.ssf);;Sogou Input Method for macOS Skin File (*.mssf);;All Supported Files (*.derflaskin *.xml *.bps *.ssf *.mssf);;All files (*.*)</source>
         <translation>Derfla皮肤包(*.derflaskin);;Derfla皮肤配置文件(*.xml);;百度输入法皮肤文件(*.bps);;搜狗输入法Windows版皮肤文件(*.ssf);;搜狗输入法macOS版皮肤文件(*.mssf);;所有支持的文件格式(*.derflaskin *.xml *.bps *.ssf *.mssf);;所有文件(*.*)</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="370"/>
+        <location filename="../derflawidget.cpp" line="366"/>
         <source>Install Derfla Extension</source>
         <translation>安装Derfla扩展</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="372"/>
+        <location filename="../derflawidget.cpp" line="368"/>
         <source>Derfla Extension Package (*.derflaextension);;Derfla Extension Configuration (extension.cfg);;All files (*.*)</source>
         <translation>Derfla扩展包(*.derflaextension);;Derfla扩展配置文件(extension.cfg);;所有文件(*.*)</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="379"/>
+        <location filename="../derflawidget.cpp" line="375"/>
         <source>Installing extension failed</source>
         <translation>安装扩展失败</translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="458"/>
+        <location filename="../derflawidget.cpp" line="454"/>
         <source>Derfla</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../derflawidget.cpp" line="458"/>
+        <location filename="../derflawidget.cpp" line="454"/>
         <source>Derfla is a cross platform productivity application, which boosts your efficiency with hotkeys, keywords, text expansion and more. Search your Windows and the web, and be more productive with custom actions to control your system.
 
 Contact me at https://minidump.info/derfla/ if you have any problem about this tool. Built at </source>
@@ -268,19 +268,16 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
 <context>
     <name>QrcodeDialog</name>
     <message>
-        <location filename="../qrcodedialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation>对话框</translation>
+        <translation type="vanished">对话框</translation>
     </message>
     <message>
-        <location filename="../qrcodedialog.cpp" line="11"/>
         <source>Scan by Alipay</source>
-        <translation>支付宝扫一扫</translation>
+        <translation type="vanished">支付宝扫一扫</translation>
     </message>
     <message>
-        <location filename="../qrcodedialog.cpp" line="16"/>
         <source>Scan by WeChat</source>
-        <translation>微信扫一扫</translation>
+        <translation type="vanished">微信扫一扫</translation>
     </message>
 </context>
 </TS>

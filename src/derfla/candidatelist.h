@@ -34,9 +34,12 @@ protected:
 signals:
     void done();
     void keyPressedEvent(QKeyEvent* event);
-    void viaPaypal();
-    void viaAlipay();
-    void viaWeChatPay();
+
+public slots:
+    void donateViaPaypal();
+    void donateViaAlipay();
+    void donateViaWeChatPay();
+
 private slots:
     void onActionUpdated(DerflaActionList& dal);
     void onEmptyAction();

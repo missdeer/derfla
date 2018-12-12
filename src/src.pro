@@ -11,7 +11,8 @@ SUBDIRS +=  \
     websearch \
     webdict \
     calculator \
-    weather
+    weather \
+    donate
 
 derfla.depends = util
 lfs.depends = util
@@ -21,3 +22,6 @@ websearch.depends = util
 webdict.depends = util
 calculator.depends = util
 weather.depends = util
+
+RESOURCES += \
+    donate/derfla.qrc

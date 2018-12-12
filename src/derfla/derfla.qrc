@@ -9,8 +9,6 @@
         <file>rc/images/extension.png</file>
         <file>rc/images/general.png</file>
         <file>rc/images/skin.png</file>
-        <file>rc/qrcode/alipay.jpg</file>
-        <file>rc/qrcode/wepay.jpg</file>
         <file>rc/paypal.png</file>
         <file>rc/alipay.png</file>
         <file>rc/wechat.png</file>
