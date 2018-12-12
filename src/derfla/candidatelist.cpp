@@ -208,14 +208,16 @@ void CandidateList::createDonateDerflaActions()
     daAlipay->setIcon(QIcon(":rc/alipay.png"));
     daAlipay->setActionType("shellExecute");
     daAlipay->setTarget(target);
-    daAlipay->setTarget("--alipay");
+    daAlipay->setArguments("--alipay");
+    daAlipay->setWorkingDirectory(QCoreApplication::applicationDirPath());
     DerflaActionPtr daWeChatPay(new DerflaAction);
     daWeChatPay->setTitle(tr("Donate to support me"));
     daWeChatPay->setDescription(tr("Donate via WeChat pay"));
     daWeChatPay->setIcon(QIcon(":rc/wechat.png"));
     daWeChatPay->setActionType("shellExecute");
     daWeChatPay->setTarget(target);
-    daWeChatPay->setTarget("--wechat");
+    daWeChatPay->setArguments("--wechat");
+    daWeChatPay->setWorkingDirectory(QCoreApplication::applicationDirPath());
     dalDonate_ << daPaypal << daAlipay << daWeChatPay;
 }
 

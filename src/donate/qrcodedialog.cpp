@@ -17,6 +17,7 @@ QrcodeDialog::QrcodeDialog(bool alipay, QWidget *parent) :
         ui->label->setPixmap(QPixmap(":rc/qrcode/wepay.jpg"));
     }
     setFixedSize(size());
+    setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
 }
 
 QrcodeDialog::~QrcodeDialog()
