@@ -40,6 +40,36 @@ HEADERS += \
 FORMS += \
         qrcodedialog.ui
 
+INCLUDEPATH += $$PWD
+
+CODECFORTR      = UTF-8
+CODECFORSRC     = UTF-8
+TRANSLATIONS    = $$PWD/translations/donate_en_US.ts \
+                  $$PWD/translations/donate_zh_CN.ts
+
+isEmpty(QMAKE_LUPDATE) {
+    win32:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]\lupdate.exe
+    else:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]/lupdate
+}
+
+isEmpty(QMAKE_LRELEASE) {
+    win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
+    else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+}
+
+lupdate.commands = $$QMAKE_LUPDATE $$PWD/donate.pro
+lupdates.depends = $$SOURCES $$HEADERS $$FORMS $$TRANSLATIONS
+lrelease.commands = $$QMAKE_LRELEASE $$PWD/donate.pro
+lrelease.depends = lupdate
+translate.depends = lrelease
+QMAKE_EXTRA_TARGETS += lupdate lrelease translate qti18n
+POST_TARGETDEPS += translate qti18n
+
+translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
+
+qti18n.depends = translate
+qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/translations/qt_zh_CN.qm)'
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

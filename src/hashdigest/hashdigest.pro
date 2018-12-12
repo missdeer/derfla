@@ -37,6 +37,31 @@ SOURCES += \
 HEADERS += \
     stdafx.h
 
+INCLUDEPATH += $$PWD
+
+CODECFORTR      = UTF-8
+CODECFORSRC     = UTF-8
+TRANSLATIONS    = $$PWD/translations/hashdigest_en_US.ts \
+                  $$PWD/translations/hashdigest_zh_CN.ts
+
+isEmpty(QMAKE_LUPDATE) {
+    win32:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]\lupdate.exe
+    else:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]/lupdate
+}
+
+isEmpty(QMAKE_LRELEASE) {
+    win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
+    else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+}
+
+lupdate.commands = $$QMAKE_LUPDATE $$PWD/hashdigest.pro
+lupdates.depends = $$SOURCES $$HEADERS $$FORMS $$TRANSLATIONS
+lrelease.commands = $$QMAKE_LRELEASE $$PWD/hashdigest.pro
+lrelease.depends = lupdate
+translate.depends = lrelease
+QMAKE_EXTRA_TARGETS += lupdate lrelease translate qti18n
+POST_TARGETDEPS += translate qti18n
+
 win32: {
     win32-*g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
@@ -47,6 +72,11 @@ win32: {
     }
     RC_FILE = hashdigest.rc
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
+
+    translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
+
+    qti18n.depends = translate
+    qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/translations/qt_zh_CN.qm)'
 
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg
