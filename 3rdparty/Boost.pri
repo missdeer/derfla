@@ -14,6 +14,7 @@ win32-*msvc* : {
     } else {
         message(Boost Library headers detected in BOOST_ROOT = $$_BOOST_ROOT)
         INCLUDEPATH += $$_BOOST_ROOT
+        TR_EXCLUDE += $$_BOOST_ROOT/*
     }
 
     _BOOST_LIBS = $$BOOST_LIBS
@@ -31,6 +32,7 @@ win32-*msvc* : {
     }
 } else: !macx {
     INCLUDEPATH += /usr/local/include
+    TR_EXCLUDE += /usr/local/include/boost/*
     LIBS += -L/usr/local/lib
 
     !isEmpty($$BOOST_ROOT) {

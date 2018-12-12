@@ -16,14 +16,12 @@ class CandidateList : public QFrame
     Q_OBJECT
 
 public:
-    explicit CandidateList(ExtensionManager* extensionManager, QWidget *parent = 0);
+    explicit CandidateList(ExtensionManager* extensionManager, QWidget *parent = nullptr);
     ~CandidateList();
     void update(const QString& text);
 
     void populateList();
-
     void refreshList();
-
     int count() const;
     bool getActiveWindowFlag() const;
     void setActiveWindowFlag(bool value);
@@ -36,9 +34,12 @@ protected:
 signals:
     void done();
     void keyPressedEvent(QKeyEvent* event);
+    void viaPaypal();
+    void viaAlipay();
+    void viaWeChatPay();
 private slots:
-    void actionUpdated(DerflaActionList& dal);
-    void emptyAction();
+    void onActionUpdated(DerflaActionList& dal);
+    void onEmptyAction();
 private:
     Ui::CandidateList *ui;
     bool activeWindowFlag_;
@@ -47,6 +48,8 @@ private:
     ExtensionManager* extensionManager_;
     ActionExecutor actionExecutor_;
     DerflaActionList dal_;
+    DerflaActionList dalDonate_;
+    void createDonateDerflaActions();
 };
 
 #endif // CANDIDATELIST_H

@@ -49,6 +49,9 @@ private slots:
     void onPreference();
     void onCheckUpdates();
     void onCustomContextMenuRequested(const QPoint &pos);
+    void onDonateViaPaypal();
+    void onDonateViaAlipay();
+    void onDonateViaWeChatPay();
 private:
     const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;

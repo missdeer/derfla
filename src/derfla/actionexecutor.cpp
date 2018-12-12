@@ -5,23 +5,27 @@ ActionExecutor::ActionExecutor(QObject *parent)
     : QObject(parent)
 {
     actionExecutorMap_ = {
-    { "script",          std::bind(&ActionExecutor::runScript,       this, std::placeholders::_1) },
-    { "shellExecute",    std::bind(&ActionExecutor::shellExecute,    this, std::placeholders::_1) },
-    { "terminalCommand", std::bind(&ActionExecutor::terminalCommand, this, std::placeholders::_1) },
-    { "openUrl",         std::bind(&ActionExecutor::openUrl,         this, std::placeholders::_1) },
-    { "revealFile",      std::bind(&ActionExecutor::revealFile,      this, std::placeholders::_1) },
-    { "browseInDerfla",  std::bind(&ActionExecutor::browseInDerfla,  this, std::placeholders::_1) },
-    { "copyText",        std::bind(&ActionExecutor::copyText,        this, std::placeholders::_1) },
+    { "script",             std::bind(&ActionExecutor::runScript,          this, std::placeholders::_1) },
+    { "shellExecute",       std::bind(&ActionExecutor::shellExecute,       this, std::placeholders::_1) },
+    { "terminalCommand",    std::bind(&ActionExecutor::terminalCommand,    this, std::placeholders::_1) },
+    { "openUrl",            std::bind(&ActionExecutor::openUrl,            this, std::placeholders::_1) },
+    { "revealFile",         std::bind(&ActionExecutor::revealFile,         this, std::placeholders::_1) },
+    { "browseInDerfla",     std::bind(&ActionExecutor::browseInDerfla,     this, std::placeholders::_1) },
+    { "copyText",           std::bind(&ActionExecutor::copyText,           this, std::placeholders::_1) },
+    { "donateViaPaypal",    std::bind(&ActionExecutor::donateViaPaypal,    this, std::placeholders::_1) },
+    { "donateViaAlipay",    std::bind(&ActionExecutor::donateViaAlipay,    this, std::placeholders::_1) },
+    { "donateViaWeChatPay", std::bind(&ActionExecutor::donateViaWeChatPay, this, std::placeholders::_1) },
 };
 
 }
 
 bool ActionExecutor::operator()(DerflaActionPtr da)
 {
-    if (actionExecutorMap_.find(da->actionType()) == actionExecutorMap_.end())
+    auto it = actionExecutorMap_.find(da->actionType());
+    if (actionExecutorMap_.end() == it)
         return false;
 
-    auto f = actionExecutorMap_[da->actionType()];
+    auto f = it.value();
     return f(da);
 }
 
@@ -79,7 +83,7 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
             return false;
         f.write(da->target().toLocal8Bit());
         f.close();
-        ::ShellExecuteW(NULL, L"open", localPath.toStdWString().c_str(), da->arguments().toStdWString().c_str(), NULL, SW_SHOWNORMAL);
+        ::ShellExecuteW(nullptr, L"open", localPath.toStdWString().c_str(), da->arguments().toStdWString().c_str(), nullptr, SW_SHOWNORMAL);
     }
 #endif
 
@@ -89,7 +93,7 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
 bool ActionExecutor::shellExecute(DerflaActionPtr da)
 {
 #if defined(Q_OS_WIN)
-    ::ShellExecuteW(NULL,
+    ::ShellExecuteW(nullptr,
                     L"open",
                     da->target().toStdWString().c_str(),
                     da->arguments().toStdWString().c_str(),
@@ -113,7 +117,7 @@ bool ActionExecutor::terminalCommand(DerflaActionPtr da)
 {
 #if defined(Q_OS_WIN)
     QString args = QString("/K %1 %2").arg(da->target()).arg(da->arguments());
-    ::ShellExecuteW(NULL,
+    ::ShellExecuteW(nullptr,
                     L"open",
                     L"cmd.exe",
                     args.toStdWString().c_str(),
@@ -168,7 +172,7 @@ bool ActionExecutor::revealFile(DerflaActionPtr da)
 {
 #if defined(Q_OS_WIN)
     QString arg = QString("/select,\"%1\"").arg(QDir::toNativeSeparators(da->target()));
-    ::ShellExecuteW(NULL, L"open", L"explorer.exe", arg.toStdWString().c_str(), NULL, SW_SHOWNORMAL);
+    ::ShellExecuteW(nullptr, L"open", L"explorer.exe", arg.toStdWString().c_str(), nullptr, SW_SHOWNORMAL);
 #elif defined(Q_OS_MAC)
     QStringList scriptArgs;
     scriptArgs << QLatin1String("-e")
@@ -183,7 +187,7 @@ bool ActionExecutor::revealFile(DerflaActionPtr da)
     return true;
 }
 
-bool ActionExecutor::browseInDerfla(DerflaActionPtr da)
+bool ActionExecutor::browseInDerfla(DerflaActionPtr)
 {
     return true;
 }
@@ -192,6 +196,24 @@ bool ActionExecutor::copyText(DerflaActionPtr da)
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(da->target());
+    return true;
+}
+
+bool ActionExecutor::donateViaPaypal(DerflaActionPtr )
+{
+    emit viaPaypal();
+    return true;
+}
+
+bool ActionExecutor::donateViaAlipay(DerflaActionPtr )
+{
+    emit viaAlipay();
+    return true;
+}
+
+bool ActionExecutor::donateViaWeChatPay(DerflaActionPtr)
+{
+    emit viaWeChatPay();
     return true;
 }
 

@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
     QScreen* scr = a.primaryScreen();
     QSize sz = scr->availableSize();
-    w.move(sz.width()/4, sz.height()/5);
+    w.move((sz.width() - w.width())/2, (sz.height()-w.height())/2);
 
     return a.exec();
 }

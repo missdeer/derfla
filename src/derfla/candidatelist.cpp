@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "qrcodedialog.h"
 #include "extensionmanager.h"
 #include "candidatelistdelegate.h"
 #include "candidatelist.h"
@@ -18,14 +19,17 @@ CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
 #else
     setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-#endif
-
+#endif    
     setMinimumSize(10, 10);
     ui->list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->list->setItemDelegate(new CandidateListDelegate(ui->list));
+    createDonateDerflaActions();
     connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
-    connect(extensionManager_, &ExtensionManager::actionUpdated, this, &CandidateList::actionUpdated);
-    connect(extensionManager_, &ExtensionManager::emptyAction, this, &CandidateList::emptyAction);
+    connect(extensionManager_, &ExtensionManager::actionUpdated, this, &CandidateList::onActionUpdated);
+    connect(extensionManager_, &ExtensionManager::emptyAction, this, &CandidateList::onEmptyAction);
+    connect(&actionExecutor_, &ActionExecutor::viaPaypal, this, &CandidateList::viaPaypal);
+    connect(&actionExecutor_, &ActionExecutor::viaAlipay, this, &CandidateList::viaAlipay);
+    connect(&actionExecutor_, &ActionExecutor::viaWeChatPay, this, &CandidateList::viaWeChatPay);
 }
 
 CandidateList::~CandidateList()
@@ -75,6 +79,7 @@ remove_duplicated:
             goto remove_duplicated;
         }
 #endif
+        dal_.append(dalDonate_);
         auto oldCount = ui->list->count();
         for (DerflaActionPtr da : dal_)
         {
@@ -87,7 +92,9 @@ remove_duplicated:
         for (int i = 0; i < oldCount; i++)
             delete ui->list->takeItem(0);
         itemCount_ = dal_.length();
-        refreshList();
+
+        if (!dal_.isEmpty())
+            refreshList();
     }
 }
 
@@ -164,7 +171,7 @@ void CandidateList::showEvent(QShowEvent* /*event*/)
     refreshList();
 }
 
-void CandidateList::actionUpdated(DerflaActionList &dal)
+void CandidateList::onActionUpdated(DerflaActionList &dal)
 {
     for(auto da : dal)
     {
@@ -173,11 +180,31 @@ void CandidateList::actionUpdated(DerflaActionList &dal)
     populateList();
 }
 
-void CandidateList::emptyAction()
+void CandidateList::onEmptyAction()
 {
     ui->list->clear();
     dal_.clear();
     populateList();
+}
+
+void CandidateList::createDonateDerflaActions()
+{
+    DerflaActionPtr daPaypal(new DerflaAction);
+    daPaypal->setTitle(tr("Donate to support me"));
+    daPaypal->setDescription(tr("Donate via Paypal"));
+    daPaypal->setIcon(QIcon(":rc/paypal.png"));
+    daPaypal->setActionType("donateViaPaypal");
+    DerflaActionPtr daAlipay(new DerflaAction);
+    daAlipay->setTitle(tr("Donate to support me"));
+    daAlipay->setDescription(tr("Donate via Alipay"));
+    daAlipay->setIcon(QIcon(":rc/alipay.png"));
+    daAlipay->setActionType("donateViaAlipay");
+    DerflaActionPtr daWeChatPay(new DerflaAction);
+    daWeChatPay->setTitle(tr("Donate to support me"));
+    daWeChatPay->setDescription(tr("Donate via WeChat pay"));
+    daWeChatPay->setIcon(QIcon(":rc/wechat.png"));
+    daWeChatPay->setActionType("donateViaWeChatPay");
+    dalDonate_ << daPaypal << daAlipay << daWeChatPay;
 }
 
 void CandidateList::onEnter()
