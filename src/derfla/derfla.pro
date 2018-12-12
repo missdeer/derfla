@@ -57,6 +57,29 @@ FORMS    += \
 
 INCLUDEPATH += $$PWD
 
+CODECFORTR      = UTF-8
+CODECFORSRC     = UTF-8
+TRANSLATIONS    = $$PWD/translations/derfla_en_US.ts \
+                  $$PWD/translations/derfla_zh_CN.ts
+
+isEmpty(QMAKE_LUPDATE) {
+    win32:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]\lupdate.exe
+    else:QMAKE_LUPDATE = $$[QT_INSTALL_BINS]/lupdate
+}
+
+isEmpty(QMAKE_LRELEASE) {
+    win32:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
+    else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+}
+
+lupdate.commands = $$QMAKE_LUPDATE $$PWD/derfla.pro
+lupdates.depends = $$SOURCES $$HEADERS $$FORMS $$TRANSLATIONS
+lrelease.commands = $$QMAKE_LRELEASE $$PWD/derfla.pro
+lrelease.depends = lupdate
+translate.depends = lrelease
+QMAKE_EXTRA_TARGETS += lupdate lrelease translate qti18n
+POST_TARGETDEPS += translate qti18n
+
 macx: {
 #    QMAKE_MAC_SDK = macosx10.11
     ICON = derfla.icns
@@ -91,6 +114,20 @@ macx: {
         cp $$PWD/rc/updater-dsa-pub.pem $$DESTDIR/Derfla.app/Contents/Resources/dsa_pub.pem
 
     QMAKE_INFO_PLIST = osxInfo.plist
+
+
+    MACDEPLOYQT = $$[QT_INSTALL_BINS]/macdeployqt
+
+    translate.depends = lrelease
+    translate.files = $$system("find $${PWD}/translations -name '*.qm' ")
+    translate.path = Contents/Resources/translations/
+    translate.commands = '$(COPY_DIR) $$shell_path($${PWD}/translations) $$shell_path($${DESTDIR}/$${TARGET}.app/Contents/Resources/)'
+
+    qti18n.depends = translate
+    qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/$${TARGET}.app/Contents/Resources/translations/qt_zh_CN.qm)'
+
+    QMAKE_BUNDLE_DATA += translate qti18n
+
 }
 
 win32: {
@@ -108,6 +145,10 @@ win32: {
     HEADERS += \
         winsparkleautoupdater.h
 
+    translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
+
+    qti18n.depends = translate
+    qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/translations/qt_zh_CN.qm)'
     # Windows icons
     RC_FILE = derfla.rc
     LIBS += -lVersion -lComctl32 -lOle32 -lGdi32

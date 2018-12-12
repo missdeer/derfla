@@ -461,9 +461,9 @@ void DerflaWidget::onSelectFolder()
 void DerflaWidget::onAbout()
 {
     QMessageBox::about(this, tr("Derfla"), tr(
-                           "Derfla is a productivity application for Windows, which boosts your efficiency with hotkeys, keywords, text expansion and more. "
-                           "Search your Windows and the web, and be more productive with custom actions to control your Windows.\r\n\r\n"
-                           "Contact me at missdeer@dfordsoft.com if you have any problem about this tool. Built at " __DATE__ " " __TIME__
+                           "Derfla is a cross platform productivity application, which boosts your efficiency with hotkeys, keywords, text expansion and more. "
+                           "Search your Windows and the web, and be more productive with custom actions to control your system.\r\n\r\n"
+                           "Contact me at https://minidump.info/derfla/ if you have any problem about this tool. Built at " __DATE__ " " __TIME__
                            ));
 }
 

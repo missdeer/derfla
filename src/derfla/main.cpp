@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setApplicationName("Derfla");
     QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("dfordsoft.com");
+    QCoreApplication::setOrganizationDomain("minidump.info");
     QCoreApplication::setOrganizationName("Derfla");
 
     if (a.isRunning())
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     QDate d =  QLocale(QLocale::C).toDate(QString(__DATE__).simplified(), QLatin1String("MMM d yyyy"));
     if (d.daysTo(QDate::currentDate()) > 60)
     {
-        QMessageBox::critical(NULL, QObject::tr("Expired"), QObject::tr("This application has been expired, please visit http://www.getderfla.com for a new build."), QMessageBox::Ok );
+        QMessageBox::critical(NULL, QObject::tr("Expired"), QObject::tr("This application has been expired, please visit https://minidump.info/derfla/ for a new build."), QMessageBox::Ok );
         return 1;
     }
 
@@ -72,6 +72,48 @@ int main(int argc, char *argv[])
     pathEnv.append(":" % a.applicationDirPath());
     qputenv("LD_LIBRARY_PATH", pathEnv);
 #endif
+
+    QString locale = QLocale::system().name();
+    QTranslator translator;
+    QTranslator qtTranslator;
+
+    // main application and dynamic linked library locale
+#if defined(Q_OS_MAC)
+    QString localeDirPath = QApplication::applicationDirPath() + "/../Resources/translations";
+#else
+    QString localeDirPath = QApplication::applicationDirPath() + "/translations";
+    if (!QDir(localeDirPath).exists())
+    {
+        localeDirPath = QApplication::applicationDirPath() + "/../translations";
+    }
+#endif
+
+    if (!translator.load("derfla_" + locale, localeDirPath))
+    {
+        qDebug() << "loading " << locale << " from " << localeDirPath << " failed";
+    }
+    else
+    {
+        qDebug() << "loading " << locale << " from " << localeDirPath << " success";
+        if (!a.installTranslator(&translator))
+        {
+            qDebug() << "installing translator failed ";
+        }
+    }
+
+    // qt locale
+    if (!qtTranslator.load("qt_" + locale, localeDirPath))
+    {
+        qDebug() << "loading " << locale << " from " << localeDirPath << " failed";
+    }
+    else
+    {
+        qDebug() << "loading " << locale << " from " << localeDirPath << " success";
+        if (!a.installTranslator(&qtTranslator))
+        {
+            qDebug() << "installing qt translator failed ";
+        }
+    }
 
     DerflaWidget w;
     w.show();
