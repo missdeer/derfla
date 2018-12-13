@@ -15,8 +15,10 @@ CONFIG -= app_bundle
 
 macx: {
     DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Tools/
+    RESDIR = $$PWD/../../bin/Derfla.app/Contents/Resources/
 } else {
     DESTDIR = $$PWD/../../bin/
+    RESDIR = $$PWD/../../bin/
 }
 
 # The following define makes your compiler emit warnings if you use
@@ -65,7 +67,7 @@ translate.depends = lrelease
 QMAKE_EXTRA_TARGETS += lupdate lrelease translate
 POST_TARGETDEPS += translate
 
-translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
+translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$RESDIR/)'
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

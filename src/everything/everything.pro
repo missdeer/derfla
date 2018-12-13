@@ -55,6 +55,7 @@ lupdates.depends = $$SOURCES $$HEADERS $$FORMS $$TRANSLATIONS
 lrelease.commands = $$QMAKE_LRELEASE $$PWD/everything.pro
 lrelease.depends = lupdate
 translate.depends = lrelease
+translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/)'
 QMAKE_EXTRA_TARGETS += lupdate lrelease translate
 POST_TARGETDEPS += translate
 
@@ -69,8 +70,6 @@ win32: {
     }
     RC_FILE = everything.rc
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
-
-    translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
 
     contains(QMAKE_HOST.arch, x86_64): {
         copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything64.dll) $$shell_path($$DESTDIR/Everything64.dll)'

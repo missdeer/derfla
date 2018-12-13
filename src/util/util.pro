@@ -13,8 +13,10 @@ PRECOMPILED_HEADER = stdafx.h
 
 macx: {
     DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Libs
+    RESDIR = $$PWD/../../bin/Derfla.app/Contents/Resources/
 } else {
     DESTDIR = $$PWD/../../bin/
+    RESDIR = $$PWD/../../bin/
 }
 
 win32-clang-msvc: CONFIG -= precompile_header
@@ -65,6 +67,7 @@ lupdates.depends = $$SOURCES $$HEADERS $$FORMS $$TRANSLATIONS
 lrelease.commands = $$QMAKE_LRELEASE $$PWD/util.pro
 lrelease.depends = lupdate
 translate.depends = lrelease
+translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$RESDIR)'
 QMAKE_EXTRA_TARGETS += lupdate lrelease translate
 POST_TARGETDEPS += translate
 
@@ -88,8 +91,6 @@ win32: {
         $$PWD/WinIconProvider.h
     RC_FILE = util.rc
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
-
-    translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
 }
 
 unix: !macx: {

@@ -716,7 +716,7 @@ Quantity function_and(Function* f, const Function::ArgumentList& args)
     /* TODO : complex mode switch for this function */
     ENSURE_MINIMUM_ARGUMENT_COUNT(2);
     return std::accumulate(args.begin(), args.end(), Quantity(-1),
-        std::mem_fun_ref(&Quantity::operator&));
+        std::mem_fn(&Quantity::operator&));
 }
 
 Quantity function_or(Function* f, const Function::ArgumentList& args)
@@ -724,7 +724,7 @@ Quantity function_or(Function* f, const Function::ArgumentList& args)
     /* TODO : complex mode switch for this function */
     ENSURE_MINIMUM_ARGUMENT_COUNT(2);
     return std::accumulate(args.begin(), args.end(), Quantity(0),
-        std::mem_fun_ref(&Quantity::operator|));
+        std::mem_fn(&Quantity::operator|));
 }
 
 Quantity function_xor(Function* f, const Function::ArgumentList& args)
@@ -732,7 +732,7 @@ Quantity function_xor(Function* f, const Function::ArgumentList& args)
     /* TODO : complex mode switch for this function */
     ENSURE_MINIMUM_ARGUMENT_COUNT(2);
     return std::accumulate(args.begin(), args.end(), Quantity(0),
-        std::mem_fun_ref(&Quantity::operator^));
+        std::mem_fn(&Quantity::operator^));
 }
 
 Quantity function_shl(Function* f, const Function::ArgumentList& args)

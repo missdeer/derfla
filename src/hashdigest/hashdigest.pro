@@ -59,6 +59,7 @@ lupdates.depends = $$SOURCES $$HEADERS $$FORMS $$TRANSLATIONS
 lrelease.commands = $$QMAKE_LRELEASE $$PWD/hashdigest.pro
 lrelease.depends = lupdate
 translate.depends = lrelease
+translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/)'
 QMAKE_EXTRA_TARGETS += lupdate lrelease translate
 POST_TARGETDEPS += translate
 
@@ -72,8 +73,6 @@ win32: {
     }
     RC_FILE = hashdigest.rc
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
-
-    translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
 
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg
