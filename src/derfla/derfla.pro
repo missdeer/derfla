@@ -69,7 +69,7 @@ isEmpty(QMAKE_LRELEASE) {
     else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 }
 
-lupdate.commands = $$QMAKE_LUPDATE $$PWD/derfla.pro
+lupdate.commands = $$QMAKE_LUPDATE -no-obsolete $$PWD/derfla.pro
 lupdates.depends = $$SOURCES $$HEADERS $$FORMS $$TRANSLATIONS
 lrelease.commands = $$QMAKE_LRELEASE $$PWD/derfla.pro
 lrelease.depends = lupdate

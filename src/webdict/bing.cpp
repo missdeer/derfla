@@ -71,7 +71,7 @@ void Bing::onFinished()
         QVariantMap m;
         m.insert("title", pron.join("; ") );
         m.insert("target", pron.join("; ") );
-        m.insert("description", "[Pronounce] " + query );
+        m.insert("description", QObject::tr("[Pronounce] ") + query );
         m.insert("actionType", "copyText");
         if (!iconData.isEmpty())
             m.insert("iconData", iconData);
@@ -104,7 +104,7 @@ void Bing::onFinished()
         QVariantMap m;
         m.insert("title", chn );
         m.insert("target", chn );
-        m.insert("description", "[Sample] " + eng );
+        m.insert("description", QObject::tr("[Sample] ") + eng );
         m.insert("actionType", "copyText");
         if (!iconData.isEmpty())
             m.insert("iconData", iconData);

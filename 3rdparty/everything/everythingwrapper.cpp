@@ -17,7 +17,7 @@ HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBuff
     CoInitialize(NULL);
     // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
     // has already been called.
-    hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID*)&psl);
+    hres = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID*)&psl);
     if (SUCCEEDED(hres))
     {
         IPersistFile* ppf;
@@ -80,8 +80,8 @@ HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBuff
 
 bool isEverythingRunning()
 {
-    HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS,0);
-    return everything_hwnd != NULL;
+    HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS,nullptr);
+    return everything_hwnd != nullptr;
 }
 
 void launchEverything(const QString& everythingFilePath)
@@ -89,13 +89,13 @@ void launchEverything(const QString& everythingFilePath)
     if (QFile::exists(everythingFilePath))
     {
         QString path = QDir::toNativeSeparators(everythingFilePath);
-        ::ShellExecuteW(NULL, L"open", path.toStdWString().c_str(), NULL, NULL, SW_SHOWMINIMIZED);
+        ::ShellExecuteW(nullptr, L"open", path.toStdWString().c_str(), nullptr, nullptr, SW_SHOWMINIMIZED);
     }
 }
 
 QString GetEverythingPath()
 {
-    HWND hWnd = FindWindow(EVERYTHING_IPC_WNDCLASS,0);
+    HWND hWnd = FindWindow(EVERYTHING_IPC_WNDCLASS,nullptr);
     if (hWnd)
     {
         int ret = (int)SendMessage(hWnd,EVERYTHING_WM_IPC,EVERYTHING_IPC_IS_DESKTOP_SHORTCUT,0);
@@ -126,25 +126,25 @@ QString GetEverythingPath()
 
 bool QuickGetFilesByFileName(const QString& pattern, QStringList& results, std::function<bool(bool)> checker, const int count)
 {
-    HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS,0);
+    HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS,nullptr);
     if (!everything_hwnd)
     {
         QWidget* p =  QApplication::desktop()->screen();
 
         if (QMessageBox::question(p,
-                             "Notice",
-                             "Everything is not running, do you want to launch the Everything application?") == QMessageBox::Yes)
+                             QObject::tr("Notice"),
+                             QObject::tr("Everything is not running, do you want to launch the Everything application?")) == QMessageBox::Yes)
         {
             QString everythingFilePath = QApplication::applicationDirPath() % "/Everything.exe";
             if (!QFile::exists(everythingFilePath))
             {
                 QMessageBox::warning(p,
-                                     "Warning",
-                                     "Can't find the Everything executable, please re-install everything extension.",
+                                     QObject::tr("Warning"),
+                                     QObject::tr("Can't find the Everything executable, please re-install everything extension."),
                                      QMessageBox::Ok);
                 return false;
             }
-            ::ShellExecuteW(NULL, L"open", everythingFilePath.toStdWString().c_str(), NULL, NULL, SW_SHOWMINIMIZED);
+            ::ShellExecuteW(nullptr, L"open", everythingFilePath.toStdWString().c_str(), nullptr, nullptr, SW_SHOWMINIMIZED);
         }
         return false;
     }

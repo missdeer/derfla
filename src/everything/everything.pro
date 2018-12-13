@@ -50,13 +50,13 @@ isEmpty(QMAKE_LRELEASE) {
     else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 }
 
-lupdate.commands = $$QMAKE_LUPDATE $$PWD/everything.pro
+lupdate.commands = $$QMAKE_LUPDATE -no-obsolete $$PWD/everything.pro
 lupdates.depends = $$SOURCES $$HEADERS $$FORMS $$TRANSLATIONS
 lrelease.commands = $$QMAKE_LRELEASE $$PWD/everything.pro
 lrelease.depends = lupdate
 translate.depends = lrelease
-QMAKE_EXTRA_TARGETS += lupdate lrelease translate qti18n
-POST_TARGETDEPS += translate qti18n
+QMAKE_EXTRA_TARGETS += lupdate lrelease translate
+POST_TARGETDEPS += translate
 
 win32: {
     include($$PWD/../../3rdparty/everything/everything.pri)
@@ -71,9 +71,6 @@ win32: {
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
     translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
-
-    qti18n.depends = translate
-    qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/translations/qt_zh_CN.qm)'
 
     contains(QMAKE_HOST.arch, x86_64): {
         copy_everything_dll.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/everything/sdk/dll/Everything64.dll) $$shell_path($$DESTDIR/Everything64.dll)'
@@ -92,7 +89,7 @@ macx: {
         mdfindwrapper.h
     OBJECTIVE_SOURCES += \
         mdfindwrapper.mm
-    LIBS+= -framework CoreServices -lobjc
+    LIBS+=-lobjc -framework CoreServices
 }
 
 copy_png.commands = '$(COPY_FILE) $$shell_path($$PWD/folder.png) $$shell_path($$DESTDIR)'

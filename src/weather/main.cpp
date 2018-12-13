@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
     a.setApplicationName("Weather");
     a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("dfordsoft.com");
+    a.setOrganizationDomain("minidump.info");
     a.setOrganizationName("Derfla");
 
     if (argc != 3)
@@ -38,6 +38,46 @@ int main(int argc, char *argv[])
 
         ts << "invalid arguments";
         return 2;
+    }
+
+    QString locale = QLocale::system().name();
+    QTranslator translator;
+    QTranslator qtTranslator;
+
+    // main application and dynamic linked library locale
+#if defined(Q_OS_MAC)
+    QString rootDirPath = QApplication::applicationDirPath() + "/../../Resources/translations";
+    QString localeDirPath = QApplication::applicationDirPath() + "/translations";
+#else
+    QString rootDirPath = QApplication::applicationDirPath() + "/../../translations";
+    QString localeDirPath = QApplication::applicationDirPath() + "/translations";
+#endif
+
+    if (!translator.load("weather_" + locale, localeDirPath))
+    {
+        qDebug() << "loading " << locale << " from " << localeDirPath << " failed";
+    }
+    else
+    {
+        qDebug() << "loading " << locale << " from " << localeDirPath << " success";
+        if (!a.installTranslator(&translator))
+        {
+            qDebug() << "installing translator failed ";
+        }
+    }
+
+    // qt locale
+    if (!qtTranslator.load("qt_" + locale, rootDirPath))
+    {
+        qDebug() << "loading " << locale << " from " << rootDirPath << " failed";
+    }
+    else
+    {
+        qDebug() << "loading " << locale << " from " << rootDirPath << " success";
+        if (!a.installTranslator(&qtTranslator))
+        {
+            qDebug() << "installing qt translator failed ";
+        }
     }
 
 #if defined(Q_OS_WIN)

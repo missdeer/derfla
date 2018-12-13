@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
     a.setApplicationName("LFS");
     a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("dfordsoft.com");
+    a.setOrganizationDomain("minidump.info");
     a.setOrganizationName("Derfla");
 
 #if defined(Q_OS_WIN)

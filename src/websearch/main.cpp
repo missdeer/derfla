@@ -36,7 +36,7 @@ bool output(const std::vector<SearchItem>& items)
 bool googleHandler(const QString& keyword)
 {
     QString url = QString("https://www.google.com/search?q=%1&ie=utf-8&oe=utf-8").arg(QString(keyword.toUtf8().toPercentEncoding()));
-    auto item = std::make_tuple(QString("Search \"%1\" on Google").arg(keyword), url, ":/rc/images/google.png");
+    auto item = std::make_tuple(QString(QObject::tr("Search \"%1\" on Google")).arg(keyword), url, ":/rc/images/google.png");
     std::vector<SearchItem> items = { item };
     return output(items);
 }
@@ -44,7 +44,7 @@ bool googleHandler(const QString& keyword)
 bool bingHandler(const QString& keyword)
 {
     QString url = QString("https://www.bing.com/search?q=%1").arg(QString(keyword.toUtf8().toPercentEncoding()));
-    auto item = std::make_tuple(QString("Search \"%1\" on Bing").arg(keyword), url, ":/rc/images/bing.png");
+    auto item = std::make_tuple(QString(QObject::tr("Search \"%1\" on Bing")).arg(keyword), url, ":/rc/images/bing.png");
     std::vector<SearchItem> items = { item };
     return output(items);
 }
@@ -52,7 +52,7 @@ bool bingHandler(const QString& keyword)
 bool baiduHandler(const QString& keyword)
 {
     QString url = QString("https://www.baidu.com/s?wd=%1").arg(QString(keyword.toUtf8().toPercentEncoding()));
-    auto item = std::make_tuple(QString("Search \"%1\" on Baidu").arg(keyword), url, ":/rc/images/baidu.png");
+    auto item = std::make_tuple(QString(QObject::tr("Search \"%1\" on Baidu")).arg(keyword), url, ":/rc/images/baidu.png");
     std::vector<SearchItem> items = { item };
     return output(items);
 }
@@ -60,7 +60,7 @@ bool baiduHandler(const QString& keyword)
 bool duckduckgoHandler(const QString& keyword)
 {
     QString url = QString("https://duckduckgo.com/?q=%1&ia=web").arg(QString(keyword.toUtf8().toPercentEncoding()));
-    auto item = std::make_tuple(QString("Search \"%1\" on Duckduckgo").arg(keyword), url, ":/rc/images/duckduckgo.png");
+    auto item = std::make_tuple(QString(QObject::tr("Search \"%1\" on Duckduckgo")).arg(keyword), url, ":/rc/images/duckduckgo.png");
     std::vector<SearchItem> items = { item };
     return output(items);
 }
@@ -68,26 +68,26 @@ bool duckduckgoHandler(const QString& keyword)
 bool wikipediaHandler(const QString& keyword)
 {
     QString url = QString("https://en.wikipedia.org/wiki/%1").arg(QString(keyword.toUtf8().toPercentEncoding()));
-    auto item = std::make_tuple(QString("Search \"%1\" on Wikipedia").arg(keyword), url, ":/rc/images/wikipedia.png");
+    auto item = std::make_tuple(QString(QObject::tr("Search \"%1\" on Wikipedia")).arg(keyword), url, ":/rc/images/wikipedia.png");
     std::vector<SearchItem> items = { item };
     return output(items);
 }
 
 bool allHandler(const QString& keyword)
 {
-    auto googleItem = std::make_tuple(QString("Search \"%1\" on Google").arg(keyword), 
+    auto googleItem = std::make_tuple(QString(QObject::tr("Search \"%1\" on Google")).arg(keyword),
         QString("https://www.google.com/search?q=%1&ie=utf-8&oe=utf-8").arg(QString(keyword.toUtf8().toPercentEncoding())),
         ":/rc/images/google.png");
-    auto bingItem = std::make_tuple(QString("Search \"%1\" on Bing").arg(keyword), 
+    auto bingItem = std::make_tuple(QString(QObject::tr("Search \"%1\" on Bing")).arg(keyword),
         QString("https://www.bing.com/search?q=%1").arg(QString(keyword.toUtf8().toPercentEncoding())),
         ":/rc/images/bing.png");
-    auto baiduItem = std::make_tuple(QString("Search \"%1\" on Baidu").arg(keyword),
+    auto baiduItem = std::make_tuple(QString(QObject::tr("Search \"%1\" on Baidu")).arg(keyword),
         QString("https://www.baidu.com/s?wd=%1").arg(QString(keyword.toUtf8().toPercentEncoding())),
         ":/rc/images/baidu.png");
-    auto duckItem = std::make_tuple(QString("Search \"%1\" on Duckduckgo").arg(keyword), 
+    auto duckItem = std::make_tuple(QString(QObject::tr("Search \"%1\" on Duckduckgo")).arg(keyword),
         QString("https://duckduckgo.com/?q=%1&ia=web").arg(QString(keyword.toUtf8().toPercentEncoding())),
         ":/rc/images/duckduckgo.png");
-    auto wikiItem = std::make_tuple(QString("Search \"%1\" on Wikipedia").arg(keyword),
+    auto wikiItem = std::make_tuple(QString(QObject::tr("Search \"%1\" on Wikipedia")).arg(keyword),
         QString("https://en.wikipedia.org/wiki/%1").arg(QString(keyword.toUtf8().toPercentEncoding())),
         ":/rc/images/wikipedia.png");
     std::vector<SearchItem> items = { googleItem, bingItem,baiduItem, duckItem, wikiItem };
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 
     a.setApplicationName("WebSearch");
     a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("dfordsoft.com");
+    a.setOrganizationDomain("minidump.info");
     a.setOrganizationName("Derfla");
 
     if (argc <= 2)
@@ -118,6 +118,46 @@ int main(int argc, char *argv[])
 
         ts << "invalid arguments";
         return 1;
+    }
+
+    QString locale = QLocale::system().name();
+    QTranslator translator;
+    QTranslator qtTranslator;
+
+    // main application and dynamic linked library locale
+#if defined(Q_OS_MAC)
+    QString rootDirPath = QApplication::applicationDirPath() + "/../../Resources/translations";
+    QString localeDirPath = QApplication::applicationDirPath() + "/translations";
+#else
+    QString rootDirPath = QApplication::applicationDirPath() + "/../../translations";
+    QString localeDirPath = QApplication::applicationDirPath() + "/translations";
+#endif
+
+    if (!translator.load("websearch_" + locale, localeDirPath))
+    {
+        qDebug() << "loading " << locale << " from " << localeDirPath << " failed";
+    }
+    else
+    {
+        qDebug() << "loading " << locale << " from " << localeDirPath << " success";
+        if (!a.installTranslator(&translator))
+        {
+            qDebug() << "installing translator failed ";
+        }
+    }
+
+    // qt locale
+    if (!qtTranslator.load("qt_" + locale, rootDirPath))
+    {
+        qDebug() << "loading " << locale << " from " << rootDirPath << " failed";
+    }
+    else
+    {
+        qDebug() << "loading " << locale << " from " << rootDirPath << " success";
+        if (!a.installTranslator(&qtTranslator))
+        {
+            qDebug() << "installing qt translator failed ";
+        }
     }
 
     QString se(argv[1]);

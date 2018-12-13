@@ -1906,12 +1906,12 @@
     <message>
         <location filename="../main.cpp" line="52"/>
         <source>Result: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>结果：%1</translation>
     </message>
     <message>
         <location filename="../main.cpp" line="53"/>
         <source>Expr: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>表达式：%1</translation>
     </message>
 </context>
 </TS>

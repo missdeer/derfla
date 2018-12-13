@@ -165,14 +165,6 @@
 Contact me at https://minidump.info/derfla/ if you have any problem about this tool. Built at </source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Derfla is a cross platform productivity application, which boosts your efficiency with hotkeys, keywords, text expansion and more. Search your Windows and the web, and be more productive with custom actions to control your system.
-
-Contact me at https://minidump.info/derfla/ if you have any problem about this tool. Built at </source>
-        <translation type="obsolete">Derfla是一个跨平台的生产力工具，可以通过热键，关键词，文本扩展等提高你的效率。可通过搜索系统中的文件和互联网，以及自定义动作等更高效地控制你的系统。
-
-关于本应用程序如果你有任何问题，请通过 https://minidump.info/derfla/ 联系我。构建于</translation>
-    </message>
 </context>
 <context>
     <name>ExtensionModel</name>
@@ -271,21 +263,6 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
         <location filename="../main.cpp" line="53"/>
         <source>This application has been expired, please visit https://minidump.info/derfla/ for a new build.</source>
         <translation>此应用程序已经过期，请访问 https://minidump.info/derfla/ 获取新版本。</translation>
-    </message>
-</context>
-<context>
-    <name>QrcodeDialog</name>
-    <message>
-        <source>Dialog</source>
-        <translation type="vanished">对话框</translation>
-    </message>
-    <message>
-        <source>Scan by Alipay</source>
-        <translation type="vanished">支付宝扫一扫</translation>
-    </message>
-    <message>
-        <source>Scan by WeChat</source>
-        <translation type="vanished">微信扫一扫</translation>
     </message>
 </context>
 </TS>

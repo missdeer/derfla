@@ -87,7 +87,7 @@ void Youdao::onFinished()
     QVariantMap m;
     m.insert("title", trans.join("; ") );
     m.insert("target", trans.join("; ") );
-    m.insert("description", "[Translation] " + query );
+    m.insert("description", QObject::tr("[Translation] ") + query );
     m.insert("actionType", "copyText");
     if (!iconData.isEmpty())
         m.insert("iconData", iconData);
@@ -100,7 +100,7 @@ void Youdao::onFinished()
         QVariantMap m;
         m.insert("title", i );
         m.insert("target", i );
-        m.insert("description", "[Explain] " + query );
+        m.insert("description", QObject::tr("[Explain] ") + query );
         m.insert("actionType", "copyText");
         if (!iconData.isEmpty())
             m.insert("iconData", iconData);
@@ -121,7 +121,7 @@ void Youdao::onFinished()
         QVariantMap m;
         m.insert("title", value.join("; ") );
         m.insert("target", value.join("; ") );
-        m.insert("description", "[Web] " + key );
+        m.insert("description", QObject::tr("[Web] ") + key );
         m.insert("actionType", "copyText");
         if (!iconData.isEmpty())
             m.insert("iconData", iconData);

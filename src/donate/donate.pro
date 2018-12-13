@@ -57,18 +57,15 @@ isEmpty(QMAKE_LRELEASE) {
     else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 }
 
-lupdate.commands = $$QMAKE_LUPDATE $$PWD/donate.pro
+lupdate.commands = $$QMAKE_LUPDATE -no-obsolete $$PWD/donate.pro
 lupdates.depends = $$SOURCES $$HEADERS $$FORMS $$TRANSLATIONS
 lrelease.commands = $$QMAKE_LRELEASE $$PWD/donate.pro
 lrelease.depends = lupdate
 translate.depends = lrelease
-QMAKE_EXTRA_TARGETS += lupdate lrelease translate qti18n
-POST_TARGETDEPS += translate qti18n
+QMAKE_EXTRA_TARGETS += lupdate lrelease translate
+POST_TARGETDEPS += translate
 
 translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
-
-qti18n.depends = translate
-qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/translations/qt_zh_CN.qm)'
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

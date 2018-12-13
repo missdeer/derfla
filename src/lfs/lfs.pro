@@ -60,13 +60,13 @@ isEmpty(QMAKE_LRELEASE) {
     else:QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 }
 
-lupdate.commands = $$QMAKE_LUPDATE $$PWD/lfs.pro
+lupdate.commands = $$QMAKE_LUPDATE -no-obsolete $$PWD/lfs.pro
 lupdates.depends = $$SOURCES $$HEADERS $$FORMS $$TRANSLATIONS
 lrelease.commands = $$QMAKE_LRELEASE $$PWD/lfs.pro
 lrelease.depends = lupdate
 translate.depends = lrelease
-QMAKE_EXTRA_TARGETS += lupdate lrelease translate qti18n
-POST_TARGETDEPS += translate qti18n
+QMAKE_EXTRA_TARGETS += lupdate lrelease translate
+POST_TARGETDEPS += translate
 
 win32: {
     win32-*g++* {
@@ -80,9 +80,6 @@ win32: {
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
     translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
-
-    qti18n.depends = translate
-    qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/translations/qt_zh_CN.qm)'
 
     copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg

@@ -6,17 +6,17 @@
     <message>
         <location filename="../qrcodedialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>对话框</translation>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="11"/>
         <source>Scan by Alipay</source>
-        <translation type="unfinished"></translation>
+        <translation>支付宝扫一扫</translation>
     </message>
     <message>
         <location filename="../qrcodedialog.cpp" line="16"/>
         <source>Scan by WeChat</source>
-        <translation type="unfinished"></translation>
+        <translation>微信扫一扫</translation>
     </message>
 </context>
 </TS>
