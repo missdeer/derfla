@@ -89,11 +89,11 @@ void LocalFSScanner::getBuiltinDirectories()
     
     for (auto p : dirs)
     {
-        LPWSTR wszPath = NULL;
-        HRESULT hr = SHGetKnownFolderPath(p.first, 0, NULL, &wszPath);
+        LPWSTR wszPath = nullptr;
+        HRESULT hr = SHGetKnownFolderPath(p.first, 0, nullptr, &wszPath);
         if (SUCCEEDED(hr))
         {
-            scanDirectories_ << Directory(QString::fromUtf16((const ushort *)wszPath), p.second);
+            scanDirectories_ << Directory(QString::fromUtf16(reinterpret_cast<const ushort *>(wszPath)), p.second);
             CoTaskMemFree(wszPath);
         }
     }
@@ -307,7 +307,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                             "terminalCommand"
                             );
         }
-    });
+    }
 
     check_stop;
     list = dir.entryInfoList(QStringList() << "*.desktop", QDir::Files | QDir::Readable);
@@ -334,7 +334,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
             QString f(d.directory + QDir::separator() + fileInfo.fileName());
             f.replace("//", "/");
             scanDirectory(Directory {f, true });
-        });
+        }
     }
 }
 #endif
