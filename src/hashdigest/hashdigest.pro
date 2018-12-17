@@ -7,9 +7,13 @@ TARGET = hashdigest
 PRECOMPILED_HEADER = stdafx.h
 
 macx: {
-    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/hashdigest
+    DESTDIR = $$PWD/../../bin/x86_64/Derfla.app/Contents/Extensions/hashdigest
 } else {
-    DESTDIR = $$PWD/../../bin/extensions/hashdigest
+    contains(QMAKE_HOST.arch, x86_64): {
+        DESTDIR = $$PWD/../../bin/x86_64/extensions/hashdigest
+    } else: {
+        DESTDIR = $$PWD/../../bin/x86/extensions/hashdigest
+    }
 }
 
 win32-clang-msvc: CONFIG -= precompile_header

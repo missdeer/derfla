@@ -7,9 +7,13 @@ TARGET = weather
 PRECOMPILED_HEADER = stdafx.h
 
 macx: {
-    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/weather
+    DESTDIR = $$PWD/../../bin/x86_64/Derfla.app/Contents/Extensions/weather
 } else {
-    DESTDIR = $$PWD/../../bin/extensions/weather
+    contains(QMAKE_HOST.arch, x86_64): {
+        DESTDIR = $$PWD/../../bin/x86_64/extensions/weather
+    } else: {
+        DESTDIR = $$PWD/../../bin/x86/extensions/weather
+    }
 }
 
 win32-clang-msvc: CONFIG -= precompile_header

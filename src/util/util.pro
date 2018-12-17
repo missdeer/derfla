@@ -12,11 +12,16 @@ CONFIG += c++17 precompile_header
 PRECOMPILED_HEADER = stdafx.h
 
 macx: {
-    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Libs
-    RESDIR = $$PWD/../../bin/Derfla.app/Contents/Resources/
+    DESTDIR = $$PWD/../../bin/x86_64/Derfla.app/Contents/Libs
+    RESDIR = $$PWD/../../bin/x86_64/Derfla.app/Contents/Resources/
 } else {
-    DESTDIR = $$PWD/../../bin/
-    RESDIR = $$PWD/../../bin/
+    contains(QMAKE_HOST.arch, x86_64): {
+        DESTDIR = $$PWD/../../bin/x86_64
+        RESDIR = $$PWD/../../bin/x86_64
+    } else: {
+        DESTDIR = $$PWD/../../bin/x86
+        RESDIR = $$PWD/../../bin/x86
+    }
 }
 
 win32-clang-msvc: CONFIG -= precompile_header

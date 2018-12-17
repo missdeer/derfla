@@ -7,9 +7,13 @@ TARGET = calculator
 PRECOMPILED_HEADER = stdafx.h
 
 macx: {
-    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/calculator
+    DESTDIR = $$PWD/../../bin/x86_64/Derfla.app/Contents/Extensions/calculator
 } else {
-    DESTDIR = $$PWD/../../bin/extensions/calculator
+    contains(QMAKE_HOST.arch, x86_64): {
+        DESTDIR = $$PWD/../../bin/x86_64/extensions/calculator
+    } else: {
+        DESTDIR = $$PWD/../../bin/x86/extensions/calculator
+    }
 }
 
 win32-clang-msvc: CONFIG -= precompile_header

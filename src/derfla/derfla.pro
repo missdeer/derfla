@@ -4,7 +4,13 @@ TARGET = Derfla
 TEMPLATE = app
 CONFIG += c++17 precompile_header
 PRECOMPILED_HEADER = stdafx.h
-DESTDIR = ../../bin
+DESTDIR = $$PWD/../../bin
+
+contains(QMAKE_HOST.arch, x86_64): {
+    DESTDIR = $$DESTDIR/x86_64
+} else: {
+    DESTDIR = $$DESTDIR/x86
+}
 
 win32-clang-msvc: CONFIG -= precompile_header
 

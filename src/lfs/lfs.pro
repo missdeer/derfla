@@ -7,9 +7,13 @@ TARGET = lfs
 PRECOMPILED_HEADER = stdafx.h
 
 macx: {
-    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/lfs
+    DESTDIR = $$PWD/../../bin/x86_64/Derfla.app/Contents/Extensions/lfs
 } else {
-    DESTDIR = $$PWD/../../bin/extensions/lfs
+    contains(QMAKE_HOST.arch, x86_64): {
+        DESTDIR = $$PWD/../../bin/x86_64/extensions/lfs
+    } else: {
+        DESTDIR = $$PWD/../../bin/x86/extensions/lfs
+    }
 }
 
 win32-clang-msvc: CONFIG -= precompile_header

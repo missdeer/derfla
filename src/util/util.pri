@@ -2,9 +2,14 @@ INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
 macx: {
-    LIBS += -L$$PWD/../../bin/Derfla.app/Contents/Libs -lderflautil
+    LIBS+=-L$$PWD/../../bin/x86_64/Derfla.app/Contents/Libs -lderflautil
 } else {
-    LIBS += -L$$PWD/../../bin -lderflautil
+    contains(QMAKE_HOST.arch, x86_64): {
+        LIBS+=-L$$PWD/../../bin/x86_64
+    } else: {
+        LIBS+=-L$$PWD/../../bin/x86
+    }
+    LIBS+=-lderflautil
 }
 
 HEADERS += \

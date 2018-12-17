@@ -7,9 +7,13 @@ TARGET = webdict
 PRECOMPILED_HEADER = stdafx.h
 
 macx: {
-    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/webdict
+    DESTDIR = $$PWD/../../bin/x86_64/Derfla.app/Contents/Extensions/webdict
 } else {
-    DESTDIR = $$PWD/../../bin/extensions/webdict
+    contains(QMAKE_HOST.arch, x86_64): {
+        DESTDIR = $$PWD/../../bin/x86_64/extensions/webdict
+    } else: {
+        DESTDIR = $$PWD/../../bin/x86/extensions/webdict
+    }
 }
 
 win32-clang-msvc: CONFIG -= precompile_header

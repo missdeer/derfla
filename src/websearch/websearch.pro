@@ -7,9 +7,13 @@ TARGET = websearch
 PRECOMPILED_HEADER = stdafx.h
 
 macx: {
-    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/websearch
+    DESTDIR = $$PWD/../../bin/x86_64/Derfla.app/Contents/Extensions/websearch
 } else {
-    DESTDIR = $$PWD/../../bin/extensions/websearch
+    contains(QMAKE_HOST.arch, x86_64): {
+        DESTDIR = $$PWD/../../bin/x86_64/extensions/websearch
+    } else: {
+        DESTDIR = $$PWD/../../bin/x86/extensions/websearch
+    }
 }
 
 win32-clang-msvc: CONFIG -= precompile_header

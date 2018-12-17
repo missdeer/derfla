@@ -6,9 +6,13 @@ CONFIG -= app_bundle
 TARGET = et
 PRECOMPILED_HEADER = stdafx.h
 macx: {
-    DESTDIR = $$PWD/../../bin/Derfla.app/Contents/Extensions/everything
+    DESTDIR = $$PWD/../../bin/x86_64/Derfla.app/Contents/Extensions/everything
 } else {
-    DESTDIR = $$PWD/../../bin/extensions/everything
+    contains(QMAKE_HOST.arch, x86_64): {
+        DESTDIR = $$PWD/../../bin/x86_64/extensions/everything
+    } else: {
+        DESTDIR = $$PWD/../../bin/x86/extensions/everything
+    }
 }
 
 win32-clang-msvc: CONFIG -= precompile_header
