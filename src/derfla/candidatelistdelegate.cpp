@@ -62,21 +62,22 @@ void CandidateListDelegate::paint(QPainter * painter, const QStyleOptionViewItem
     }
 
     //GET TITLE, DESCRIPTION AND ICON
-    QIcon ic = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
-    if (ic.isNull())
+    QIcon itemIcon = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
+    if (itemIcon.isNull())
     {
         QPixmap pixmap(":/terminal.png");
-        ic.addPixmap(pixmap);
+        itemIcon.addPixmap(pixmap);
     }
+    QIcon actionTypeIcon = qvariant_cast<QIcon>(index.data(Qt::UserRole + 2));
     QString title = index.data(Qt::DisplayRole).toString();
     QString description = index.data(Qt::UserRole + 1).toString();
 
     int imageSpace = 10;
-    if (!ic.isNull())
+    if (!itemIcon.isNull())
     {
-        //ICON
+        // item icon
         r = option.rect.adjusted(10, 10, -10, -10);
-        ic.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
+        itemIcon.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
         imageSpace = 55;
     }
 
@@ -98,6 +99,13 @@ void CandidateListDelegate::paint(QPainter * painter, const QStyleOptionViewItem
         r = option.rect.adjusted(imageSpace, 35, -10, 5);
         painter->setFont(QFont(globalDefaultFontFamily, 10, QFont::Normal));
         painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignLeft, description, &r);
+    }
+    
+    if (!actionTypeIcon.isNull())
+    {
+        // action type icon
+        r = option.rect.adjusted(-50, 10, -10, -30);
+        actionTypeIcon.paint(painter, r, Qt::AlignVCenter | Qt::AlignRight);
     }
 }
 

@@ -2,6 +2,7 @@
 #define CANDIDATELIST_H
 
 #include <QFrame>
+#include <QIcon>
 #include "candidatelistwidget.h"
 #include "actionexecutor.h"
 
@@ -52,6 +53,7 @@ private:
     ActionExecutor actionExecutor_;
     DerflaActionList dal_;
     DerflaActionList dalDonate_;
+    QMap<QString, QIcon> actionIconMap_;
     void createDonateDerflaActions();
 };
 

@@ -12,5 +12,12 @@
         <file>rc/paypal.png</file>
         <file>rc/alipay.png</file>
         <file>rc/wechat.png</file>
+        <file>rc/actions/browse.png</file>
+        <file>rc/actions/copytext.png</file>
+        <file>rc/actions/openurl.png</file>
+        <file>rc/actions/reveal.png</file>
+        <file>rc/actions/script.png</file>
+        <file>rc/actions/shell.png</file>
+        <file>rc/actions/terminal.png</file>
     </qresource>
 </RCC>

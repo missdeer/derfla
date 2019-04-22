@@ -10,6 +10,15 @@ CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent
     , cleared_(true)
     , itemCount_(0)
     , extensionManager_(extensionManager)
+    , actionIconMap_{
+               {"script",          QIcon(":/rc/actions/script.png")},
+               {"shellExecute",    QIcon(":/rc/actions/shell.png")},
+               {"terminalCommand", QIcon(":/rc/actions/terminal.png")},
+               {"openUrl",         QIcon(":/rc/actions/openurl.png")},
+               {"revealFile",      QIcon(":/rc/actions/reveal.png")},
+               {"browseInDerfla",  QIcon(":/rc/actions/browse.png")},
+               {"copyText",        QIcon(":/rc/actions/copytext.png")},
+          }
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_ShowWithoutActivating);
@@ -82,6 +91,7 @@ remove_duplicated:
             QListWidgetItem* item = new QListWidgetItem(ui->list);
             item->setData(Qt::DisplayRole, da->title());
             item->setData(Qt::UserRole + 1, da->description());
+            item->setData(Qt::UserRole + 2, actionIconMap_[da->actionType()]);
             item->setData(Qt::DecorationRole, da->icon());
             ui->list->addItem(item);
         }
