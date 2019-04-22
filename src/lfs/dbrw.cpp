@@ -37,7 +37,10 @@ QString DBRW::search(const QString &keyword, int countRequired)
     {
         QVariantMap m;
         m.insert("title", item->title());
-        m.insert("description", item->description());
+        if (item->description() != item->title())
+            m.insert("description", item->description());
+        else
+            m.insert("description", item->target());
         m.insert("target", item->target());
         m.insert("arguments", item->arguments());
         m.insert("workingDir", item->workingDirectory());
