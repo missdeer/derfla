@@ -17,6 +17,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     : QWidget(parent)
     , mouseMovePos_(0, 0)
     , candidateDelayTimer_(new QTimer(this))
+    , widgetSentToBackTimer_(new QTimer(this))
     , input_(new CharLineEdit(this))
     , extensionManager_(new ExtensionManager(this))
     , candidateList_(new CandidateList(extensionManager_, this))
@@ -70,6 +71,8 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     input_->setClearButtonEnabled(false);
     connect(input_, &CharLineEdit::keyPressed, this, &DerflaWidget::keyPressEvent);
     connect(input_, &QLineEdit::textChanged, this, &DerflaWidget::onInputChanged);
+    connect(input_, &CharLineEdit::focusOut, this, &DerflaWidget::onFocusOut);
+    connect(input_, &CharLineEdit::focusIn, this, &DerflaWidget::onFocusIn);
 
     QAction *selectFileAction = new QAction(tr("Select File"), this);
     selectFileAction->setShortcut(tr("Ctrl+O"));
@@ -157,6 +160,8 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     connect(candidateDelayTimer_, &QTimer::timeout, this, &DerflaWidget::onCandidateDelayTimer);
     candidateDelayTimer_->setSingleShot(true);
 
+    connect(widgetSentToBackTimer_, &QTimer::timeout, this, &DerflaWidget::onWidgetSentToBack);
+    
     QString keySequence = settings.value("hotkey", "Alt+Space").toString();
 #if defined(Q_OS_WIN)
     hotkeyManager_->setKey(QKeySequence(keySequence));
@@ -295,6 +300,19 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
     }
 }
 
+void DerflaWidget::focusOutEvent(QFocusEvent *)
+{
+    if (!input_->hasFocus() && candidateList_->isVisible() && !candidateList_->hasFocus())
+        hideCandidateList();
+    widgetSentToBackTimer_->start(1000);
+}
+
+void DerflaWidget::focusInEvent(QFocusEvent *e)
+{
+    onFocusIn(e);
+    widgetSentToBackTimer_->stop();
+}
+
 void DerflaWidget::onInputChanged(const QString &text)
 {
     //qDebug() <<  "DerflaWidget::inputChanged:" << input_->text();
@@ -312,7 +330,6 @@ void DerflaWidget::onInputChanged(const QString &text)
 
 void DerflaWidget::onKeyPressed(QKeyEvent *e)
 {
-
     //qDebug() << "DerflaWidget::keyPressed" << e;
     if ( e->key() != Qt::Key_Escape)
         hideCandidateList();
@@ -321,9 +338,23 @@ void DerflaWidget::onKeyPressed(QKeyEvent *e)
     qApp->sendEvent(this, e);
 }
 
+void DerflaWidget::onFocusOut(QFocusEvent *)
+{
+    // input lost focus
+}
+
+void DerflaWidget::onFocusIn(QFocusEvent *)
+{
+    // input got focus
+    widgetSentToBackTimer_->start(1000);
+    if (!candidateList_->isVisible() && !input_->text().isEmpty())
+    {
+        candidateDelayTimer_->start(candidateDelayInterval_);
+    }
+}
+
 void DerflaWidget::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-
     switch(reason)
     {
     case QSystemTrayIcon::DoubleClick:
@@ -569,6 +600,15 @@ void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)
     menu->exec(mapToGlobal(pos));
 }
 
+void DerflaWidget::onWidgetSentToBack()
+{
+    if (!input_->hasFocus() && !hasFocus() && candidateList_->isVisible())
+    {
+        hideCandidateList();
+        widgetSentToBackTimer_->stop();
+    }
+}
+
 void DerflaWidget::showCandidateList()
 {
     //candidateList_->show();
@@ -587,7 +627,8 @@ void DerflaWidget::processKey()
 void DerflaWidget::doEnter()
 {
     //qDebug() << "DerflaWidget::doEnter";
-    candidateList_->onEnter();
+    if (candidateList_->isVisible())
+        candidateList_->onEnter();
 }
 
 void DerflaWidget::doTab()

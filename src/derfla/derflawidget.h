@@ -22,19 +22,23 @@ class DerflaWidget : public QWidget
 
 public:
     explicit DerflaWidget(QWidget *parent = nullptr);
-    ~DerflaWidget();
+    ~DerflaWidget() override;
 protected:
-    void mouseMoveEvent(QMouseEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void paintEvent(QPaintEvent *event);    
-    void moveEvent(QMoveEvent *event);
-    void keyPressEvent(QKeyEvent* event);
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
+    void moveEvent(QMoveEvent *event) override;
+    void keyPressEvent(QKeyEvent* event) override;
+    void focusOutEvent(QFocusEvent*) override;
+    void focusInEvent(QFocusEvent *e) override;
 signals:
 
 private slots:
     void onInputChanged(const QString& text);
     void onKeyPressed(QKeyEvent* e);
+    void onFocusOut(QFocusEvent *);
+    void onFocusIn(QFocusEvent *);
     void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
     void onLoadSkin();
 	void onInstallExtension();
@@ -49,11 +53,13 @@ private slots:
     void onPreference();
     void onCheckUpdates();
     void onCustomContextMenuRequested(const QPoint &pos);
+    void onWidgetSentToBack();
 private:
     const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;
 
     QTimer* candidateDelayTimer_;
+    QTimer* widgetSentToBackTimer_;
     CharLineEdit* input_;
     QSystemTrayIcon* trayIcon_;
     ExtensionManager* extensionManager_;
