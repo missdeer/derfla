@@ -11,8 +11,8 @@ Heweather::Heweather(QObject *parent) : QObject(parent)
 
 void Heweather::forecast(const QString &location)
 {
-    // https://free-api.heweather.com/s6/weather/forecast?parameters
-    QUrl url("https://free-api.heweather.com/s6/weather/forecast");
+    // https://free-api.heweather.net/s6/weather/forecast?parameters
+    QUrl url("https://free-api.heweather.net/s6/weather/forecast");
     QUrlQuery query;
 
     query.addQueryItem("location", location.toUtf8());
