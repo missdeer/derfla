@@ -53,13 +53,11 @@ private slots:
     void onPreference();
     void onCheckUpdates();
     void onCustomContextMenuRequested(const QPoint &pos);
-    void onWidgetSentToBack();
 private:
     const int widgetMinWidth_ = 450;
     QPoint mouseMovePos_;
 
     QTimer* candidateDelayTimer_;
-    QTimer* widgetSentToBackTimer_;
     CharLineEdit* input_;
     QSystemTrayIcon* trayIcon_;
     ExtensionManager* extensionManager_;
