@@ -7,9 +7,9 @@ class AppMutex {
 public:
     AppMutex() {
 #if defined(_WIN64)
-        m_hMutex = ::CreateMutexW(NULL, FALSE, L"Derfla-x86_64" );
+        m_hMutex = ::CreateMutexW(nullptr, FALSE, L"Derfla-x86_64" );
 #else
-        m_hMutex = ::CreateMutexW(NULL, FALSE, L"Derfla-x86" );
+        m_hMutex = ::CreateMutexW(nullptr, FALSE, L"Derfla-x86" );
 #endif
     }
     ~AppMutex() {
@@ -50,27 +50,25 @@ int main(int argc, char *argv[])
     QDate d =  QLocale(QLocale::C).toDate(QString(__DATE__).simplified(), QLatin1String("MMM d yyyy"));
     if (d.daysTo(QDate::currentDate()) > 60)
     {
-        QMessageBox::critical(NULL, QObject::tr("Expired"), QObject::tr("This application has been expired, please visit https://minidump.info/derfla/ for a new build."), QMessageBox::Ok );
+        QMessageBox::critical(nullptr, QObject::tr("Expired"), QObject::tr("This application has been expired, please visit https://minidump.info/derfla/ for a new build."), QMessageBox::Ok );
         return 1;
     }
 
 #if defined(Q_OS_WIN)
-    auto pathEnv = qgetenv("PATH");
-    pathEnv.append(";" % QDir::toNativeSeparators(a.applicationDirPath()));
-    qputenv("PATH", pathEnv); // so that extensions can use Derfla main executable's Qt binaries
-    qputenv("QT_PLUGIN_PATH", QDir::toNativeSeparators(a.applicationDirPath()).toUtf8());
+    auto pathEnv = QDir::toNativeSeparators(QApplication::applicationDirPath()) + ";" + qgetenv("PATH");
+    qDebug() << pathEnv;
+    qputenv("PATH", pathEnv.toUtf8()); // so that extensions can use Derfla main executable's Qt binaries
+    qputenv("QT_PLUGIN_PATH", QDir::toNativeSeparators(QApplication::applicationDirPath()).toUtf8());
 #elif defined(Q_OS_MAC)
-    auto pathEnv = qgetenv("DYLD_LIBRARY_PATH");
     QDir dir(a.applicationDirPath());
     dir.cdUp();
     dir.cd("Libs");
-    pathEnv.append(":" % dir.absolutePath());
-    qputenv("DYLD_LIBRARY_PATH", pathEnv);
+    auto pathEnv = dir.absolutePath() + ":" + qgetenv("DYLD_LIBRARY_PATH");
+    qputenv("DYLD_LIBRARY_PATH", pathEnv.toUtf8());
     qputenv("QT_MAC_DISABLE_FOREGROUND_APPLICATION_TRANSFORM", "1");
 #else
-    auto pathEnv = qgetenv("LD_LIBRARY_PATH");
-    pathEnv.append(":" % a.applicationDirPath());
-    qputenv("LD_LIBRARY_PATH", pathEnv);
+    auto pathEnv = dir.absolutePath() + ":" + qgetenv("LD_LIBRARY_PATH");
+    qputenv("LD_LIBRARY_PATH", pathEnv.toUtf8());
 #endif
 
     QString locale = QLocale::system().name();
@@ -88,28 +86,28 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    if (!translator.load("derfla_" + locale, localeDirPath))
+    if (!translator.load(QString("derfla_%1.qm").arg(QLocale::system().name()), localeDirPath))
     {
         qDebug() << "loading " << locale << " from " << localeDirPath << " failed";
     }
     else
     {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
-        if (!a.installTranslator(&translator))
+        if (!QApplication::installTranslator(&translator))
         {
             qDebug() << "installing translator failed ";
         }
     }
 
     // qt locale
-    if (!qtTranslator.load("qt_" + locale, localeDirPath))
+    if (!qtTranslator.load(QString("qt_%1.qm").arg(QLocale::system().name()), localeDirPath))
     {
         qDebug() << "loading " << locale << " from " << localeDirPath << " failed";
     }
     else
     {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
-        if (!a.installTranslator(&qtTranslator))
+        if (!QApplication::installTranslator(&qtTranslator))
         {
             qDebug() << "installing qt translator failed ";
         }
