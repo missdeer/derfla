@@ -598,12 +598,14 @@ void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)
 
 void DerflaWidget::showCandidateList()
 {
-    //candidateList_->show();
-    candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
+    if (hasFocus() || isActiveWindow() || input_->hasFocus())
+    {
+        candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
+        
+        QString inputText = input_->text().trimmed();
     
-    QString inputText = input_->text().trimmed();
-
-    candidateList_->update(inputText);
+        candidateList_->update(inputText);        
+    }
 }
 
 void DerflaWidget::processKey()
