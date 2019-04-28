@@ -48,6 +48,7 @@ private:
     Ui::CandidateList *ui;
     bool activeWindowFlag_;
     bool cleared_;
+    bool donateAppended_;
     int itemCount_ ;
     ExtensionManager* extensionManager_;
     ActionExecutor actionExecutor_;
@@ -55,6 +56,7 @@ private:
     DerflaActionList dalDonate_;
     QMap<QString, QIcon> actionIconMap_;
     void createDonateDerflaActions();
+    void clearData();
 };
 
 #endif // CANDIDATELIST_H

@@ -8,6 +8,7 @@ CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent
     : QFrame(parent)
     , ui(new Ui::CandidateList)
     , cleared_(true)
+    , donateAppended_(false)
     , itemCount_(0)
     , extensionManager_(extensionManager)
     , actionIconMap_{
@@ -42,14 +43,22 @@ CandidateList::~CandidateList()
     delete ui;
 }
 
+void CandidateList::clearData()
+{
+    dal_.clear();
+    itemCount_ = 0;
+    donateAppended_ = false;    
+}
+
 void CandidateList::update(const QString &text)
 {
     if (text.isEmpty() && isVisible())
         hide();
     else
         cleared_ = false;
-
-    dal_.clear();
+    
+    qDebug() << __FUNCTION__ << text;
+    clearData();
     extensionManager_->query(text);
 }
 
@@ -84,7 +93,11 @@ remove_duplicated:
             goto remove_duplicated;
         }
 #endif
-        dal_.append(dalDonate_);
+        if (!donateAppended_)
+        {
+            donateAppended_ = true;
+            dal_.append(dalDonate_);
+        }
         auto oldCount = ui->list->count();
         for (DerflaActionPtr da : dal_)
         {
@@ -183,13 +196,15 @@ void CandidateList::onActionUpdated(DerflaActionList &dal)
     {
         dal_.append(da);
     }
+    //qDebug() << __FUNCTION__ << dal.length() << dal_.length();
     populateList();
 }
 
 void CandidateList::onEmptyAction()
 {
+    //qDebug() << __FUNCTION__;
     ui->list->clear();
-    dal_.clear();
+    clearData();
     populateList();
 }
 
@@ -234,8 +249,8 @@ void CandidateList::createDonateDerflaActions()
 void CandidateList::onEnter()
 {
     int index = ui->list->currentRow();
-    //qDebug() << "CandidateList::onEnter:" << index;
-    if (index < 0 || index >= itemCount_)
+    //qDebug() << "CandidateList::onEnter:" << index << dal_.length() << itemCount_;
+    if (index < 0 || index >= dal_.length())
     {
         close();
         return;
