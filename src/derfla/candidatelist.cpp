@@ -248,6 +248,8 @@ void CandidateList::createDonateDerflaActions()
 
 void CandidateList::onEnter()
 {
+    if (dal_.isEmpty())
+        return;
     int index = ui->list->currentRow();
     //qDebug() << "CandidateList::onEnter:" << index << dal_.length() << itemCount_;
     if (index < 0 || index >= dal_.length())
