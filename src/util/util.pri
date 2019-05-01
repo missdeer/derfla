@@ -16,7 +16,8 @@ HEADERS += \
     $$PWD/util_global.h \
     $$PWD/stdafx.h \
     $$PWD/directory.h \
-    $$PWD/util.h
+    $$PWD/util.h \
+    $$PWD/scopedguard.h
 
 win32: {
     HEADERS += \

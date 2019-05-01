@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include <boost/scope_exit.hpp>
+#include "scopedguard.h"
 #include "extension.h"
 
 Extension::Extension(QObject *parent) 

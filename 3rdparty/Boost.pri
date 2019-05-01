@@ -34,20 +34,4 @@ win32-*msvc* : {
     INCLUDEPATH += /usr/local/include
     TR_EXCLUDE += /usr/local/include/boost/*
     LIBS+=-L/usr/local/lib
-
-    !isEmpty($$BOOST_ROOT) {
-        INCLUDEPATH += $$BOOST_ROOT
-    }
-
-    !isEmpty($$(BOOST_ROOT)) {
-        INCLUDEPATH += $$(BOOST_ROOT)
-    }
-
-    !isEmpty($$BOOST_LIBS) {
-        LIBS+=-L$$BOOST_LIBS
-    }
-
-    !isEmpty($$(BOOST_LIBS)) {
-        LIBS+=-L$$(BOOST_LIBS)
-    }
 }

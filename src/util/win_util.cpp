@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "scopedguard.h"
 #include "directory.h"
 #include "util.h"
 #include "win_util.h"
@@ -43,9 +44,7 @@ namespace util {
         DWORD  verHandle = NULL;
         DWORD  verSize = GetFileVersionInfoSize(f.toStdWString().c_str(), &verHandle);
 
-        BOOST_SCOPE_EXIT(verHandle) {
-            CloseHandle((HANDLE)verHandle);
-        } BOOST_SCOPE_EXIT_END
+        ScopedGuard ch([verHandle](){CloseHandle((HANDLE)verHandle);});
 
         if (!verSize)
         {
@@ -54,9 +53,7 @@ namespace util {
         LPSTR verData = new char[verSize];
         ZeroMemory(verData, verSize);
 
-        BOOST_SCOPE_EXIT(verData) {
-            delete[] verData;
-        } BOOST_SCOPE_EXIT_END
+        ScopedGuard deleteVerData([verData](){delete[] verData;});
         if (!GetFileVersionInfo(f.toStdWString().c_str(), verHandle, verSize, verData))
         {
             return;
@@ -113,9 +110,7 @@ namespace util {
             WCHAR wszDescription[1024 * 8] = { 0 };
             const size_t argumentsLength = 65535;
             WCHAR *pwszArguments = new WCHAR[argumentsLength];
-            BOOST_SCOPE_EXIT(pwszArguments) {
-                delete pwszArguments;
-            } BOOST_SCOPE_EXIT_END
+            ScopedGuard da([pwszArguments](){delete pwszArguments;});
             HRESULT hr = resolveShellLink(NULL, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
             if (FAILED(hr))
                 return;
@@ -198,12 +193,9 @@ namespace util {
             return hres;
         }
 
-        BOOST_SCOPE_EXIT(psl) {
-            // Release the pointer to the IShellLink interface.
-            psl->Release();
-        } BOOST_SCOPE_EXIT_END
+        ScopedGuard releasePsl([psl](){psl->Release();});
 
-            IPersistFile* ppf;
+        IPersistFile* ppf;
 
         // Get a pointer to the IPersistFile interface.
         hres = psl->QueryInterface(IID_IPersistFile, (void**)&ppf);
@@ -214,13 +206,10 @@ namespace util {
             return hres;
         }
 
-        BOOST_SCOPE_EXIT(ppf) {
-            // Release the pointer to the IPersistFile interface.
-            ppf->Release();
-        } BOOST_SCOPE_EXIT_END
+        ScopedGuard releasePpf([ppf](){ppf->Release();});
 
-            // Load the shortcut.
-            hres = ppf->Load(lpszLinkFile, STGM_READ);
+        // Load the shortcut.
+        hres = ppf->Load(lpszLinkFile, STGM_READ);
 
         if (FAILED(hres))
         {
@@ -292,10 +281,8 @@ namespace util {
         // Get arguments
         const size_t argumentsLength = 65535;
         WCHAR *pszArguments = new WCHAR[argumentsLength];
-        BOOST_SCOPE_EXIT(pszArguments) {
-            delete pszArguments;
-        } BOOST_SCOPE_EXIT_END
-            hres = psl->GetArguments(pszArguments, argumentsLength);
+        ScopedGuard da([pszArguments](){delete pszArguments;});
+        hres = psl->GetArguments(pszArguments, argumentsLength);
         if (FAILED(hres))
         {
             qWarning() << "psl->GetArguments(pszArguments, argumentsLength) failed";
@@ -348,9 +335,7 @@ namespace util {
             return false;
         }
 
-        BOOST_SCOPE_EXIT(&hImage) {
-            CloseHandle(hImage);
-        } BOOST_SCOPE_EXIT_END
+        ScopedGuard ch([&hImage](){CloseHandle(hImage);});
         /*
         *  Read the MS-DOS image header.
         */
