@@ -45,10 +45,6 @@
 #include <QStringBuilder>
 #include <QProcess>
 
-
-// Boost
-#include <boost/scope_exit.hpp>
-
 #endif
 
 #endif // STDAFX_H

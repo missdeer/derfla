@@ -76,10 +76,6 @@
 
 // Qt Xml
 #include <QDomDocument>
-
-// Boost
-#include <boost/scope_exit.hpp>
-
 #if defined(Q_OS_WIN)
 #define globalDefaultFontFamily "Microsoft YaHei"
 #elif defined(Q_OS_MAC)

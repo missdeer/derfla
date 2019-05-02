@@ -42,13 +42,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     directory.cpp \
-    util.cpp
+    util.cpp \
+    scopedguard.cpp 
 
 HEADERS += \
     util_global.h \
     stdafx.h \
     directory.h \
-    util.h
+    util.h \
+    scopedguard.h 
 
 INCLUDEPATH += $$PWD
 

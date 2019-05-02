@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "qtsingleapplication.h"
-#include <boost/scope_exit.hpp>
+#include "scopedguard.h"
 #include <QTextStream>
 #include <iostream>
 #if defined(Q_OS_WIN)
@@ -33,9 +33,7 @@ int main(int argc, char *argv[])
 
 #if defined(Q_OS_WIN)
     CoInitialize(NULL);
-    BOOST_SCOPE_EXIT(void) {
-        CoUninitialize();
-    } BOOST_SCOPE_EXIT_END
+    ScopedGuard cu([](){CoUninitialize();});
 #endif
 
     DBRW dbrw;

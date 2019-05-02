@@ -51,10 +51,6 @@
 #include <QSqlRecord>
 #include <QSqlError>
 #include <QSqlDriver>
-
-// Boost
-#include <boost/scope_exit.hpp>
-
 #endif
 
 #endif // STDAFX_H
