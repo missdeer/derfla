@@ -43,7 +43,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     directory.cpp \
     util.cpp \
-    scopedguard.cpp 
+    scopedguard.cpp
 
 HEADERS += \
     util_global.h \
