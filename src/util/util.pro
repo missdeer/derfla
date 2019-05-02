@@ -76,8 +76,6 @@ translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path(
 QMAKE_EXTRA_TARGETS += lupdate lrelease translate
 POST_TARGETDEPS += translate
 
-# workaround for non-MSVC mkspec on 5.12
-equals(QT_MINOR_VERSION, 12): !win32-*msvc: LIBS += /usr/local/lib
 win32: {
     win32-*g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
