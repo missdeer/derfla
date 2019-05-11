@@ -347,46 +347,10 @@ void Widget::paint()
 }
 #undef signals
 
-extern "C" {
-#include <gio/gio.h>
-#include <gtk/gtk.h>
-}
-#include "gpixbuftoqicon.h"
 
 void Widget::searchApp()
 {
-    auto apps = g_app_info_get_all();
-    GtkIconTheme *pGtkIconTheme= gtk_icon_theme_get_default();
-    GError* err = 0;
 
-    while (apps->next != NULL)
-    {
-        try {
-
-            std::string display(g_app_info_get_display_name((GAppInfo*)(apps->data)));
-            std::string command(g_app_info_get_executable((GAppInfo*)(apps->data)));
-
-            GIcon* icon = g_app_info_get_icon((GAppInfo*)(apps->data));
-
-            auto pGtkIconInfo = gtk_icon_theme_lookup_by_gicon(pGtkIconTheme,icon,256,GTK_ICON_LOOKUP_USE_BUILTIN);
-            auto giconinfo = gtk_icon_info_load_icon(pGtkIconInfo, &err);
-
-            if (err == 0)
-            {
-                auto qicon = giconToQIcon(giconinfo);
-                map.push_back({display, {command, qicon}});
-            }
-            else
-            {
-                map.push_back({display, {command, NULL}});
-            }
-
-            apps = apps->next;
-
-
-        }
-        catch (...){apps = apps->next;continue;}
-    }
 }
 
 Widget::~Widget()

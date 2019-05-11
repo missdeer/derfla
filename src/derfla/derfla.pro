@@ -21,6 +21,20 @@ include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../util/util.pri)
 
 SOURCES += main.cpp\
+    alfredui/config.cpp \
+    alfredui/config_parse.cpp \
+    alfredui/defaulsearch.cpp \
+    alfredui/doublelistitem.cpp \
+    alfredui/frequenceparse.cpp \
+    alfredui/hotkey.cpp \
+    alfredui/listitem.cpp \
+    alfredui/listwidget.cpp \
+    alfredui/plaintext.cpp \
+    alfredui/returnbyscript.cpp \
+    alfredui/setting.cpp \
+    alfredui/theme.cpp \
+    alfredui/widget.cpp \
+    alfredui/widgetthread.cpp \
     derflawidget.cpp \
     charlineedit.cpp \
     candidatelist.cpp \
@@ -37,6 +51,21 @@ SOURCES += main.cpp\
     booleaneditor.cpp
 
 HEADERS  += stdafx.h \
+    alfredui/config.h \
+    alfredui/config_parse.h \
+    alfredui/defaulsearch.h \
+    alfredui/doublelistitem.h \
+    alfredui/frequenceparse.h \
+    alfredui/geticon.h \
+    alfredui/hotkey.h \
+    alfredui/listitem.h \
+    alfredui/listwidget.h \
+    alfredui/plaintext.h \
+    alfredui/returnbyscript.h \
+    alfredui/setting.h \
+    alfredui/theme.h \
+    alfredui/widget.h \
+    alfredui/widgetthread.h \
     derflawidget.h \
     charlineedit.h \
     candidatelist.h \
@@ -53,10 +82,15 @@ HEADERS  += stdafx.h \
     booleaneditor.h
 
 FORMS    += \
+    alfredui/doublelistitem.ui \
+    alfredui/hotkey.ui \
+    alfredui/listitem.ui \
+    alfredui/setting.ui \
+    alfredui/widget.ui \
     candidatelist.ui \
     preferencedialog.ui
 
-INCLUDEPATH += $$PWD
+INCLUDEPATH += $$PWD $$PWD/alfredui
 
 CODECFORTR      = UTF-8
 CODECFORSRC     = UTF-8
@@ -164,6 +198,11 @@ win32: {
 
     QMAKE_EXTRA_TARGETS += copy_winsparkle copy_skin
     POST_TARGETDEPS += copy_winsparkle copy_skin
+}
+
+unix: !macx: {
+    HEADERS += alfredui/gpixbuftoqicon.h
+    SOURCES += alfredui/gpixbuftoqicon.cpp
 }
 
 RESOURCES += \

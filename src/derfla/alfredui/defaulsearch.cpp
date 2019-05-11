@@ -4,7 +4,6 @@
 #include "setting.h"
 #include <vector>
 #include <QFileInfo>
-#include "boost/regex.hpp"
 #include <QDir>
 #include <QFileIconProvider>
 #include <iostream>
@@ -76,9 +75,9 @@ bool defaulSearch::noScriptMatches()
 void defaulSearch::netSearch(bool& searchApp)
 try
 {
-    boost::regex net1("[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
-    boost::regex net2("(http|ftp|https)://[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
-    if (boost::regex_match(keyword, net1))
+    std::regex net1("[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
+    std::regex net2("(http|ftp|https)://[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
+    if (std::regex_match(keyword, net1))
     {
         vals.push_back(returnByScript(
                            INTERNETICON,
@@ -88,7 +87,7 @@ try
                            ));
     }
     else {
-        if (boost::regex_match(keyword, net2)) {
+        if (std::regex_match(keyword, net2)) {
             vals.push_back(returnByScript(
                                INTERNETICON,
                                keyword,
