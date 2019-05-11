@@ -15,8 +15,8 @@
 #include "singleapplication.h"
 #include "theme.h"
 
-typedef std::vector<std::pair<std::string, std::pair<std::string, QIcon*>>> pair;
-typedef std::pair<std::string, std::pair<std::string, QIcon*>> qpair;
+using pair = std::vector<std::pair<std::string, std::pair<std::string, QIcon*>>> ;
+using qpair = std::pair<std::string, std::pair<std::string, QIcon*>> ;
 namespace Ui {
 class Widget;
 }
@@ -29,7 +29,7 @@ public slots:
     void paint_mutex();
     void OtherhotkeyPressed(std::string, bool);
 public:
-    explicit Widget(QWidget *parent = 0);
+    explicit Widget(QWidget *parent = nullptr);
     void defaultsearch();
     void searchApp();
     std::vector<returnByScript> val;
@@ -37,7 +37,7 @@ public:
     void setOne();
     void enterCurItem();
     float Height;
-    ~Widget();
+    ~Widget() override;
     void setApp(SingleApplication *app);
 
 private:
