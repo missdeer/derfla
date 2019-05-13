@@ -26,7 +26,7 @@ class Widget : public QWidget
     Q_OBJECT
     friend class WidgetThread;
 public slots:
-    void paint_mutex();
+    void paint();
     void OtherhotkeyPressed(std::string, bool);
 public:
     explicit Widget(QWidget *parent = nullptr);
@@ -40,7 +40,6 @@ public:
     ~Widget() override;
 
 private:
-    void paint();
     Ui::Widget *ui;
     QMutex* mutex_paint;
     QMutex* mutex_thread;

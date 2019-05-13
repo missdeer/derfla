@@ -122,7 +122,7 @@ void Widget::hotkeyPressed()
     }
     else {
         this->val.clear();
-        this->paint_mutex();
+        this->paint();
         this->plainTextEdit->setPlainText("");
         CenterToScreen(this);
         this->show();
@@ -140,7 +140,7 @@ void Widget::OtherhotkeyPressed(std::string s, bool argument)
         if (argument) {
             this->val.clear();
             this->defaultsearch();
-            this->paint_mutex();
+            this->paint();
             QClipboard* clipboard = QGuiApplication::clipboard();
             auto searchText = clipboard->text(QClipboard::Selection);
             QTextCursor t(this->plainTextEdit->document());
@@ -246,13 +246,7 @@ void Widget::defaultsearch()
 {
     WidgetThread *w = new WidgetThread(this);
     w->start();
-    connect(w, SIGNAL(shouldPaint()), this, SLOT(paint_mutex()));
-}
-
-void Widget::paint_mutex()
-{
-    QMutexLocker l(mutex_paint);
-    this->paint();
+    connect(w, SIGNAL(shouldPaint()), this, SLOT(paint()), Qt::QueuedConnection);
 }
 
 void Widget::paint()
@@ -298,10 +292,6 @@ void Widget::paint()
                     l = new ListItem(val[i].qicon, val[i].text, std::to_string(i + 1));
                 }
             }
-            QListWidgetItem * item = new QListWidgetItem(listWidget);
-            item->setSizeHint(QSize(l->width(), l->height()));
-            listWidget->addItem(item);
-            listWidget->setItemWidget(item, l);
         }
         else {
             if (i < MAXPRINTSIZE)
@@ -321,11 +311,11 @@ void Widget::paint()
                     l = new ListItem(val[i].qicon, val[i].text, std::to_string(i + 1));
                 }
             }
-            QListWidgetItem * item = new QListWidgetItem(listWidget);
-            item->setSizeHint(QSize(l->width(), l->height()));
-            listWidget->addItem(item);
-            listWidget->setItemWidget(item, l);
         }
+        QListWidgetItem * item = new QListWidgetItem(listWidget);
+        item->setSizeHint(QSize(l->width(), l->height()));
+        listWidget->addItem(item);
+        listWidget->setItemWidget(item, l);
     }
     listWidget->setCurrentRow(0);
     listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowsize * printsize);
