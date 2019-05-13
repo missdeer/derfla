@@ -71,19 +71,19 @@ PreferenceDialog::PreferenceDialog(const QList<ExtensionPtr>& extensions, QWidge
     QVBoxLayout* gl3 = new QVBoxLayout(ui->skinPage);
 
     cbSkins_ = new QComboBox(ui->skinPage);
-    cbSkins_->addItem(":/skins/derfla.derflaskin");
+    cbSkins_->addItem("derfla.derflaskin");
 
 #if defined(Q_OS_MAC)
     QDir dir(qApp->applicationDirPath() % "/../Resources/skins/");
 #else
     QDir dir(qApp->applicationDirPath() % "/skins");
 #endif
-    auto eil = dir.entryInfoList(QStringList() << "*.derflaskin" << "*.ssf" << "*.mssf" << "*.bps", QDir::Files);
+    auto eil = dir.entryInfoList(QStringList() << "*.derflaskin", QDir::Files);
     for (const auto& fi : eil)
     {
         cbSkins_->addItem(fi.fileName());
     }
-    QString skinPath = settings.value("skin", ":/skins/derfla.derflaskin").toString();
+    QString skinPath = settings.value("skin", "derfla.derflaskin").toString();
     int index = cbSkins_->findText(skinPath);
     if (index >= 0)
         cbSkins_->setCurrentIndex(index);
