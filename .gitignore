@@ -22,3 +22,5 @@ debug
 release
 x64
 *.qm
+Sparkle
+bin
