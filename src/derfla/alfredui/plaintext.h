@@ -5,7 +5,6 @@
 #include <QWidget>
 #include "returnbyscript.h"
 #include "frequenceparse.h"
-#include "singleapplication.h"
 
 class PlainText : public QPlainTextEdit
 {
@@ -20,8 +19,6 @@ public:
     void enterListWidget(int row);
     void focusOutEvent(QFocusEvent *event);
     void enterCurrentRow();
-private:
-    SingleApplication* aptr;
 };
 
 #endif // PLAINTEXT_H

@@ -18,7 +18,7 @@
 #include "ui_alfredwidget.h"
 #include "returnbyscript.h"
 #include "defaulsearch.h"
-#include "listwidget.h"
+#include "alfredlistwidget.h"
 #include "listitem.h"
 #include "doublelistitem.h"
 #include "config_parse.h"

@@ -12,7 +12,6 @@
 #include "plaintext.h"
 #include "returnbyscript.h"
 #include "config.h"
-#include "singleapplication.h"
 #include "theme.h"
 
 using pair = std::vector<std::pair<std::string, std::pair<std::string, QIcon*>>> ;
