@@ -21,6 +21,7 @@ include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../util/util.pri)
 
 SOURCES += main.cpp\
+    alfredui/alfredtheme.cpp \
     alfredui/config.cpp \
     alfredui/config_parse.cpp \
     alfredui/defaulsearch.cpp \
@@ -30,7 +31,6 @@ SOURCES += main.cpp\
     alfredui/alfredlistwidget.cpp \
     alfredui/plaintext.cpp \
     alfredui/returnbyscript.cpp \
-    alfredui/theme.cpp \
     alfredui/alfredwidget.cpp \
     alfredui/widgetthread.cpp \
     derflawidget.cpp \
@@ -49,6 +49,7 @@ SOURCES += main.cpp\
     booleaneditor.cpp
 
 HEADERS  += stdafx.h \
+    alfredui/alfredtheme.h \
     alfredui/config.h \
     alfredui/config_parse.h \
     alfredui/defaulsearch.h \
@@ -59,7 +60,6 @@ HEADERS  += stdafx.h \
     alfredui/alfredlistwidget.h \
     alfredui/plaintext.h \
     alfredui/returnbyscript.h \
-    alfredui/theme.h \
     alfredui/alfredwidget.h \
     alfredui/widgetthread.h \
     derflawidget.h \

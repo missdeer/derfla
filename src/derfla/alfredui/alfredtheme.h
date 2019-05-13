@@ -5,11 +5,11 @@
 #include <QString>
 #include <QColor>
 
-class Theme
+class AlfredTheme
 {
 public:
-    Theme() = default;
-    Theme(const QSize &dimensions, 
+    AlfredTheme() = default;
+    AlfredTheme(const QSize &dimensions, 
           const QString &groupBoxStylesheet, 
           const QString &plainTextEditStylesheet, 
           const QString &listWidgetStylesheet, 
@@ -17,7 +17,7 @@ public:
           qreal blurRadius, 
           const QColor &shadowColor, 
           qreal shadowOffset);
-    ~Theme() = default;
+    ~AlfredTheme() = default;
 
     const QSize & dimensions() const;
     void setDimensions(const QSize &dimensions);

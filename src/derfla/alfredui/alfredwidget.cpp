@@ -22,7 +22,7 @@
 #include "listitem.h"
 #include "doublelistitem.h"
 #include "config_parse.h"
-#include "theme.h"
+#include "alfredtheme.h"
 
 #if defined(Q_OS_MAC)
 bool isDarkMode();
@@ -185,7 +185,7 @@ void AlfredWidget::setUpTheme()
         themeFile.close();
     }
 
-    theme = new Theme();
+    theme = new AlfredTheme();
 
     int globalBeginHeight;
     int globalListWidgetY;

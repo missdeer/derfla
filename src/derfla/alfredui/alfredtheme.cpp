@@ -1,6 +1,6 @@
-#include "theme.h"
+#include "alfredtheme.h"
 
-Theme::Theme(const QSize &dimensions, 
+AlfredTheme::AlfredTheme(const QSize &dimensions,
              const QString &groupBoxStylesheet, 
              const QString &plainTextEditStylesheet, 
              const QString &listWidgetStylesheet,
@@ -20,102 +20,102 @@ Theme::Theme(const QSize &dimensions,
 
 }
 
-const QSize &Theme::dimensions() const
+const QSize &AlfredTheme::dimensions() const
 {
     return mDimensions;
 }
 
-void Theme::setDimensions(const QSize &dimensions)
+void AlfredTheme::setDimensions(const QSize &dimensions)
 {
     mDimensions = dimensions;
 }
 
-const QString &Theme::groupBoxStylesheet() const
+const QString &AlfredTheme::groupBoxStylesheet() const
 {
     return mGroupBoxStylesheet;
 }
 
-void Theme::setGroupBoxStylesheet(const QString &groupBoxStylesheet)
+void AlfredTheme::setGroupBoxStylesheet(const QString &groupBoxStylesheet)
 {
     mGroupBoxStylesheet = groupBoxStylesheet;
 }
 
-const QString & Theme::plainTextEditStylesheet() const
+const QString & AlfredTheme::plainTextEditStylesheet() const
 {
     return mPlainTextEditStylesheet;
 }
 
-void Theme::setPlainTextEditStylesheet(const QString &plainTextEditStylesheet)
+void AlfredTheme::setPlainTextEditStylesheet(const QString &plainTextEditStylesheet)
 {
     mPlainTextEditStylesheet = plainTextEditStylesheet;
 }
 
-const QString &Theme::listWidgetStylesheet() const
+const QString &AlfredTheme::listWidgetStylesheet() const
 {
     return mListWidgetStylesheet;
 }
 
-void Theme::setListWidgetStylesheet(const QString &listWidgetStylesheet)
+void AlfredTheme::setListWidgetStylesheet(const QString &listWidgetStylesheet)
 {
     mListWidgetStylesheet = listWidgetStylesheet;
 }
 
-qreal Theme::blurRadius() const
+qreal AlfredTheme::blurRadius() const
 {
     return mBlurRadius;
 }
 
-void Theme::setBlurRadius(const qreal &blurRadius)
+void AlfredTheme::setBlurRadius(const qreal &blurRadius)
 {
     mBlurRadius = blurRadius;
 }
 
-const QColor & Theme::shadowColor() const
+const QColor & AlfredTheme::shadowColor() const
 {
     return mShadowColor;
 }
 
-void Theme::setShadowColor(const QColor &shadowColor)
+void AlfredTheme::setShadowColor(const QColor &shadowColor)
 {
     mShadowColor = shadowColor;
 }
 
-qreal Theme::shadowOffset() const
+qreal AlfredTheme::shadowOffset() const
 {
     return mShadowOffset;
 }
 
-void Theme::setShadowOffset(const qreal &shadowOffset)
+void AlfredTheme::setShadowOffset(const qreal &shadowOffset)
 {
     mShadowOffset = shadowOffset;
 }
 
-int Theme::fontSize() const
+int AlfredTheme::fontSize() const
 {
     return mFontSize;
 }
 
-void Theme::setFontSize(int fontSize)
+void AlfredTheme::setFontSize(int fontSize)
 {
     mFontSize = fontSize;
 }
 
-int Theme::beginHeight() const
+int AlfredTheme::beginHeight() const
 {
     return mBeginHeight;
 }
 
-void Theme::setBeginHeight(int beginHeight)
+void AlfredTheme::setBeginHeight(int beginHeight)
 {
     mBeginHeight = beginHeight;
 }
 
-int Theme::listWidgetY() const
+int AlfredTheme::listWidgetY() const
 {
     return mListWidgetY;
 }
 
-void Theme::setListWidgetY(int listWidgetY)
+void AlfredTheme::setListWidgetY(int listWidgetY)
 {
     mListWidgetY = listWidgetY;
 }

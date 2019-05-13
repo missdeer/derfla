@@ -12,7 +12,7 @@
 #include "plaintext.h"
 #include "returnbyscript.h"
 #include "config.h"
-#include "theme.h"
+#include "alfredtheme.h"
 
 using pair = std::vector<std::pair<std::string, std::pair<std::string, QIcon*>>> ;
 using qpair = std::pair<std::string, std::pair<std::string, QIcon*>> ;
@@ -44,7 +44,7 @@ private:
     pair map;
     PlainText *plainTextEdit;
     QListWidget *listWidget;
-    Theme* theme;
+    AlfredTheme* theme;
     void setUpTheme();
 };
 #endif // WIDGET_H
