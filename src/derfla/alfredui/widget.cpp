@@ -244,31 +244,8 @@ void Widget::defaultsearch()
 
 void Widget::paint_mutex()
 {
-    mutex_paint->lock();
+    QMutexLocker l(mutex_paint);
     this->paint();
-    mutex_paint->unlock();
-}
-
-size_t Widget::partition(returnByScript *a, size_t p, size_t q)
-{
-    size_t r = q;
-    for (size_t i = p; i < q; i++)
-    {
-        if (this->plainTextEdit->fparse.getValue(a[i].text) <
-            this->plainTextEdit->fparse.getValue(a[r].text)) {
-            std::swap(a[i--], a[--q]);
-        }
-    }
-    std::swap(a[q], a[r]);
-    return q;
-}
-
-void Widget::quicksort(returnByScript *a, size_t n)
-{
-    if (n < 2) return;
-    size_t m = partition(a, 0, n - 1);
-    this->quicksort(a, m);
-    this->quicksort(a + m + 1, n - m - 1);
 }
 
 void Widget::paint()
@@ -287,7 +264,9 @@ void Widget::paint()
     listWidget->show();
     listWidget->setMaximumHeight(rowsize * printsize);
     listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowsize * printsize);
-    this->quicksort((&val[0]), std::min(MAXSORTSIZE, int(val.size())));
+    std::sort(val.begin(), val.end(), [this](const returnByScript& lhs, const returnByScript& rhs){
+        return plainTextEdit->fparse.getValue(lhs.text) < plainTextEdit->fparse.getValue(rhs.text);
+    });
     this->setMaximumHeight(printsize * rowsize + theme->beginHeight());
     this->setMinimumHeight(printsize * rowsize + theme->beginHeight());
     this->setGeometry(this->x(), this->y(), printsize * rowsize + theme->beginHeight(), this->width());
@@ -356,9 +335,4 @@ void Widget::searchApp()
 Widget::~Widget()
 {
     delete ui;
-}
-
-void Widget::setApp(SingleApplication *app)
-{
-    plainTextEdit->setApp(app);
 }

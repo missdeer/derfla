@@ -69,7 +69,7 @@ void PlainText::enterListWidget(int row)
 
         if ((*val)[row].command == "quit")
         {
-            (*aptr).quit();
+            qApp->quit();
             return;
         }
 
@@ -96,7 +96,7 @@ void PlainText::keyPressEvent(QKeyEvent* event)
         }
         return;
     }
-    if (key == 16777220 || key == Qt::Key_Enter)
+    if (key == Qt::Key_Return || key == Qt::Key_Enter)
     {
         enterListWidget(listWidget->currentRow());
         return;
@@ -127,9 +127,4 @@ void PlainText::keyPressEvent(QKeyEvent* event)
 void PlainText::focusOutEvent(QFocusEvent*)
 {
     //this->parent->hide();
-}
-
-void PlainText::setApp(SingleApplication* app)
-{
-    aptr = app;
 }

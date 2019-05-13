@@ -20,7 +20,6 @@ public:
     void enterListWidget(int row);
     void focusOutEvent(QFocusEvent *event);
     void enterCurrentRow();
-    void setApp(SingleApplication *app);
 private:
     SingleApplication* aptr;
 };

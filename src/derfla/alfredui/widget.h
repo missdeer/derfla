@@ -38,15 +38,12 @@ public:
     void enterCurItem();
     float Height;
     ~Widget() override;
-    void setApp(SingleApplication *app);
 
 private:
     void paint();
     Ui::Widget *ui;
     QMutex* mutex_paint;
     QMutex* mutex_thread;
-    void quicksort(returnByScript* a, size_t n);
-    size_t partition(returnByScript* a, size_t p, size_t q);
     pair map;
     PlainText *plainTextEdit;
     QListWidget *listWidget;
