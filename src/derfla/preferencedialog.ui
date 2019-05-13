@@ -70,7 +70,7 @@
         <bool>true</bool>
        </property>
        <property name="currentRow">
-        <number>0</number>
+        <number>-1</number>
        </property>
        <item>
         <property name="text">
@@ -92,6 +92,15 @@
        </item>
        <item>
         <property name="text">
+         <string>Plugin</string>
+        </property>
+        <property name="icon">
+         <iconset resource="derfla.qrc">
+          <normaloff>:/rc/images/plugin.png</normaloff>:/rc/images/plugin.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Skin</string>
         </property>
         <property name="icon">
@@ -104,10 +113,11 @@
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>2</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="generalPage"/>
        <widget class="QWidget" name="extensionPage"/>
+       <widget class="QWidget" name="pluginPage"/>
        <widget class="QWidget" name="skinPage"/>
       </widget>
      </item>

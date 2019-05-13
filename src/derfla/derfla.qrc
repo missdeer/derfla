@@ -19,5 +19,6 @@
         <file>rc/actions/script.png</file>
         <file>rc/actions/shell.png</file>
         <file>rc/actions/terminal.png</file>
+        <file>rc/images/plugin.png</file>
     </qresource>
 </RCC>
