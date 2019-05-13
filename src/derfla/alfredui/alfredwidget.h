@@ -21,7 +21,7 @@ namespace Ui {
 class Widget;
 }
 
-class Widget : public QWidget
+class AlfredWidget : public QWidget
 {
     Q_OBJECT
     friend class WidgetThread;
@@ -29,7 +29,7 @@ public slots:
     void paint();
     void OtherhotkeyPressed(std::string, bool);
 public:
-    explicit Widget(QWidget *parent = nullptr);
+    explicit AlfredWidget(QWidget *parent = nullptr);
     void defaultsearch();
     void searchApp();
     std::vector<returnByScript> val;
@@ -37,7 +37,7 @@ public:
     void setOne();
     void enterCurItem();
     float Height;
-    ~Widget() override;
+    ~AlfredWidget() override;
 
 private:
     Ui::Widget *ui;

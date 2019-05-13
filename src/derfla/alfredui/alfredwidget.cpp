@@ -14,8 +14,8 @@
 #include <QClipboard>
 #include <iterator>
 #include <fstream>
-#include "widget.h"
-#include "ui_widget.h"
+#include "alfredwidget.h"
+#include "ui_alfredwidget.h"
 #include "returnbyscript.h"
 #include "defaulsearch.h"
 #include "listwidget.h"
@@ -28,13 +28,12 @@
 bool isDarkMode();
 #endif
 
-Widget::Widget(QWidget *parent) :
+AlfredWidget::AlfredWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget),
     mutex_thread(new QMutex)
 
 {
-
     ui->setupUi(this);
 
     setUpTheme();
@@ -96,23 +95,23 @@ Widget::Widget(QWidget *parent) :
     this->setAttribute(Qt::WA_TranslucentBackground,true);
     this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
     plainTextEdit->setFocus();
-    connect(plainTextEdit, &QPlainTextEdit::textChanged, this, &Widget::defaultsearch);
-    connect(listWidget, &QListWidget::currentRowChanged, this, &Widget::setOne);
-    connect(listWidget, &QListWidget::itemPressed, this, &Widget::enterCurItem);
+    connect(plainTextEdit, &QPlainTextEdit::textChanged, this, &AlfredWidget::defaultsearch);
+    connect(listWidget, &QListWidget::currentRowChanged, this, &AlfredWidget::setOne);
+    connect(listWidget, &QListWidget::itemPressed, this, &AlfredWidget::enterCurItem);
     plainTextEdit->setFocus();
 }
 
-void Widget::setOne()
+void AlfredWidget::setOne()
 {
     if (listWidget->currentRow() == -1) listWidget->setCurrentRow(0);
 }
 
-void Widget::enterCurItem()
+void AlfredWidget::enterCurItem()
 {
     plainTextEdit->enterCurrentRow();
 }
 
-void Widget::hotkeyPressed()
+void AlfredWidget::hotkeyPressed()
 {
     if (this->isVisible())
     {
@@ -128,7 +127,7 @@ void Widget::hotkeyPressed()
     }
 }
 
-void Widget::OtherhotkeyPressed(std::string s, bool argument)
+void AlfredWidget::OtherhotkeyPressed(std::string s, bool argument)
 {
     if (this->isVisible())
     {
@@ -166,7 +165,7 @@ void Widget::OtherhotkeyPressed(std::string s, bool argument)
  * Function reads from file "theme.ini" the theme and applies it.
  * Two themes are supported: classic and dark.
  */
-void Widget::setUpTheme()
+void AlfredWidget::setUpTheme()
 {
     std::ifstream themeFile(THEMEPATH);
     std::string themeName;
@@ -241,14 +240,14 @@ void Widget::setUpTheme()
     theme->setShadowOffset(shadowOffset);
 }
 
-void Widget::defaultsearch()
+void AlfredWidget::defaultsearch()
 {
     WidgetThread *w = new WidgetThread(this);
     w->start();
     connect(w, SIGNAL(shouldPaint()), this, SLOT(paint()), Qt::QueuedConnection);
 }
 
-void Widget::paint()
+void AlfredWidget::paint()
 {
     listWidget->clear();
     int size = std::min(int(val.size()), MAXADDTOLISTSIZE);
@@ -323,12 +322,12 @@ void Widget::paint()
 #undef signals
 
 
-void Widget::searchApp()
+void AlfredWidget::searchApp()
 {
 
 }
 
-Widget::~Widget()
+AlfredWidget::~AlfredWidget()
 {
     delete ui;
 }

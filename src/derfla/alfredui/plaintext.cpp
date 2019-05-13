@@ -1,5 +1,5 @@
 #include "plaintext.h"
-#include "setting.h"
+#include "config.h"
 #include "config_parse.h"
 #include <iostream>
 #include <QTextEdit>
@@ -48,8 +48,8 @@ void PlainText::enterListWidget(int row)
         }
         if ((*val)[row].command == "setting")
         {
-            Setting * s = new Setting;
-            s->show();
+//            Setting * s = new Setting;
+//            s->show();
             return;
         }
         if ((*val)[row].command == "complete")

@@ -26,14 +26,12 @@ SOURCES += main.cpp\
     alfredui/defaulsearch.cpp \
     alfredui/doublelistitem.cpp \
     alfredui/frequenceparse.cpp \
-    alfredui/hotkey.cpp \
     alfredui/listitem.cpp \
     alfredui/listwidget.cpp \
     alfredui/plaintext.cpp \
     alfredui/returnbyscript.cpp \
-    alfredui/setting.cpp \
     alfredui/theme.cpp \
-    alfredui/widget.cpp \
+    alfredui/alfredwidget.cpp \
     alfredui/widgetthread.cpp \
     derflawidget.cpp \
     charlineedit.cpp \
@@ -57,14 +55,12 @@ HEADERS  += stdafx.h \
     alfredui/doublelistitem.h \
     alfredui/frequenceparse.h \
     alfredui/geticon.h \
-    alfredui/hotkey.h \
     alfredui/listitem.h \
     alfredui/listwidget.h \
     alfredui/plaintext.h \
     alfredui/returnbyscript.h \
-    alfredui/setting.h \
     alfredui/theme.h \
-    alfredui/widget.h \
+    alfredui/alfredwidget.h \
     alfredui/widgetthread.h \
     derflawidget.h \
     charlineedit.h \
@@ -83,10 +79,8 @@ HEADERS  += stdafx.h \
 
 FORMS    += \
     alfredui/doublelistitem.ui \
-    alfredui/hotkey.ui \
     alfredui/listitem.ui \
-    alfredui/setting.ui \
-    alfredui/widget.ui \
+    alfredui/alfredwidget.ui \
     candidatelist.ui \
     preferencedialog.ui
 
