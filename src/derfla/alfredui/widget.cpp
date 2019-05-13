@@ -24,6 +24,9 @@
 #include "config_parse.h"
 #include "theme.h"
 
+#if defined(Q_OS_MAC)
+bool isDarkMode();
+#endif
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -121,7 +124,7 @@ void Widget::hotkeyPressed()
         this->val.clear();
         this->paint_mutex();
         this->plainTextEdit->setPlainText("");
-        MOVE;
+        CenterToScreen(this);
         this->show();
     }
 }
@@ -144,7 +147,7 @@ void Widget::OtherhotkeyPressed(std::string s, bool argument)
             this->plainTextEdit->setPlainText(QString::fromStdString(s + ' ') + searchText);
             t.setPosition(s.size() + 1 + searchText.size());
             this->plainTextEdit->setTextCursor(t);
-            MOVE;
+            CenterToScreen(this);
             this->show();
             this->defaultsearch();
         }
@@ -171,6 +174,11 @@ void Widget::setUpTheme()
 
     if (!themeFile.is_open())
     {
+#if defined (Q_OS_MAC)
+        if (isDarkMode())
+            themeName = "Dark";
+        else
+#endif
         themeName = "Classic";
     }
     else
@@ -194,7 +202,6 @@ void Widget::setUpTheme()
 
     if(themeName == "Classic")
     {
-
         globalBeginHeight = 125;
         globalListWidgetY = 91;
         dimensions = QSize(550, 75);
@@ -322,7 +329,7 @@ void Widget::paint()
     }
     listWidget->setCurrentRow(0);
     listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowsize * printsize);
-    MOVE;
+    CenterToScreen(this);
 }
 #undef signals
 

@@ -124,7 +124,8 @@ macx: {
 
     OBJECTIVE_SOURCES += \
         CocoaInitializer.mm \
-        SparkleAutoUpdater.mm
+        SparkleAutoUpdater.mm \
+        darkmode.mm
     HEADERS += CocoaInitializer.h SparkleAutoUpdater.h
 
     LIBS += -F$$PWD/../../3rdparty/Sparkle \

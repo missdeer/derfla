@@ -8,27 +8,33 @@
 class Theme
 {
 public:
-    Theme() {}
-    Theme(QSize dimensions, QString groupBoxStylesheet, QString plainTextEditStylesheet, QString listWidgetStylesheet,\
-          int fontSize, qreal blurRadius, QColor shadowColor, qreal shadowOffset);
-    ~Theme();
+    Theme() = default;
+    Theme(const QSize &dimensions, 
+          const QString &groupBoxStylesheet, 
+          const QString &plainTextEditStylesheet, 
+          const QString &listWidgetStylesheet, 
+          int fontSize, 
+          qreal blurRadius, 
+          const QColor &shadowColor, 
+          qreal shadowOffset);
+    ~Theme() = default;
 
-    QSize dimensions() const;
+    const QSize & dimensions() const;
     void setDimensions(const QSize &dimensions);
 
-    QString groupBoxStylesheet() const;
+    const QString & groupBoxStylesheet() const;
     void setGroupBoxStylesheet(const QString &groupBoxStylesheet);
 
-    QString plainTextEditStylesheet() const;
+    const QString &plainTextEditStylesheet() const;
     void setPlainTextEditStylesheet(const QString &plainTextEditStylesheet);
 
-    QString listWidgetStylesheet() const;
+    const QString & listWidgetStylesheet() const;
     void setListWidgetStylesheet(const QString &listWidgetStylesheet);
 
     qreal blurRadius() const;
     void setBlurRadius(const qreal &blurRadius);
 
-    QColor shadowColor() const;
+    const QColor & shadowColor() const;
     void setShadowColor(const QColor &shadowColor);
 
     qreal shadowOffset() const;

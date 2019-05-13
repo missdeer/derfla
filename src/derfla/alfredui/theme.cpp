@@ -1,14 +1,26 @@
 #include "theme.h"
 
-Theme::Theme(QSize dimensions, QString groupBoxStylesheet, QString plainTextEditStylesheet, QString listWidgetStylesheet,\
-            int fontSize, qreal blurRadius, QColor shadowColor, qreal shadowOffset) :
-    mDimensions(dimensions), mGroupBoxStylesheet(groupBoxStylesheet), mListWidgetStylesheet(listWidgetStylesheet),\
-    mPlainTextEditStylesheet(plainTextEditStylesheet), mFontSize(fontSize), mBlurRadius(blurRadius), mShadowColor(shadowColor), mShadowOffset(shadowOffset)
+Theme::Theme(const QSize &dimensions, 
+             const QString &groupBoxStylesheet, 
+             const QString &plainTextEditStylesheet, 
+             const QString &listWidgetStylesheet,
+             int fontSize, 
+             qreal blurRadius, 
+             const QColor &shadowColor, 
+             qreal shadowOffset) 
+    : mDimensions(dimensions)
+    , mGroupBoxStylesheet(groupBoxStylesheet)
+    , mPlainTextEditStylesheet(plainTextEditStylesheet)
+    , mListWidgetStylesheet(listWidgetStylesheet)
+    , mFontSize(fontSize)
+    , mBlurRadius(blurRadius)
+    , mShadowColor(shadowColor)
+    , mShadowOffset(shadowOffset)
 {
 
 }
 
-QSize Theme::dimensions() const
+const QSize &Theme::dimensions() const
 {
     return mDimensions;
 }
@@ -18,7 +30,7 @@ void Theme::setDimensions(const QSize &dimensions)
     mDimensions = dimensions;
 }
 
-QString Theme::groupBoxStylesheet() const
+const QString &Theme::groupBoxStylesheet() const
 {
     return mGroupBoxStylesheet;
 }
@@ -28,7 +40,7 @@ void Theme::setGroupBoxStylesheet(const QString &groupBoxStylesheet)
     mGroupBoxStylesheet = groupBoxStylesheet;
 }
 
-QString Theme::plainTextEditStylesheet() const
+const QString & Theme::plainTextEditStylesheet() const
 {
     return mPlainTextEditStylesheet;
 }
@@ -38,7 +50,7 @@ void Theme::setPlainTextEditStylesheet(const QString &plainTextEditStylesheet)
     mPlainTextEditStylesheet = plainTextEditStylesheet;
 }
 
-QString Theme::listWidgetStylesheet() const
+const QString &Theme::listWidgetStylesheet() const
 {
     return mListWidgetStylesheet;
 }
@@ -58,7 +70,7 @@ void Theme::setBlurRadius(const qreal &blurRadius)
     mBlurRadius = blurRadius;
 }
 
-QColor Theme::shadowColor() const
+const QColor & Theme::shadowColor() const
 {
     return mShadowColor;
 }
@@ -108,4 +120,3 @@ void Theme::setListWidgetY(int listWidgetY)
     mListWidgetY = listWidgetY;
 }
 
-Theme::~Theme() {}
