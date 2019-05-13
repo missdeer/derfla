@@ -71,6 +71,7 @@ PreferenceDialog::PreferenceDialog(const QList<ExtensionPtr>& extensions, QWidge
     QVBoxLayout* gl3 = new QVBoxLayout(ui->skinPage);
 
     cbAlfredStyleUI_ = new QCheckBox(tr("Use Alfred Style User Interface"), ui->skinPage);
+    cbAlfredStyleUI_->setChecked(settings.value("alfredStyleUI").toBool());
     gl3->addWidget(cbAlfredStyleUI_);
     
     cbSkins_ = new QComboBox(ui->skinPage);
@@ -125,6 +126,7 @@ void PreferenceDialog::on_buttonBox_accepted()
                            "/skins/"
                        #endif
                            % cbSkins_->currentText()));
+    settings.setValue("alfredStyleUI", cbAlfredStyleUI_->isChecked());
     settings.setValue("autoupdate", cbAutoUpdate_->isChecked());
 #if defined (Q_OS_WIN) || defined(Q_OS_MAC)
     settings.setValue("autostart", cbStartWithSystem_->isChecked());
