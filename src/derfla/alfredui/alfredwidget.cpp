@@ -63,7 +63,7 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
 
     ui->formLayout->setWidget(0, QFormLayout::SpanningRole, plainTextEdit);
 
-    listWidget = new ListWidget(ui->groupBox);
+    listWidget = new AlfredListWidget(ui->groupBox);
     plainTextEdit->listWidget = listWidget;
     listWidget->setObjectName(QStringLiteral("listWidget"));
 
