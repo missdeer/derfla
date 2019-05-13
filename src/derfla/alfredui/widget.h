@@ -41,7 +41,6 @@ public:
 
 private:
     Ui::Widget *ui;
-    QMutex* mutex_paint;
     QMutex* mutex_thread;
     pair map;
     PlainText *plainTextEdit;

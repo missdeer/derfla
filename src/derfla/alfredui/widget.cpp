@@ -31,7 +31,6 @@ bool isDarkMode();
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget),
-    mutex_paint(new QMutex),
     mutex_thread(new QMutex)
 
 {
