@@ -21,3 +21,4 @@ GeneratedFiles
 debug
 release
 x64
+*.qm
