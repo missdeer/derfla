@@ -27,7 +27,7 @@ SOURCES += main.cpp\
     alfredui/doublelistitem.cpp \
     alfredui/frequenceparse.cpp \
     alfredui/listitem.cpp \
-    alfredui/listwidget.cpp \
+    alfredui/alfredlistwidget.cpp \
     alfredui/plaintext.cpp \
     alfredui/returnbyscript.cpp \
     alfredui/theme.cpp \
@@ -56,7 +56,7 @@ HEADERS  += stdafx.h \
     alfredui/frequenceparse.h \
     alfredui/geticon.h \
     alfredui/listitem.h \
-    alfredui/listwidget.h \
+    alfredui/alfredlistwidget.h \
     alfredui/plaintext.h \
     alfredui/returnbyscript.h \
     alfredui/theme.h \
