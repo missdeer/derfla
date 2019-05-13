@@ -70,6 +70,9 @@ PreferenceDialog::PreferenceDialog(const QList<ExtensionPtr>& extensions, QWidge
     // skin settings page
     QVBoxLayout* gl3 = new QVBoxLayout(ui->skinPage);
 
+    cbAlfredStyleUI_ = new QCheckBox(tr("Use Alfred Style User Interface"), ui->skinPage);
+    gl3->addWidget(cbAlfredStyleUI_);
+    
     cbSkins_ = new QComboBox(ui->skinPage);
     cbSkins_->addItem("derfla.derflaskin");
 

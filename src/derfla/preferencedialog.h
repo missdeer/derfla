@@ -36,6 +36,7 @@ private:
     QKeySequenceEdit* edtHotkey_;
     QCheckBox* cbAutoUpdate_;
     QTableView* listExtensions_;
+    QCheckBox* cbAlfredStyleUI_;
     QComboBox* cbSkins_;
     QWidget* previewSkin_;
 };
