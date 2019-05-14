@@ -2,6 +2,7 @@
 #include <QSystemTrayIcon>
 #include "extensionmanager.h"
 #include "derflawidget.h"
+#include "alfredwidget.h"
 #include "derflaapp.h"
 
 DerflaApp::DerflaApp(QObject *parent) 
@@ -28,10 +29,10 @@ void DerflaApp::showDerflaWidget()
 
 void DerflaApp::createAlfredWidget()
 {
-    
+    alfredWidget_ = new AlfredWidget();
 }
 
 void DerflaApp::showAlfredWidget()
 {
-    
+    alfredWidget_->show();
 }
