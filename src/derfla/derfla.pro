@@ -20,71 +20,71 @@ include($$PWD/../../3rdparty/Boost.pri)
 
 include($$PWD/../util/util.pri)
 
-SOURCES += main.cpp\
-    alfredui/alfredtheme.cpp \
-    alfredui/config.cpp \
-    alfredui/config_parse.cpp \
-    alfredui/defaulsearch.cpp \
-    alfredui/doublelistitem.cpp \
-    alfredui/frequenceparse.cpp \
-    alfredui/listitem.cpp \
-    alfredui/alfredlistwidget.cpp \
-    alfredui/plaintext.cpp \
-    alfredui/returnbyscript.cpp \
-    alfredui/alfredwidget.cpp \
-    alfredui/widgetthread.cpp \
-    derflawidget.cpp \
-    charlineedit.cpp \
-    candidatelist.cpp \
-    candidatelistdelegate.cpp \
-    candidatelistwidget.cpp \
-    derflaaction.cpp \
-    actionexecutor.cpp \
-    extension.cpp \
-    extensionmanager.cpp \
-    autoupdater.cpp \
-    preferencedialog.cpp \
-    skinmanager.cpp \
-    extensionmodel.cpp \
-    booleaneditor.cpp
+SOURCES += $$PWD/main.cpp\
+    $$PWD/alfredui/alfredtheme.cpp \
+    $$PWD/alfredui/config.cpp \
+    $$PWD/alfredui/config_parse.cpp \
+    $$PWD/alfredui/defaulsearch.cpp \
+    $$PWD/alfredui/doublelistitem.cpp \
+    $$PWD/alfredui/frequenceparse.cpp \
+    $$PWD/alfredui/listitem.cpp \
+    $$PWD/alfredui/alfredlistwidget.cpp \
+    $$PWD/alfredui/plaintext.cpp \
+    $$PWD/alfredui/returnbyscript.cpp \
+    $$PWD/alfredui/alfredwidget.cpp \
+    $$PWD/alfredui/widgetthread.cpp \
+    $$PWD/derflaui/derflawidget.cpp \
+    $$PWD/derflaui/charlineedit.cpp \
+    $$PWD/derflaui/candidatelist.cpp \
+    $$PWD/derflaui/candidatelistdelegate.cpp \
+    $$PWD/derflaui/candidatelistwidget.cpp\
+    $$PWD/derflaui/skinmanager.cpp \
+    $$PWD/extension/extension.cpp \
+    $$PWD/extension/extensionmanager.cpp \
+    $$PWD/extension/extensionmodel.cpp \
+    $$PWD/updater/autoupdater.cpp \
+    $$PWD/commonui/preferencedialog.cpp \
+    $$PWD/commonui/booleaneditor.cpp \
+    $$PWD/derflaaction.cpp \
+    $$PWD/actionexecutor.cpp 
 
-HEADERS  += stdafx.h \
-    alfredui/alfredtheme.h \
-    alfredui/config.h \
-    alfredui/config_parse.h \
-    alfredui/defaulsearch.h \
-    alfredui/doublelistitem.h \
-    alfredui/frequenceparse.h \
-    alfredui/geticon.h \
-    alfredui/listitem.h \
-    alfredui/alfredlistwidget.h \
-    alfredui/plaintext.h \
-    alfredui/returnbyscript.h \
-    alfredui/alfredwidget.h \
-    alfredui/widgetthread.h \
-    derflawidget.h \
-    charlineedit.h \
-    candidatelist.h \
-    candidatelistdelegate.h \
-    candidatelistwidget.h \
-    derflaaction.h \
-    actionexecutor.h \
-    extension.h \
-    extensionmanager.h \
-    autoupdater.h \
-    preferencedialog.h \
-    skinmanager.h \
-    extensionmodel.h \
-    booleaneditor.h
+HEADERS  += $$PWD/stdafx.h \
+    $$PWD/alfredui/alfredtheme.h \
+    $$PWD/alfredui/config.h \
+    $$PWD/alfredui/config_parse.h \
+    $$PWD/alfredui/defaulsearch.h \
+    $$PWD/alfredui/doublelistitem.h \
+    $$PWD/alfredui/frequenceparse.h \
+    $$PWD/alfredui/geticon.h \
+    $$PWD/alfredui/listitem.h \
+    $$PWD/alfredui/alfredlistwidget.h \
+    $$PWD/alfredui/plaintext.h \
+    $$PWD/alfredui/returnbyscript.h \
+    $$PWD/alfredui/alfredwidget.h \
+    $$PWD/alfredui/widgetthread.h \
+    $$PWD/derflaui/derflawidget.h \
+    $$PWD/derflaui/charlineedit.h \
+    $$PWD/derflaui/candidatelist.h \
+    $$PWD/derflaui/candidatelistdelegate.h \
+    $$PWD/derflaui/candidatelistwidget.h\
+    $$PWD/derflaui/skinmanager.h \
+    $$PWD/extension/extension.h \
+    $$PWD/extension/extensionmanager.h \
+    $$PWD/extension/extensionmodel.h \
+    $$PWD/updater/autoupdater.h \
+    $$PWD/commonui/preferencedialog.h \
+    $$PWD/commonui/booleaneditor.h \
+    $$PWD/derflaaction.h \
+    $$PWD/actionexecutor.h 
 
 FORMS    += \
-    alfredui/doublelistitem.ui \
-    alfredui/listitem.ui \
-    alfredui/alfredwidget.ui \
-    candidatelist.ui \
-    preferencedialog.ui
+    $$PWD/alfredui/doublelistitem.ui \
+    $$PWD/alfredui/listitem.ui \
+    $$PWD/alfredui/alfredwidget.ui \
+    $$PWD/derflaui/candidatelist.ui \
+    $$PWD/commonui/preferencedialog.ui
 
-INCLUDEPATH += $$PWD $$PWD/alfredui
+INCLUDEPATH += $$PWD $$PWD/alfredui $$PWD/derflaui $$PWD/commonui $$PWD/updater $$PWD/extension
 
 CODECFORTR      = UTF-8
 CODECFORSRC     = UTF-8
@@ -117,10 +117,10 @@ macx: {
     INSTALLS += icon
 
     OBJECTIVE_SOURCES += \
-        CocoaInitializer.mm \
-        SparkleAutoUpdater.mm \
-        darkmode.mm
-    HEADERS += CocoaInitializer.h SparkleAutoUpdater.h
+        $$PWD/updater/SparkleAutoUpdater.mm \
+        $$PWD/macui/CocoaInitializer.mm \
+        $$PWD/macui/darkmode.mm
+    HEADERS += $$PWD/macui/CocoaInitializer.h $$PWD/updater/SparkleAutoUpdater.h
 
     LIBS += -F$$PWD/../../3rdparty/Sparkle \
             -framework AppKit \
@@ -171,9 +171,9 @@ win32: {
     include($$PWD/../../3rdparty/qglobalshortcut/qglobalshortcut.pri)
     include($$PWD/../../3rdparty/WinSparkle/winsparkle.pri)
     SOURCES += \
-        winsparkleautoupdater.cpp
+        $$PWD/updater/winsparkleautoupdater.cpp
     HEADERS += \
-        winsparkleautoupdater.h
+        $$PWD/updater/winsparkleautoupdater.h
 
     translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
 
@@ -196,8 +196,8 @@ win32: {
 }
 
 unix: !macx: {
-    HEADERS += alfredui/gpixbuftoqicon.h
-    SOURCES += alfredui/gpixbuftoqicon.cpp
+    HEADERS += $$PWD/alfredui/gpixbuftoqicon.h
+    SOURCES += $$PWD/alfredui/gpixbuftoqicon.cpp
 }
 
 RESOURCES += \
