@@ -18,6 +18,7 @@ class DerflaApp : public QObject
     friend class AlfredWidget;
 public:
     explicit DerflaApp(QObject *parent = nullptr);
+    ~DerflaApp() override;
     
     void createDerflaWidget();
     void showDerflaWidget();

@@ -144,7 +144,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     trayiconMenu->addMenu(donateMenu);
     trayiconMenu->addSeparator();
     trayiconMenu->addAction(quitAction);
-    derflaApp->trayIcon_ = new QSystemTrayIcon(this);
+    
     connect(derflaApp->trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::onTrayIconActivated);
     derflaApp->trayIcon_->setContextMenu(trayiconMenu);
     derflaApp->trayIcon_->setIcon(QIcon(":/derfla.ico"));
