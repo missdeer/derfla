@@ -585,7 +585,7 @@ void DerflaWidget::onCheckUpdates()
 
 void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)
 {
-    auto menu = trayIcon_->contextMenu();
+    auto menu = derflaApp->trayIcon_->contextMenu();
     menu->exec(mapToGlobal(pos));
 }
 

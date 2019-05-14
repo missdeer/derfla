@@ -58,7 +58,6 @@ private:
 
     QTimer* candidateDelayTimer_;
     CharLineEdit* input_;
-    QSystemTrayIcon* trayIcon_;
     ExtensionManager* extensionManager_;
     CandidateList* candidateList_;
 #if defined (Q_OS_WIN)
