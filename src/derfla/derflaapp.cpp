@@ -11,7 +11,8 @@ DerflaApp::DerflaApp(QObject *parent)
     , extensionManager_(new ExtensionManager(this))
     , trayIcon_(new QSystemTrayIcon(this))
 {
-    
+    extensionManager_->loadAllFromLocal();
+    extensionManager_->loadAllFromCache();
 }
 
 void DerflaApp::createDerflaWidget()

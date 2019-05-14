@@ -58,8 +58,6 @@ DerflaWidget::DerflaWidget(ExtensionManager *em, QWidget *parent)
     QMacStyle::setFocusRectPolicy(input, QMacStyle::FocusDisabled);
 #endif
 
-    extensionManager_->loadAllFromLocal();
-    extensionManager_->loadAllFromCache();
     connect(candidateList_, &CandidateList::done, this, &DerflaWidget::onCandidateListDone);
     connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::onKeyPressed);
 //    QAction *logoAction = new QAction(tr("Input"), this);
@@ -147,12 +145,12 @@ DerflaWidget::DerflaWidget(ExtensionManager *em, QWidget *parent)
     trayiconMenu->addMenu(donateMenu);
     trayiconMenu->addSeparator();
     trayiconMenu->addAction(quitAction);
-    trayIcon_ = new QSystemTrayIcon(this);
-    connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::onTrayIconActivated);
-    trayIcon_->setContextMenu(trayiconMenu);
-    trayIcon_->setIcon(QIcon(":/derfla.ico"));
-    trayIcon_->setToolTip(tr("Derfla - Accelerate your keyboard!"));
-    trayIcon_->show();
+    derflaApp->trayIcon_ = new QSystemTrayIcon(this);
+    connect(derflaApp->trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::onTrayIconActivated);
+    derflaApp->trayIcon_->setContextMenu(trayiconMenu);
+    derflaApp->trayIcon_->setIcon(QIcon(":/derfla.ico"));
+    derflaApp->trayIcon_->setToolTip(tr("Derfla - Accelerate your keyboard!"));
+    derflaApp->trayIcon_->show();
 
     connect(this, &QWidget::customContextMenuRequested, this, &DerflaWidget::onCustomContextMenuRequested);
     connect(candidateDelayTimer_, &QTimer::timeout, this, &DerflaWidget::onCandidateDelayTimer);
