@@ -3,6 +3,7 @@
 #include "extensionmanager.h"
 #include "derflawidget.h"
 #include "alfredwidget.h"
+#include "autoupdater.h"
 #include "derflaapp.h"
 
 DerflaApp::DerflaApp(QObject *parent) 
@@ -35,4 +36,18 @@ void DerflaApp::createAlfredWidget()
 void DerflaApp::showAlfredWidget()
 {
     alfredWidget_->show();
+}
+
+void DerflaApp::autoUpdate()
+{
+    autoUpdater_ = AutoUpdater::createAutoUpdate();
+    QSettings settings;
+    if (settings.value("autoupdate", true).toBool())
+        autoUpdater_->checkForUpdates();
+}
+
+void DerflaApp::checkForUpdates()
+{
+    if (autoUpdater_)
+        autoUpdater_->checkForUpdates();
 }

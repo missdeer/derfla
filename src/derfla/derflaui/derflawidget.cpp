@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include <private/qzipreader_p.h>
-#include "autoupdater.h"
+#include "derflaapp.h"
 #include "skinmanager.h"
 #if defined(Q_OS_WIN)
 #include "qglobalshortcut.h"
@@ -26,7 +26,6 @@ DerflaWidget::DerflaWidget(ExtensionManager *em, QWidget *parent)
     , hotkeyManager_(new UGlobalHotkeys(this))
     #endif
     , skinManager_(new SkinManager)
-    , autoUpdater_(nullptr)
 {
 #if defined(Q_OS_WIN)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
@@ -167,10 +166,6 @@ DerflaWidget::DerflaWidget(ExtensionManager *em, QWidget *parent)
     hotkeyManager_->registerHotkey(keySequence);
     connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::onShowInFront);
 #endif
-
-    autoUpdater_ = AutoUpdater::createAutoUpdate();
-    if (settings.value("autoupdate", true).toBool())
-        autoUpdater_->checkForUpdates();
 }
 
 DerflaWidget::~DerflaWidget()
@@ -587,7 +582,7 @@ void DerflaWidget::onPreference()
 
 void DerflaWidget::onCheckUpdates()
 {
-    autoUpdater_->checkForUpdates();
+    derflaApp->checkForUpdates();
 }
 
 void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)

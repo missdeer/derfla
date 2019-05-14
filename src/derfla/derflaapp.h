@@ -8,6 +8,7 @@ QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 class ExtensionManager;
 class DerflaWidget;
 class AlfredWidget;
+class AutoUpdater;
 
 class DerflaApp : public QObject
 {
@@ -22,6 +23,9 @@ public:
     void showDerflaWidget();
     void createAlfredWidget();
     void showAlfredWidget();
+    
+    void autoUpdate();
+    void checkForUpdates();
 signals:
     
 public slots:
@@ -29,8 +33,11 @@ public slots:
 private:
     ExtensionManager *extensionManager_;
     QSystemTrayIcon* trayIcon_;
-    DerflaWidget* derflaWidget_;
-    AlfredWidget* alfredWidget_;
+    DerflaWidget* derflaWidget_ = nullptr;
+    AlfredWidget* alfredWidget_ = nullptr;
+    AutoUpdater* autoUpdater_ = nullptr;
 };
+
+inline DerflaApp *derflaApp = nullptr;
 
 #endif // DERFLAAPP_H

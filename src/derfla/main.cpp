@@ -114,9 +114,10 @@ int main(int argc, char *argv[])
         }
     }
     
-    DerflaApp app;
-    app.createDerflaWidget();
-    app.showDerflaWidget();
+    derflaApp = new DerflaApp;
+    derflaApp->createDerflaWidget();
+    derflaApp->showDerflaWidget();
+    derflaApp->autoUpdate();
     
     return a.exec();
 }

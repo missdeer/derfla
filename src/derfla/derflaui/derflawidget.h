@@ -13,7 +13,6 @@ class CharLineEdit;
 class CandidateList;
 class UGlobalHotkeys;
 class QGlobalShortcut;
-class AutoUpdater;
 class SkinManager;
 
 class DerflaWidget : public QWidget
@@ -68,7 +67,6 @@ private:
     UGlobalHotkeys *hotkeyManager_;
 #endif
     SkinManager* skinManager_;
-    AutoUpdater* autoUpdater_;
     QAction *stayOnTopAction_;
     int candidateDelayInterval_;
     bool stayOnTop_;
