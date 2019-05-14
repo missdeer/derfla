@@ -8,7 +8,6 @@
 #include <QTimer>
 #include <QSystemTrayIcon>
 
-class ExtensionManager;
 class CharLineEdit;
 class CandidateList;
 class UGlobalHotkeys;
@@ -20,7 +19,7 @@ class DerflaWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit DerflaWidget(ExtensionManager *em, QWidget *parent = nullptr);
+    explicit DerflaWidget(QWidget *parent = nullptr);
     ~DerflaWidget() override;
 protected:
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -58,7 +57,6 @@ private:
 
     QTimer* candidateDelayTimer_;
     CharLineEdit* input_;
-    ExtensionManager* extensionManager_;
     CandidateList* candidateList_;
 #if defined (Q_OS_WIN)
     QGlobalShortcut *hotkeyManager_;

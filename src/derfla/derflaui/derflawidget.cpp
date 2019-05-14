@@ -13,13 +13,12 @@
 #include "preferencedialog.h"
 #include "derflawidget.h"
 
-DerflaWidget::DerflaWidget(ExtensionManager *em, QWidget *parent)
+DerflaWidget::DerflaWidget(QWidget *parent)
     : QWidget(parent)
     , mouseMovePos_(0, 0)
     , candidateDelayTimer_(new QTimer(this))
     , input_(new CharLineEdit(this))
-    , extensionManager_(em)
-    , candidateList_(new CandidateList(extensionManager_, this))
+    , candidateList_(new CandidateList(derflaApp->extensionManager_, this))
     #if defined(Q_OS_WIN)
     , hotkeyManager_(new QGlobalShortcut(this))
     #else
@@ -389,7 +388,7 @@ void DerflaWidget::onInstallExtension()
     if (!QFile::exists(fileName))
         return;
     try {
-        extensionManager_->installExtension(fileName);
+        derflaApp->extensionManager_->installExtension(fileName);
     }
     catch(std::runtime_error& e) {
         QMessageBox::warning(this, tr("Installing extension failed"), QString::fromLatin1(e.what()), QMessageBox::Ok);
@@ -485,7 +484,7 @@ void DerflaWidget::onPreference()
 #else
     hotkeyManager_->unregisterHotkey();
 #endif
-    PreferenceDialog dlg(extensionManager_->extensions(), this);
+    PreferenceDialog dlg(derflaApp->extensionManager_->extensions(), this);
     QSettings settings;
     if (dlg.exec() == QDialog::Accepted)
     {

@@ -17,7 +17,7 @@ DerflaApp::DerflaApp(QObject *parent)
 
 void DerflaApp::createDerflaWidget()
 {
-    derflaWidget_ = new DerflaWidget(extensionManager_);
+    derflaWidget_ = new DerflaWidget;
 }
 
 void DerflaApp::showDerflaWidget()
