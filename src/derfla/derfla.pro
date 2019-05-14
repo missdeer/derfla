@@ -115,6 +115,7 @@ macx: {
     icon.path = $$PWD
     icon.files += derfla.png
     INSTALLS += icon
+    INCLUDEPATH += $$PWD/macui
 
     OBJECTIVE_SOURCES += \
         $$PWD/updater/SparkleAutoUpdater.mm \
