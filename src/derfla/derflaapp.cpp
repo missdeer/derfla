@@ -17,8 +17,16 @@ DerflaApp::DerflaApp(QObject *parent)
 
 DerflaApp::~DerflaApp()
 {
-    delete trayIcon_;
-    delete extensionManager_;
+    if (trayIcon_)
+        delete trayIcon_;
+    if (extensionManager_)
+        delete extensionManager_;
+    if (derflaWidget_)
+        delete derflaWidget_;
+    if (alfredWidget_)
+        delete alfredWidget_;
+    if (autoUpdater_)
+        delete autoUpdater_;
 }
 
 void DerflaApp::createDerflaWidget()
