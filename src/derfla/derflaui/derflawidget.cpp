@@ -13,12 +13,12 @@
 #include "preferencedialog.h"
 #include "derflawidget.h"
 
-DerflaWidget::DerflaWidget(QWidget *parent)
+DerflaWidget::DerflaWidget(ExtensionManager *em, QWidget *parent)
     : QWidget(parent)
     , mouseMovePos_(0, 0)
     , candidateDelayTimer_(new QTimer(this))
     , input_(new CharLineEdit(this))
-    , extensionManager_(new ExtensionManager(this))
+    , extensionManager_(em)
     , candidateList_(new CandidateList(extensionManager_, this))
     #if defined(Q_OS_WIN)
     , hotkeyManager_(new QGlobalShortcut(this))

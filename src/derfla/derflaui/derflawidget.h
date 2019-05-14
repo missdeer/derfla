@@ -21,7 +21,7 @@ class DerflaWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit DerflaWidget(QWidget *parent = nullptr);
+    explicit DerflaWidget(ExtensionManager *em, QWidget *parent = nullptr);
     ~DerflaWidget() override;
 protected:
     void mouseMoveEvent(QMouseEvent *event) override;

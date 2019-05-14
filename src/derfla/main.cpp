@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "derflaapp.h"
 #include "derflawidget.h"
 #include "qtsingleapplication.h"
 
@@ -112,13 +113,10 @@ int main(int argc, char *argv[])
             qDebug() << "installing qt translator failed ";
         }
     }
-
-    DerflaWidget w;
-    w.show();
-
-    QScreen* scr = a.primaryScreen();
-    QSize sz = scr->availableSize();
-    w.move((sz.width() - w.width())/2, (sz.height()-w.height())/2);
-
+    
+    DerflaApp app;
+    app.createDerflaWidget();
+    app.showDerflaWidget();
+    
     return a.exec();
 }
