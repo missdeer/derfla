@@ -76,26 +76,24 @@ namespace util {
         const size_t subBlockSize = 50;
         WCHAR SubBlock[subBlockSize] = { 0 };
         UINT dwBytes = 0;
-        for (int i = 0; i < (cbTranslate / sizeof(struct LANGANDCODEPAGE)); i++)
+        for (size_t i = 0; i < (cbTranslate / sizeof(struct LANGANDCODEPAGE)); i++)
         {
             hr = StringCchPrintf(SubBlock, subBlockSize,
                 L"\\StringFileInfo\\%04x%04x\\FileDescription",
                 lpTranslate[i].wLanguage,
                 lpTranslate[i].wCodePage);
-            if (FAILED(hr))
+            if (SUCCEEDED(hr))
             {
-                // TODO: write error handler.
+                LPBYTE lpBuffer = nullptr;
+                // Retrieve file description for language and code page "i".
+                VerQueryValue(verData,
+                    SubBlock,
+                    (LPVOID *)&lpBuffer,
+                    &dwBytes);
+    
+                desc = QString::fromUtf16((const ushort*)lpBuffer);
+                break;
             }
-
-            LPBYTE lpBuffer = nullptr;
-            // Retrieve file description for language and code page "i".
-            VerQueryValue(verData,
-                SubBlock,
-                (LPVOID *)&lpBuffer,
-                &dwBytes);
-
-            desc = QString::fromUtf16((const ushort*)lpBuffer);
-            break;
         }
     }
 
@@ -111,7 +109,7 @@ namespace util {
             const size_t argumentsLength = 65535;
             WCHAR *pwszArguments = new WCHAR[argumentsLength];
             ScopedGuard da([pwszArguments](){delete[] pwszArguments;});
-            HRESULT hr = resolveShellLink(NULL, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
+            HRESULT hr = resolveShellLink(nullptr, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
             if (FAILED(hr))
                 return;
             QRegExp r("%([^%]+)%");
@@ -186,7 +184,7 @@ namespace util {
 
         // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
         // has already been called.
-        HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID*)&psl);
+        HRESULT hres = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID*)&psl);
         if (FAILED(hres))
         {
             qCritical() << "CoCreateInstance failed";
@@ -325,10 +323,10 @@ namespace util {
         HANDLE hImage = CreateFile(path.toStdWString().c_str(),
             GENERIC_READ,
             FILE_SHARE_READ,
-            NULL,
+            nullptr,
             OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL,
-            NULL);
+            nullptr);
 
         if (INVALID_HANDLE_VALUE == hImage)
         {
@@ -402,17 +400,14 @@ namespace util {
         case IMAGE_SUBSYSTEM_WINDOWS_CUI:
             //printf("Type is Windows CUI.\n");
             return true;
-            break;
 
         case IMAGE_SUBSYSTEM_OS2_CUI:
             //printf("Type is OS/2 CUI.\n");
             return true;
-            break;
 
         case IMAGE_SUBSYSTEM_POSIX_CUI:
             //printf("Type is POSIX CUI.\n");
             return true;
-            break;
 
         case IMAGE_SUBSYSTEM_NATIVE_WINDOWS:
             //printf("Type is native Win9x driver.\n");
