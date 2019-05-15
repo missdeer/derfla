@@ -110,7 +110,7 @@ namespace util {
             WCHAR wszDescription[1024 * 8] = { 0 };
             const size_t argumentsLength = 65535;
             WCHAR *pwszArguments = new WCHAR[argumentsLength];
-            ScopedGuard da([pwszArguments](){delete pwszArguments;});
+            ScopedGuard da([pwszArguments](){delete[] pwszArguments;});
             HRESULT hr = resolveShellLink(NULL, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
             if (FAILED(hr))
                 return;
@@ -281,7 +281,7 @@ namespace util {
         // Get arguments
         const size_t argumentsLength = 65535;
         WCHAR *pszArguments = new WCHAR[argumentsLength];
-        ScopedGuard da([pszArguments](){delete pszArguments;});
+        ScopedGuard da([pszArguments](){delete[] pszArguments;});
         hres = psl->GetArguments(pszArguments, argumentsLength);
         if (FAILED(hres))
         {
