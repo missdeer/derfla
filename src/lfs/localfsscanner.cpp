@@ -43,7 +43,7 @@ void LocalFSScanner::stop()
 void LocalFSScanner::scan()
 {
     timestamp_ = QDateTime::currentDateTime().toMSecsSinceEpoch();
-    util::timestamp = timestamp_;
+    util::setTimestamp(timestamp_);
 
 #if defined(Q_OS_MAC)
     scanDockIcons();

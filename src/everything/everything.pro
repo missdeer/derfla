@@ -15,6 +15,7 @@ macx: {
     }
 }
 
+win32-*msvc: QMAKE_CXXFLAGS += "/std:c++17"
 win32-clang-msvc: CONFIG -= precompile_header
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)

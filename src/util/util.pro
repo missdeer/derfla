@@ -24,6 +24,7 @@ macx: {
     }
 }
 
+win32-*msvc: QMAKE_CXXFLAGS += "/std:c++17"
 win32-clang-msvc: CONFIG -= precompile_header
 DEFINES += UTIL_LIBRARY
 
