@@ -92,8 +92,8 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
 
     plainTextEdit->setStyleSheet(theme->plainTextEditStylesheet()); //custom theme text edit
 
-    this->setAttribute(Qt::WA_TranslucentBackground,true);
-    this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_TranslucentBackground,true);
+    setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
     plainTextEdit->setFocus();
     connect(plainTextEdit, &QPlainTextEdit::textChanged, this, &AlfredWidget::defaultsearch);
     connect(listWidget, &QListWidget::currentRowChanged, this, &AlfredWidget::setOne);
@@ -113,41 +113,41 @@ void AlfredWidget::enterCurItem()
 
 void AlfredWidget::hotkeyPressed()
 {
-    if (this->isVisible())
+    if (isVisible())
     {
-        this->plainTextEdit->setPlainText("");
-        this->hide();
+        plainTextEdit->setPlainText("");
+        hide();
     }
     else {
-        this->val.clear();
-        this->paint();
-        this->plainTextEdit->setPlainText("");
+        val.clear();
+        paint();
+        plainTextEdit->setPlainText("");
         CenterToScreen(this);
-        this->show();
+        show();
     }
 }
 
 void AlfredWidget::OtherhotkeyPressed(std::string s, bool argument)
 {
-    if (this->isVisible())
+    if (isVisible())
     {
-        this->plainTextEdit->setPlainText("");
-        this->hide();
+        plainTextEdit->setPlainText("");
+        hide();
     }
     else {
         if (argument) {
-            this->val.clear();
-            this->defaultsearch();
-            this->paint();
+            val.clear();
+            defaultsearch();
+            paint();
             QClipboard* clipboard = QGuiApplication::clipboard();
             auto searchText = clipboard->text(QClipboard::Selection);
-            QTextCursor t(this->plainTextEdit->document());
-            this->plainTextEdit->setPlainText(QString::fromStdString(s + ' ') + searchText);
+            QTextCursor t(plainTextEdit->document());
+            plainTextEdit->setPlainText(QString::fromStdString(s + ' ') + searchText);
             t.setPosition(s.size() + 1 + searchText.size());
-            this->plainTextEdit->setTextCursor(t);
+            plainTextEdit->setTextCursor(t);
             CenterToScreen(this);
-            this->show();
-            this->defaultsearch();
+            show();
+            defaultsearch();
         }
         else {
             try {
@@ -218,10 +218,10 @@ void AlfredWidget::setUpTheme()
         dimensions = QSize(550, 50);
         groupBoxStylesheet = "QGroupBox{background:#444444;border-radius: 9px; padding: -3px -3px -3px -3px;}";
         plainTextEditStylesheet = "QPlainTextEdit{background:#3a3a3a; border: 1px solid #3a3a3a; color: #AAAAAA}";
-        listWidgetStylesheet = "QListWidget { background: #444444; border: 1px solid #444444}\
-                                        QListWidget::item { background: #444444; padding: 0px 0px 0px 3px;}\
-                                        QListWidget::item:selected { background: #525252; border: 1px solid #AAAAAA; border-radius: 2px;}\
-                                        QLabel {color: #AAAAAA;}";
+        listWidgetStylesheet = "QListWidget { background: #444444; border: 1px solid #444444}"
+                               "QListWidget::item { background: #444444; padding: 0px 0px 0px 3px;}"
+                               "QListWidget::item:selected { background: #525252; border: 1px solid #AAAAAA; border-radius: 2px;}"
+                               "QLabel {color: #AAAAAA;}";
         fontSize = 30;
         blurRadius = 10.0;
         shadowColor = QColor(0, 0, 0, 200);
@@ -255,9 +255,9 @@ void AlfredWidget::paint()
     if (val.empty())
     {
         listWidget->hide();
-        this->setMaximumHeight(printsize * rowsize + theme->beginHeight() - 6); //custom theme begin height
-        this->setMinimumHeight(printsize * rowsize + theme->beginHeight() - 6);
-        this->setGeometry(this->x(), this->y(), val.size() * rowsize + theme->beginHeight(), this->width());
+        setMaximumHeight(printsize * rowsize + theme->beginHeight() - 6); //custom theme begin height
+        setMinimumHeight(printsize * rowsize + theme->beginHeight() - 6);
+        setGeometry(x(), y(), val.size() * rowsize + theme->beginHeight(), width());
         return;
     }
     listWidget->show();
@@ -266,16 +266,16 @@ void AlfredWidget::paint()
     std::sort(val.begin(), val.end(), [this](const returnByScript& lhs, const returnByScript& rhs){
         return plainTextEdit->fparse.getValue(lhs.text) < plainTextEdit->fparse.getValue(rhs.text);
     });
-    this->setMaximumHeight(printsize * rowsize + theme->beginHeight());
-    this->setMinimumHeight(printsize * rowsize + theme->beginHeight());
-    this->setGeometry(this->x(), this->y(), printsize * rowsize + theme->beginHeight(), this->width());
+    setMaximumHeight(printsize * rowsize + theme->beginHeight());
+    setMinimumHeight(printsize * rowsize + theme->beginHeight());
+    setGeometry(x(), y(), printsize * rowsize + theme->beginHeight(), width());
 
-    for (int i = 0; i != size; i++)
+    for (size_t i = 0; i < size; i++)
     {
         QWidget* l;
-        if (val[i].subtext == "") {
+        if (val[i].subtext.empty()) {
             if (i < MAXPRINTSIZE) {
-                if (val[i].qicon == NULL) {
+                if (val[i].qicon == nullptr) {
                     l = new ListItem(val[i].icon, val[i].text, std::string("Alt+") + std::to_string(i + 1));
                 }
                 else {
@@ -283,7 +283,7 @@ void AlfredWidget::paint()
                 }
             }
             else {
-                if (val[i].qicon == NULL) {
+                if (val[i].qicon == nullptr) {
                     l = new ListItem(val[i].icon, val[i].text, std::to_string(i + 1));
                 }
                 else {
@@ -294,7 +294,7 @@ void AlfredWidget::paint()
         else {
             if (i < MAXPRINTSIZE)
             {
-                if (val[i].qicon == NULL) {
+                if (val[i].qicon == nullptr) {
                     l = new DoubleListItem(val[i].icon, val[i].text, val[i].subtext, std::string("Alt+") + std::to_string(i + 1));
                 }
                 else {
@@ -302,7 +302,7 @@ void AlfredWidget::paint()
                 }
             }
             else {
-                if (val[i].qicon == NULL) {
+                if (val[i].qicon == nullptr) {
                     l = new ListItem(val[i].icon, val[i].text, std::to_string(i + 1));
                 }
                 else {
