@@ -64,6 +64,11 @@ void DerflaApp::checkForUpdates()
         autoUpdater_->checkForUpdates();
 }
 
+QSettings &DerflaApp::settings()
+{
+    return settings_;
+}
+
 void DerflaApp::CenterToScreen(QWidget *widget)
 {
     if (!widget)

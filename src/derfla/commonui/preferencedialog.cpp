@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "derflaapp.h"
 #include "extensionmodel.h"
 #include "booleaneditor.h"
 #include "preferencedialog.h"
@@ -11,7 +12,7 @@ PreferenceDialog::PreferenceDialog(const QList<ExtensionPtr>& extensions, QWidge
     ui->setupUi(this);
     connect(ui->listWidget, &QListWidget::currentRowChanged, ui->stackedWidget, &QStackedWidget::setCurrentIndex);
 
-    QSettings settings;
+    QSettings &settings = derflaApp->settings();
     // general settings page
     QVBoxLayout* gl = new QVBoxLayout(ui->generalPage);
     cbStayOnTop_ = new QCheckBox(tr("Stay On Top"), ui->generalPage);
@@ -112,7 +113,7 @@ PreferenceDialog::~PreferenceDialog()
 
 void PreferenceDialog::on_buttonBox_accepted()
 {
-    QSettings settings;
+    QSettings &settings = derflaApp->settings();
 
     settings.setValue("stayOnTop", cbStayOnTop_->isChecked());
     settings.setValue("interval", sliderInterval_->value());
@@ -137,7 +138,7 @@ void PreferenceDialog::on_buttonBox_accepted()
 
 void PreferenceDialog::onKeySequenceChanged(const QKeySequence &keySequence)
 {
-    QSettings settings;
+    QSettings &settings = derflaApp->settings();
     if (keySequence == QKeySequence(settings.value("hotkey", "Alt+Space").toString()))
         return;
 }

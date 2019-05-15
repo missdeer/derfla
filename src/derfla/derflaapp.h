@@ -28,6 +28,8 @@ public:
     
     void autoUpdate();
     void checkForUpdates();
+    
+    QSettings &settings();
 signals:
     
 public slots:
