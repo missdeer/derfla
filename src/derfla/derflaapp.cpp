@@ -54,8 +54,7 @@ void DerflaApp::showAlfredWidget()
 void DerflaApp::autoUpdate()
 {
     autoUpdater_ = AutoUpdater::createAutoUpdate();
-    QSettings settings;
-    if (settings.value("autoupdate", true).toBool())
+    if (settings_.value("autoupdate", true).toBool())
         autoUpdater_->checkForUpdates();
 }
 

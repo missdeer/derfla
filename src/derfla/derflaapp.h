@@ -2,6 +2,7 @@
 #define DERFLAAPP_H
 
 #include <QObject>
+#include <QSettings>
 
 QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 
@@ -37,7 +38,7 @@ private:
     DerflaWidget* derflaWidget_ = nullptr;
     AlfredWidget* alfredWidget_ = nullptr;
     AutoUpdater* autoUpdater_ = nullptr;
-        
+    QSettings settings_;    
     void CenterToScreen(QWidget* widget);    
 };
 

@@ -38,12 +38,10 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 
     setWindowIcon(QIcon(":/derfla.png"));
 
-    QSettings settings;
+    candidateDelayInterval_ = derflaApp->settings_.value("interval", 0).toInt();
+    stayOnTop_ = derflaApp->settings_.value("stayOnTop", false).toBool();
 
-    candidateDelayInterval_ = settings.value("interval", 0).toInt();
-    stayOnTop_ = settings.value("stayOnTop", false).toBool();
-
-    QString skinPath = settings.value("skin", ":/skins/derfla.derflaskin").toString();
+    QString skinPath = derflaApp->settings_.value("skin", ":/skins/derfla.derflaskin").toString();
     if (!applySkin(skinPath))
     {
         qWarning() << "loading skin failed:" << skinPath;
@@ -155,7 +153,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     connect(candidateDelayTimer_, &QTimer::timeout, this, &DerflaWidget::onCandidateDelayTimer);
     candidateDelayTimer_->setSingleShot(true);
     
-    QString keySequence = settings.value("hotkey", "Alt+Space").toString();
+    QString keySequence = derflaApp->settings_.value("hotkey", "Alt+Space").toString();
 #if defined(Q_OS_WIN)
     hotkeyManager_->setKey(QKeySequence(keySequence));
     connect(hotkeyManager_, &QGlobalShortcut::activated, this,  &DerflaWidget::onShowInFront);
@@ -373,9 +371,8 @@ void DerflaWidget::onLoadSkin()
         return;
     if (applySkin(fileName))
     {
-        QSettings settings;
-        settings.setValue("skin", fileName);
-        settings.sync();
+        derflaApp->settings_.setValue("skin", fileName);
+        derflaApp->settings_.sync();
     }
 }
 
@@ -406,9 +403,8 @@ void DerflaWidget::onStayOnTop()
         setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
     onShowInFront();
 
-    QSettings settings;
-    settings.setValue("stayOnTop", stayOnTop_);
-    settings.sync();
+    derflaApp->settings_.setValue("stayOnTop", stayOnTop_);
+    derflaApp->settings_.sync();
 }
 
 void DerflaWidget::onShowInFront()
@@ -485,13 +481,11 @@ void DerflaWidget::onPreference()
     hotkeyManager_->unregisterHotkey();
 #endif
     PreferenceDialog dlg(derflaApp->extensionManager_->extensions(), this);
-    QSettings settings;
     if (dlg.exec() == QDialog::Accepted)
     {
+        candidateDelayInterval_ = derflaApp->settings_.value("interval", 0).toInt();
 
-        candidateDelayInterval_ = settings.value("interval", 0).toInt();
-
-        QString skinPath = settings.value("skin", ":/skins/derfla.derflaskin").toString();
+        QString skinPath = derflaApp->settings_.value("skin", ":/skins/derfla.derflaskin").toString();
         if (!applySkin(skinPath))
         {
             qWarning() << "loading skin failed:" << skinPath;
@@ -502,7 +496,7 @@ void DerflaWidget::onPreference()
             }
         }
 
-        stayOnTop_ = settings.value("stayOnTop", false).toBool();
+        stayOnTop_ = derflaApp->settings_.value("stayOnTop", false).toBool();
         stayOnTopAction_->setChecked(stayOnTop_);
         if (stayOnTop_)
             setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
@@ -511,7 +505,7 @@ void DerflaWidget::onPreference()
 
         onShowInFront();
 
-        if (settings.value("autostart", false).toBool())
+        if (derflaApp->settings_.value("autostart", false).toBool())
         {
 #if defined(Q_OS_WIN)
             QString key = "Derfla";
@@ -569,7 +563,7 @@ void DerflaWidget::onPreference()
         }
 
     }
-    QString keySequence = settings.value("hotkey", "Alt+Space").toString();
+    QString keySequence = derflaApp->settings_.value("hotkey", "Alt+Space").toString();
 #if defined(Q_OS_WIN)
     hotkeyManager_->setKey(QKeySequence(keySequence));
 #else

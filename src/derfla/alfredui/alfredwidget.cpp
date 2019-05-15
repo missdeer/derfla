@@ -193,9 +193,9 @@ void AlfredWidget::setUpTheme()
 
 void AlfredWidget::defaultsearch()
 {
-    WidgetThread *w = new WidgetThread(this);
-    w->start();
-    connect(w, SIGNAL(shouldPaint()), this, SLOT(paint()), Qt::QueuedConnection);
+//    WidgetThread *w = new WidgetThread(this);
+//    w->start();
+//    connect(w, SIGNAL(shouldPaint()), this, SLOT(paint()), Qt::QueuedConnection);
 }
 
 void AlfredWidget::paint()
