@@ -40,6 +40,5 @@ PATH + "/.local/share/icons",\
 #define MAXSORTSIZE 50
 #define MAXPRINTSIZE 9
 
-std::string getHomPath();
 void CenterToScreen(QWidget* widget);
 #endif // CONFIG_H
