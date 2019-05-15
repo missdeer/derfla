@@ -8,16 +8,30 @@
 
 DerflaApp::DerflaApp(QObject *parent) 
     : QObject(parent)
-    , extensionManager_(new ExtensionManager(this))
-    , trayIcon_(new QSystemTrayIcon(this))
+    , extensionManager_(new ExtensionManager)
+    , trayIcon_(new QSystemTrayIcon)
 {
     extensionManager_->loadAllFromLocal();
     extensionManager_->loadAllFromCache();
 }
 
+DerflaApp::~DerflaApp()
+{
+    if (trayIcon_)
+        delete trayIcon_;
+    if (extensionManager_)
+        delete extensionManager_;
+    if (derflaWidget_)
+        delete derflaWidget_;
+    if (alfredWidget_)
+        delete alfredWidget_;
+    if (autoUpdater_)
+        delete autoUpdater_;
+}
+
 void DerflaApp::createDerflaWidget()
 {
-    derflaWidget_ = new DerflaWidget(extensionManager_);
+    derflaWidget_ = new DerflaWidget;
 }
 
 void DerflaApp::showDerflaWidget()

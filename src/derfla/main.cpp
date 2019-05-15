@@ -114,7 +114,8 @@ int main(int argc, char *argv[])
         }
     }
     
-    derflaApp = new DerflaApp;
+    DerflaApp app;
+    derflaApp = &app;
     derflaApp->createDerflaWidget();
     derflaApp->showDerflaWidget();
     derflaApp->autoUpdate();
