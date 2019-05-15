@@ -12,7 +12,7 @@ namespace util {
 
         if ((newOffset = SetFilePointer(hFile,
             offset,
-            NULL,
+            nullptr,
             FILE_BEGIN)) == 0xFFFFFFFF)
         {
             qCritical() << "SetFilePointer failed, error " << GetLastError();
@@ -29,7 +29,7 @@ namespace util {
             buffer,
             size,
             &bytes,
-            NULL))
+            nullptr))
         {
             qCritical() << "ReadFile failed, error" << GetLastError();
         }
@@ -44,7 +44,7 @@ namespace util {
         DWORD  verHandle = NULL;
         DWORD  verSize = GetFileVersionInfoSize(f.toStdWString().c_str(), &verHandle);
 
-        ScopedGuard ch([verHandle](){CloseHandle((HANDLE)verHandle);});
+        ScopedGuard ch([verHandle](){CloseHandle(reinterpret_cast<HANDLE>(verHandle));});
 
         if (!verSize)
         {
