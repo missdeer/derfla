@@ -17,6 +17,7 @@ HEADERS += \
     $$PWD/stdafx.h \
     $$PWD/directory.h \
     $$PWD/util.h \
+    $$PWD/derflaaction.h \
     $$PWD/scopedguard.h
 
 win32: {
