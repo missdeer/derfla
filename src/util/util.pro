@@ -41,16 +41,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    directory.cpp \
-    util.cpp \
-    scopedguard.cpp
+    $$PWD/directory.cpp \
+    $$PWD/util.cpp \
+    $$PWD/derflaaction.cpp \
+    $$PWD/scopedguard.cpp
 
 HEADERS += \
-    util_global.h \
-    stdafx.h \
-    directory.h \
-    util.h \
-    scopedguard.h 
+    $$PWD/util_global.h \
+    $$PWD/stdafx.h \
+    $$PWD/directory.h \
+    $$PWD/util.h \
+    $$PWD/derflaaction.h \
+    $$PWD/scopedguard.h 
 
 INCLUDEPATH += $$PWD
 
@@ -107,6 +109,6 @@ unix: !macx: {
 }
 
 macx: {
-    OBJECTIVE_SOURCES += mac_util.mm
+    OBJECTIVE_SOURCES += $$PWD/mac_util.mm
     LIBS += -framework AppKit
 }

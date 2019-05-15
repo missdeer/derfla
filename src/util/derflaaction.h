@@ -3,8 +3,9 @@
 
 #include <QUuid>
 #include <QIcon>
+#include "util_global.h"
 
-class DerflaAction
+class UTILSHARED_EXPORT DerflaAction
 {
 public:
     DerflaAction();

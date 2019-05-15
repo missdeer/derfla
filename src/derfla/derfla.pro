@@ -46,7 +46,6 @@ SOURCES += $$PWD/main.cpp\
     $$PWD/commonui/preferencedialog.cpp \
     $$PWD/commonui/booleaneditor.cpp \
     $$PWD/derflaapp.cpp \
-    $$PWD/derflaaction.cpp \
     $$PWD/actionexecutor.cpp 
 
 HEADERS  += $$PWD/stdafx.h \
@@ -76,7 +75,6 @@ HEADERS  += $$PWD/stdafx.h \
     $$PWD/commonui/preferencedialog.h \
     $$PWD/commonui/booleaneditor.h \
     $$PWD/derflaapp.h \
-    $$PWD/derflaaction.h \
     $$PWD/actionexecutor.h 
 
 FORMS    += \
