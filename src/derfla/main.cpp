@@ -116,8 +116,8 @@ int main(int argc, char *argv[])
     
     DerflaApp app;
     derflaApp = &app;
-    derflaApp->createDerflaWidget();
-    derflaApp->showDerflaWidget();
+    derflaApp->createWidget();
+    derflaApp->show();
     derflaApp->autoUpdate();
     
     return a.exec();

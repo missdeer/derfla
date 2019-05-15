@@ -21,6 +21,9 @@ public:
     explicit DerflaApp(QObject *parent = nullptr);
     ~DerflaApp() override;
     
+    void createWidget();
+    void show();
+    
     void createDerflaWidget();
     void showDerflaWidget();
     void createAlfredWidget();

@@ -29,9 +29,34 @@ DerflaApp::~DerflaApp()
         delete autoUpdater_;
 }
 
+void DerflaApp::createWidget()
+{
+    if (settings_.value("alfredStyleUI").toBool())
+    {
+        createAlfredWidget();
+    }
+    else 
+    {
+        createDerflaWidget();
+    }
+}
+
+void DerflaApp::show()
+{
+    if (settings_.value("alfredStyleUI").toBool())
+    {
+        showAlfredWidget();
+    }
+    else 
+    {
+        showDerflaWidget();
+    }
+}
+
 void DerflaApp::createDerflaWidget()
 {
-    derflaWidget_ = new DerflaWidget;
+    if (!derflaWidget_)
+        derflaWidget_ = new DerflaWidget;
 }
 
 void DerflaApp::showDerflaWidget()
@@ -42,7 +67,8 @@ void DerflaApp::showDerflaWidget()
 
 void DerflaApp::createAlfredWidget()
 {
-    alfredWidget_ = new AlfredWidget();
+    if (!alfredWidget_)
+        alfredWidget_ = new AlfredWidget();
 }
 
 void DerflaApp::showAlfredWidget()
@@ -53,15 +79,17 @@ void DerflaApp::showAlfredWidget()
 
 void DerflaApp::autoUpdate()
 {
-    autoUpdater_ = AutoUpdater::createAutoUpdate();
     if (settings_.value("autoupdate", true).toBool())
+    {
+        if (!autoUpdater_)
+            autoUpdater_ = AutoUpdater::createAutoUpdate();
         autoUpdater_->checkForUpdates();
+    }
 }
 
 void DerflaApp::checkForUpdates()
 {
-    if (autoUpdater_)
-        autoUpdater_->checkForUpdates();
+    autoUpdate();
 }
 
 QSettings &DerflaApp::settings()
@@ -75,9 +103,5 @@ void DerflaApp::CenterToScreen(QWidget *widget)
         return;
     QScreen* scr = qApp->primaryScreen();
     QSize sz = scr->availableSize();
-    int desk_x = sz.width();
-    int desk_y = sz.height();
-    int x = widget->width();
-    widget->move(desk_x / 2 - x / 2, 
-                 (desk_y - beginheight - rowsize * (MAXPRINTSIZE - 1)) * widget->height());
+    widget->move((sz.width() - widget->width())/2, (sz.height()-widget->height())/2);
 }
