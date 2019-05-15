@@ -37,6 +37,8 @@ private:
     DerflaWidget* derflaWidget_ = nullptr;
     AlfredWidget* alfredWidget_ = nullptr;
     AutoUpdater* autoUpdater_ = nullptr;
+        
+    void CenterToScreen(QWidget* widget);    
 };
 
 inline DerflaApp *derflaApp = nullptr;

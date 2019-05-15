@@ -21,7 +21,7 @@
 #include "alfredlistwidget.h"
 #include "listitem.h"
 #include "doublelistitem.h"
-#include "config_parse.h"
+#include "derflaapp.h"
 #include "alfredtheme.h"
 
 #if defined(Q_OS_MAC)
@@ -109,55 +109,6 @@ void AlfredWidget::setOne()
 void AlfredWidget::enterCurItem()
 {
     plainTextEdit->enterCurrentRow();
-}
-
-void AlfredWidget::hotkeyPressed()
-{
-    if (isVisible())
-    {
-        plainTextEdit->setPlainText("");
-        hide();
-    }
-    else {
-        val.clear();
-        paint();
-        plainTextEdit->setPlainText("");
-        CenterToScreen(this);
-        show();
-    }
-}
-
-void AlfredWidget::OtherhotkeyPressed(std::string s, bool argument)
-{
-    if (isVisible())
-    {
-        plainTextEdit->setPlainText("");
-        hide();
-    }
-    else {
-        if (argument) {
-            val.clear();
-            defaultsearch();
-            paint();
-            QClipboard* clipboard = QGuiApplication::clipboard();
-            auto searchText = clipboard->text(QClipboard::Selection);
-            QTextCursor t(plainTextEdit->document());
-            plainTextEdit->setPlainText(QString::fromStdString(s + ' ') + searchText);
-            t.setPosition(s.size() + 1 + searchText.size());
-            plainTextEdit->setTextCursor(t);
-            CenterToScreen(this);
-            show();
-            defaultsearch();
-        }
-        else {
-            try {
-                std::shared_ptr<ConfigParse> C(new ConfigParse(CONFPATH));
-                QProcess *newProcess = new QProcess();
-                newProcess->start(QString::fromStdString(C->getValue(s, "ScriptAddress")));
-            }
-            catch(...){}
-        }
-    }
 }
 
 /**
@@ -317,7 +268,7 @@ void AlfredWidget::paint()
     }
     listWidget->setCurrentRow(0);
     listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowsize * printsize);
-    CenterToScreen(this);
+    derflaApp->CenterToScreen(this);
 }
 #undef signals
 

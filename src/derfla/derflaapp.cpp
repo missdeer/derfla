@@ -37,10 +37,7 @@ void DerflaApp::createDerflaWidget()
 void DerflaApp::showDerflaWidget()
 {
     derflaWidget_->show();
-    
-    QScreen* scr = qApp->primaryScreen();
-    QSize sz = scr->availableSize();
-    derflaWidget_->move((sz.width() - derflaWidget_->width())/2, (sz.height()-derflaWidget_->height())/2);
+    CenterToScreen(derflaWidget_);
 }
 
 void DerflaApp::createAlfredWidget()
@@ -51,6 +48,7 @@ void DerflaApp::createAlfredWidget()
 void DerflaApp::showAlfredWidget()
 {
     alfredWidget_->show();
+    CenterToScreen(alfredWidget_);
 }
 
 void DerflaApp::autoUpdate()
@@ -65,4 +63,17 @@ void DerflaApp::checkForUpdates()
 {
     if (autoUpdater_)
         autoUpdater_->checkForUpdates();
+}
+
+void DerflaApp::CenterToScreen(QWidget *widget)
+{
+    if (!widget)
+        return;
+    QScreen* scr = qApp->primaryScreen();
+    QSize sz = scr->availableSize();
+    int desk_x = sz.width();
+    int desk_y = sz.height();
+    int x = widget->width();
+    widget->move(desk_x / 2 - x / 2, 
+                 (desk_y - beginheight - rowsize * (MAXPRINTSIZE - 1)) * widget->height());
 }

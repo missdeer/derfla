@@ -12,7 +12,7 @@
 #define beginheight 125 //125 -> 94
 #define iconsize 42
 #define listwidgety 91 //91 -> 65
-#define PATH getHomPath()
+#define PATH ""
 
 #define ICON ":/icons/icons/search.png"
 #define INTERNETICON ":/icons/icons/workflow_openurl.png"
@@ -40,5 +40,4 @@ PATH + "/.local/share/icons",\
 #define MAXSORTSIZE 50
 #define MAXPRINTSIZE 9
 
-void CenterToScreen(QWidget* widget);
 #endif // CONFIG_H

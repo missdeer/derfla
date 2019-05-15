@@ -26,16 +26,13 @@ class AlfredWidget : public QWidget
     friend class WidgetThread;
 public slots:
     void paint();
-    void OtherhotkeyPressed(std::string, bool);
 public:
     explicit AlfredWidget(QWidget *parent = nullptr);
     void defaultsearch();
     void searchApp();
     std::vector<returnByScript> val;
-    void hotkeyPressed();
     void setOne();
     void enterCurItem();
-    float Height;
     ~AlfredWidget() override;
 
 private:
