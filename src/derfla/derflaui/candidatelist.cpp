@@ -209,8 +209,8 @@ void CandidateList::onEnter()
     if (derflaApp->isEmptyDerflaAction())
         return;
     int index = ui->list->currentRow();
-    //qDebug() << "CandidateList::onEnter:" << index << derflaApp->derflaActionCount() << itemCount_;
-    if (index < 0 || index >= derflaApp->derflaActionCount())
+    //qDebug() << __FUNCTION__ << index << derflaApp->derflaActionCount() << derflaApp->donateDerflaActions().length();//<< itemCount_;
+    if (index < 0 || index >= derflaApp->derflaActionCount() + derflaApp->donateDerflaActions().length())
     {
         close();
         return;

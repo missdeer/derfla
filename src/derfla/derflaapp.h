@@ -40,7 +40,7 @@ public:
     QSettings &settings();
     
     bool isEmptyDerflaAction() const { return dal_.isEmpty(); }
-    DerflaActionPtr derflaAction(int index) { return dal_.at(index);}
+    DerflaActionPtr derflaAction(int index);
     int derflaActionCount() const { return dal_.length(); }
     void clearDerflaAction() { dal_.clear(); }
     DerflaActionList& derflaActions() { return dal_; }

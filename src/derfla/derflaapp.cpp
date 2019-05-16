@@ -18,6 +18,7 @@ DerflaApp::DerflaApp(QObject *parent)
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaApp::onTrayIconActivated);
     
     createCommonActions();
+    createDonateDerflaActions();
 }
 
 DerflaApp::~DerflaApp()
@@ -101,6 +102,15 @@ void DerflaApp::queryByExtension(const QString &text)
 QSettings &DerflaApp::settings()
 {
     return settings_;
+}
+
+DerflaActionPtr DerflaApp::derflaAction(int index) 
+{ 
+    if (index >= 0 && index < dal_.length())
+        return dal_.at(index);
+    else if (index < dal_.length() + dalDonate_.length())
+        return dalDonate_.at(index - dal_.length());
+    return DerflaActionPtr();
 }
 
 void DerflaApp::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -250,7 +260,7 @@ void DerflaApp::centerToScreen(QWidget *widget)
         return;
     QScreen* scr = qApp->primaryScreen();
     QSize sz = scr->availableSize();
-    widget->move((sz.width() - widget->width())/2, (sz.height()-widget->height())/2);
+    widget->move((sz.width() - widget->width())/2, (sz.height()-widget->height())/4);
 }
 
 void DerflaApp::createCommonActions()
