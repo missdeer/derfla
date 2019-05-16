@@ -7,14 +7,13 @@
 #include <QPixmap>
 #include <QTimer>
 #include <QSystemTrayIcon>
+#include "commonwidget.h"
 
 class CharLineEdit;
 class CandidateList;
-class UGlobalHotkeys;
-class QGlobalShortcut;
 class SkinManager;
 
-class DerflaWidget : public QWidget
+class DerflaWidget : public CommonWidget
 {
     Q_OBJECT
 
@@ -34,22 +33,16 @@ signals:
 
 private slots:
     void onInputChanged(const QString& text);
-    void onKeyPressed(QKeyEvent* e);
-    void onFocusOut(QFocusEvent *);
-    void onFocusIn(QFocusEvent *);
-    void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
-    void onLoadSkin();
-	void onInstallExtension();
-    void onStayOnTop();
-    void onShowInFront();
+    void onInputFocusOut(QFocusEvent *);
+    void onInputFocusIn(QFocusEvent *);
+    void onCandidateListKeyPressed(QKeyEvent* e);
+    void onLoadSkin() override;
+    void onStayOnTop() override;
+    void onSelectFile() override;
+    void onSelectFolder() override;
+    void onPreference() override;
     void onCandidateListDone();
-    void onQuit();
     void onCandidateDelayTimer();
-    void onSelectFile();
-    void onSelectFolder();
-    void onAbout();
-    void onPreference();
-    void onCheckUpdates();
     void onCustomContextMenuRequested(const QPoint &pos);
 private:
     const int widgetMinWidth_ = 450;
@@ -58,15 +51,8 @@ private:
     QTimer* candidateDelayTimer_;
     CharLineEdit* input_;
     CandidateList* candidateList_;
-#if defined (Q_OS_WIN)
-    QGlobalShortcut *hotkeyManager_;
-#else
-    UGlobalHotkeys *hotkeyManager_;
-#endif
     SkinManager* skinManager_;
-    QAction *stayOnTopAction_;
     int candidateDelayInterval_;
-    bool stayOnTop_;
 
     void processKey();
     void doEnter();

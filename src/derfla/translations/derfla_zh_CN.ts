@@ -7,25 +7,13 @@
         <source>Frame</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Donate to support me</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Donate via Paypal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Donate via Alipay</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Donate via WeChat pay</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
-    <name>DerflaWidget</name>
+    <name>DerflaApp</name>
+    <message>
+        <source>Derfla</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Select File</source>
         <translation type="unfinished"></translation>
@@ -103,14 +91,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Load Derfla Skin</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Derfla Skin Package (*.derflaskin);;Derfla Skin Configuration (*.xml);;Baidu Input Method Skin File (*.bps);;Sogou Input Method for Windows Skin File (*.ssf);;Sogou Input Method for macOS Skin File (*.mssf);;All Supported Files (*.derflaskin *.xml *.bps *.ssf *.mssf);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Install Derfla Extension</source>
         <translation type="unfinished"></translation>
     </message>
@@ -123,13 +103,36 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Derfla</source>
+        <source>Donate to support me</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donate via Paypal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donate via Alipay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donate via WeChat pay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Derfla is a cross platform productivity application, which boosts your efficiency with hotkeys, keywords, text expansion and more. Search your Windows and the web, and be more productive with custom actions to control your system.
 
 Contact me at https://minidump.info/derfla/ if you have any problem about this tool. Built at </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DerflaWidget</name>
+    <message>
+        <source>Load Derfla Skin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Derfla Skin Package (*.derflaskin);;Derfla Skin Configuration (*.xml);;Baidu Input Method Skin File (*.bps);;Sogou Input Method for Windows Skin File (*.ssf);;Sogou Input Method for macOS Skin File (*.mssf);;All Supported Files (*.derflaskin *.xml *.bps *.ssf *.mssf);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

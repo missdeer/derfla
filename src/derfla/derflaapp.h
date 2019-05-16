@@ -3,13 +3,16 @@
 
 #include <QObject>
 #include <QSettings>
+#include <QSystemTrayIcon>
+#include "actionexecutor.h"
 
-QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
+QT_FORWARD_DECLARE_CLASS(QAction)
 
 class ExtensionManager;
 class DerflaWidget;
 class AlfredWidget;
 class AutoUpdater;
+class CommonWidget;
 
 class DerflaApp : public QObject
 {
@@ -31,20 +34,53 @@ public:
     
     void autoUpdate();
     void checkForUpdates();
-    
+    void executeAction(DerflaActionPtr da) { actionExecutor_(da);}
+    ExtensionManager *extensionManager() { return extensionManager_; }
+    void queryByExtension(const QString& text);
     QSettings &settings();
+    
+    bool isEmptyDerflaAction() const { return dal_.isEmpty(); }
+    DerflaActionPtr derflaAction(int index) { return dal_.at(index);}
+    int derflaActionCount() const { return dal_.length(); }
+    void clearDerflaAction() { dal_.clear(); }
+    DerflaActionList& derflaActions() { return dal_; }
+    DerflaActionList& donateDerflaActions() { return dalDonate_; }
 signals:
-    
+    void actionUpdated();
+    void emptyAction();
 public slots:
-    
+    void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
+    void onLoadSkin();
+	void onInstallExtension();
+    void onStayOnTop();
+    void onShowInFront();
+    void onQuit();
+    void onSelectFile();
+    void onSelectFolder();
+    void onAbout();
+    void onPreference();
+    void onCheckUpdates();
+    void donateViaPaypal();
+    void donateViaAlipay();
+    void donateViaWeChatPay();
+private slots:
+    void onActionUpdated(DerflaActionList& dal);
+    void onEmptyAction();
 private:
     ExtensionManager *extensionManager_;
     QSystemTrayIcon* trayIcon_;
+    CommonWidget* widget_ = nullptr;
     DerflaWidget* derflaWidget_ = nullptr;
     AlfredWidget* alfredWidget_ = nullptr;
     AutoUpdater* autoUpdater_ = nullptr;
+    QAction *stayOnTopAction_ = nullptr;
     QSettings settings_;    
-    void CenterToScreen(QWidget* widget);    
+    ActionExecutor actionExecutor_;
+    DerflaActionList dal_;
+    DerflaActionList dalDonate_;
+    void centerToScreen(QWidget* widget);    
+    void createCommonActions();
+    void createDonateDerflaActions();
 };
 
 inline DerflaApp *derflaApp = nullptr;

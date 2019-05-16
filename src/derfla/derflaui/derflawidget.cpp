@@ -2,11 +2,6 @@
 #include <private/qzipreader_p.h>
 #include "derflaapp.h"
 #include "skinmanager.h"
-#if defined(Q_OS_WIN)
-#include "qglobalshortcut.h"
-#else
-#include "uglobalhotkeys.h"
-#endif
 #include "charlineedit.h"
 #include "extensionmanager.h"
 #include "candidatelist.h"
@@ -14,16 +9,11 @@
 #include "derflawidget.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent)
-    : QWidget(parent)
+    : CommonWidget(parent)
     , mouseMovePos_(0, 0)
     , candidateDelayTimer_(new QTimer(this))
     , input_(new CharLineEdit(this))
-    , candidateList_(new CandidateList(derflaApp->extensionManager_, this))
-    #if defined(Q_OS_WIN)
-    , hotkeyManager_(new QGlobalShortcut(this))
-    #else
-    , hotkeyManager_(new UGlobalHotkeys(this))
-    #endif
+    , candidateList_(new CandidateList(this))
     , skinManager_(new SkinManager)
 {
 #if defined(Q_OS_WIN)
@@ -39,7 +29,6 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     setWindowIcon(QIcon(":/derfla.png"));
 
     candidateDelayInterval_ = derflaApp->settings_.value("interval", 0).toInt();
-    stayOnTop_ = derflaApp->settings_.value("stayOnTop", false).toBool();
 
     QString skinPath = derflaApp->settings_.value("skin", ":/skins/derfla.derflaskin").toString();
     if (!applySkin(skinPath))
@@ -56,7 +45,7 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 #endif
 
     connect(candidateList_, &CandidateList::done, this, &DerflaWidget::onCandidateListDone);
-    connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::onKeyPressed);
+    connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::onCandidateListKeyPressed);
 //    QAction *logoAction = new QAction(tr("Input"), this);
 //    logoAction->setIcon(QIcon(":/derfla.ico"));
 //    input_->addAction(logoAction, QLineEdit::ActionPosition::TrailingPosition);
@@ -64,103 +53,13 @@ DerflaWidget::DerflaWidget(QWidget *parent)
     input_->setClearButtonEnabled(false);
     connect(input_, &CharLineEdit::keyPressed, this, &DerflaWidget::keyPressEvent);
     connect(input_, &QLineEdit::textChanged, this, &DerflaWidget::onInputChanged);
-    connect(input_, &CharLineEdit::focusOut, this, &DerflaWidget::onFocusOut);
-    connect(input_, &CharLineEdit::focusIn, this, &DerflaWidget::onFocusIn);
-
-    QAction *selectFileAction = new QAction(tr("Select File"), this);
-    selectFileAction->setShortcut(tr("Ctrl+O"));
-    connect(selectFileAction, &QAction::triggered, this, &DerflaWidget::onSelectFile);
-
-    QAction *selectFolderAction = new QAction(tr("Select Folder"), this);
-    selectFolderAction->setShortcut(tr("Ctrl+D"));
-    connect(selectFolderAction, &QAction::triggered, this, &DerflaWidget::onSelectFolder);
-
-    QAction *loadSkinAction = new QAction(tr("Load &Skin"), this);
-    connect(loadSkinAction, &QAction::triggered, this, &DerflaWidget::onLoadSkin);
-
-    QAction *installExtensionAction = new QAction(tr("&Install Extension"), this);
-    connect(installExtensionAction, &QAction::triggered, this, &DerflaWidget::onInstallExtension);
-
-    stayOnTopAction_ = new QAction(tr("Stay On Top"), this);
-    stayOnTopAction_->setCheckable(true);
-    if (stayOnTop_)
-    {
-        stayOnTopAction_->setChecked(true);
-        setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
-    }
-    connect(stayOnTopAction_, &QAction::triggered, this, &DerflaWidget::onStayOnTop);
-
-    QAction *checkUpdatesAction = new  QAction(tr("Check Updates..."), this);
-    connect(checkUpdatesAction, &QAction::triggered, this, &DerflaWidget::onCheckUpdates);
-
-    QAction *quitAction = new QAction(tr("E&xit"), this);
-    quitAction->setShortcut(tr("Ctrl+Q"));
-    connect(quitAction, &QAction::triggered, this, &DerflaWidget::onQuit);
-
-    setContextMenuPolicy(Qt::CustomContextMenu);
-
-    QAction *showAction = new QAction(tr("Show"), this);
-    connect(showAction, &QAction::triggered, this, &DerflaWidget::onShowInFront);
-
-    QAction *aboutAction = new QAction(tr("About"), this);
-    connect(aboutAction, &QAction::triggered, this, &DerflaWidget::onAbout);
-
-    QAction *homepageAction = new QAction(tr("Homepage"), this);
-    connect(homepageAction, &QAction::triggered, [](){
-        QDesktopServices::openUrl(QUrl("https://minidump.info/derfla/"));
-    });
-
-    QAction *preferenceAction = new QAction(tr("Preference..."), this);
-    connect(preferenceAction, &QAction::triggered, this, &DerflaWidget::onPreference);
-
-    QMenu* donateMenu = new QMenu(tr("Donate"), this);
-    QAction *donateViaPaypalAction = new QAction(QIcon(":rc/paypal.png"), tr("Via Paypal..."), this);
-    connect(donateViaPaypalAction, &QAction::triggered, candidateList_, &CandidateList::donateViaPaypal);
-    donateMenu->addAction(donateViaPaypalAction);
-
-    QAction *donateViaAlipayAction = new QAction(QIcon(":rc/alipay.png"), tr("Via Alipay..."), this);
-    connect(donateViaAlipayAction, &QAction::triggered, candidateList_, &CandidateList::donateViaAlipay);
-    donateMenu->addAction(donateViaAlipayAction);
-
-    QAction *donateViaWeChatAction = new QAction(QIcon(":rc/wechat.png"), tr("Via WeChat Pay..."), this);
-    connect(donateViaWeChatAction, &QAction::triggered, candidateList_, &CandidateList::donateViaWeChatPay);
-    donateMenu->addAction(donateViaWeChatAction);
-
-    QMenu* trayiconMenu = new QMenu(this);
-    trayiconMenu->addAction(showAction);
-    trayiconMenu->addAction(aboutAction);
-    trayiconMenu->addAction(homepageAction);
-    trayiconMenu->addSeparator();
-    trayiconMenu->addAction(selectFileAction);
-    trayiconMenu->addAction(selectFolderAction);
-    trayiconMenu->addSeparator();
-    trayiconMenu->addAction(loadSkinAction);
-    trayiconMenu->addAction(installExtensionAction);
-    trayiconMenu->addAction(stayOnTopAction_);
-    trayiconMenu->addAction(checkUpdatesAction);
-    trayiconMenu->addAction(preferenceAction);
-    trayiconMenu->addMenu(donateMenu);
-    trayiconMenu->addSeparator();
-    trayiconMenu->addAction(quitAction);
+    connect(input_, &CharLineEdit::focusOut, this, &DerflaWidget::onInputFocusOut);
+    connect(input_, &CharLineEdit::focusIn, this, &DerflaWidget::onInputFocusIn);
     
-    connect(derflaApp->trayIcon_, &QSystemTrayIcon::activated, this, &DerflaWidget::onTrayIconActivated);
-    derflaApp->trayIcon_->setContextMenu(trayiconMenu);
-    derflaApp->trayIcon_->setIcon(QIcon(":/derfla.ico"));
-    derflaApp->trayIcon_->setToolTip(tr("Derfla - Accelerate your keyboard!"));
-    derflaApp->trayIcon_->show();
-
+    setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &QWidget::customContextMenuRequested, this, &DerflaWidget::onCustomContextMenuRequested);
     connect(candidateDelayTimer_, &QTimer::timeout, this, &DerflaWidget::onCandidateDelayTimer);
     candidateDelayTimer_->setSingleShot(true);
-    
-    QString keySequence = derflaApp->settings_.value("hotkey", "Alt+Space").toString();
-#if defined(Q_OS_WIN)
-    hotkeyManager_->setKey(QKeySequence(keySequence));
-    connect(hotkeyManager_, &QGlobalShortcut::activated, this,  &DerflaWidget::onShowInFront);
-#else
-    hotkeyManager_->registerHotkey(keySequence);
-    connect(hotkeyManager_, &UGlobalHotkeys::activated, this,  &DerflaWidget::onShowInFront);
-#endif
 }
 
 DerflaWidget::~DerflaWidget()
@@ -295,7 +194,7 @@ void DerflaWidget::focusOutEvent(QFocusEvent *)
 
 void DerflaWidget::focusInEvent(QFocusEvent *e)
 {
-    onFocusIn(e);
+    onInputFocusIn(e);
 }
 
 void DerflaWidget::onInputChanged(const QString &text)
@@ -313,7 +212,7 @@ void DerflaWidget::onInputChanged(const QString &text)
     }
 }
 
-void DerflaWidget::onKeyPressed(QKeyEvent *e)
+void DerflaWidget::onCandidateListKeyPressed(QKeyEvent *e)
 {
     //qDebug() << "DerflaWidget::keyPressed" << e;
 //    if ( e->key() != Qt::Key_Escape)
@@ -323,34 +222,19 @@ void DerflaWidget::onKeyPressed(QKeyEvent *e)
     qApp->sendEvent(this, e);
 }
 
-void DerflaWidget::onFocusOut(QFocusEvent *)
+void DerflaWidget::onInputFocusOut(QFocusEvent *)
 {
     // input lost focus
     if (!hasFocus() && candidateList_->isVisible() && !candidateList_->isActiveWindow())
         hideCandidateList();
 }
 
-void DerflaWidget::onFocusIn(QFocusEvent *)
+void DerflaWidget::onInputFocusIn(QFocusEvent *)
 {
     // input got focus
     if (!candidateList_->isVisible() && !input_->text().isEmpty())
     {
         candidateDelayTimer_->start(candidateDelayInterval_);
-    }
-}
-
-void DerflaWidget::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
-{
-    switch(reason)
-    {
-    case QSystemTrayIcon::DoubleClick:
-        if (isHidden())
-            show();
-        activateWindow();
-        raise();
-        break;
-    default:
-        break;
     }
 }
 
@@ -376,22 +260,6 @@ void DerflaWidget::onLoadSkin()
     }
 }
 
-void DerflaWidget::onInstallExtension()
-{
-	QString fileName = QFileDialog::getOpenFileName(this,
-		tr("Install Derfla Extension"),
-		"",
-        tr("Derfla Extension Package (*.derflaextension);;Derfla Extension Configuration (extension.cfg);;All files (*.*)"));
-    if (!QFile::exists(fileName))
-        return;
-    try {
-        derflaApp->extensionManager_->installExtension(fileName);
-    }
-    catch(std::runtime_error& e) {
-        QMessageBox::warning(this, tr("Installing extension failed"), QString::fromLatin1(e.what()), QMessageBox::Ok);
-    }
-}
-
 void DerflaWidget::onStayOnTop()
 {
     QAction *action = qobject_cast<QAction*>(sender());
@@ -407,23 +275,10 @@ void DerflaWidget::onStayOnTop()
     derflaApp->settings_.sync();
 }
 
-void DerflaWidget::onShowInFront()
-{
-    if (isHidden())
-        show();
-    activateWindow();
-    raise();
-}
-
 void DerflaWidget::onCandidateListDone()
 {
     hideCandidateList();
     input_->setText("");
-}
-
-void DerflaWidget::onQuit()
-{
-    qApp->quit();
 }
 
 void DerflaWidget::onCandidateDelayTimer()
@@ -464,15 +319,6 @@ void DerflaWidget::onSelectFolder()
     input_->setText(text);
 }
 
-void DerflaWidget::onAbout()
-{
-    QMessageBox::about(this, tr("Derfla"), tr(
-                           "Derfla is a cross platform productivity application, which boosts your efficiency with hotkeys, keywords, text expansion and more. "
-                           "Search your Windows and the web, and be more productive with custom actions to control your system.\r\n\r\n"
-                           "Contact me at https://minidump.info/derfla/ if you have any problem about this tool. Built at " __DATE__ " " __TIME__
-                           ));
-}
-
 void DerflaWidget::onPreference()
 {
 #if defined(Q_OS_WIN)
@@ -497,7 +343,7 @@ void DerflaWidget::onPreference()
         }
 
         stayOnTop_ = derflaApp->settings_.value("stayOnTop", false).toBool();
-        stayOnTopAction_->setChecked(stayOnTop_);
+        derflaApp->stayOnTopAction_->setChecked(stayOnTop_);
         if (stayOnTop_)
             setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
         else
@@ -571,14 +417,11 @@ void DerflaWidget::onPreference()
 #endif
 }
 
-void DerflaWidget::onCheckUpdates()
-{
-    derflaApp->checkForUpdates();
-}
-
 void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)
 {
+    Q_ASSERT(derflaApp && derflaApp->trayIcon_);
     auto menu = derflaApp->trayIcon_->contextMenu();
+    Q_ASSERT(menu);
     menu->exec(mapToGlobal(pos));
 }
 

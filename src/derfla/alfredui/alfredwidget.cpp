@@ -29,10 +29,9 @@ bool isDarkMode();
 #endif
 
 AlfredWidget::AlfredWidget(QWidget *parent) :
-    QWidget(parent),
+    CommonWidget(parent),
     ui(new Ui::Widget),
     mutex_thread(new QMutex)
-
 {
     ui->setupUi(this);
 
@@ -268,7 +267,7 @@ void AlfredWidget::paint()
     }
     listWidget->setCurrentRow(0);
     listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowsize * printsize);
-    derflaApp->CenterToScreen(this);
+    derflaApp->centerToScreen(this);
 }
 #undef signals
 

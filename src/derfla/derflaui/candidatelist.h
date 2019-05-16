@@ -4,20 +4,19 @@
 #include <QFrame>
 #include <QIcon>
 #include "candidatelistwidget.h"
-#include "actionexecutor.h"
+#include "derflaaction.h"
 
 namespace Ui {
 class CandidateList;
 }
 class ExtensionManager;
-class ActionExecutor;
 
 class CandidateList : public QFrame
 {
     Q_OBJECT
 
 public:
-    explicit CandidateList(ExtensionManager* extensionManager, QWidget *parent = nullptr);
+    explicit CandidateList(QWidget *parent = nullptr);
     ~CandidateList();
     void update(const QString& text);
 
@@ -37,25 +36,15 @@ signals:
     void keyPressedEvent(QKeyEvent* event);
 
 public slots:
-    void donateViaPaypal();
-    void donateViaAlipay();
-    void donateViaWeChatPay();
 
 private slots:
-    void onActionUpdated(DerflaActionList& dal);
+    void onActionUpdated();
     void onEmptyAction();
 private:
     Ui::CandidateList *ui;
     bool activeWindowFlag_;
     bool cleared_;
-    bool donateAppended_;
-    int itemCount_ ;
-    ExtensionManager* extensionManager_;
-    ActionExecutor actionExecutor_;
-    DerflaActionList dal_;
-    DerflaActionList dalDonate_;
     QMap<QString, QIcon> actionIconMap_;
-    void createDonateDerflaActions();
     void clearData();
 };
 

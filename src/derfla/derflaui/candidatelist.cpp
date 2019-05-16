@@ -1,16 +1,14 @@
 #include "stdafx.h"
+#include "derflaapp.h"
 #include "extensionmanager.h"
 #include "candidatelistdelegate.h"
 #include "candidatelist.h"
 #include "ui_candidatelist.h"
 
-CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent)
+CandidateList::CandidateList(QWidget *parent)
     : QFrame(parent)
     , ui(new Ui::CandidateList)
     , cleared_(true)
-    , donateAppended_(false)
-    , itemCount_(0)
-    , extensionManager_(extensionManager)
     , actionIconMap_{
                {"script",          QIcon(":/rc/actions/script.png")},
                {"shellExecute",    QIcon(":/rc/actions/shell.png")},
@@ -32,10 +30,9 @@ CandidateList::CandidateList(ExtensionManager* extensionManager, QWidget *parent
     setMinimumSize(10, 10);
     ui->list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->list->setItemDelegate(new CandidateListDelegate(ui->list));
-    createDonateDerflaActions();
     connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
-    connect(extensionManager_, &ExtensionManager::actionUpdated, this, &CandidateList::onActionUpdated);
-    connect(extensionManager_, &ExtensionManager::emptyAction, this, &CandidateList::onEmptyAction);
+    connect(derflaApp, &DerflaApp::actionUpdated, this, &CandidateList::onActionUpdated);
+    connect(derflaApp, &DerflaApp::emptyAction, this, &CandidateList::onEmptyAction);
 }
 
 CandidateList::~CandidateList()
@@ -45,9 +42,7 @@ CandidateList::~CandidateList()
 
 void CandidateList::clearData()
 {
-    dal_.clear();
-    itemCount_ = 0;
-    donateAppended_ = false;    
+    derflaApp->clearDerflaAction();
 }
 
 void CandidateList::update(const QString &text)
@@ -59,47 +54,53 @@ void CandidateList::update(const QString &text)
     
     qDebug() << __FUNCTION__ << text;
     clearData();
-    extensionManager_->query(text);
+    derflaApp->queryByExtension(text);
 }
 
 void CandidateList::populateList()
 {
-    if (dal_.empty())
+    if (derflaApp->isEmptyDerflaAction())
     {
         if (isVisible())
             hide();
     }
     else
     {
+        DerflaActionList &dal = derflaApp->derflaActions();
 #if !defined(Q_OS_MAC) && !defined(Q_OS_WIN)
-        std::sort(dal_.begin(), dal_.end(), [](DerflaActionPtr da, DerflaActionPtr ) {
+        std::sort(dal.begin(), dal.end(), [](DerflaActionPtr da, DerflaActionPtr ) {
             return !da->icon().isNull();                
             });
 
 remove_duplicated:
-        auto it = std::find_if(dal_.begin(), dal_.end(), [&](DerflaActionPtr da) {
+        auto it = std::find_if(dal.begin(), dal.end(), [&](DerflaActionPtr da) {
             if (da->actionType() == DAT_CONSOLE)
             {
-                auto findIt = std::find_if(dal_.begin(), dal_.end(), [da](DerflaActionPtr d) {
+                auto findIt = std::find_if(dal.begin(), dal.end(), [da](DerflaActionPtr d) {
                     return (d->actionType() == DAT_GUI && da->target() == d->target() && da->arguments() == d->arguments() );
                 });
-                return dal_.end() != findIt;
+                return dal.end() != findIt;
             }
             return false;
             });
-        if (dal_.end() != it)
+        if (dal.end() != it)
         {
-            dal_.erase(it);
+            dal.erase(it);
             goto remove_duplicated;
         }
 #endif
-        if (!donateAppended_)
-        {
-            donateAppended_ = true;
-            dal_.append(dalDonate_);
-        }
         auto oldCount = ui->list->count();
-        for (DerflaActionPtr da : dal_)
+        for (DerflaActionPtr da : dal)
+        {
+            QListWidgetItem* item = new QListWidgetItem(ui->list);
+            item->setData(Qt::DisplayRole, da->title());
+            item->setData(Qt::UserRole + 1, da->description());
+            item->setData(Qt::UserRole + 2, actionIconMap_[da->actionType()]);
+            item->setData(Qt::DecorationRole, da->icon());
+            ui->list->addItem(item);
+        }
+        DerflaActionList &dalDonate = derflaApp->donateDerflaActions();
+        for (DerflaActionPtr da : dalDonate)
         {
             QListWidgetItem* item = new QListWidgetItem(ui->list);
             item->setData(Qt::DisplayRole, da->title());
@@ -110,16 +111,15 @@ remove_duplicated:
         }
         for (int i = 0; i < oldCount; i++)
             delete ui->list->takeItem(0);
-        itemCount_ = dal_.length();
-
-        if (!dal_.isEmpty())
+        
+        if (!derflaApp->isEmptyDerflaAction())
             refreshList();
     }
 }
 
 void CandidateList::refreshList()
 {
-    if (itemCount_ > 0)
+    if (ui->list->count() > 0)
     {
         ui->list->setCurrentRow(0);
         if (isHidden())
@@ -127,14 +127,14 @@ void CandidateList::refreshList()
             show();
         }
         QSize s = size();
-        resize(s.width(), qMin(10, itemCount_) * CandidateListItemHeight);
+        resize(s.width(), qMin(10, ui->list->count()) * CandidateListItemHeight);
         //qDebug() << itemCount_ << s << size() << s.width() << qMin(10, itemCount_) * CandidateListItemHeight;
     }
 }
 
 int CandidateList::count() const
 {
-    return itemCount_;
+    return ui->list->count();
 }
 
 void CandidateList::keyPressEvent(QKeyEvent *event)
@@ -190,13 +190,9 @@ void CandidateList::showEvent(QShowEvent* /*event*/)
     refreshList();
 }
 
-void CandidateList::onActionUpdated(DerflaActionList &dal)
+void CandidateList::onActionUpdated()
 {
-    for(auto da : dal)
-    {
-        dal_.append(da);
-    }
-    //qDebug() << __FUNCTION__ << dal.length() << dal_.length();
+    //qDebug() << __FUNCTION__ << dal.length() << derflaApp->derflaActionCount();
     populateList();
 }
 
@@ -208,59 +204,21 @@ void CandidateList::onEmptyAction()
     populateList();
 }
 
-void CandidateList::createDonateDerflaActions()
-{
-    DerflaActionPtr daPaypal(new DerflaAction);
-    daPaypal->setTitle(tr("Donate to support me"));
-    daPaypal->setDescription(tr("Donate via Paypal"));
-    daPaypal->setIcon(QIcon(":rc/paypal.png"));
-    daPaypal->setActionType("openUrl");
-    daPaypal->setTarget("https://www.paypal.me/dfordsoft");
-
-#if defined (Q_OS_MAC)
-    QDir dir(QCoreApplication::applicationDirPath());
-    dir.cdUp();
-    dir.cd("Tools");
-    QString target = dir.absolutePath() + "/donate";
-#elif defined (Q_OS_WIN)
-    QString target = QCoreApplication::applicationDirPath() + "/donate.exe";
-#else
-    QString target = QCoreApplication::applicationDirPath() + "/donate";
-#endif
-    DerflaActionPtr daAlipay(new DerflaAction);
-    daAlipay->setTitle(tr("Donate to support me"));
-    daAlipay->setDescription(tr("Donate via Alipay"));
-    daAlipay->setIcon(QIcon(":rc/alipay.png"));
-    daAlipay->setActionType("shellExecute");
-    daAlipay->setTarget(target);
-    daAlipay->setArguments("--alipay");
-    daAlipay->setWorkingDirectory(QCoreApplication::applicationDirPath());
-    DerflaActionPtr daWeChatPay(new DerflaAction);
-    daWeChatPay->setTitle(tr("Donate to support me"));
-    daWeChatPay->setDescription(tr("Donate via WeChat pay"));
-    daWeChatPay->setIcon(QIcon(":rc/wechat.png"));
-    daWeChatPay->setActionType("shellExecute");
-    daWeChatPay->setTarget(target);
-    daWeChatPay->setArguments("--wechat");
-    daWeChatPay->setWorkingDirectory(QCoreApplication::applicationDirPath());
-    dalDonate_ << daPaypal << daAlipay << daWeChatPay;
-}
-
 void CandidateList::onEnter()
 {
-    if (dal_.isEmpty())
+    if (derflaApp->isEmptyDerflaAction())
         return;
     int index = ui->list->currentRow();
-    //qDebug() << "CandidateList::onEnter:" << index << dal_.length() << itemCount_;
-    if (index < 0 || index >= dal_.length())
+    //qDebug() << "CandidateList::onEnter:" << index << derflaApp->derflaActionCount() << itemCount_;
+    if (index < 0 || index >= derflaApp->derflaActionCount())
     {
         close();
         return;
     }
-    DerflaActionPtr da = dal_.at(index);
+    DerflaActionPtr da = derflaApp->derflaAction(index);
     if (!da->disabled())
     {
-        actionExecutor_(da);
+        derflaApp->executeAction(da);
         emit done();
     }
 }
@@ -268,21 +226,6 @@ void CandidateList::onEnter()
 void CandidateList::setInputBoxSize(const QSize &s)
 {
     resize(qMax(s.width(), 700), size().height());
-}
-
-void CandidateList::donateViaPaypal()
-{
-    actionExecutor_(dalDonate_[0]);
-}
-
-void CandidateList::donateViaAlipay()
-{
-    actionExecutor_(dalDonate_[1]);
-}
-
-void CandidateList::donateViaWeChatPay()
-{
-    actionExecutor_(dalDonate_[2]);
 }
 
 bool CandidateList::getActiveWindowFlag() const

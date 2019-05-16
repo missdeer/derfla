@@ -13,6 +13,7 @@
 #include "returnbyscript.h"
 #include "config.h"
 #include "alfredtheme.h"
+#include "commonwidget.h"
 
 using pair = std::vector<std::pair<std::string, std::pair<std::string, QIcon*>>> ;
 using qpair = std::pair<std::string, std::pair<std::string, QIcon*>> ;
@@ -20,7 +21,7 @@ namespace Ui {
 class Widget;
 }
 
-class AlfredWidget : public QWidget
+class AlfredWidget : public CommonWidget
 {
     Q_OBJECT
     friend class WidgetThread;

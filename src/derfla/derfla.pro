@@ -47,7 +47,8 @@ SOURCES += $$PWD/main.cpp\
     $$PWD/commonui/preferencedialog.cpp \
     $$PWD/commonui/booleaneditor.cpp \
     $$PWD/derflaapp.cpp \
-    $$PWD/actionexecutor.cpp 
+    $$PWD/actionexecutor.cpp  \
+    commonui/commonwidget.cpp
 
 HEADERS  += $$PWD/stdafx.h \
     $$PWD/alfredui/alfredtheme.h \
@@ -76,7 +77,8 @@ HEADERS  += $$PWD/stdafx.h \
     $$PWD/commonui/preferencedialog.h \
     $$PWD/commonui/booleaneditor.h \
     $$PWD/derflaapp.h \
-    $$PWD/actionexecutor.h 
+    $$PWD/actionexecutor.h  \
+    commonui/commonwidget.h
 
 FORMS    += \
     $$PWD/alfredui/doublelistitem.ui \
