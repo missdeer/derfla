@@ -16,8 +16,6 @@
 #include <fstream>
 #include "alfredwidget.h"
 #include "ui_alfredwidget.h"
-#include "returnbyscript.h"
-#include "defaulsearch.h"
 #include "alfredlistwidget.h"
 #include "listitem.h"
 #include "doublelistitem.h"
@@ -28,6 +26,9 @@
 bool isDarkMode();
 #endif
 
+#define rowsize 51
+#define iconsize 42
+
 AlfredWidget::AlfredWidget(QWidget *parent) :
     CommonWidget(parent),
     ui(new Ui::Widget),
@@ -37,7 +38,7 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
 
     setUpTheme();
 
-    plainTextEdit = new PlainText(FREQUENCEPATH.c_str(), ui->groupBox);
+    plainTextEdit = new PlainText(ui->groupBox);
     plainTextEdit->parent = this;
     plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
 
@@ -120,26 +121,15 @@ void AlfredWidget::enterCurItem()
  */
 void AlfredWidget::setUpTheme()
 {
-    std::ifstream themeFile(THEMEPATH);
-    std::string themeName;
-
-    if (!themeFile.is_open())
-    {
+    std::string themeName = "Classic";
+    
 #if defined (Q_OS_MAC)
-        if (isDarkMode())
-            themeName = "Dark";
-        else
+    if (isDarkMode())
+        themeName = "Dark";
 #endif
-        themeName = "Classic";
-    }
-    else
-    {
-        std::getline(themeFile, themeName);
-        themeFile.close();
-    }
-
+    
     theme = new AlfredTheme();
-
+    
     int globalBeginHeight;
     int globalListWidgetY;
     QSize dimensions;

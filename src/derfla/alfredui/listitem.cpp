@@ -1,6 +1,6 @@
+#include "stdafx.h"
 #include "listitem.h"
 #include "ui_listitem.h"
-#include "config.h"
 #include <string>
 #include <QString>
 #include <QIcon>
@@ -8,13 +8,20 @@
 #include <QFontMetrics>
 #include <QPixmap>
 
+#define rowsize 51
+#define iconsize 42
+#define EXEICON ":/icons/icons/application-x-executable.png"
+
 ListItem::ListItem(const QString& icon, const QString &text, const QString &cmd, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ListItem)
 {
     ui->setupUi(this);
     ui->cmd->setStyleSheet("QLabel{color: rgb(100, 100, 100)}");
-    QFontMetrics fm(QFont(ui->text->font()));
+    QFont textFont(ui->text->font());
+    textFont.setFamily(globalDefaultFontFamily);
+    QFontMetrics fm(textFont);
+    ui->text->setFont(textFont);
     ui->text->setText(fm.elidedText(text, Qt::ElideRight, ui->text->width()));
     ui->cmd->setText(cmd);
     QIcon tmp;
@@ -40,7 +47,10 @@ ListItem::ListItem(const QIcon &icon, const QString &text, const QString &cmd, Q
 {
     ui->setupUi(this);
     ui->cmd->setStyleSheet("QLabel{color: rgb(100, 100, 100)}");
-    QFontMetrics fm(QFont(ui->text->font()));
+    QFont textFont(ui->text->font());
+    textFont.setFamily(globalDefaultFontFamily);
+    QFontMetrics fm(textFont);
+    ui->text->setFont(textFont);
     ui->text->setText(fm.elidedText(text, Qt::ElideRight, ui->text->width()));
     ui->cmd->setText(cmd);
     QIcon tmp = icon;

@@ -15,8 +15,8 @@ class DoubleListItem : public QWidget
     Q_OBJECT
 
 public:
-    explicit DoubleListItem(const QString& icon, const QString& text, const QString& subtext, const QString& cmd, QWidget *parent = nullptr);
-    explicit DoubleListItem(const QIcon &icon, const QString& text, const QString& subtext, const QString& cmd, QWidget *parent = nullptr);
+    explicit DoubleListItem(const QString& icon, const QString& title, const QString& description, const QString& cmd, QWidget *parent = nullptr);
+    explicit DoubleListItem(const QIcon &icon, const QString& title, const QString& description, const QString& cmd, QWidget *parent = nullptr);
     ~DoubleListItem();
 
 private:

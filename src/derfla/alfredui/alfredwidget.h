@@ -8,10 +8,7 @@
 #include <QMutex>
 #include <string>
 #include <map>
-#include "widgetthread.h"
 #include "plaintext.h"
-#include "returnbyscript.h"
-#include "config.h"
 #include "alfredtheme.h"
 #include "commonwidget.h"
 

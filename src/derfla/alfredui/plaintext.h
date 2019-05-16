@@ -3,8 +3,6 @@
 #include <QPlainTextEdit>
 #include <QListWidget>
 #include <QWidget>
-#include "returnbyscript.h"
-#include "frequenceparse.h"
 
 class PlainText : public QPlainTextEdit
 {
@@ -12,9 +10,7 @@ class PlainText : public QPlainTextEdit
 public:
     QWidget *parent;
     QListWidget *listWidget;
-    FrequenceParse fparse;
-    std::vector<returnByScript>* val;
-    explicit PlainText(const char* file, QWidget *parent = 0);
+    explicit PlainText(QWidget *parent = nullptr);
     void keyPressEvent(QKeyEvent* event);
     void enterListWidget(int row);
     void focusOutEvent(QFocusEvent *event);

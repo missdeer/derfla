@@ -23,17 +23,11 @@ include($$PWD/../util/util.pri)
 
 SOURCES += $$PWD/main.cpp\
     $$PWD/alfredui/alfredtheme.cpp \
-    $$PWD/alfredui/config.cpp \
-    $$PWD/alfredui/config_parse.cpp \
-    $$PWD/alfredui/defaulsearch.cpp \
     $$PWD/alfredui/doublelistitem.cpp \
-    $$PWD/alfredui/frequenceparse.cpp \
     $$PWD/alfredui/listitem.cpp \
     $$PWD/alfredui/alfredlistwidget.cpp \
     $$PWD/alfredui/plaintext.cpp \
-    $$PWD/alfredui/returnbyscript.cpp \
     $$PWD/alfredui/alfredwidget.cpp \
-    $$PWD/alfredui/widgetthread.cpp \
     $$PWD/derflaui/derflawidget.cpp \
     $$PWD/derflaui/charlineedit.cpp \
     $$PWD/derflaui/candidatelist.cpp \
@@ -52,18 +46,12 @@ SOURCES += $$PWD/main.cpp\
 
 HEADERS  += $$PWD/stdafx.h \
     $$PWD/alfredui/alfredtheme.h \
-    $$PWD/alfredui/config.h \
-    $$PWD/alfredui/config_parse.h \
-    $$PWD/alfredui/defaulsearch.h \
     $$PWD/alfredui/doublelistitem.h \
-    $$PWD/alfredui/frequenceparse.h \
     $$PWD/alfredui/geticon.h \
     $$PWD/alfredui/listitem.h \
     $$PWD/alfredui/alfredlistwidget.h \
     $$PWD/alfredui/plaintext.h \
-    $$PWD/alfredui/returnbyscript.h \
     $$PWD/alfredui/alfredwidget.h \
-    $$PWD/alfredui/widgetthread.h \
     $$PWD/derflaui/derflawidget.h \
     $$PWD/derflaui/charlineedit.h \
     $$PWD/derflaui/candidatelist.h \
