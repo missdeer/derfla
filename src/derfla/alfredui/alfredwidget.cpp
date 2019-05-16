@@ -94,10 +94,13 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
     setAttribute(Qt::WA_TranslucentBackground,true);
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
     plainTextEdit->setFocus();
-    connect(plainTextEdit, &QPlainTextEdit::textChanged, this, &AlfredWidget::defaultsearch);
+    connect(plainTextEdit, &QPlainTextEdit::textChanged, this, &AlfredWidget::onTextChanged);
     connect(listWidget, &QListWidget::currentRowChanged, this, &AlfredWidget::setOne);
     connect(listWidget, &QListWidget::itemPressed, this, &AlfredWidget::enterCurItem);
     plainTextEdit->setFocus();
+    
+    connect(derflaApp, &DerflaApp::actionUpdated, this, &AlfredWidget::onActionUpdated);
+    connect(derflaApp, &DerflaApp::emptyAction, this, &AlfredWidget::onEmptyAction);
 }
 
 void AlfredWidget::setOne()
@@ -190,74 +193,54 @@ void AlfredWidget::setUpTheme()
     theme->setShadowOffset(shadowOffset);
 }
 
-void AlfredWidget::defaultsearch()
+void AlfredWidget::onTextChanged()
 {
-//    WidgetThread *w = new WidgetThread(this);
-//    w->start();
-//    connect(w, SIGNAL(shouldPaint()), this, SLOT(paint()), Qt::QueuedConnection);
+    QString text = plainTextEdit->toPlainText();
+    derflaApp->clearDerflaAction();
+    derflaApp->queryByExtension(text);
 }
 
-void AlfredWidget::paint()
+void AlfredWidget::populateList()
 {
     listWidget->clear();
-    int size = std::min(int(val.size()), MAXADDTOLISTSIZE);
-    int printsize = std::min(int(val.size()), MAXPRINTSIZE);
-    if (val.empty())
+    DerflaActionList &dal = derflaApp->derflaActions();
+    int size = std::min(int(dal.size()), 9);
+    int printsize = std::min(int(dal.size()), 9);
+    if (dal.empty())
     {
         listWidget->hide();
         setMaximumHeight(printsize * rowsize + theme->beginHeight() - 6); //custom theme begin height
         setMinimumHeight(printsize * rowsize + theme->beginHeight() - 6);
-        setGeometry(x(), y(), val.size() * rowsize + theme->beginHeight(), width());
+        setGeometry(x(), y(), dal.size() * rowsize + theme->beginHeight(), width());
         return;
     }
     listWidget->show();
     listWidget->setMaximumHeight(rowsize * printsize);
     listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowsize * printsize);
-    std::sort(val.begin(), val.end(), [this](const returnByScript& lhs, const returnByScript& rhs){
-        return plainTextEdit->fparse.getValue(lhs.text) < plainTextEdit->fparse.getValue(rhs.text);
-    });
+
     setMaximumHeight(printsize * rowsize + theme->beginHeight());
     setMinimumHeight(printsize * rowsize + theme->beginHeight());
     setGeometry(x(), y(), printsize * rowsize + theme->beginHeight(), width());
 
     for (size_t i = 0; i < size; i++)
     {
+        DerflaActionPtr da = dal.at(i);
         QWidget* l;
-        if (val[i].subtext.empty()) {
-            if (i < MAXPRINTSIZE) {
-                if (val[i].qicon == nullptr) {
-                    l = new ListItem(val[i].icon, val[i].text, std::string("Alt+") + std::to_string(i + 1));
-                }
-                else {
-                    l = new ListItem(val[i].qicon, val[i].text, std::string("Alt+") + std::to_string(i + 1));
-                }
+        if (da->description().isEmpty()) {
+            if (i < 9) {
+                l = new ListItem(da->icon(), da->title(), "Alt+" + QString::number(i + 1));
             }
             else {
-                if (val[i].qicon == nullptr) {
-                    l = new ListItem(val[i].icon, val[i].text, std::to_string(i + 1));
-                }
-                else {
-                    l = new ListItem(val[i].qicon, val[i].text, std::to_string(i + 1));
-                }
+                l = new ListItem(da->icon(), da->title(), QString::number(i + 1));
             }
         }
         else {
-            if (i < MAXPRINTSIZE)
+            if (i < 9)
             {
-                if (val[i].qicon == nullptr) {
-                    l = new DoubleListItem(val[i].icon, val[i].text, val[i].subtext, std::string("Alt+") + std::to_string(i + 1));
-                }
-                else {
-                    l = new DoubleListItem(val[i].qicon, val[i].text, val[i].subtext, std::string("Alt+") + std::to_string(i + 1));
-                }
+                l = new DoubleListItem(da->icon(), da->title(), da->description(), "Alt+" + QString::number(i + 1));
             }
             else {
-                if (val[i].qicon == nullptr) {
-                    l = new ListItem(val[i].icon, val[i].text, std::to_string(i + 1));
-                }
-                else {
-                    l = new ListItem(val[i].qicon, val[i].text, std::to_string(i + 1));
-                }
+                l = new ListItem(da->icon(), da->title(), QString::number(i + 1));
             }
         }
         QListWidgetItem * item = new QListWidgetItem(listWidget);
@@ -271,13 +254,17 @@ void AlfredWidget::paint()
 }
 #undef signals
 
-
-void AlfredWidget::searchApp()
-{
-
-}
-
 AlfredWidget::~AlfredWidget()
 {
     delete ui;
+}
+
+void AlfredWidget::onActionUpdated()
+{
+    populateList();
+}
+
+void AlfredWidget::onEmptyAction()
+{
+    populateList();
 }

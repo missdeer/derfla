@@ -4,7 +4,7 @@
 #include <QStringList>
 #include <QString>
 
-DoubleListItem::DoubleListItem(const string& icon, const string& text, const string& subtext, const string& cmd, QWidget *parent) :
+DoubleListItem::DoubleListItem(const QString& icon, const QString& text, const QString& subtext, const QString& cmd, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DoubleListItem)
 {
@@ -12,28 +12,28 @@ DoubleListItem::DoubleListItem(const string& icon, const string& text, const str
     ui->subtext->setStyleSheet("QLabel{color: rgb(100, 100, 100)}");
     ui->cmd->setStyleSheet("QLabel{color: rgb(100, 100, 100)}");
     QFontMetrics fm(QFont(ui->text->font()));
-    ui->text->setText(fm.elidedText(QString::fromStdString(text), Qt::ElideRight, ui->text->width()));
+    ui->text->setText(fm.elidedText(text, Qt::ElideRight, ui->text->width()));
     QFontMetrics subfm(QFont(ui->subtext->font()));
-    ui->subtext->setText(subfm.elidedText(QString::fromStdString(subtext), Qt::ElideRight, ui->subtext->width()));
-    ui->cmd->setText(QString::fromStdString(cmd));
+    ui->subtext->setText(subfm.elidedText(subtext, Qt::ElideRight, ui->subtext->width()));
+    ui->cmd->setText(cmd);
     QIcon tmp;
-    if (icon.find('/') == std::string::npos)
+    if (icon.indexOf('/') == -1)
     {
-        tmp = QIcon::fromTheme(QString::fromStdString(icon));
+        tmp = QIcon::fromTheme(icon);
     }
     else
     {
-        tmp = QIcon(QString::fromStdString(icon));
+        tmp = QIcon(icon);
     }
     if (tmp.isNull())
     {
-        tmp = QIcon(QString::fromStdString(EXEICON));
+        tmp = QIcon(EXEICON);
     }
     QPixmap p = tmp.pixmap(QSize(iconsize, iconsize));
     ui->icon->setPixmap(p);
 }
 
-DoubleListItem::DoubleListItem(const QIcon* icon, const string& text, const string& subtext, const string& cmd, QWidget *parent) :
+DoubleListItem::DoubleListItem(const QIcon& icon, const QString &text, const QString &subtext, const QString &cmd, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DoubleListItem)
 {
@@ -41,15 +41,15 @@ DoubleListItem::DoubleListItem(const QIcon* icon, const string& text, const stri
     ui->subtext->setStyleSheet("QLabel{color: rgb(100, 100, 100)}");
     ui->cmd->setStyleSheet("QLabel{color: rgb(100, 100, 100)}");
     QFontMetrics fm(QFont(ui->text->font()));
-    ui->text->setText(fm.elidedText(QString::fromStdString(text), Qt::ElideRight, ui->text->width()));
+    ui->text->setText(fm.elidedText(text, Qt::ElideRight, ui->text->width()));
     QFontMetrics subfm(QFont(ui->subtext->font()));
-    ui->subtext->setText(subfm.elidedText(QString::fromStdString(subtext), Qt::ElideRight, ui->subtext->width()));
-    ui->cmd->setText(QString::fromStdString(cmd));
-    QIcon tmp = *icon;
+    ui->subtext->setText(subfm.elidedText(subtext, Qt::ElideRight, ui->subtext->width()));
+    ui->cmd->setText(cmd);
+    QIcon tmp = icon;
     QStringList sl;
     if (tmp.isNull())
     {
-        tmp = QIcon(QString::fromStdString(EXEICON));
+        tmp = QIcon(EXEICON);
     }
     QPixmap p = tmp.pixmap(QSize(iconsize, iconsize));
     ui->icon->setPixmap(p);

@@ -24,18 +24,16 @@ class Widget;
 class AlfredWidget : public CommonWidget
 {
     Q_OBJECT
-    friend class WidgetThread;
-public slots:
-    void paint();
 public:
     explicit AlfredWidget(QWidget *parent = nullptr);
-    void defaultsearch();
-    void searchApp();
-    std::vector<returnByScript> val;
+    ~AlfredWidget() override;
+    void onTextChanged();
     void setOne();
     void enterCurItem();
-    ~AlfredWidget() override;
-
+    void populateList();
+private slots:
+    void onActionUpdated();
+    void onEmptyAction();
 private:
     Ui::Widget *ui;
     QMutex* mutex_thread;

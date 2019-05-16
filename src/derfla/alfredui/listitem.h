@@ -15,8 +15,8 @@ class ListItem : public QWidget
     Q_OBJECT
 
 public:
-    explicit ListItem(const string& icon, const string& text, const string& cmd, QWidget *parent = 0);
-    explicit ListItem(const QIcon* icon, const string& text, const string& cmd, QWidget *parent = 0);
+    explicit ListItem(const QString &icon, const QString& text, const QString& cmd, QWidget *parent = nullptr);
+    explicit ListItem(const QIcon& icon, const QString& text, const QString& cmd, QWidget *parent = nullptr);
 
     ~ListItem();
 
