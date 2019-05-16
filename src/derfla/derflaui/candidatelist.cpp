@@ -28,7 +28,7 @@ CandidateList::CandidateList(QWidget *parent)
     setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
 #endif    
     setMinimumSize(10, 10);
-    ui->list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    ui->list->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->list->setItemDelegate(new CandidateListDelegate(ui->list));
     connect(ui->list, &CandidateListWidget::keyPressedEvent, this, &CandidateList::keyPressedEvent);
     connect(derflaApp, &DerflaApp::actionUpdated, this, &CandidateList::onActionUpdated);

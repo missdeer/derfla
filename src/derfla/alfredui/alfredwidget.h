@@ -12,8 +12,6 @@
 #include "alfredtheme.h"
 #include "commonwidget.h"
 
-using pair = std::vector<std::pair<std::string, std::pair<std::string, QIcon*>>> ;
-using qpair = std::pair<std::string, std::pair<std::string, QIcon*>> ;
 namespace Ui {
 class Widget;
 }
@@ -33,8 +31,6 @@ private slots:
     void onEmptyAction();
 private:
     Ui::Widget *ui;
-    QMutex* mutex_thread;
-    pair map;
     PlainText *plainTextEdit;
     QListWidget *listWidget;
     AlfredTheme* theme;

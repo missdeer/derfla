@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <vector>
 #include <QGraphicsDropShadowEffect>
 #include <QPlainTextEdit>
@@ -31,8 +32,7 @@ bool isDarkMode();
 
 AlfredWidget::AlfredWidget(QWidget *parent) :
     CommonWidget(parent),
-    ui(new Ui::Widget),
-    mutex_thread(new QMutex)
+    ui(new Ui::Widget)
 {
     ui->setupUi(this);
 
@@ -106,7 +106,11 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
 
 void AlfredWidget::setOne()
 {
-    if (listWidget->currentRow() == -1) listWidget->setCurrentRow(0);
+    if (listWidget->currentRow() == -1) 
+        listWidget->setCurrentRow(0);
+    qDebug() << __FUNCTION__ << listWidget->count() << listWidget->height() << listWidget->currentRow() << rowsize;
+    auto currentItem = listWidget->currentItem();
+    listWidget->scrollToItem(currentItem, QAbstractItemView::PositionAtCenter);
 }
 
 void AlfredWidget::enterCurItem()
@@ -114,11 +118,6 @@ void AlfredWidget::enterCurItem()
     plainTextEdit->enterCurrentRow();
 }
 
-/**
- * @brief Widget::setUpTheme
- * Function reads from file "theme.ini" the theme and applies it.
- * Two themes are supported: classic and dark.
- */
 void AlfredWidget::setUpTheme()
 {
     std::string themeName = "Classic";
@@ -194,7 +193,7 @@ void AlfredWidget::populateList()
 {
     listWidget->clear();
     DerflaActionList &dal = derflaApp->derflaActions();
-    int size = std::min(int(dal.size()), 9);
+    int size = dal.size();
     int printsize = std::min(int(dal.size()), 9);
     if (dal.empty())
     {
@@ -210,7 +209,7 @@ void AlfredWidget::populateList()
 
     setMaximumHeight(printsize * rowsize + theme->beginHeight());
     setMinimumHeight(printsize * rowsize + theme->beginHeight());
-    setGeometry(x(), y(), printsize * rowsize + theme->beginHeight(), width());
+    setGeometry(x(), y(), width(), printsize * rowsize + theme->beginHeight());
 
     for (size_t i = 0; i < size; i++)
     {
@@ -240,9 +239,8 @@ void AlfredWidget::populateList()
     }
     listWidget->setCurrentRow(0);
     listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowsize * printsize);
-    derflaApp->centerToScreen(this);
+    qDebug() << __FUNCTION__ << listWidget->count() << listWidget->height() << listWidget->currentRow() << rowsize;
 }
-#undef signals
 
 AlfredWidget::~AlfredWidget()
 {
