@@ -39,7 +39,6 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
     setUpTheme();
 
     plainTextEdit = new PlainText(ui->groupBox);
-    plainTextEdit->parent = this;
     plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
 
     QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -79,12 +78,12 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
     listWidget->setIconSize(QSize(iconsize, iconsize));
     listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    listWidget->setMinimumHeight(1024);
+    listWidget->setMinimumHeight(1);
     listWidget->hide();
 
     ui->groupBox->setStyleSheet(theme->groupBoxStylesheet()); //custom theme group box
 
-    QGraphicsDropShadowEffect *wndShadow = new QGraphicsDropShadowEffect;
+    auto *wndShadow = new QGraphicsDropShadowEffect;
     wndShadow->setBlurRadius(theme->blurRadius());
     wndShadow->setColor(theme->shadowColor());
     wndShadow->setOffset(theme->shadowOffset()); //custom theme shadow
@@ -96,26 +95,28 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
     plainTextEdit->setFocus();
     connect(plainTextEdit, &QPlainTextEdit::textChanged, this, &AlfredWidget::onTextChanged);
+    connect(plainTextEdit, &PlainText::enterItem, this, &AlfredWidget::onEnterItem);
+    connect(plainTextEdit, &PlainText::escape, this, &AlfredWidget::onEscape);
     connect(listWidget, &QListWidget::currentRowChanged, this, &AlfredWidget::setOne);
     connect(listWidget, &QListWidget::itemPressed, this, &AlfredWidget::enterCurItem);
     plainTextEdit->setFocus();
     
     connect(derflaApp, &DerflaApp::actionUpdated, this, &AlfredWidget::onActionUpdated);
     connect(derflaApp, &DerflaApp::emptyAction, this, &AlfredWidget::onEmptyAction);
+    connect(this, &AlfredWidget::done, this, &AlfredWidget::onDone);
 }
 
 void AlfredWidget::setOne()
 {
     if (listWidget->currentRow() == -1) 
         listWidget->setCurrentRow(0);
-    qDebug() << __FUNCTION__ << listWidget->count() << listWidget->height() << listWidget->currentRow() << rowsize;
-    auto currentItem = listWidget->currentItem();
-    listWidget->scrollToItem(currentItem, QAbstractItemView::PositionAtCenter);
+//    auto currentItem = listWidget->currentItem();
+//    listWidget->scrollToItem(currentItem, QAbstractItemView::PositionAtCenter);
 }
 
 void AlfredWidget::enterCurItem()
 {
-    plainTextEdit->enterCurrentRow();
+    onEnterItem(listWidget->currentRow());
 }
 
 void AlfredWidget::setUpTheme()
@@ -186,7 +187,8 @@ void AlfredWidget::onTextChanged()
 {
     QString text = plainTextEdit->toPlainText();
     derflaApp->clearDerflaAction();
-    derflaApp->queryByExtension(text);
+    if (!text.isEmpty())
+        derflaApp->queryByExtension(text);
 }
 
 void AlfredWidget::populateList()
@@ -197,10 +199,9 @@ void AlfredWidget::populateList()
     int printsize = std::min(int(dal.size()), 9);
     if (dal.empty())
     {
-        listWidget->hide();
         setMaximumHeight(printsize * rowsize + theme->beginHeight() - 6); //custom theme begin height
         setMinimumHeight(printsize * rowsize + theme->beginHeight() - 6);
-        setGeometry(x(), y(), dal.size() * rowsize + theme->beginHeight(), width());
+        setGeometry(x(), y(), theme->beginHeight(), width());
         return;
     }
     listWidget->show();
@@ -211,7 +212,7 @@ void AlfredWidget::populateList()
     setMinimumHeight(printsize * rowsize + theme->beginHeight());
     setGeometry(x(), y(), width(), printsize * rowsize + theme->beginHeight());
 
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++) 
     {
         DerflaActionPtr da = dal.at(i);
         QWidget* l;
@@ -232,14 +233,13 @@ void AlfredWidget::populateList()
                 l = new ListItem(da->icon(), da->title(), QString::number(i + 1));
             }
         }
-        QListWidgetItem * item = new QListWidgetItem(listWidget);
+        auto * item = new QListWidgetItem(listWidget);
         item->setSizeHint(QSize(l->width(), l->height()));
         listWidget->addItem(item);
         listWidget->setItemWidget(item, l);
     }
     listWidget->setCurrentRow(0);
     listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowsize * printsize);
-    qDebug() << __FUNCTION__ << listWidget->count() << listWidget->height() << listWidget->currentRow() << rowsize;
 }
 
 AlfredWidget::~AlfredWidget()
@@ -254,5 +254,43 @@ void AlfredWidget::onActionUpdated()
 
 void AlfredWidget::onEmptyAction()
 {
+    populateList();
+}
+
+void AlfredWidget::onEnterItem(int index)
+{
+    if (index < listWidget->count() && index >= 0)
+    {
+        DerflaActionPtr da = derflaApp->derflaAction(index);
+        if (!da->disabled())
+        {
+            derflaApp->executeAction(da);
+            emit done();
+        }
+    }
+}
+
+void AlfredWidget::onEscape()
+{
+    if (listWidget->count())
+    {
+        derflaApp->clearDerflaAction();
+        populateList();
+        return;
+    }
+    
+    if (!plainTextEdit->toPlainText().isEmpty())
+    {
+        plainTextEdit->clear();
+        return;
+    }
+    
+    hide();
+}
+
+void AlfredWidget::onDone()
+{
+    derflaApp->clearDerflaAction();
+    plainTextEdit->clear();
     populateList();
 }

@@ -26,9 +26,14 @@ public:
     void setOne();
     void enterCurItem();
     void populateList();
+signals:
+    void done();
 private slots:
     void onActionUpdated();
     void onEmptyAction();
+    void onEnterItem(int index);
+    void onEscape();
+    void onDone();
 private:
     Ui::Widget *ui;
     PlainText *plainTextEdit;
