@@ -27,8 +27,8 @@
 bool isDarkMode();
 #endif
 
-#define rowsize 51
-#define iconsize 42
+static const int rowSize = 51;
+static const int iconSize = 42;
 
 AlfredWidget::AlfredWidget(QWidget *parent) :
     CommonWidget(parent),
@@ -50,10 +50,11 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
     plainTextEdit->setMinimumSize(theme->dimensions());
     plainTextEdit->setMaximumSize(QSize(2048, theme->dimensions().height())); //custom theme dimensions
 
-    QFont font2;
-    font2.setPointSize(theme->fontSize()); //custom theme font size
+    QFont fontInput;
+    fontInput.setFamily(globalDefaultFontFamily);
+    fontInput.setPointSize(theme->fontSize()); //custom theme font size
 
-    plainTextEdit->setFont(font2);
+    plainTextEdit->setFont(fontInput);
     plainTextEdit->setFocusPolicy(Qt::StrongFocus);
     plainTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     plainTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -75,7 +76,7 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
     ui->formLayout->setWidget(1, QFormLayout::SpanningRole, listWidget);
 
     listWidget->setStyleSheet(theme->listWidgetStylesheet()); //custom theme list widget
-    listWidget->setIconSize(QSize(iconsize, iconsize));
+    listWidget->setIconSize(QSize(iconSize, iconSize));
     listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     listWidget->setMinimumHeight(1);
@@ -199,18 +200,18 @@ void AlfredWidget::populateList()
     int printsize = std::min(int(dal.size()), 9);
     if (dal.empty())
     {
-        setMaximumHeight(printsize * rowsize + theme->beginHeight() - 6); //custom theme begin height
-        setMinimumHeight(printsize * rowsize + theme->beginHeight() - 6);
+        setMaximumHeight(printsize * rowSize + theme->beginHeight() - 6); //custom theme begin height
+        setMinimumHeight(printsize * rowSize + theme->beginHeight() - 6);
         setGeometry(x(), y(), theme->beginHeight(), width());
         return;
     }
     listWidget->show();
-    listWidget->setMaximumHeight(rowsize * printsize);
-    listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowsize * printsize);
+    listWidget->setMaximumHeight(rowSize * printsize);
+    listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowSize * printsize);
 
-    setMaximumHeight(printsize * rowsize + theme->beginHeight());
-    setMinimumHeight(printsize * rowsize + theme->beginHeight());
-    setGeometry(x(), y(), width(), printsize * rowsize + theme->beginHeight());
+    setMaximumHeight(printsize * rowSize + theme->beginHeight());
+    setMinimumHeight(printsize * rowSize + theme->beginHeight());
+    setGeometry(x(), y(), width(), printsize * rowSize + theme->beginHeight());
 
     for (size_t i = 0; i < size; i++) 
     {
@@ -230,7 +231,7 @@ void AlfredWidget::populateList()
                 l = new DoubleListItem(da->icon(), da->title(), da->description(), "Alt+" + QString::number(i + 1));
             }
             else {
-                l = new ListItem(da->icon(), da->title(), QString::number(i + 1));
+                l = new DoubleListItem(da->icon(), da->title(), da->description(), QString::number(i + 1));
             }
         }
         auto * item = new QListWidgetItem(listWidget);
@@ -239,7 +240,7 @@ void AlfredWidget::populateList()
         listWidget->setItemWidget(item, l);
     }
     listWidget->setCurrentRow(0);
-    listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowsize * printsize);
+    listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowSize * printsize);
 }
 
 AlfredWidget::~AlfredWidget()

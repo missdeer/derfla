@@ -8,9 +8,8 @@
 #include <QFontMetrics>
 #include <QPixmap>
 
-#define rowsize 51
-#define iconsize 42
-#define EXEICON ":/icons/icons/application-x-executable.png"
+static const int iconSize = 42;
+static const QString exeIcon = ":/rc/actions/terminal.png";
 
 ListItem::ListItem(const QString& icon, const QString &text, const QString &cmd, QWidget *parent) :
     QWidget(parent),
@@ -35,9 +34,9 @@ ListItem::ListItem(const QString& icon, const QString &text, const QString &cmd,
     }
     if (tmp.isNull())
     {
-        tmp = QIcon(EXEICON);
+        tmp = QIcon(exeIcon);
     }
-    QPixmap p = tmp.pixmap(QSize(iconsize, iconsize));
+    QPixmap p = tmp.pixmap(QSize(iconSize, iconSize));
     ui->icon->setPixmap(p);
 }
 
@@ -56,9 +55,9 @@ ListItem::ListItem(const QIcon &icon, const QString &text, const QString &cmd, Q
     QIcon tmp = icon;
     if (tmp.isNull())
     {
-        tmp = QIcon(EXEICON);
+        tmp = QIcon(exeIcon);
     }
-    QPixmap p = tmp.pixmap(QSize(iconsize, iconsize));
+    QPixmap p = tmp.pixmap(QSize(iconSize, iconSize));
     ui->icon->setPixmap(p);
 }
 

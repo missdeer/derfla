@@ -5,9 +5,8 @@
 #include <QString>
 #include <QIcon>
 
-#define rowsize 51
-#define iconsize 42
-#define EXEICON ":/icons/icons/application-x-executable.png"
+static const int iconSize = 42;
+static const QString exeIcon = ":/rc/actions/terminal.png";
 
 DoubleListItem::DoubleListItem(const QString& icon, const QString& title, const QString& description, const QString& cmd, QWidget *parent) :
     QWidget(parent),
@@ -38,9 +37,9 @@ DoubleListItem::DoubleListItem(const QString& icon, const QString& title, const 
     }
     if (tmp.isNull())
     {
-        tmp = QIcon(EXEICON);
+        tmp = QIcon(exeIcon);
     }
-    QPixmap p = tmp.pixmap(QSize(iconsize, iconsize));
+    QPixmap p = tmp.pixmap(QSize(iconSize, iconSize));
     ui->icon->setPixmap(p);
 }
 
@@ -66,9 +65,9 @@ DoubleListItem::DoubleListItem(const QIcon& icon, const QString &text, const QSt
     QStringList sl;
     if (tmp.isNull())
     {
-        tmp = QIcon(EXEICON);
+        tmp = QIcon(exeIcon);
     }
-    QPixmap p = tmp.pixmap(QSize(iconsize, iconsize));
+    QPixmap p = tmp.pixmap(QSize(iconSize, iconSize));
     ui->icon->setPixmap(p);
 }
 
