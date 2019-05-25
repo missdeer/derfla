@@ -209,6 +209,9 @@ void AlfredWidget::populateList()
         setGeometry(x(), y(), theme->beginHeight(), width());
         return;
     }
+    QString text = plainTextEdit->toPlainText();
+    if (text.isEmpty())
+        return;
     listWidget->show();
     listWidget->setMaximumHeight(rowSize * printsize);
     listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowSize * printsize);
