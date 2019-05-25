@@ -190,7 +190,14 @@ void AlfredWidget::onTextChanged()
 {
     QString text = plainTextEdit->toPlainText();
     derflaApp->clearDerflaAction();
-    if (!text.isEmpty())
+    if (text.isEmpty())
+    {
+        listWidget->clear();
+        listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), 0);
+        setMinimumHeight(theme->beginHeight() - 6);
+        setGeometry(x(), y(), width(), theme->beginHeight());
+    }
+    else
         derflaApp->queryByExtension(text);
 }
 
@@ -204,7 +211,7 @@ void AlfredWidget::populateList()
     {
         setMaximumHeight(printsize * rowSize + theme->beginHeight() - 6); //custom theme begin height
         setMinimumHeight(printsize * rowSize + theme->beginHeight() - 6);
-        setGeometry(x(), y(), theme->beginHeight(), width());
+        setGeometry(x(), y(), width(), theme->beginHeight());
         return;
     }
     QString text = plainTextEdit->toPlainText();
