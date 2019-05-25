@@ -67,10 +67,10 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
     plainTextEdit->listWidget = listWidget;
     listWidget->setObjectName(QStringLiteral("listWidget"));
 
-    QFont font1;
-    font1.setPointSize(20);
+    QFont fontCandidate;
+    fontCandidate.setPointSize(20);
 
-    listWidget->setFont(font1);
+    listWidget->setFont(fontCandidate);
     listWidget->setFocusPolicy(Qt::NoFocus);
 
     ui->formLayout->setWidget(1, QFormLayout::SpanningRole, listWidget);
@@ -93,7 +93,7 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
     plainTextEdit->setStyleSheet(theme->plainTextEditStylesheet()); //custom theme text edit
 
     setAttribute(Qt::WA_TranslucentBackground,true);
-    setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     plainTextEdit->setFocus();
     connect(plainTextEdit, &QPlainTextEdit::textChanged, this, &AlfredWidget::onTextChanged);
     connect(plainTextEdit, &PlainText::enterItem, this, &AlfredWidget::onEnterItem);
