@@ -93,7 +93,11 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
     plainTextEdit->setStyleSheet(theme->plainTextEditStylesheet()); //custom theme text edit
 
     setAttribute(Qt::WA_TranslucentBackground,true);
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+#if defined(Q_OS_WIN)
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
+#else
+    setWindowFlags(Qt::FramelessWindowHint );
+#endif
     plainTextEdit->setFocus();
     connect(plainTextEdit, &QPlainTextEdit::textChanged, this, &AlfredWidget::onTextChanged);
     connect(plainTextEdit, &PlainText::enterItem, this, &AlfredWidget::onEnterItem);
