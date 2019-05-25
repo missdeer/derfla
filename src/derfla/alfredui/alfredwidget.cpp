@@ -115,8 +115,6 @@ void AlfredWidget::setOne()
 {
     if (listWidget->currentRow() == -1) 
         listWidget->setCurrentRow(0);
-//    auto currentItem = listWidget->currentItem();
-//    listWidget->scrollToItem(currentItem, QAbstractItemView::PositionAtCenter);
 }
 
 void AlfredWidget::enterCurItem()
