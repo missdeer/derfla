@@ -20,7 +20,7 @@ class PreferenceDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PreferenceDialog(const QList<ExtensionPtr>& extensions, QWidget *parent = nullptr);
+    explicit PreferenceDialog(QWidget *parent = nullptr);
     ~PreferenceDialog();
 
 private slots:

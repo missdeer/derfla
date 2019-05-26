@@ -150,7 +150,7 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
         }
         else
         {
-            qApp->sendEvent(ui->list, event);
+            QCoreApplication::instance()->sendEvent(ui->list, event);
         }
         break;
     case Qt::Key_Down:
@@ -160,7 +160,7 @@ void CandidateList::keyPressEvent(QKeyEvent *event)
         }
         else
         {
-            qApp->sendEvent(ui->list, event);
+            QCoreApplication::instance()->sendEvent(ui->list, event);
         }
         break;
     default:

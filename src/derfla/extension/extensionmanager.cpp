@@ -22,9 +22,9 @@ ExtensionManager::~ExtensionManager()
 bool ExtensionManager::loadAllFromLocal()
 {
 #if defined(Q_OS_MAC)
-    QString extensionPath = qApp->applicationDirPath() % "/../Extensions";
+    QString extensionPath = QCoreApplication::applicationDirPath() % "/../Extensions";
 #else
-    QString extensionPath = qApp->applicationDirPath() % "/extensions";
+    QString extensionPath = QCoreApplication::applicationDirPath() % "/extensions";
 #endif
     QDir dir(extensionPath);
     if (!dir.exists())

@@ -22,7 +22,7 @@ public slots:
     virtual void onShowInFront();
     virtual void onSelectFile();
     virtual void onSelectFolder();
-    virtual void onPreference();
+    virtual bool onPreference();
     
 protected:
 #if defined (Q_OS_WIN)

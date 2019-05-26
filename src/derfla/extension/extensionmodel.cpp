@@ -1,9 +1,10 @@
 #include "stdafx.h"
+#include "derflaapp.h"
+#include "extensionmanager.h"
 #include "extensionmodel.h"
 
-ExtensionModel::ExtensionModel(const QList<ExtensionPtr> &extensions, QObject *parent)
+ExtensionModel::ExtensionModel( QObject *parent)
     : QAbstractTableModel(parent)
-    , extensions_(extensions)
 {
 
 }
@@ -18,7 +19,7 @@ QModelIndex ExtensionModel::index(int row, int column, const QModelIndex &parent
 
 int ExtensionModel::rowCount(const QModelIndex &) const
 {
-    return extensions_.size();
+    return derflaApp->extensionManager()->extensions().size();
 }
 
 int ExtensionModel::columnCount(const QModelIndex &) const
@@ -34,10 +35,10 @@ QVariant ExtensionModel::data(const QModelIndex &index, int role) const
     if (role != Qt::DisplayRole)
         return QVariant();
 
-    if (index.row() < 0 || index.row() >= extensions_.size())
+    if (index.row() < 0 || index.row() >= derflaApp->extensionManager()->extensions().size())
         return QVariant();
 
-    auto e = extensions_[index.row()];
+    auto e = derflaApp->extensionManager()->extensions()[index.row()];
     switch(index.column())
     {
     case 0:

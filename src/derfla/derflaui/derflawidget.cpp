@@ -147,7 +147,7 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
             //qDebug() << "DerflaWidget::keyPressEvent 2:" << event->key();
             candidateList_->activateWindow();
             candidateList_->setActiveWindowFlag(true);
-            qApp->sendEvent(candidateList_, event);
+            QCoreApplication::instance()->sendEvent(candidateList_, event);
         }
     }
     else if ((event->key() == Qt::Key_Tab || event->key() == Qt::Key_Backspace) && event->modifiers() == Qt::ShiftModifier)
@@ -178,7 +178,7 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
         if (!input_->hasFocus())
         {
             input_->setFocus();
-            qApp->sendEvent(input_, event);
+            QCoreApplication::instance()->sendEvent(input_, event);
         }
         // process any other key with character output
         event->ignore();
@@ -219,7 +219,7 @@ void DerflaWidget::onCandidateListKeyPressed(QKeyEvent *e)
 //        hideCandidateList();
     activateWindow();
     raise();
-    qApp->sendEvent(this, e);
+    QCoreApplication::instance()->sendEvent(this, e);
 }
 
 void DerflaWidget::onInputFocusOut(QFocusEvent *)
@@ -239,7 +239,9 @@ void DerflaWidget::onInputFocusIn(QFocusEvent *)
 }
 
 void DerflaWidget::onLoadSkin()
-{    
+{
+    CommonWidget::onLoadSkin();
+
     hideCandidateList();
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Load Derfla Skin"),
@@ -262,7 +264,7 @@ void DerflaWidget::onLoadSkin()
 
 void DerflaWidget::onStayOnTop()
 {
-    QAction *action = qobject_cast<QAction*>(sender());
+    auto *action = qobject_cast<QAction*>(sender());
     stayOnTop_ = !stayOnTop_;
     action->setChecked(stayOnTop_);
     if (stayOnTop_)
@@ -319,102 +321,97 @@ void DerflaWidget::onSelectFolder()
     input_->setText(text);
 }
 
-void DerflaWidget::onPreference()
+bool DerflaWidget::onPreference()
 {
-#if defined(Q_OS_WIN)
-    hotkeyManager_->unsetKey();
-#else
-    hotkeyManager_->unregisterHotkey();
-#endif
-    PreferenceDialog dlg(derflaApp->extensionManager_->extensions(), this);
-    if (dlg.exec() == QDialog::Accepted)
+    if (!CommonWidget::onPreference())
+        return false;
+
+    candidateDelayInterval_ = derflaApp->settings_.value("interval", 0).toInt();
+
+    QString skinPath = derflaApp->settings_.value("skin", ":/skins/derfla.derflaskin").toString();
+    if (!applySkin(skinPath))
     {
-        candidateDelayInterval_ = derflaApp->settings_.value("interval", 0).toInt();
-
-        QString skinPath = derflaApp->settings_.value("skin", ":/skins/derfla.derflaskin").toString();
-        if (!applySkin(skinPath))
+        qWarning() << "loading skin failed:" << skinPath;
+        if (!applySkin(":/skins/derfla.derflaskin"))
         {
-            qWarning() << "loading skin failed:" << skinPath;
-            if (!applySkin(":/skins/derfla.derflaskin"))
-            {
-                qCritical() << "loading skin failed";
-                return;
-            }
+            qCritical() << "loading skin failed";
+            return false;
         }
-
-        stayOnTop_ = derflaApp->settings_.value("stayOnTop", false).toBool();
-        derflaApp->stayOnTopAction_->setChecked(stayOnTop_);
-        if (stayOnTop_)
-            setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
-        else
-            setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
-
-        onShowInFront();
-
-        if (derflaApp->settings_.value("autostart", false).toBool())
-        {
-#if defined(Q_OS_WIN)
-            QString key = "Derfla";
-            QSettings registrySettings(
-                "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-                QSettings::NativeFormat);
-            registrySettings.remove(key);
-            registrySettings.setValue(key, QDir::toNativeSeparators(qApp->applicationFilePath()));
-            registrySettings.sync();
-#elif defined(Q_OS_MAC)
-            // Remove any existing login entry for this app first, in case there was one
-            // from a previous installation, that may be under a different launch path.
-
-            QStringList args;
-            args << "-e tell application \"System Events\" to delete login item\"Derfla\"";
-
-            QProcess::execute("osascript", args);
-
-            QDir dir(qApp->applicationDirPath());
-            dir.cdUp();
-            dir.cdUp();
-            QString absolutePath = dir.absolutePath();
-            // absolutePath will contain a "/" at the end,
-            // but we want the clean path to the .app bundle
-            if ( absolutePath.length() > 0 && absolutePath.right(1) == "/" ) {
-                absolutePath.chop(1);
-            }
-
-            // Now install the login item, if needed.
-            args.clear();
-            args << "-e tell application \"System Events\" to make login item at end "
-                    "with properties {path:\"" + absolutePath + "\", hidden:false}";
-
-            QProcess::execute("osascript", args);
-#endif
-        }
-        else
-        {
-#if defined(Q_OS_WIN)
-            QString key = "Derfla";
-            QSettings registrySettings(
-                "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-                QSettings::NativeFormat);
-            registrySettings.remove(key);
-            registrySettings.sync();
-#elif defined(Q_OS_MAC)
-            // Remove any existing login entry for this app first, in case there was one
-            // from a previous installation, that may be under a different launch path.
-
-            QStringList args;
-            args << "-e tell application \"System Events\" to delete login item\"Derfla\"";
-
-            QProcess::execute("osascript", args);
-#endif
-        }
-
     }
+
+    stayOnTop_ = derflaApp->settings_.value("stayOnTop", false).toBool();
+    derflaApp->stayOnTopAction_->setChecked(stayOnTop_);
+    if (stayOnTop_)
+        setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    else
+        setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
+
+    onShowInFront();
+
+    if (derflaApp->settings_.value("autostart", false).toBool())
+    {
+#if defined(Q_OS_WIN)
+        QString key = "Derfla";
+        QSettings registrySettings(
+            "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+            QSettings::NativeFormat);
+        registrySettings.remove(key);
+        registrySettings.setValue(key, QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
+        registrySettings.sync();
+#elif defined(Q_OS_MAC)
+        // Remove any existing login entry for this app first, in case there was one
+        // from a previous installation, that may be under a different launch path.
+
+        QStringList args;
+        args << "-e tell application \"System Events\" to delete login item\"Derfla\"";
+
+        QProcess::execute("osascript", args);
+
+        QDir dir(QCoreApplication::applicationDirPath());
+        dir.cdUp();
+        dir.cdUp();
+        QString absolutePath = dir.absolutePath();
+        // absolutePath will contain a "/" at the end,
+        // but we want the clean path to the .app bundle
+        if ( absolutePath.length() > 0 && absolutePath.right(1) == "/" ) {
+            absolutePath.chop(1);
+        }
+
+        // Now install the login item, if needed.
+        args.clear();
+        args << "-e tell application \"System Events\" to make login item at end "
+                "with properties {path:\"" + absolutePath + "\", hidden:false}";
+
+        QProcess::execute("osascript", args);
+#endif
+    }
+    else
+    {
+#if defined(Q_OS_WIN)
+        QString key = "Derfla";
+        QSettings registrySettings(
+            "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+            QSettings::NativeFormat);
+        registrySettings.remove(key);
+        registrySettings.sync();
+#elif defined(Q_OS_MAC)
+        // Remove any existing login entry for this app first, in case there was one
+        // from a previous installation, that may be under a different launch path.
+
+        QStringList args;
+        args << "-e tell application \"System Events\" to delete login item\"Derfla\"";
+
+        QProcess::execute("osascript", args);
+#endif
+    }
+
     QString keySequence = derflaApp->settings_.value("hotkey", "Alt+Space").toString();
 #if defined(Q_OS_WIN)
     hotkeyManager_->setKey(QKeySequence(keySequence));
 #else
     hotkeyManager_->registerHotkey(keySequence);
 #endif
+    return true;
 }
 
 void DerflaWidget::onCustomContextMenuRequested(const QPoint &pos)

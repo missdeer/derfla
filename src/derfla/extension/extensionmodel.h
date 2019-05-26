@@ -8,7 +8,7 @@ class ExtensionModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit ExtensionModel(const QList<ExtensionPtr>& extensions, QObject* parent);
+    explicit ExtensionModel(QObject* parent);
 
     virtual QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const Q_DECL_OVERRIDE;
     virtual int rowCount(const QModelIndex & parent = QModelIndex()) const Q_DECL_OVERRIDE;
@@ -18,8 +18,6 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-private:
-    const QList<ExtensionPtr> & extensions_;
 };
 
 #endif // EXTENSIONMODEL_H

@@ -158,7 +158,7 @@ void DerflaApp::onShowInFront()
 
 void DerflaApp::onQuit()
 {
-    qApp->quit();
+    QCoreApplication::quit();
 }
 
 void DerflaApp::onSelectFile()

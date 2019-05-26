@@ -36,11 +36,6 @@ private slots:
     void onInputFocusOut(QFocusEvent *);
     void onInputFocusIn(QFocusEvent *);
     void onCandidateListKeyPressed(QKeyEvent* e);
-    void onLoadSkin() override;
-    void onStayOnTop() override;
-    void onSelectFile() override;
-    void onSelectFolder() override;
-    void onPreference() override;
     void onCandidateListDone();
     void onCandidateDelayTimer();
     void onCustomContextMenuRequested(const QPoint &pos);
@@ -62,6 +57,12 @@ private:
     void stopWaiting();
     void showCandidateList();
     void hideCandidateList();
+
+    void onLoadSkin() override;
+    void onStayOnTop() override;
+    void onSelectFile() override;
+    void onSelectFolder() override;
+    bool onPreference() override;
 };
 
 #endif // DerflaWidget_H

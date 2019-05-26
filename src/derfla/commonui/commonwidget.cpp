@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "derflaapp.h"
+#include "preferencedialog.h"
 #include "commonwidget.h"
 
 CommonWidget::CommonWidget(QWidget *parent) 
@@ -51,7 +52,13 @@ void CommonWidget::onSelectFolder()
     
 }
 
-void CommonWidget::onPreference()
+bool CommonWidget::onPreference()
 {
-    
+#if defined(Q_OS_WIN)
+    hotkeyManager_->unsetKey();
+#else
+    hotkeyManager_->unregisterHotkey();
+#endif
+    PreferenceDialog dlg(this);
+    return (dlg.exec() == QDialog::Accepted);
 }

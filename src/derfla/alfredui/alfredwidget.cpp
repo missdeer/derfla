@@ -307,3 +307,28 @@ void AlfredWidget::onDone()
     plainTextEdit->clear();
     populateList();
 }
+
+void AlfredWidget::onLoadSkin()
+{
+
+}
+
+void AlfredWidget::onStayOnTop()
+{
+
+}
+
+void AlfredWidget::onSelectFile()
+{
+
+}
+
+void AlfredWidget::onSelectFolder()
+{
+
+}
+
+bool AlfredWidget::onPreference()
+{
+    return CommonWidget::onPreference();
+}

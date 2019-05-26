@@ -40,5 +40,11 @@ private:
     QListWidget *listWidget;
     AlfredTheme* theme;
     void setUpTheme();
+
+    void onLoadSkin() override;
+    void onStayOnTop() override;
+    void onSelectFile() override;
+    void onSelectFolder() override;
+    bool onPreference() override;
 };
 #endif // WIDGET_H
