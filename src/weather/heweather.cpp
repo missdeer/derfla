@@ -39,7 +39,7 @@ void Heweather::onFinished()
     QJsonDocument doc = QJsonDocument::fromJson(m_content);
     if (!doc.isObject())
     {
-        qApp->exit(1);
+        QCoreApplication::exit(1);
         return;
     }
 
@@ -55,7 +55,7 @@ void Heweather::onFinished()
     if (!w.isArray())
     {
         ts << "no root node";
-        qApp->exit(2);
+        QCoreApplication::exit(2);
     }
 
     auto weather = w.toArray();
@@ -63,7 +63,7 @@ void Heweather::onFinished()
     if (!weatherItem.isObject())
     {
         ts << "invalid first array element";
-        qApp->exit(3);
+        QCoreApplication::exit(3);
     }
 
     auto item = weatherItem.toObject();
@@ -72,7 +72,7 @@ void Heweather::onFinished()
     if (status != "ok")
     {
         ts << "status is " << status;
-        qApp->exit(4);
+        QCoreApplication::exit(4);
     }
     auto basic = item["basic"].toObject();
     QString location = basic["location"].toString();
@@ -112,7 +112,7 @@ void Heweather::onFinished()
 
     d.setArray(arr);
     ts << QString(d.toJson(QJsonDocument::Compact));
-    qApp->exit(0);
+    QCoreApplication::exit(0);
 }
 
 void Heweather::onError(QNetworkReply::NetworkError e)
@@ -120,7 +120,7 @@ void Heweather::onError(QNetworkReply::NetworkError e)
     auto* reply = qobject_cast<QNetworkReply*>(sender());
     Q_ASSERT(reply);
     qDebug() << e << reply->errorString() ;
-    qApp->exit(1);
+    QCoreApplication::exit(1);
 }
 
 void Heweather::onReadyRead()

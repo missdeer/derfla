@@ -38,7 +38,7 @@ void Bing::onFinished()
     QJsonDocument doc = QJsonDocument::fromJson(m_content);
     if (!doc.isObject())
     {
-        qApp->exit(1);
+        QCoreApplication::exit(1);
         return;
     }
 
@@ -115,7 +115,7 @@ void Bing::onFinished()
     QTextStream ts(stdout);
     ts.setCodec("UTF-8");
     ts << QString(d.toJson(QJsonDocument::Compact));
-    qApp->exit(0);
+    QCoreApplication::exit(0);
 }
 
 void Bing::onError(QNetworkReply::NetworkError e)
@@ -123,7 +123,7 @@ void Bing::onError(QNetworkReply::NetworkError e)
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
     Q_ASSERT(reply);
     qDebug() << e << reply->errorString() ;
-    qApp->exit(1);
+    QCoreApplication::exit(1);
 }
 
 void Bing::onReadyRead()

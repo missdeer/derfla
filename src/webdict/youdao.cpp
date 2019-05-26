@@ -44,7 +44,7 @@ void Youdao::onFinished()
     QJsonDocument doc = QJsonDocument::fromJson(m_content);
     if (!doc.isObject())
     {
-        qApp->exit(1);
+        QCoreApplication::exit(1);
         return;
     }
 
@@ -52,7 +52,7 @@ void Youdao::onFinished()
     auto errorCode = o["errorCode"].toInt();
     if (errorCode != 0)
     {
-        qApp->exit(errorCode);
+        QCoreApplication::exit(errorCode);
         return;
     }
 
@@ -132,7 +132,7 @@ void Youdao::onFinished()
     QTextStream ts(stdout);
     ts.setCodec("UTF-8");
     ts << QString(d.toJson(QJsonDocument::Compact));
-    qApp->exit(0);
+    QCoreApplication::exit(0);
 }
 
 void Youdao::onError(QNetworkReply::NetworkError e)
@@ -140,7 +140,7 @@ void Youdao::onError(QNetworkReply::NetworkError e)
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
     Q_ASSERT(reply);
     qDebug() << e << reply->errorString() ;
-    qApp->exit(1);
+    QCoreApplication::exit(1);
 }
 
 void Youdao::onReadyRead()

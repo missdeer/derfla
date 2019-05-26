@@ -69,7 +69,7 @@ bool handleDir(const QString& pattern)
         m.insert("arguments", "");
         m.insert("workingDir", "");
         m.insert("actionType", "shellExecute");
-        m.insert("iconPath", QString(qApp->applicationDirPath() % "/folder.png"));
+        m.insert("iconPath", QString(QCoreApplication::applicationDirPath() % "/folder.png"));
         arr.append(QJsonObject::fromVariantMap(m));
     }
     d.setArray(arr);
@@ -147,7 +147,7 @@ bool handleShellOpen(const QString& pattern)
         m.insert("actionType", "shellExecute");
         if (fi.isDir())
         {
-            m.insert("iconPath", QString(qApp->applicationDirPath() % "/folder.png"));
+            m.insert("iconPath", QString(QCoreApplication::applicationDirPath() % "/folder.png"));
         }
         else
         {
