@@ -18,7 +18,6 @@ win32-clang-msvc: CONFIG -= precompile_header
 !win32: include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)
-include($$PWD/../../3rdparty/lua/src/lua.pri)
 include($$PWD/../util/util.pri)
 
 SOURCES += $$PWD/main.cpp\
