@@ -13,16 +13,17 @@ class CommonWidget : public QWidget
     Q_OBJECT
 public:
     explicit CommonWidget(QWidget *parent = nullptr);
-    
-signals:
-    
-public slots:
+
     virtual void onLoadSkin();
     virtual void onStayOnTop();
     virtual void onShowInFront();
     virtual void onSelectFile();
     virtual void onSelectFolder();
     virtual bool onPreference();
+    virtual void hideCandidateList();
+signals:
+    
+public slots:
     
 protected:
 #if defined (Q_OS_WIN)

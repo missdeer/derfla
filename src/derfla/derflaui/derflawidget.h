@@ -56,8 +56,8 @@ private:
     bool applySkin(const QString& skin);
     void stopWaiting();
     void showCandidateList();
-    void hideCandidateList();
 
+    void hideCandidateList() override;
     void onLoadSkin() override;
     void onStayOnTop() override;
     void onSelectFile() override;

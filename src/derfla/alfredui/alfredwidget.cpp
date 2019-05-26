@@ -186,16 +186,21 @@ void AlfredWidget::setUpTheme()
     theme->setShadowOffset(shadowOffset);
 }
 
+void AlfredWidget::hideCandidateList()
+{
+    listWidget->clear();
+    listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), 0);
+    setMinimumHeight(theme->beginHeight() - 6);
+    setGeometry(x(), y(), width(), theme->beginHeight());
+}
+
 void AlfredWidget::onTextChanged()
 {
     QString text = plainTextEdit->toPlainText();
     derflaApp->clearDerflaAction();
     if (text.isEmpty())
     {
-        listWidget->clear();
-        listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), 0);
-        setMinimumHeight(theme->beginHeight() - 6);
-        setGeometry(x(), y(), width(), theme->beginHeight());
+        hideCandidateList();
     }
     else
         derflaApp->queryByExtension(text);
@@ -320,12 +325,35 @@ void AlfredWidget::onStayOnTop()
 
 void AlfredWidget::onSelectFile()
 {
+    if (!isVisible())
+        return;
+    hideCandidateList();
+    QString fileName = QFileDialog::getOpenFileName(this);
+    if (fileName.isEmpty())
+        return;
 
+    QString text = plainTextEdit->toPlainText();
+    if (!text.isEmpty() && !text.endsWith(" "))
+        text.append(" ");
+    text.append(QDir::toNativeSeparators(fileName));
+    plainTextEdit->setPlainText(text);
 }
 
 void AlfredWidget::onSelectFolder()
 {
+    if (!isVisible())
+        return;
 
+    hideCandidateList();
+    QString fileName = QFileDialog::getExistingDirectory(this);
+    if (fileName.isEmpty())
+        return;
+
+    QString text = plainTextEdit->toPlainText();
+    if (!text.isEmpty() && !text.endsWith(" "))
+        text.append(" ");
+    text.append(QDir::toNativeSeparators(fileName));
+    plainTextEdit->setPlainText(text);
 }
 
 bool AlfredWidget::onPreference()

@@ -22,6 +22,10 @@ class AlfredWidget : public CommonWidget
 public:
     explicit AlfredWidget(QWidget *parent = nullptr);
     ~AlfredWidget() override;
+    AlfredWidget(const AlfredWidget&) = delete;
+    AlfredWidget& operator=(const AlfredWidget&) = delete;
+    AlfredWidget(const AlfredWidget&&) = delete;
+    AlfredWidget& operator=(const AlfredWidget&&) = delete;
     void onTextChanged();
     void setOne();
     void enterCurItem();
@@ -40,6 +44,7 @@ private:
     QListWidget *listWidget;
     AlfredTheme* theme;
     void setUpTheme();
+    void hideCandidateList() override;
 
     void onLoadSkin() override;
     void onStayOnTop() override;

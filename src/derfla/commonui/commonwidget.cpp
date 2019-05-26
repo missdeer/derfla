@@ -44,7 +44,7 @@ void CommonWidget::onShowInFront()
 
 void CommonWidget::onSelectFile()
 {
-    
+
 }
 
 void CommonWidget::onSelectFolder()
@@ -61,4 +61,9 @@ bool CommonWidget::onPreference()
 #endif
     PreferenceDialog dlg(this);
     return (dlg.exec() == QDialog::Accepted);
+}
+
+void CommonWidget::hideCandidateList()
+{
+
 }
