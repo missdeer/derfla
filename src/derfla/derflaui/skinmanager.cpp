@@ -2,11 +2,6 @@
 #include <private/qzipreader_p.h>
 #include "skinmanager.h"
 
-SkinManager::SkinManager()
-{
-
-}
-
 void SkinManager::makeSkinImages(int cutTop, int cutBottom)
 {
     if (cutTop >= 0 && cutBottom > cutTop)

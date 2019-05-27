@@ -5,7 +5,7 @@
 class ThemeManager
 {
 public:
-    ThemeManager();
+    bool applyTheme(const QString& theme);
 };
 
 #endif // THEMEMANAGER_H

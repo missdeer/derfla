@@ -7,8 +7,6 @@
 class SkinManager
 {
 public:
-    SkinManager();
-
     bool applySkin(const QString& skin);
 
     const QPixmap &backgroundImage() const;
