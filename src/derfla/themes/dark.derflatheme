@@ -1,0 +1,16 @@
+beginHeight = 94
+listWidgetY = 65
+dimensions = { width = 550, height = 50 }
+groupBoxStylesheet = "QGroupBox{background:#444444;border-radius: 9px; padding: -3px -3px -3px -3px;}";
+plainTextEditStylesheet = "QPlainTextEdit{background:#3a3a3a; border: 1px solid #3a3a3a; color: #AAAAAA}";
+listWidgetStylesheet = [[
+QListWidget { background: #444444; border: 1px solid #444444}
+QListWidget::item { background: #444444; padding: 0px 0px 0px 3px;}
+QListWidget::item:selected { background: #525252; border: 1px solid #AAAAAA; border-radius: 2px;}
+QLabel {color: #AAAAAA;}
+]]
+
+fontSize = 30;
+blurRadius = 10.0;
+shadowColor = { r = 0, g = 0, b = 0, a = 200 }
+shadowOffset = 0.0;
