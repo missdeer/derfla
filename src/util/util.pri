@@ -1,4 +1,4 @@
-INCLUDEPATH += $$PWD $$PWD/../../3rdparty/lua/src/
+INCLUDEPATH += $$PWD $$PWD/../../3rdparty/lua/ $$PWD/../../3rdparty/lua/src/
 DEPENDPATH += $$PWD
 
 macx: {
