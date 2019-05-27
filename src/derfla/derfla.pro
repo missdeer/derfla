@@ -41,6 +41,7 @@ SOURCES += $$PWD/main.cpp\
     $$PWD/commonui/booleaneditor.cpp \
     $$PWD/derflaapp.cpp \
     $$PWD/actionexecutor.cpp  \
+    alfredui/thememanager.cpp \
     commonui/commonwidget.cpp
 
 HEADERS  += $$PWD/stdafx.h \
@@ -65,6 +66,7 @@ HEADERS  += $$PWD/stdafx.h \
     $$PWD/commonui/booleaneditor.h \
     $$PWD/derflaapp.h \
     $$PWD/actionexecutor.h  \
+    alfredui/thememanager.h \
     commonui/commonwidget.h
 
 FORMS    += \

@@ -15,7 +15,7 @@ public:
           const QString &listWidgetStylesheet, 
           int fontSize, 
           qreal blurRadius, 
-          const QColor &shadowColor, 
+          QColor shadowColor, 
           qreal shadowOffset);
     ~AlfredTheme() = default;
 
