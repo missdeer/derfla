@@ -74,7 +74,12 @@ FORMS    += \
     $$PWD/derflaui/candidatelist.ui \
     $$PWD/commonui/preferencedialog.ui
 
-INCLUDEPATH += $$PWD $$PWD/alfredui $$PWD/derflaui $$PWD/commonui $$PWD/updater $$PWD/extension
+INCLUDEPATH += $$PWD \
+    $$PWD/alfredui \
+    $$PWD/derflaui \
+    $$PWD/commonui \
+    $$PWD/updater \
+    $$PWD/extension
 
 CODECFORTR      = UTF-8
 CODECFORSRC     = UTF-8
@@ -111,16 +116,16 @@ macx: {
         $$PWD/updater/SparkleAutoUpdater.mm \
         $$PWD/macui/CocoaInitializer.mm \
         $$PWD/macui/darkmode.mm
-    HEADERS += $$PWD/macui/CocoaInitializer.h $$PWD/updater/SparkleAutoUpdater.h
+    HEADERS += $$PWD/macui/CocoaInitializer.h \
+        $$PWD/updater/SparkleAutoUpdater.h
 
     LIBS += -F$$PWD/../../3rdparty/Sparkle \
-            -framework AppKit \
-            -framework Carbon \
-            -framework Foundation \
-            -framework ApplicationServices \
-            -framework Sparkle \
-            -framework CoreServices -lobjc
-
+        -framework AppKit \
+        -framework Carbon \
+        -framework Foundation \
+        -framework ApplicationServices \
+        -framework Sparkle \
+        -framework CoreServices -lobjc
     QMAKE_LFLAGS += -Wl,-rpath,@loader_path/../Frameworks
     QMAKE_LFLAGS += -F$$PWD/../../3rdparty/Sparkle
     QMAKE_CXXFLAGS += -F$$PWD/../../3rdparty/Sparkle
@@ -132,6 +137,7 @@ macx: {
         cp -avf $$PWD/../../3rdparty/Sparkle/Sparkle.framework $$DESTDIR/Derfla.app/Contents/Frameworks && \
         install_name_tool -change libderflautil.1.dylib @executable_path/../Libs/libderflautil.1.dylib $$DESTDIR/Derfla.app/Contents/MacOS/Derfla && \
         cp -avf $$PWD/skins  $$DESTDIR/Derfla.app/Contents/Resources && \
+        cp -avf $$PWD/themes $$DESTDIR/Derfla.app/Contents/Resources && \
         cp $$PWD/rc/updater-dsa-pub.pem $$DESTDIR/Derfla.app/Contents/Resources/dsa_pub.pem
 
     QMAKE_INFO_PLIST = osxInfo.plist
@@ -181,19 +187,15 @@ win32: {
         copy_winsparkle.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/WinSparkle/Release/WinSparkle.dll) $$shell_path($$DESTDIR)'
     }
     copy_skin.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$DESTDIR/skins)'
+    copy_theme.commands = '$(COPY_DIR) $$shell_path($$PWD/themes) $$shell_path($$DESTDIR/themes)'
 
-    QMAKE_EXTRA_TARGETS += copy_winsparkle copy_skin
-    POST_TARGETDEPS += copy_winsparkle copy_skin
-}
-
-unix: !macx: {
-    HEADERS += $$PWD/alfredui/gpixbuftoqicon.h
-    SOURCES += $$PWD/alfredui/gpixbuftoqicon.cpp
+    QMAKE_EXTRA_TARGETS += copy_winsparkle copy_skin copy_theme
+    POST_TARGETDEPS += copy_winsparkle copy_skin copy_theme
 }
 
 RESOURCES += \
-    derfla.qrc
+    $$PWD/derfla.qrc
 
 DISTFILES += \
-    rc/updater-dsa-pub.pem
+    $$PWD/rc/updater-dsa-pub.pem
 
