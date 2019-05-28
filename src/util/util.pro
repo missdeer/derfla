@@ -50,7 +50,8 @@ SOURCES += \
     $$PWD/directory.cpp \
     $$PWD/util.cpp \
     $$PWD/derflaaction.cpp \
-    $$PWD/scopedguard.cpp
+    $$PWD/scopedguard.cpp \
+    luawrapper.cpp
 
 HEADERS += \
     $$PWD/util_global.h \
@@ -58,7 +59,8 @@ HEADERS += \
     $$PWD/directory.h \
     $$PWD/util.h \
     $$PWD/derflaaction.h \
-    $$PWD/scopedguard.h 
+    $$PWD/scopedguard.h  \
+    luawrapper.h
 
 INCLUDEPATH += $$PWD
 
