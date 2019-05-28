@@ -6,7 +6,7 @@
 
 QT       += widgets
 
-TARGET = derflautil
+TARGET = DerflaUtil
 TEMPLATE = lib
 CONFIG += c++17 precompile_header
 PRECOMPILED_HEADER = stdafx.h

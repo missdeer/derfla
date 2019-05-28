@@ -2,15 +2,16 @@ INCLUDEPATH += $$PWD $$PWD/../../3rdparty/lua/ $$PWD/../../3rdparty/lua/src/
 DEPENDPATH += $$PWD
 
 macx: {
-    LIBS+=-L$$PWD/../../bin/x86_64/Derfla.app/Contents/Libs -lderflautil
+    LIBS+=-L$$PWD/../../bin/x86_64/Derfla.app/Contents/Libs
 } else {
     contains(QMAKE_HOST.arch, x86_64): {
         LIBS+=-L$$PWD/../../bin/x86_64
     } else: {
         LIBS+=-L$$PWD/../../bin/x86
     }
-    LIBS+=-lderflautil
 }
+
+LIBS+=-lDerflaUtil
 
 HEADERS += \
     $$PWD/util_global.h \
