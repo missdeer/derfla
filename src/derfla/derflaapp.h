@@ -37,6 +37,7 @@ public:
     void executeAction(DerflaActionPtr da) { actionExecutor_(da);}
     ExtensionManager *extensionManager() { return extensionManager_; }
     void queryByExtension(const QString& text);
+    void setCheckedStayOnTopAction(bool checked);
     QSettings &settings();
     
     bool isEmptyDerflaAction() const { return dal_.isEmpty(); }

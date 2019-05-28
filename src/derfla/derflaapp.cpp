@@ -99,6 +99,12 @@ void DerflaApp::queryByExtension(const QString &text)
     extensionManager_->query(text);
 }
 
+void DerflaApp::setCheckedStayOnTopAction(bool checked)
+{
+    Q_ASSERT(stayOnTopAction_);
+    stayOnTopAction_->setChecked(checked);
+}
+
 QSettings &DerflaApp::settings()
 {
     return settings_;
