@@ -72,3 +72,301 @@ bool LuaWrapper::doScript(const QString &script)
     }
     return true;
 }
+
+double LuaWrapper::getDouble(const QString &name)
+{
+    if (!m_L)
+        return 0.0;
+
+    lua_getglobal(m_L, name.toStdString().c_str());
+
+    if (!lua_isnumber(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0.0;
+    }
+
+    double result = lua_tonumber(m_L, -1);
+    lua_pop(m_L, 1);
+
+    return result;
+}
+
+float LuaWrapper::getFloat(const QString &name)
+{
+    if (!m_L)
+        return 0.0;
+
+    lua_getglobal(m_L, name.toStdString().c_str());
+
+    if (!lua_isnumber(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0.0;
+    }
+
+    float result = (float)lua_tonumber(m_L, -1);
+    lua_pop(m_L, 1);
+
+    return result;
+}
+
+int LuaWrapper::getInt(const QString &name)
+{
+    if (!m_L)
+        return 0;
+
+    lua_getglobal(m_L, name.toStdString().c_str());
+
+    if (!lua_isinteger(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0;
+    }
+
+    int result = (int)lua_tointeger(m_L, -1);
+    lua_pop(m_L, 1);
+
+    return result;
+}
+
+long long LuaWrapper::getLongLong(const QString &name)
+{
+    if (!m_L)
+        return 0;
+
+    lua_getglobal(m_L, name.toStdString().c_str());
+
+    if (!lua_isinteger(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0;
+    }
+
+    long long result = (long long)lua_tointeger(m_L, -1);
+    lua_pop(m_L, 1);
+
+    return result;
+}
+
+bool LuaWrapper::getBool(const QString &name)
+{
+    if (!m_L)
+        return 0.0;
+
+    lua_getglobal(m_L, name.toStdString().c_str());
+
+    if (!lua_isboolean(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a boolean";
+        return 0.0;
+    }
+
+    int result = lua_toboolean(m_L, -1);
+    lua_pop(m_L, 1);
+
+    return !!result;
+}
+
+QString LuaWrapper::getString(const QString &name)
+{
+    if (!m_L)
+        return "";
+
+    lua_getglobal(m_L, name.toStdString().c_str());
+
+    if (!lua_isstring(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a string";
+        return "";
+    }
+
+    size_t resultLen = 0;
+    const char * result = lua_tolstring(m_L, -1, &resultLen);
+    QString str = QString::fromLatin1(result, (int)resultLen);
+    lua_pop(m_L, 1);
+
+    return str;
+}
+
+double LuaWrapper::getDouble(const QString &table, const QString &name)
+{
+    if (!m_L)
+        return 0.0;
+
+    lua_getglobal(m_L, table.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << table << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get table[name] */
+
+    if (!lua_isnumber(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0.0;
+    }
+
+    double result = lua_tonumber(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove name
+    lua_pop(m_L, 1); // remove table
+
+    return result;
+}
+
+float LuaWrapper::getFloat(const QString &table, const QString &name)
+{
+    if (!m_L)
+        return 0.0;
+
+    lua_getglobal(m_L, table.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << table << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get table[name] */
+
+    if (!lua_isnumber(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0.0;
+    }
+
+    float result = (float)lua_tonumber(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove name
+    lua_pop(m_L, 1); // remove table
+
+    return result;
+}
+
+int LuaWrapper::getInt(const QString &table, const QString &name)
+{
+    if (!m_L)
+        return 0;
+
+    lua_getglobal(m_L, table.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << table << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get table[name] */
+
+    if (!lua_isinteger(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0;
+    }
+
+    int result = (int)lua_tointeger(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove name
+    lua_pop(m_L, 1); // remove table
+
+    return result;
+}
+
+long long LuaWrapper::getLongLong(const QString &table, const QString &name)
+{
+    if (!m_L)
+        return 0;
+
+    lua_getglobal(m_L, table.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << table << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get table[name] */
+
+    if (!lua_isinteger(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0;
+    }
+
+    long long result = (long long)lua_tointeger(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove name
+    lua_pop(m_L, 1); // remove table
+
+    return result;
+}
+
+bool LuaWrapper::getBool(const QString &table, const QString &name)
+{
+    if (!m_L)
+        return 0.0;
+
+    lua_getglobal(m_L, table.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << table << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get table[name] */
+
+    if (!lua_isboolean(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a boolean";
+        return 0.0;
+    }
+
+    int result = lua_toboolean(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove name
+    lua_pop(m_L, 1); // remove table
+
+    return result;
+}
+
+QString LuaWrapper::getString(const QString &table, const QString &name)
+{
+    if (!m_L)
+        return "";
+
+    lua_getglobal(m_L, table.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << table << " is expected to be a table";
+        return "";
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get table[name] */
+
+    if (!lua_isstring(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a string";
+        return "";
+    }
+
+    size_t resultLen = 0;
+    const char * result = lua_tolstring(m_L, -1, &resultLen);
+    QString str = QString::fromLatin1(result, (int)resultLen);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove name
+    lua_pop(m_L, 1); // remove table
+
+    return str;
+}
