@@ -124,66 +124,14 @@ void AlfredWidget::enterCurItem()
 
 void AlfredWidget::setUpTheme()
 {
-    std::string themeName = "Classic";
+    QString themeName = "classic";
     
 #if defined (Q_OS_MAC)
     if (isDarkMode())
-        themeName = "Dark";
+        themeName = "dark";
 #endif
     
-    theme = new AlfredTheme();
-    
-    int globalBeginHeight;
-    int globalListWidgetY;
-    QSize dimensions;
-    QString groupBoxStylesheet;
-    QString plainTextEditStylesheet;
-    QString listWidgetStylesheet;
-    int fontSize;
-    qreal blurRadius;
-    QColor shadowColor;
-    qreal shadowOffset;
-
-    if(themeName == "Classic")
-    {
-        globalBeginHeight = 125;
-        globalListWidgetY = 91;
-        dimensions = QSize(550, 75);
-        groupBoxStylesheet = "QGroupBox{background:white;border-radius: 9px;}";
-        plainTextEditStylesheet = "QPlainTextEdit{border: 1px solid white}";
-        listWidgetStylesheet = "QListWidget{border: 1px solid white} QListWidget::item{padding : 3px 3px 3px 3px}";
-        fontSize = 40;
-        blurRadius = 9.0;
-        shadowColor = QColor(0, 0, 0, 160);
-        shadowOffset = 3.0;
-    }
-    else
-    {
-        globalBeginHeight = 94;
-        globalListWidgetY = 65;
-        dimensions = QSize(550, 50);
-        groupBoxStylesheet = "QGroupBox{background:#444444;border-radius: 9px; padding: -3px -3px -3px -3px;}";
-        plainTextEditStylesheet = "QPlainTextEdit{background:#3a3a3a; border: 1px solid #3a3a3a; color: #AAAAAA}";
-        listWidgetStylesheet = "QListWidget { background: #444444; border: 1px solid #444444}"
-                               "QListWidget::item { background: #444444; padding: 0px 0px 0px 3px;}"
-                               "QListWidget::item:selected { background: #525252; border: 1px solid #AAAAAA; border-radius: 2px;}"
-                               "QLabel {color: #AAAAAA;}";
-        fontSize = 30;
-        blurRadius = 10.0;
-        shadowColor = QColor(0, 0, 0, 200);
-        shadowOffset = 0.0;
-    }
-
-    theme->setBeginHeight(globalBeginHeight);
-    theme->setListWidgetY(globalListWidgetY);
-    theme->setDimensions(dimensions);
-    theme->setGroupBoxStylesheet(groupBoxStylesheet);
-    theme->setPlainTextEditStylesheet(plainTextEditStylesheet);
-    theme->setListWidgetStylesheet(listWidgetStylesheet);
-    theme->setFontSize(fontSize);
-    theme->setBlurRadius(blurRadius);
-    theme->setShadowColor(shadowColor);
-    theme->setShadowOffset(shadowOffset);
+    theme = themeManager.applyTheme(":/themes/" + themeName + ".derflatheme");
 }
 
 void AlfredWidget::hideCandidateList()
@@ -230,7 +178,7 @@ void AlfredWidget::populateList()
     setMinimumHeight(printsize * rowSize + theme->beginHeight());
     setGeometry(x(), y(), width(), printsize * rowSize + theme->beginHeight());
 
-    for (size_t i = 0; i < size; i++) 
+    for (int i = 0; i < size; i++)
     {
         DerflaActionPtr da = dal.at(i);
         QWidget* l;

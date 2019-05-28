@@ -55,7 +55,7 @@ bool LuaWrapper::doScript(const QString &script)
 {
     if (!m_L)
         return false;
-    int status = luaL_loadbuffer(m_L, script.toStdString().c_str(), script.toStdString().size(), nullptr);
+    int status = luaL_loadbuffer(m_L, script.toStdString().c_str(), script.toStdString().size(), "theme");
     if (status)
     {
         qDebug() << "Couldn't load script:" << lua_tostring(m_L, -1);

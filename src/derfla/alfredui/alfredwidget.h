@@ -9,8 +9,8 @@
 #include <string>
 #include <map>
 #include "plaintext.h"
-#include "alfredtheme.h"
 #include "commonwidget.h"
+#include "thememanager.h"
 
 namespace Ui {
 class Widget;
@@ -43,6 +43,7 @@ private:
     PlainText *plainTextEdit;
     QListWidget *listWidget;
     AlfredTheme* theme;
+    ThemeManager themeManager;
     void setUpTheme();
     void hideCandidateList() override;
 
