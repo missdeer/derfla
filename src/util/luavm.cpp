@@ -3,13 +3,13 @@
 #include "derflaluawarpper.h"
 
 
-LuaWrapper::LuaWrapper(lua_State *L)
+LuaVM::LuaVM(lua_State *L)
     : m_L(L)
 {
 
 }
 
-void LuaWrapper::createLuaState()
+void LuaVM::createLuaState()
 {
     m_L = luaL_newstate();
 
@@ -17,7 +17,7 @@ void LuaWrapper::createLuaState()
     luaopen_derfla(m_L);
 }
 
-void LuaWrapper::shutdownLuaState()
+void LuaVM::shutdownLuaState()
 {
     if (m_L)
     {
@@ -28,7 +28,7 @@ void LuaWrapper::shutdownLuaState()
     }    
 }
 
-bool LuaWrapper::doFile(const QString &file)
+bool LuaVM::doFile(const QString &file)
 {
     if (!m_L)
         return false;
@@ -51,7 +51,7 @@ bool LuaWrapper::doFile(const QString &file)
     return true;
 }
 
-bool LuaWrapper::doScript(const QString &script)
+bool LuaVM::doScript(const QString &script)
 {
     if (!m_L)
         return false;
@@ -73,7 +73,7 @@ bool LuaWrapper::doScript(const QString &script)
     return true;
 }
 
-double LuaWrapper::getDouble(const QString &name)
+double LuaVM::getDouble(const QString &name)
 {
     if (!m_L)
         return 0.0;
@@ -92,7 +92,7 @@ double LuaWrapper::getDouble(const QString &name)
     return result;
 }
 
-float LuaWrapper::getFloat(const QString &name)
+float LuaVM::getFloat(const QString &name)
 {
     if (!m_L)
         return 0.0;
@@ -111,7 +111,7 @@ float LuaWrapper::getFloat(const QString &name)
     return result;
 }
 
-int LuaWrapper::getInt(const QString &name)
+int LuaVM::getInt(const QString &name)
 {
     if (!m_L)
         return 0;
@@ -130,7 +130,7 @@ int LuaWrapper::getInt(const QString &name)
     return result;
 }
 
-long long LuaWrapper::getLongLong(const QString &name)
+long long LuaVM::getLongLong(const QString &name)
 {
     if (!m_L)
         return 0;
@@ -149,7 +149,7 @@ long long LuaWrapper::getLongLong(const QString &name)
     return result;
 }
 
-bool LuaWrapper::getBool(const QString &name)
+bool LuaVM::getBool(const QString &name)
 {
     if (!m_L)
         return 0.0;
@@ -168,7 +168,7 @@ bool LuaWrapper::getBool(const QString &name)
     return !!result;
 }
 
-QString LuaWrapper::getString(const QString &name)
+QString LuaVM::getString(const QString &name)
 {
     if (!m_L)
         return "";
@@ -189,7 +189,7 @@ QString LuaWrapper::getString(const QString &name)
     return str;
 }
 
-double LuaWrapper::getDouble(const QString &table, const QString &name)
+double LuaVM::getDouble(const QString &table, const QString &name)
 {
     if (!m_L)
         return 0.0;
@@ -219,7 +219,7 @@ double LuaWrapper::getDouble(const QString &table, const QString &name)
     return result;
 }
 
-float LuaWrapper::getFloat(const QString &table, const QString &name)
+float LuaVM::getFloat(const QString &table, const QString &name)
 {
     if (!m_L)
         return 0.0;
@@ -249,7 +249,7 @@ float LuaWrapper::getFloat(const QString &table, const QString &name)
     return result;
 }
 
-int LuaWrapper::getInt(const QString &table, const QString &name)
+int LuaVM::getInt(const QString &table, const QString &name)
 {
     if (!m_L)
         return 0;
@@ -279,7 +279,7 @@ int LuaWrapper::getInt(const QString &table, const QString &name)
     return result;
 }
 
-long long LuaWrapper::getLongLong(const QString &table, const QString &name)
+long long LuaVM::getLongLong(const QString &table, const QString &name)
 {
     if (!m_L)
         return 0;
@@ -309,7 +309,7 @@ long long LuaWrapper::getLongLong(const QString &table, const QString &name)
     return result;
 }
 
-bool LuaWrapper::getBool(const QString &table, const QString &name)
+bool LuaVM::getBool(const QString &table, const QString &name)
 {
     if (!m_L)
         return 0.0;
@@ -339,7 +339,7 @@ bool LuaWrapper::getBool(const QString &table, const QString &name)
     return result;
 }
 
-QString LuaWrapper::getString(const QString &table, const QString &name)
+QString LuaVM::getString(const QString &table, const QString &name)
 {
     if (!m_L)
         return "";

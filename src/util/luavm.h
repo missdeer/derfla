@@ -4,12 +4,12 @@
 #include "util_global.h"
 #include <lua.hpp>
 
-class UTILSHARED_EXPORT LuaWrapper
+class UTILSHARED_EXPORT LuaVM
 {
 public:
-    LuaWrapper() = default;
-    explicit LuaWrapper(lua_State *L);
-    ~LuaWrapper() = default;
+    LuaVM() = default;
+    explicit LuaVM(lua_State *L);
+    ~LuaVM() = default;
 
     void createLuaState();
     void shutdownLuaState();

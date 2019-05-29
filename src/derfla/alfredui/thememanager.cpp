@@ -4,7 +4,7 @@
 #include "thememanager.h"
 
 ThemeManager::ThemeManager()
-    : m_lua(new LuaWrapper)
+    : m_lua(new LuaVM)
 {
     m_lua->createLuaState();
 }

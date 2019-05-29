@@ -2,7 +2,7 @@
 #define THEMEMANAGER_H
 
 class AlfredTheme;
-class LuaWrapper;
+class LuaVM;
 
 class ThemeManager
 {
@@ -12,7 +12,7 @@ public:
     ~ThemeManager();
 private:
     AlfredTheme *m_theme = nullptr;
-    LuaWrapper *m_lua = nullptr;
+    LuaVM *m_lua = nullptr;
 };
 
 #endif // THEMEMANAGER_H
