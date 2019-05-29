@@ -154,14 +154,14 @@ long long LuaVM::getLongLong(const QString &name)
 bool LuaVM::getBool(const QString &name)
 {
     if (!m_L)
-        return 0.0;
+        return false;
 
     lua_getglobal(m_L, name.toStdString().c_str());
 
     if (!lua_isboolean(m_L, -1))
     {
         qDebug() << name << " is expected to be a boolean";
-        return 0.0;
+        return false;
     }
 
     int result = lua_toboolean(m_L, -1);
@@ -220,6 +220,94 @@ double LuaVM::getDouble(const QString &table, const QString &name)
     return result;
 }
 
+double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &name)
+{
+    if (!m_L)
+        return 0.0;
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[name] */
+
+    if (!lua_isnumber(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0.0;
+    }
+
+    double result = lua_tonumber(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return result;
+}
+
+double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &t3, const QString &name)
+{
+    if (!m_L)
+        return 0.0;
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[t3] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t3 << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t3[name] */
+
+    if (!lua_isnumber(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0.0;
+    }
+
+    double result = lua_tonumber(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t3
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return result;
+}
+
 float LuaVM::getFloat(const QString &table, const QString &name)
 {
     if (!m_L)
@@ -245,6 +333,94 @@ float LuaVM::getFloat(const QString &table, const QString &name)
     float result = (float)lua_tonumber(m_L, -1);
     lua_pop(m_L, 1); // remove the result
     lua_pop(m_L, 1); // remove table
+
+    return result;
+}
+
+float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &name)
+{
+    if (!m_L)
+        return 0.0;
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[name] */
+
+    if (!lua_isnumber(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0.0;
+    }
+
+    float result = (float)lua_tonumber(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return result;
+}
+
+float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &t3, const QString &name)
+{
+    if (!m_L)
+        return 0.0;
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[t3] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t3 << " is expected to be a table";
+        return 0.0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t3[name] */
+
+    if (!lua_isnumber(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0.0;
+    }
+
+    float result = (float)lua_tonumber(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t3
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
 
     return result;
 }
@@ -278,6 +454,94 @@ int LuaVM::getInt(const QString &table, const QString &name)
     return result;
 }
 
+int LuaVM::getInt(const QString &t1, const QString &t2, const QString &name)
+{
+    if (!m_L)
+        return 0;
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[name] */
+
+    if (!lua_isinteger(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0;
+    }
+
+    int result = (int)lua_tointeger(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return result;
+}
+
+int LuaVM::getInt(const QString &t1, const QString &t2, const QString &t3, const QString &name)
+{
+    if (!m_L)
+        return 0;
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[t3] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t3 << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t3[name] */
+
+    if (!lua_isinteger(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0;
+    }
+
+    int result = (int)lua_tointeger(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t3
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return result;
+}
+
 long long LuaVM::getLongLong(const QString &table, const QString &name)
 {
     if (!m_L)
@@ -307,17 +571,105 @@ long long LuaVM::getLongLong(const QString &table, const QString &name)
     return result;
 }
 
+long long LuaVM::getLongLong(const QString &t1, const QString &t2, const QString &name)
+{
+    if (!m_L)
+        return 0;
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[name] */
+
+    if (!lua_isinteger(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0;
+    }
+
+    long long result = (long long)lua_tointeger(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return result;
+}
+
+long long LuaVM::getLongLong(const QString &t1, const QString &t2, const QString &t3, const QString &name)
+{
+    if (!m_L)
+        return 0;
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[t3] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t3 << " is expected to be a table";
+        return 0;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t3[name] */
+
+    if (!lua_isinteger(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a number";
+        return 0;
+    }
+
+    long long result = (long long)lua_tointeger(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t3
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return result;
+}
+
 bool LuaVM::getBool(const QString &table, const QString &name)
 {
     if (!m_L)
-        return 0.0;
+        return false;
 
     lua_getglobal(m_L, table.toStdString().c_str());
 
     if (!lua_istable(m_L, -1))
     {
         qDebug() << table << " is expected to be a table";
-        return 0.0;
+        return false;
     }
 
     lua_pushstring(m_L, name.toStdString().c_str());
@@ -326,14 +678,101 @@ bool LuaVM::getBool(const QString &table, const QString &name)
     if (!lua_isboolean(m_L, -1))
     {
         qDebug() << name << " is expected to be a boolean";
-        return 0.0;
+        return false;
     }
 
     int result = lua_toboolean(m_L, -1);
     lua_pop(m_L, 1); // remove the result
     lua_pop(m_L, 1); // remove table
 
-    return result;
+    return !!result;
+}
+
+bool LuaVM::getBool(const QString &t1, const QString &t2, const QString &name)
+{
+    if (!m_L)
+        return false;
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return false;
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return false;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[name] */
+
+    if (!lua_isboolean(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a boolean";
+        return false;
+    }
+
+    int result = lua_toboolean(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return !!result;
+}
+
+bool LuaVM::getBool(const QString &t1, const QString &t2, const QString &t3, const QString &name)
+{
+    if (!m_L)
+        return false;
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return false;
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return false;
+    }
+
+    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[t3] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t3 << " is expected to be a table";
+        return false;
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t3[name] */
+
+    if (!lua_isboolean(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a boolean";
+        return false;
+    }
+
+    int result = lua_toboolean(m_L, -1);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return !!result;
 }
 
 QString LuaVM::getString(const QString &table, const QString &name)
@@ -367,6 +806,218 @@ QString LuaVM::getString(const QString &table, const QString &name)
     return str;
 }
 
+QString LuaVM::getString(const QString &t1, const QString &t2, const QString &name)
+{
+    if (!m_L)
+        return "";
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return "";
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return "";
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[name] */
+
+    if (!lua_isstring(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a string";
+        return "";
+    }
+
+    size_t resultLen = 0;
+    const char * result = lua_tolstring(m_L, -1, &resultLen);
+    QString str = QString::fromLatin1(result, (int)resultLen);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return str;
+}
+
+QString LuaVM::getString(const QString &t1, const QString &t2, const QString &t3, const QString &name)
+{
+    if (!m_L)
+        return "";
+
+    lua_getglobal(m_L, t1.toStdString().c_str());
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t1 << " is expected to be a table";
+        return "";
+    }
+
+    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t1[t2] */
+
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << t2 << " is expected to be a table";
+        return "";
+    }
+
+    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t2[t3] */
+
+    if (!lua_isstring(m_L, -1))
+    {
+        qDebug() << t3 << " is expected to be a string";
+        return "";
+    }
+
+    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_gettable(m_L, -2);  /* get t3[name] */
+
+    if (!lua_isstring(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a string";
+        return "";
+    }
+
+    size_t resultLen = 0;
+    const char * result = lua_tolstring(m_L, -1, &resultLen);
+    QString str = QString::fromLatin1(result, (int)resultLen);
+    lua_pop(m_L, 1); // remove the result
+    lua_pop(m_L, 1); // remove t3
+    lua_pop(m_L, 1); // remove t2
+    lua_pop(m_L, 1); // remove t1
+
+    return str;
+}
+
+bool LuaVM::set(const QString &name, double value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &name, double value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, double value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const QString &name, double value)
+{
+
+}
+
+bool LuaVM::set(const QString &name, float value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &name, float value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, float value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const QString &name, float value)
+{
+
+}
+
+bool LuaVM::set(const QString &name, int value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &name, int value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, int value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const QString &name, int value)
+{
+
+}
+
+bool LuaVM::set(const QString &name, long long value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &name, long long value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, long long value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const QString &name, long long value)
+{
+
+}
+
+bool LuaVM::set(const QString &name, bool value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &name, bool value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, bool value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const QString &name, bool value)
+{
+
+}
+
+bool LuaVM::set(const QString &name, const char *value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &name, const char *value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, const char *value)
+{
+
+}
+
+bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const QString &name, const char *value)
+{
+
+}
+
 void LuaVM::loadBuiltinTemplate()
 {
     QFile f(":/lua/builtin.lua");
@@ -381,5 +1032,13 @@ void LuaVM::loadBuiltinTemplate()
 
 void LuaVM::setupBuiltinValues()
 {
-
+#if defined(Q_OS_MAC)
+    set("derfla", "os", "name", "macos");
+#elif defined(Q_OS_WIN)
+    set("derfla", "os", "name", "windows");
+#elif defined(Q_OS_LINUX)
+    set("derfla", "os", "name", "linux");
+#else
+    set("derfla", "os", "name", "other");
+#endif
 }
