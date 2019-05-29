@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "luawrapper.h"
+#include "luavm.h"
 #include "alfredtheme.h"
 #include "thememanager.h"
 
