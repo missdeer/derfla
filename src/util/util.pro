@@ -51,8 +51,6 @@ SOURCES += \
     $$PWD/util.cpp \
     $$PWD/derflaaction.cpp \
     $$PWD/scopedguard.cpp \
-    $$PWD/derflaluawrapper.cpp \
-    $$PWD/derflainfo.cpp \
     $$PWD/luavm.cpp
 
 HEADERS += \
@@ -62,9 +60,7 @@ HEADERS += \
     $$PWD/util.h \
     $$PWD/derflaaction.h \
     $$PWD/scopedguard.h  \
-    $$PWD/derflainfo.h \
-    $$PWD/luavm.h \
-    $$PWD/derflaluawarpper.h
+    $$PWD/luavm.h
 
 INCLUDEPATH += $$PWD
 
@@ -124,3 +120,6 @@ macx: {
     OBJECTIVE_SOURCES += $$PWD/mac_util.mm
     LIBS += -framework AppKit
 }
+
+RESOURCES += \
+    util.qrc

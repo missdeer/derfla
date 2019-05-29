@@ -11,8 +11,8 @@ public:
     explicit LuaVM(lua_State *L);
     ~LuaVM() = default;
 
-    void createLuaState();
-    void shutdownLuaState();
+    void start();
+    void shutdown();
     bool doFile(const QString &file);
     bool doScript(const QString &script);
 
@@ -32,6 +32,9 @@ public:
 
 private:
     lua_State *m_L = nullptr;
+
+    void loadBuiltinTemplate();
+    void setupBuiltinValues();
 };
 
 #endif // LUAWRAPPER_H

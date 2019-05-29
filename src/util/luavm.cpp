@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "luavm.h"
-#include "derflaluawarpper.h"
 
 
 LuaVM::LuaVM(lua_State *L)
@@ -9,15 +8,18 @@ LuaVM::LuaVM(lua_State *L)
 
 }
 
-void LuaVM::createLuaState()
+void LuaVM::start()
 {
     m_L = luaL_newstate();
 
     luaL_openlibs(m_L);
-    luaopen_derfla(m_L);
+
+    loadBuiltinTemplate();
+
+    setupBuiltinValues();
 }
 
-void LuaVM::shutdownLuaState()
+void LuaVM::shutdown()
 {
     if (m_L)
     {
@@ -369,4 +371,21 @@ QString LuaVM::getString(const QString &table, const QString &name)
     lua_pop(m_L, 1); // remove table
 
     return str;
+}
+
+void LuaVM::loadBuiltinTemplate()
+{
+    QFile f(":/lua/builtin.lua");
+    if (f.open(QIODevice::ReadOnly))
+    {
+        QByteArray ba = f.readAll();
+        f.close();
+
+        doScript(ba);
+    }
+}
+
+void LuaVM::setupBuiltinValues()
+{
+
 }
