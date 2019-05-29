@@ -26,7 +26,7 @@ macx: {
 
 win32-*msvc: QMAKE_CXXFLAGS += "/std:c++17"
 win32-clang-msvc: CONFIG -= precompile_header
-DEFINES += UTIL_LIBRARY
+DEFINES += UTIL_LIBRARY STATIC_LINKED
 
 win32: DEFINES += 
 else: !macx: DEFINES += LUA_USE_LINUX
@@ -51,7 +51,9 @@ SOURCES += \
     $$PWD/util.cpp \
     $$PWD/derflaaction.cpp \
     $$PWD/scopedguard.cpp \
-    luawrapper.cpp
+    $$PWD/derflaluawrapper.cpp \
+    $$PWD/derflainfo.cpp \
+    $$PWD/luawrapper.cpp
 
 HEADERS += \
     $$PWD/util_global.h \
@@ -60,7 +62,9 @@ HEADERS += \
     $$PWD/util.h \
     $$PWD/derflaaction.h \
     $$PWD/scopedguard.h  \
-    luawrapper.h
+    $$PWD/derflainfo.h \
+    $$PWD/luawrapper.h \
+    derflaluawarpper.h
 
 INCLUDEPATH += $$PWD
 

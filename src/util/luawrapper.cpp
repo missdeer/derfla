@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "luawrapper.h"
+#include "derflaluawarpper.h"
+
 
 LuaWrapper::LuaWrapper(lua_State *L)
     : m_L(L)
@@ -12,6 +14,7 @@ void LuaWrapper::createLuaState()
     m_L = luaL_newstate();
 
     luaL_openlibs(m_L);
+    luaopen_derfla(m_L);
 }
 
 void LuaWrapper::shutdownLuaState()
