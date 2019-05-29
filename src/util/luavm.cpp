@@ -930,7 +930,7 @@ bool LuaVM::set(const QString &t1, const QString &name, double value)
     }
 
     lua_pushnumber(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t1
     return true;
@@ -959,7 +959,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, doubl
     }
 
     lua_pushnumber(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t2
     lua_pop(m_L, 1); // remove t1
@@ -998,7 +998,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
     }
 
     lua_pushnumber(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t3
     lua_pop(m_L, 1); // remove t2
@@ -1058,7 +1058,7 @@ bool LuaVM::set(const QString &t1, const QString &name, int value)
     }
 
     lua_pushinteger(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t1
     return true;
@@ -1087,7 +1087,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, int v
     }
 
     lua_pushinteger(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t2
     lua_pop(m_L, 1); // remove t1
@@ -1126,7 +1126,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
     }
 
     lua_pushinteger(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t3
     lua_pop(m_L, 1); // remove t2
@@ -1166,7 +1166,7 @@ bool LuaVM::set(const QString &t1, const QString &name, long long value)
     }
 
     lua_pushinteger(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t1
     return true;
@@ -1195,7 +1195,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, long 
     }
 
     lua_pushinteger(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t2
     lua_pop(m_L, 1); // remove t1
@@ -1234,7 +1234,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
     }
 
     lua_pushinteger(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t3
     lua_pop(m_L, 1); // remove t2
@@ -1274,7 +1274,7 @@ bool LuaVM::set(const QString &t1, const QString &name, bool value)
     }
 
     lua_pushboolean(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t1
     return true;
@@ -1303,7 +1303,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, bool 
     }
 
     lua_pushboolean(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t2
     lua_pop(m_L, 1); // remove t1
@@ -1341,7 +1341,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
     }
 
     lua_pushboolean(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t3
     lua_pop(m_L, 1); // remove t2
@@ -1382,7 +1382,7 @@ bool LuaVM::set(const QString &t1, const QString &name, const char *value)
     }
 
     lua_pushstring(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t1
     return true;
@@ -1411,7 +1411,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, const
     }
 
     lua_pushstring(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t2
     lua_pop(m_L, 1); // remove t1
@@ -1450,7 +1450,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
     }
 
     lua_pushstring(m_L, value);
-    lua_setfield(m_L, -1, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name.toStdString().c_str());
 
     lua_pop(m_L, 1); // remove t3
     lua_pop(m_L, 1); // remove t2
