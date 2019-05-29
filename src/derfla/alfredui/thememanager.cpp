@@ -55,5 +55,8 @@ ThemeManager::~ThemeManager()
     if (m_theme)
         delete m_theme;
     if (m_lua)
+    {
+        m_lua->shutdownLuaState();
         delete m_lua;
+    }
 }

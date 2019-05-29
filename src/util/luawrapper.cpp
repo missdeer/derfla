@@ -7,25 +7,22 @@ LuaWrapper::LuaWrapper(lua_State *L)
 
 }
 
-LuaWrapper::~LuaWrapper()
-{
-    if (m_L)
-    {
-        lua_close(m_L);
-        m_L = nullptr;
-    }
-}
-
-void LuaWrapper::attachLuaState(lua_State *L)
-{
-    m_L = L;
-}
-
 void LuaWrapper::createLuaState()
 {
     m_L = luaL_newstate();
 
     luaL_openlibs(m_L);
+}
+
+void LuaWrapper::shutdownLuaState()
+{
+    if (m_L)
+    {
+#if !defined(Q_OS_WIN) && !defined(__clang__)
+        lua_close(m_L);
+#endif
+        m_L = nullptr;
+    }    
 }
 
 bool LuaWrapper::doFile(const QString &file)

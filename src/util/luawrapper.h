@@ -9,10 +9,10 @@ class UTILSHARED_EXPORT LuaWrapper
 public:
     LuaWrapper() = default;
     explicit LuaWrapper(lua_State *L);
-    ~LuaWrapper();
+    ~LuaWrapper() = default;
 
-    void attachLuaState(lua_State *L);
     void createLuaState();
+    void shutdownLuaState();
     bool doFile(const QString &file);
     bool doScript(const QString &script);
 
