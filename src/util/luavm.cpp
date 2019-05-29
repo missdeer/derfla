@@ -215,7 +215,6 @@ double LuaVM::getDouble(const QString &table, const QString &name)
 
     double result = lua_tonumber(m_L, -1);
     lua_pop(m_L, 1); // remove the result
-    lua_pop(m_L, 1); // remove name
     lua_pop(m_L, 1); // remove table
 
     return result;
@@ -245,7 +244,6 @@ float LuaVM::getFloat(const QString &table, const QString &name)
 
     float result = (float)lua_tonumber(m_L, -1);
     lua_pop(m_L, 1); // remove the result
-    lua_pop(m_L, 1); // remove name
     lua_pop(m_L, 1); // remove table
 
     return result;
@@ -275,7 +273,6 @@ int LuaVM::getInt(const QString &table, const QString &name)
 
     int result = (int)lua_tointeger(m_L, -1);
     lua_pop(m_L, 1); // remove the result
-    lua_pop(m_L, 1); // remove name
     lua_pop(m_L, 1); // remove table
 
     return result;
@@ -305,7 +302,6 @@ long long LuaVM::getLongLong(const QString &table, const QString &name)
 
     long long result = (long long)lua_tointeger(m_L, -1);
     lua_pop(m_L, 1); // remove the result
-    lua_pop(m_L, 1); // remove name
     lua_pop(m_L, 1); // remove table
 
     return result;
@@ -335,7 +331,6 @@ bool LuaVM::getBool(const QString &table, const QString &name)
 
     int result = lua_toboolean(m_L, -1);
     lua_pop(m_L, 1); // remove the result
-    lua_pop(m_L, 1); // remove name
     lua_pop(m_L, 1); // remove table
 
     return result;
@@ -367,7 +362,6 @@ QString LuaVM::getString(const QString &table, const QString &name)
     const char * result = lua_tolstring(m_L, -1, &resultLen);
     QString str = QString::fromLatin1(result, (int)resultLen);
     lua_pop(m_L, 1); // remove the result
-    lua_pop(m_L, 1); // remove name
     lua_pop(m_L, 1); // remove table
 
     return str;
