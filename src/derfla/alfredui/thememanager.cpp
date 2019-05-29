@@ -3,13 +3,18 @@
 #include "alfredtheme.h"
 #include "thememanager.h"
 
+ThemeManager::ThemeManager()
+    : m_lua(new LuaWrapper)
+{
+    m_lua->createLuaState();
+}
+
 AlfredTheme *ThemeManager::applyTheme(const QString &theme)
 {
     if (!QFile::exists(theme))
         return nullptr;
 
-    LuaWrapper w;
-    w.createLuaState();
+    Q_ASSERT(m_lua);
     if (theme.startsWith(":/"))
     {
         QFile f(theme);
@@ -18,29 +23,29 @@ AlfredTheme *ThemeManager::applyTheme(const QString &theme)
         QByteArray ba = f.readAll();
         f.close();
 
-        if (!w.doScript(ba))
+        if (!m_lua->doScript(ba))
             return nullptr;
     } else {
-        if (!w.doFile(theme))
+        if (!m_lua->doFile(theme))
             return nullptr;
     }
 
     if (!m_theme)
         m_theme = new AlfredTheme;
-    m_theme->setBeginHeight(w.getInt("beginHeight"));
-    m_theme->setListWidgetY(w.getInt("listWidgetY"));
-    m_theme->setDimensions(QSize(w.getInt("dimensions", "width"),
-                           w.getInt("dimensions", "height")));
-    m_theme->setGroupBoxStylesheet(w.getString("groupBoxStylesheet"));
-    m_theme->setPlainTextEditStylesheet(w.getString("plainTextEditStylesheet"));
-    m_theme->setListWidgetStylesheet(w.getString("listWidgetStylesheet"));
-    m_theme->setFontSize(w.getInt("fontSize"));
-    m_theme->setBlurRadius(w.getDouble("blurRadius"));
-    m_theme->setShadowColor(QColor(w.getInt("shadowColor", "r"),
-                             w.getInt("shadowColor", "g"),
-                             w.getInt("shadowColor", "b"),
-                             w.getInt("shadowColor", "a")));
-    m_theme->setShadowOffset(w.getDouble("shadowOffset"));
+    m_theme->setBeginHeight(m_lua->getInt("beginHeight"));
+    m_theme->setListWidgetY(m_lua->getInt("listWidgetY"));
+    m_theme->setDimensions(QSize(m_lua->getInt("dimensions", "width"),
+                           m_lua->getInt("dimensions", "height")));
+    m_theme->setGroupBoxStylesheet(m_lua->getString("groupBoxStylesheet"));
+    m_theme->setPlainTextEditStylesheet(m_lua->getString("plainTextEditStylesheet"));
+    m_theme->setListWidgetStylesheet(m_lua->getString("listWidgetStylesheet"));
+    m_theme->setFontSize(m_lua->getInt("fontSize"));
+    m_theme->setBlurRadius(m_lua->getDouble("blurRadius"));
+    m_theme->setShadowColor(QColor(m_lua->getInt("shadowColor", "r"),
+                             m_lua->getInt("shadowColor", "g"),
+                             m_lua->getInt("shadowColor", "b"),
+                             m_lua->getInt("shadowColor", "a")));
+    m_theme->setShadowOffset(m_lua->getDouble("shadowOffset"));
     
     return m_theme;
 }
@@ -49,4 +54,6 @@ ThemeManager::~ThemeManager()
 {
     if (m_theme)
         delete m_theme;
+    if (m_lua)
+        delete m_lua;
 }

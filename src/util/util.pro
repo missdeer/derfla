@@ -28,7 +28,7 @@ win32-*msvc: QMAKE_CXXFLAGS += "/std:c++17"
 win32-clang-msvc: CONFIG -= precompile_header
 DEFINES += UTIL_LIBRARY
 
-win32: DEFINES += LUA_BUILD_AS_DLL
+win32: DEFINES += 
 else: !macx: DEFINES += LUA_USE_LINUX
 else: DEFINES += LUA_USE_MACOSX
 
