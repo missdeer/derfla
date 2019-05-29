@@ -53,7 +53,7 @@ SOURCES += \
     $$PWD/scopedguard.cpp \
     $$PWD/derflaluawrapper.cpp \
     $$PWD/derflainfo.cpp \
-    $$PWD/luawrapper.cpp
+    $$PWD/luavm.cpp
 
 HEADERS += \
     $$PWD/util_global.h \
@@ -63,8 +63,8 @@ HEADERS += \
     $$PWD/derflaaction.h \
     $$PWD/scopedguard.h  \
     $$PWD/derflainfo.h \
-    $$PWD/luawrapper.h \
-    derflaluawarpper.h
+    $$PWD/luavm.h \
+    $$PWD/derflaluawarpper.h
 
 INCLUDEPATH += $$PWD
 
