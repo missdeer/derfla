@@ -5,7 +5,7 @@ groupBoxStylesheet = "QGroupBox{background:white;border-radius: 9px;}";
 plainTextEditStylesheet = "QPlainTextEdit{border: 1px solid white}";
 listWidgetStylesheet = "QListWidget{border: 1px solid white} QListWidget::item{padding : 3px 3px 3px 3px}";
 
-if derfla.os.name == "osx" then
+if derfla.os.name == "macos" then
     fontSize = 52;
 else
     fontSize = 40
