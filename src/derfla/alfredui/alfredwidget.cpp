@@ -134,12 +134,11 @@ void AlfredWidget::setUpTheme()
     if (!QFile::exists(themePath))
     {
 #if defined (Q_OS_MAC)
-    if (isDarkMode())
-        themePath = ":/themes/dark.derflatheme";
-    else
-#else
-    themePath = ":/themes/classic.derflatheme"; 
+        if (isDarkMode())
+            themePath = ":/themes/dark.derflatheme";
+        else
 #endif
+            themePath = ":/themes/classic.derflatheme"; 
     }
     
     theme = themeManager.applyTheme(themePath);
@@ -147,12 +146,11 @@ void AlfredWidget::setUpTheme()
     if (!theme)
     {
 #if defined (Q_OS_MAC)
-    if (isDarkMode())
-        themePath = ":/themes/dark.derflatheme";
-    else
-#else
-    themePath = ":/themes/classic.derflatheme"; 
+        if (isDarkMode())
+            themePath = ":/themes/dark.derflatheme";
+        else
 #endif
+            themePath = ":/themes/classic.derflatheme"; 
         theme = themeManager.applyTheme(themePath);
     }
     
