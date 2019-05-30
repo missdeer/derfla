@@ -109,6 +109,10 @@ AlfredWidget::AlfredWidget(QWidget *parent) :
     connect(derflaApp, &DerflaApp::actionUpdated, this, &AlfredWidget::onActionUpdated);
     connect(derflaApp, &DerflaApp::emptyAction, this, &AlfredWidget::onEmptyAction);
     connect(this, &AlfredWidget::done, this, &AlfredWidget::onDone);
+    
+    setMaximumHeight(theme->beginHeight() - 6); 
+    setMinimumHeight(theme->beginHeight() - 6);
+    setGeometry(x(), y(), width(), theme->beginHeight());
 }
 
 void AlfredWidget::setOne()
@@ -132,6 +136,8 @@ void AlfredWidget::setUpTheme()
 #endif
     
     theme = themeManager.applyTheme(":/themes/" + themeName + ".derflatheme");
+    
+    Q_ASSERT(theme);
 }
 
 void AlfredWidget::hideCandidateList()
@@ -158,15 +164,15 @@ void AlfredWidget::populateList()
 {
     listWidget->clear();
     DerflaActionList &dal = derflaApp->derflaActions();
-    int size = dal.size();
-    int printsize = std::min(int(dal.size()), 9);
     if (dal.empty())
     {
-        setMaximumHeight(printsize * rowSize + theme->beginHeight() - 6); //custom theme begin height
-        setMinimumHeight(printsize * rowSize + theme->beginHeight() - 6);
+        setMaximumHeight(theme->beginHeight() - 6); 
+        setMinimumHeight(theme->beginHeight() - 6);
         setGeometry(x(), y(), width(), theme->beginHeight());
         return;
     }
+    int size = dal.size();
+    int printsize = std::min(int(dal.size()), 9);
     QString text = plainTextEdit->toPlainText();
     if (text.isEmpty())
         return;
