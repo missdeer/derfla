@@ -128,14 +128,33 @@ void AlfredWidget::enterCurItem()
 
 void AlfredWidget::setUpTheme()
 {
-    QString themeName = "classic";
+    QSettings &settings = derflaApp->settings();
+    QString themePath = settings.value("theme").toString();    
     
+    if (!QFile::exists(themePath))
+    {
 #if defined (Q_OS_MAC)
     if (isDarkMode())
-        themeName = "dark";
+        themePath = ":/themes/dark.derflatheme";
+    else
+#else
+    themePath = ":/themes/classic.derflatheme"; 
 #endif
+    }
     
-    theme = themeManager.applyTheme(":/themes/" + themeName + ".derflatheme");
+    theme = themeManager.applyTheme(themePath);
+    
+    if (!theme)
+    {
+#if defined (Q_OS_MAC)
+    if (isDarkMode())
+        themePath = ":/themes/dark.derflatheme";
+    else
+#else
+    themePath = ":/themes/classic.derflatheme"; 
+#endif
+        theme = themeManager.applyTheme(themePath);
+    }
     
     Q_ASSERT(theme);
 }
