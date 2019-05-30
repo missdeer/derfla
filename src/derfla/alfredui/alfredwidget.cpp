@@ -186,25 +186,12 @@ void AlfredWidget::populateList()
 
     for (int i = 0; i < size; i++)
     {
-        DerflaActionPtr da = dal.at(i);
-        QWidget* l;
-        if (da->description().isEmpty()) {
-            if (i < 9) {
-                l = new ListItem(da->icon(), da->title(), "Alt+" + QString::number(i + 1));
-            }
-            else {
-                l = new ListItem(da->icon(), da->title(), QString::number(i + 1));
-            }
-        }
-        else {
-            if (i < 9)
-            {
-                l = new DoubleListItem(da->icon(), da->title(), da->description(), "Alt+" + QString::number(i + 1));
-            }
-            else {
-                l = new DoubleListItem(da->icon(), da->title(), da->description(), QString::number(i + 1));
-            }
-        }
+        const DerflaActionPtr &da = dal.at(i);
+        QWidget* l = nullptr;
+        if (da->description().isEmpty()) 
+            l = new ListItem(da->icon(), da->title(), (i < 9 ? "Alt+" : "" )+ QString::number(i + 1));
+        else 
+            l = new DoubleListItem(da->icon(), da->title(), da->description(), (i < 9 ? "Alt+" : "" ) + QString::number(i + 1));
         auto * item = new QListWidgetItem(listWidget);
         item->setSizeHint(QSize(l->width(), l->height()));
         listWidget->addItem(item);
