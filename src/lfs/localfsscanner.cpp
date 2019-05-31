@@ -197,7 +197,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
 void LocalFSScanner::scanDockIcons()
 {
     auto homePath = qgetenv("HOME");
-    QProcess *p = new QProcess;
+    auto *p = new QProcess;
     connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
     p->setProgram("/usr/bin/plutil");
     p->setArguments(QStringList() << "-convert"
@@ -210,7 +210,7 @@ void LocalFSScanner::scanDockIcons()
 
 void LocalFSScanner::finished(int exitCode, QProcess::ExitStatus )
 {
-    QProcess* p = qobject_cast<QProcess*>(sender());
+    auto* p = qobject_cast<QProcess*>(sender());
 
     p->deleteLater();
 
@@ -249,7 +249,7 @@ void LocalFSScanner::finished(int exitCode, QProcess::ExitStatus )
                 auto cfurlIt = fileData.find("_CFURLString");
                 if (fileData.end() == cfurlIt)
                     continue;
-                QString cfurl = cfurlIt.value().toString();
+                QString cfurl = QByteArray::fromPercentEncoding(cfurlIt.value().toByteArray());
 
                 if (cfurl.startsWith("file://") && cfurl.endsWith(".app/")) {
                     cfurl = cfurl.right(cfurl.length() - 7);
