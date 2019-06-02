@@ -23,9 +23,7 @@ void LuaVM::shutdown()
 {
     if (m_L)
     {
-#if !defined(Q_OS_WIN) && !defined(__clang__)
         lua_close(m_L);
-#endif
         m_L = nullptr;
     }    
 }
