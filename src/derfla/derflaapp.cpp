@@ -12,7 +12,6 @@ DerflaApp::DerflaApp(QObject *parent)
     , trayIcon_(new QSystemTrayIcon)
 {
     extensionManager_->loadAllFromLocal();
-    extensionManager_->loadAllFromCache();
     connect(extensionManager_, &ExtensionManager::actionUpdated, this, &DerflaApp::onActionUpdated);
     connect(extensionManager_, &ExtensionManager::emptyAction, this, &DerflaApp::onEmptyAction);
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaApp::onTrayIconActivated);
@@ -134,22 +133,6 @@ void DerflaApp::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
 void DerflaApp::onLoadSkin()
 {
     widget_->onLoadSkin();
-}
-
-void DerflaApp::onInstallExtension()
-{
-    QString fileName = QFileDialog::getOpenFileName(widget_,
-		tr("Install Derfla Extension"),
-		"",
-        tr("Derfla Extension Package (*.derflaextension);;Derfla Extension Configuration (extension.derflaext);;All files (*.*)"));
-    if (!QFile::exists(fileName))
-        return;
-    try {
-        extensionManager_->installExtension(fileName);
-    }
-    catch(std::runtime_error& e) {
-        QMessageBox::warning(widget_, tr("Installing extension failed"), QString::fromLatin1(e.what()), QMessageBox::Ok);
-    }
 }
 
 void DerflaApp::onStayOnTop()
@@ -282,9 +265,6 @@ void DerflaApp::createCommonActions()
     QAction *loadSkinAction = new QAction(tr("Load &Skin"), this);
     connect(loadSkinAction, &QAction::triggered, this, &DerflaApp::onLoadSkin);
 
-    QAction *installExtensionAction = new QAction(tr("&Install Extension"), this);
-    connect(installExtensionAction, &QAction::triggered, this, &DerflaApp::onInstallExtension);
-
     stayOnTopAction_ = new QAction(tr("Stay On Top"), this);
     stayOnTopAction_->setCheckable(true);
     connect(stayOnTopAction_, &QAction::triggered, this, &DerflaApp::onStayOnTop);
@@ -332,7 +312,6 @@ void DerflaApp::createCommonActions()
     trayiconMenu->addAction(selectFolderAction);
     trayiconMenu->addSeparator();
     trayiconMenu->addAction(loadSkinAction);
-    trayiconMenu->addAction(installExtensionAction);
     trayiconMenu->addAction(stayOnTopAction_);
     trayiconMenu->addAction(checkUpdatesAction);
     trayiconMenu->addAction(preferenceAction);

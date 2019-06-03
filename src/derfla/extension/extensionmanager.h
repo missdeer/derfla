@@ -13,9 +13,7 @@ public:
     ~ExtensionManager();
 
     bool loadAllFromLocal();
-    bool loadAllFromCache();
     void query(const QString& input);
-    bool installExtension(const QString& extensionFile);
     const QList<ExtensionPtr>& extensions() const;
 
 signals:

@@ -98,18 +98,6 @@ bool ExtensionManager::loadAllFromLocal()
     return true;
 }
 
-bool ExtensionManager::loadAllFromCache()
-{
-
-    return true;
-}
-
-bool ExtensionManager::installExtension(const QString &extensionFile)
-{
-
-    return true;
-}
-
 void ExtensionManager::extensionQueried(DerflaActionList &dal)
 {
     emit actionUpdated(dal);

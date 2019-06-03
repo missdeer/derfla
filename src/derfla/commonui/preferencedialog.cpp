@@ -76,24 +76,48 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     gl3->addWidget(cbAlfredStyleUI_);
     
     cbSkins_ = new QComboBox(ui->skinPage);
-    cbSkins_->addItem("derfla.derflaskin");
-
-#if defined(Q_OS_MAC)
-    QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/skins/");
-#else
-    QDir dir(QCoreApplication::applicationDirPath() % "/skins");
-#endif
-    auto eil = dir.entryInfoList(QStringList() << "*.derflaskin", QDir::Files);
-    for (const auto& fi : eil)
+    if (cbAlfredStyleUI_->isChecked())
     {
-        cbSkins_->addItem(fi.fileName());
+#if defined(Q_OS_MAC)
+        QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/themes/");
+        QString skinPath = settings.value("theme", isDarkMode() ? ":/themes/dark.derflatheme" : ":/themes/classic.derflatheme").toString();
+#else
+        QDir dir(QCoreApplication::applicationDirPath() % "/themes");
+        QString skinPath = settings.value("theme", ":/themes/classic.derflatheme").toString();
+#endif
+        auto eil = dir.entryInfoList(QStringList() << "*.derflatheme", QDir::Files);
+        for (const auto& fi : eil)
+        {
+            cbSkins_->addItem(fi.fileName());
+        }
+        int index = cbSkins_->findText(skinPath);
+        if (index >= 0)
+            cbSkins_->setCurrentIndex(index);
+        else
+            cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());
     }
-    QString skinPath = settings.value("skin", "derfla.derflaskin").toString();
-    int index = cbSkins_->findText(skinPath);
-    if (index >= 0)
-        cbSkins_->setCurrentIndex(index);
-    else
-        cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());
+    else 
+    {
+        cbSkins_->addItem("derfla.derflaskin");
+        
+#if defined(Q_OS_MAC)
+        QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/skins/");
+#else
+        QDir dir(QCoreApplication::applicationDirPath() % "/skins");
+#endif
+        auto eil = dir.entryInfoList(QStringList() << "*.derflaskin", QDir::Files);
+        for (const auto& fi : eil)
+        {
+            cbSkins_->addItem(fi.fileName());
+        }
+        QString skinPath = settings.value("skin", "derfla.derflaskin").toString();
+        int index = cbSkins_->findText(skinPath);
+        if (index >= 0)
+            cbSkins_->setCurrentIndex(index);
+        else
+            cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());
+    }
+    
     connect(cbSkins_, &QComboBox::currentTextChanged, this, &PreferenceDialog::onCurrentSkinChanged);
     gl3->addWidget(cbSkins_);
 

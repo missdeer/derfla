@@ -52,7 +52,6 @@ signals:
 public slots:
     void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
     void onLoadSkin();
-	void onInstallExtension();
     void onStayOnTop();
     void onShowInFront();
     void onQuit();
