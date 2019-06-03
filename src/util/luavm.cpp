@@ -73,6 +73,35 @@ bool LuaVM::doScript(const QString &script)
     return true;
 }
 
+bool LuaVM::getStringArray(const QString &name, QStringList &array)
+{
+    if (!m_L)
+        return false;
+    
+    lua_getglobal(m_L, name.toStdString().c_str());
+    
+    if (!lua_istable(m_L, -1))
+    {
+        qDebug() << name << " is expected to be a table";
+        return false;
+    }
+    
+    size_t n = lua_rawlen(m_L, -1);
+    
+    for (size_t i = 0; i < n; i++)
+    {
+        lua_rawgeti(m_L, -1, i);
+        
+        size_t resultLen = 0;
+        const char * result = lua_tolstring(m_L, -1, &resultLen);
+        QString str = QString::fromLatin1(result, (int)resultLen);
+        lua_pop(m_L, 1);
+        array.append(str);
+    }
+    
+    return true;
+}
+
 double LuaVM::getDouble(const QString &name)
 {
     if (!m_L)

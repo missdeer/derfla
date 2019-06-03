@@ -3,6 +3,7 @@
 
 #include "util_global.h"
 #include <lua.hpp>
+#include <QStringList>
 
 class UTILSHARED_EXPORT LuaVM
 {
@@ -15,6 +16,8 @@ public:
     void shutdown();
     bool doFile(const QString &file);
     bool doScript(const QString &script);
+    
+    bool getStringArray(const QString &name, QStringList& array);
 
     double getDouble(const QString &name);
     double getDouble(const QString &table, const QString &name);
