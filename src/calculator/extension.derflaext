@@ -1,9 +1,13 @@
 id = "com.derfla.calculator"
 author = "missdeer"
 name = "Calculator"
-executable = "calculator"
+if derfla.os.name == "windows" then
+	executable= "calculator.exe"
+else
+	executable= "calculator"
+end
 description = "A high-precision scientific calculator"
-prefix = {"c", "ca", "cal", "calc", "calc", "calculator"}
+prefix = {"c", "ca", "cal", "calc", "calcu", "calculator"}
 waitIconPath = ""
 waitTitle = "Calculating..."
 waitDescription = "Calculating..."

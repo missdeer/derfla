@@ -1,7 +1,11 @@
 id =  "com.derfla.everything"
 author =  "missdeer"
 name =  "Everything Agent"
-executable =  "et"
+if derfla.os.name == "windows" then
+	executable= "et.exe"
+else
+	executable= "et"
+end
 description =  "Use Everything to search local file system and take actions"
 prefix = {"f", "d", "vs", "open"}
 waitIconPath =  ""

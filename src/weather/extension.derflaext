@@ -1,7 +1,11 @@
 id= "com.derfla.weather"
 author= "missdeer"
 name= "Weather Report"
-executable= "weather"
+if derfla.os.name == "windows" then
+	executable= "weather.exe"
+else
+	executable= "weather"
+end
 description= "Query city weather report"
 prefix={"w", "weather"}
 waitIconPath= ""

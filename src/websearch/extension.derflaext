@@ -1,7 +1,12 @@
 id= "com.derfla.websearch"
 author= "missdeer"
 name= "Web Search"
-executable= "websearch"
+if derfla.os.name == "windows" then
+	executable= "websearch.exe"
+else
+	executable= "websearch"
+end
+
 description= "Search keyword on web search engine"
 prefix={"s", "se", "search", "g", "gg", "google","b","bing","baidu","d", "duck", "duckduckgo","ddgo","w", "wiki", "wikipedia"}
 waitIconPath= ""

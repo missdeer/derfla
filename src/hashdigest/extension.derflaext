@@ -1,7 +1,12 @@
 id= "com.derfla.hashdigest"
 author= "missdeer"
 name= "HashDigest"
-executable= "hashdigest"
+if derfla.os.name == "windows" then
+	executable= "hashdigest.exe"
+else
+	executable= "hashdigest"
+end
+
 description= "Calculate hash digest of string, file..."
 prefix={"md4", "md5", "sha1", "sha224", "sha256", "sha384", "sha512", "sha3-224", "sha3-256", "sha3-384", "sha3-512", "keccak224", "keccak256", "keccak384", "keccak512"}
 waitIconPath= ""

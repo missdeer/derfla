@@ -1,7 +1,11 @@
 id= "com.derfla.webdict"
 author= "missdeer"
 name= "Web Dictionary"
-executable= "webdict"
+if derfla.os.name == "windows" then
+	executable= "webdict.exe"
+else
+	executable= "webdict"
+end
 description= "Query web dictionary"
 prefix={"dict", "yd", "youdao", "bing", "ciba"}
 waitIconPath= ""
