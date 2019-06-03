@@ -35,7 +35,7 @@ bool ExtensionManager::loadAllFromLocal()
 
     for (const auto & d : dirs)
     {
-        QString filePath = d.absoluteFilePath() % "/extension.cfg";
+        QString filePath = d.absoluteFilePath() % "/extension.derflaext";
         QFileInfo fi(filePath);
         if (fi.exists())
         {
@@ -235,7 +235,7 @@ bool ExtensionManager::installExtension(const QString &extensionFile)
         return false;
     }
     // read configuration file
-    QString configPath = savePath % "/extension.cfg";
+    QString configPath = savePath % "/extension.derflaext";
     QFile f(configPath);
 
     if (!f.exists())

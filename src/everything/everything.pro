@@ -31,7 +31,7 @@ SOURCES += \
         main.cpp
 
 DISTFILES += \
-    extension.cfg
+    extension.derflaext
 
 HEADERS += \
     stdafx.h
@@ -95,7 +95,7 @@ macx: {
 }
 
 copy_png.commands = '$(COPY_FILE) $$shell_path($$PWD/folder.png) $$shell_path($$DESTDIR)'
-copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
+copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.derflaext) $$shell_path($$DESTDIR)'
 
 QMAKE_EXTRA_TARGETS += copy_png copy_cfg
 POST_TARGETDEPS += copy_png copy_cfg

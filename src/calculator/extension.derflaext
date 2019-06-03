@@ -1,0 +1,9 @@
+id = "com.derfla.calculator"
+author = "missdeer"
+name = "Calculator"
+executable = "calculator"
+description = "A high-precision scientific calculator"
+prefix = {"c", "ca", "cal", "calc", "calc", "calculator"}
+waitIconPath = ""
+waitTitle = "Calculating..."
+waitDescription = "Calculating..."

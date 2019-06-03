@@ -141,7 +141,7 @@ void DerflaApp::onInstallExtension()
     QString fileName = QFileDialog::getOpenFileName(widget_,
 		tr("Install Derfla Extension"),
 		"",
-        tr("Derfla Extension Package (*.derflaextension);;Derfla Extension Configuration (extension.cfg);;All files (*.*)"));
+        tr("Derfla Extension Package (*.derflaextension);;Derfla Extension Configuration (extension.derflaext);;All files (*.*)"));
     if (!QFile::exists(fileName))
         return;
     try {

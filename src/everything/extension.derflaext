@@ -1,0 +1,10 @@
+id =  "com.derfla.everything"
+author =  "missdeer"
+name =  "Everything Agent"
+executable =  "et"
+description =  "Use Everything to search local file system and take actions"
+prefix = {"f", "d", "vs", "open"}
+waitIconPath =  ""
+waitTitle =  "Searching..."
+waitDescription =  "Searching on local file system..."
+

@@ -77,19 +77,19 @@ win32: {
     RC_FILE = websearch.rc
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 
-    copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
+    copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.derflaext) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg
     POST_TARGETDEPS += copy_cfg
 }
 
 macx: {
-    copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.cfg) $$shell_path($$DESTDIR)'
+    copy_cfg.commands = '$(COPY_FILE) $$shell_path($$PWD/extension.derflaext) $$shell_path($$DESTDIR)'
     QMAKE_EXTRA_TARGETS += copy_cfg
     POST_TARGETDEPS += copy_cfg
 }
 
 DISTFILES += \
-    extension.cfg
+    extension.derflaext
 
 RESOURCES += \
     websearch.qrc
