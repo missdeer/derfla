@@ -142,16 +142,31 @@ void PreferenceDialog::on_buttonBox_accepted()
     settings.setValue("stayOnTop", cbStayOnTop_->isChecked());
     settings.setValue("interval", sliderInterval_->value());
     settings.setValue("hotkey", edtHotkey_->keySequence().toString());
-    settings.setValue("skin", cbSkins_->currentIndex() == 0 ?
-                          cbSkins_->currentText() :
-                                                            (QCoreApplication::applicationDirPath() %
-                       #if defined(Q_OS_MAC)
-                           "/../Resources/skins/"
-                       #else
-                           "/skins/"
-                       #endif
-                           % cbSkins_->currentText()));
     settings.setValue("alfredStyleUI", cbAlfredStyleUI_->isChecked());
+    if (cbAlfredStyleUI_->isChecked())
+    {
+        settings.setValue("theme", cbSkins_->currentIndex() == 0 ?
+                              cbSkins_->currentText() :
+                                                                (QCoreApplication::applicationDirPath() %
+                           #if defined(Q_OS_MAC)
+                               "/../Resources/themes/"
+                           #else
+                               "/themes/"
+                           #endif
+                               % cbSkins_->currentText()));
+    }
+    else 
+    {
+        settings.setValue("skin", cbSkins_->currentIndex() == 0 ?
+                              cbSkins_->currentText() :
+                                                                (QCoreApplication::applicationDirPath() %
+                           #if defined(Q_OS_MAC)
+                               "/../Resources/skins/"
+                           #else
+                               "/skins/"
+                           #endif
+                               % cbSkins_->currentText()));
+    }
     settings.setValue("autoupdate", cbAutoUpdate_->isChecked());
 #if defined (Q_OS_WIN) || defined(Q_OS_MAC)
     settings.setValue("autostart", cbStartWithSystem_->isChecked());
