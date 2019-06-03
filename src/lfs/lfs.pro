@@ -96,4 +96,4 @@ macx: {
 }
 
 DISTFILES += \
-    extension.derflaext
+    $$PWD/extension.derflaext

@@ -89,7 +89,7 @@ macx: {
 }
 
 DISTFILES += \
-    extension.derflaext
+    $$PWD/extension.derflaext
 
 RESOURCES += \
-    hashdigest.qrc
+    $$PWD/hashdigest.qrc

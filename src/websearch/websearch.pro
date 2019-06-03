@@ -89,7 +89,7 @@ macx: {
 }
 
 DISTFILES += \
-    extension.derflaext
+    $$PWD/extension.derflaext
 
 RESOURCES += \
-    websearch.qrc
+    $$PWD/websearch.qrc

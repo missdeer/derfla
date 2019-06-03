@@ -91,7 +91,7 @@ macx: {
 }
 
 DISTFILES += \
-    extension.derflaext
+    $$PWD/extension.derflaext
 
 RESOURCES += \
-    weather.qrc
+    $$PWD/weather.qrc

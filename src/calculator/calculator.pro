@@ -98,7 +98,7 @@ macx: {
 }
 
 DISTFILES += \
-    extension.derflaext
+    $$PWD/extension.derflaext
 
 RESOURCES += \
-    calculator.qrc
+    $$PWD/calculator.qrc

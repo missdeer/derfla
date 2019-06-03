@@ -101,4 +101,7 @@ QMAKE_EXTRA_TARGETS += copy_png copy_cfg
 POST_TARGETDEPS += copy_png copy_cfg
 
 RESOURCES += \
-    everything.qrc
+    $$PWD/everything.qrc
+
+DISTFILES += \
+    $$PWD/extension.derflaext

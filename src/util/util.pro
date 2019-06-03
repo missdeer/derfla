@@ -104,7 +104,7 @@ win32: {
     HEADERS += \
         $$PWD/win_util.h \
         $$PWD/WinIconProvider.h
-    RC_FILE = util.rc
+    RC_FILE = $$PWD/util.rc
     LIBS += -lVersion -lComctl32 -luser32 -lOle32 -lGdi32 -lShell32 -luuid -ladvapi32 -lwinmm
 }
 
@@ -122,4 +122,4 @@ macx: {
 }
 
 RESOURCES += \
-    util.qrc
+    $$PWD/util.qrc
