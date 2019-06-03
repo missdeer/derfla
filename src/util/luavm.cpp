@@ -1,22 +1,28 @@
 #include "stdafx.h"
 #include "luavm.h"
 
-
-LuaVM::LuaVM(lua_State *L)
-    : m_L(L)
+LuaVM::LuaVM()
 {
+    start();
+}
 
+LuaVM::~LuaVM()
+{
+    shutdown();
 }
 
 void LuaVM::start()
 {
-    m_L = luaL_newstate();
-
-    luaL_openlibs(m_L);
-
-    loadBuiltinTemplate();
-
-    setupBuiltinValues();
+    if (!m_L)
+    {
+        m_L = luaL_newstate();
+    
+        luaL_openlibs(m_L);
+    
+        loadBuiltinTemplate();
+    
+        setupBuiltinValues();        
+    }
 }
 
 void LuaVM::shutdown()

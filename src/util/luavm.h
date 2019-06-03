@@ -8,8 +8,12 @@
 class UTILSHARED_EXPORT LuaVM
 {
 public:
-    LuaVM() = default;
-    explicit LuaVM(lua_State *L);
+    LuaVM();
+    ~LuaVM();
+    LuaVM(const LuaVM&) = delete;
+    LuaVM& operator=(const LuaVM&) = delete;
+    LuaVM(LuaVM &&) = delete;
+    LuaVM& operator=(LuaVM &&) = delete;
 
     void start();
     void shutdown();

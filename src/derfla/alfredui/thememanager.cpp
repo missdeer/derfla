@@ -6,7 +6,6 @@
 ThemeManager::ThemeManager()
     : m_lua(new LuaVM)
 {
-    m_lua->start();
 }
 
 AlfredTheme *ThemeManager::applyTheme(const QString &theme)
@@ -55,8 +54,5 @@ ThemeManager::~ThemeManager()
     if (m_theme)
         delete m_theme;
     if (m_lua)
-    {
-        m_lua->shutdown();
         delete m_lua;
-    }
 }

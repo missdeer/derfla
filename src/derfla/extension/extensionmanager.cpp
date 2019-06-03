@@ -41,8 +41,6 @@ bool ExtensionManager::loadAllFromLocal()
         if (QFile::exists(filePath))
         {
             LuaVM vm;
-            vm.start();
-            ScopedGuard sg([&vm](){vm.shutdown();});
             
             if (!vm.doFile(filePath))
                 continue;
