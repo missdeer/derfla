@@ -10,7 +10,6 @@ class UTILSHARED_EXPORT LuaVM
 public:
     LuaVM() = default;
     explicit LuaVM(lua_State *L);
-    ~LuaVM() = default;
 
     void start();
     void shutdown();
