@@ -1,4 +1,4 @@
-image = "red.png"
+image = "bluegrey.png"
 inputstyle = [[
 QLineEdit { font: 36px;
 	border-width: 0px;
