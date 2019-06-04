@@ -98,19 +98,19 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     }
     else 
     {
-        cbSkins_->addItem("derfla.derflaskin");
+        cbSkins_->addItem("derfla.zip");
         
 #if defined(Q_OS_MAC)
         QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/skins/");
 #else
         QDir dir(QCoreApplication::applicationDirPath() % "/skins");
 #endif
-        auto eil = dir.entryInfoList(QStringList() << "*.derflaskin", QDir::Files);
+        auto eil = dir.entryInfoList(QStringList() << "*.zip", QDir::Files);
         for (const auto& fi : eil)
         {
             cbSkins_->addItem(fi.fileName());
         }
-        QString skinPath = settings.value("skin", "derfla.derflaskin").toString();
+        QString skinPath = settings.value("skin", "derfla.zip").toString();
         int index = cbSkins_->findText(skinPath);
         if (index >= 0)
             cbSkins_->setCurrentIndex(index);

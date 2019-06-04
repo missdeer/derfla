@@ -30,11 +30,11 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 
     candidateDelayInterval_ = derflaApp->settings_.value("interval", 0).toInt();
 
-    QString skinPath = derflaApp->settings_.value("skin", ":/skins/derfla.derflaskin").toString();
+    QString skinPath = derflaApp->settings_.value("skin", ":/skins/derfla.zip").toString();
     if (!applySkin(skinPath))
     {
         qWarning() << "loading skin failed:" << skinPath;
-        if (!applySkin(":/skins/derfla.derflaskin"))
+        if (!applySkin(":/skins/derfla.zip"))
         {
             qCritical() << "loading skin failed";
             return;
@@ -246,12 +246,9 @@ void DerflaWidget::onLoadSkin()
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Load Derfla Skin"),
         "",
-        tr("Derfla Skin Package (*.derflaskin);;"
-           "Derfla Skin Configuration (*.xml);;"
-           "Baidu Input Method Skin File (*.bps);;"
-           "Sogou Input Method for Windows Skin File (*.ssf);;"
-           "Sogou Input Method for macOS Skin File (*.mssf);;"
-           "All Supported Files (*.derflaskin *.xml *.bps *.ssf *.mssf);;"
+        tr("Derfla Skin Package (*.zip);;"
+           "Derfla Skin Configuration (*.derflaskin);;"
+           "All Supported Files (*.derflaskin *.zip);;"
            "All files (*.*)"));
     if (!QFile::exists(fileName))
         return;
@@ -321,11 +318,11 @@ bool DerflaWidget::onPreference()
 
     candidateDelayInterval_ = derflaApp->settings_.value("interval", 0).toInt();
 
-    QString skinPath = derflaApp->settings_.value("skin", ":/skins/derfla.derflaskin").toString();
+    QString skinPath = derflaApp->settings_.value("skin", ":/skins/derfla.zip").toString();
     if (!applySkin(skinPath))
     {
         qWarning() << "loading skin failed:" << skinPath;
-        if (!applySkin(":/skins/derfla.derflaskin"))
+        if (!applySkin(":/skins/derfla.zip"))
         {
             qCritical() << "loading skin failed";
             return false;
