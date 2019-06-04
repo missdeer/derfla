@@ -1,4 +1,4 @@
-QT       += core gui widgets xml gui-private
+QT       += core gui widgets gui-private
 
 TARGET = Derfla
 TEMPLATE = app
@@ -41,8 +41,8 @@ SOURCES += $$PWD/main.cpp\
     $$PWD/commonui/booleaneditor.cpp \
     $$PWD/derflaapp.cpp \
     $$PWD/actionexecutor.cpp  \
-    alfredui/thememanager.cpp \
-    commonui/commonwidget.cpp
+    $$PWD/alfredui/thememanager.cpp \
+    $$PWD/commonui/commonwidget.cpp
 
 HEADERS  += $$PWD/stdafx.h \
     $$PWD/alfredui/alfredtheme.h \
@@ -66,8 +66,8 @@ HEADERS  += $$PWD/stdafx.h \
     $$PWD/commonui/booleaneditor.h \
     $$PWD/derflaapp.h \
     $$PWD/actionexecutor.h  \
-    alfredui/thememanager.h \
-    commonui/commonwidget.h
+    $$PWD/alfredui/thememanager.h \
+    $$PWD/commonui/commonwidget.h
 
 FORMS    += \
     $$PWD/alfredui/doublelistitem.ui \

@@ -72,53 +72,14 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     auto* gl3 = new QVBoxLayout(ui->skinPage);
 
     cbAlfredStyleUI_ = new QCheckBox(tr("Use Alfred Style User Interface"), ui->skinPage);
+    connect(cbAlfredStyleUI_, &QCheckBox::stateChanged, this, &PreferenceDialog::onAlfredStyleUIStateChanged);
+        
+    cbSkins_ = new QComboBox(ui->skinPage);
+    connect(cbSkins_, &QComboBox::currentTextChanged, this, &PreferenceDialog::onCurrentSkinChanged);
+    
     cbAlfredStyleUI_->setChecked(settings.value("alfredStyleUI").toBool());
     gl3->addWidget(cbAlfredStyleUI_);
     
-    cbSkins_ = new QComboBox(ui->skinPage);
-    if (cbAlfredStyleUI_->isChecked())
-    {
-#if defined(Q_OS_MAC)
-        QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/themes/");
-        QString skinPath = settings.value("theme", isDarkMode() ? ":/themes/dark.derflatheme" : ":/themes/classic.derflatheme").toString();
-#else
-        QDir dir(QCoreApplication::applicationDirPath() % "/themes");
-        QString skinPath = settings.value("theme", ":/themes/classic.derflatheme").toString();
-#endif
-        auto eil = dir.entryInfoList(QStringList() << "*.derflatheme", QDir::Files);
-        for (const auto& fi : eil)
-        {
-            cbSkins_->addItem(fi.fileName());
-        }
-        int index = cbSkins_->findText(skinPath);
-        if (index >= 0)
-            cbSkins_->setCurrentIndex(index);
-        else
-            cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());
-    }
-    else 
-    {
-        cbSkins_->addItem("derfla.zip");
-        
-#if defined(Q_OS_MAC)
-        QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/skins/");
-#else
-        QDir dir(QCoreApplication::applicationDirPath() % "/skins");
-#endif
-        auto eil = dir.entryInfoList(QStringList() << "*.zip", QDir::Files);
-        for (const auto& fi : eil)
-        {
-            cbSkins_->addItem(fi.fileName());
-        }
-        QString skinPath = settings.value("skin", "derfla.zip").toString();
-        int index = cbSkins_->findText(skinPath);
-        if (index >= 0)
-            cbSkins_->setCurrentIndex(index);
-        else
-            cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());
-    }
-    
-    connect(cbSkins_, &QComboBox::currentTextChanged, this, &PreferenceDialog::onCurrentSkinChanged);
     gl3->addWidget(cbSkins_);
 
     previewSkin_ = new QWidget(ui->skinPage);
@@ -184,5 +145,66 @@ void PreferenceDialog::onKeySequenceChanged(const QKeySequence &keySequence)
 
 void PreferenceDialog::onCurrentSkinChanged(const QString &name)
 {
+    
+}
 
+void PreferenceDialog::onAlfredStyleUIStateChanged(int )
+{
+    if (cbAlfredStyleUI_->isChecked())
+    {
+        loadThemes();
+    }
+    else 
+    {        
+        loadSkins();
+    }
+}
+
+void PreferenceDialog::loadThemes()
+{
+    cbSkins_->clear();
+    QSettings &settings = derflaApp->settings();
+#if defined(Q_OS_MAC)
+    QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/themes/");
+    QString skinPath = settings.value("theme", isDarkMode() ? ":/themes/dark.derflatheme" : ":/themes/classic.derflatheme").toString();
+#else
+    QDir dir(QCoreApplication::applicationDirPath() % "/themes");
+    QString skinPath = settings.value("theme", ":/themes/classic.derflatheme").toString();
+#endif
+    auto eil = dir.entryInfoList(QStringList() << "*.derflatheme", QDir::Files);
+    for (const auto& fi : eil)
+    {
+        cbSkins_->addItem(fi.fileName());
+    }
+    int index = cbSkins_->findText(skinPath);
+    if (index >= 0)
+        cbSkins_->setCurrentIndex(index);
+    else
+        cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());    
+}
+
+void PreferenceDialog::loadSkins()
+{
+    cbSkins_->clear();
+    QSettings &settings = derflaApp->settings();
+#if defined(Q_OS_MAC)
+    QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/skins/");
+#else
+    QDir dir(QCoreApplication::applicationDirPath() % "/skins");
+#endif
+    auto eil = dir.entryInfoList(QStringList() << "*.zip", QDir::Files);
+    for (const auto& fi : eil)
+    {
+        cbSkins_->addItem(fi.fileName());
+    }
+    if (cbSkins_->findText("derfla.zip") < 0)
+    {
+        cbSkins_->insertItem(0, "derfla.zip");
+    }
+    QString skinPath = settings.value("skin", "derfla.zip").toString();
+    int index = cbSkins_->findText(skinPath);
+    if (index >= 0)
+        cbSkins_->setCurrentIndex(index);
+    else
+        cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());    
 }

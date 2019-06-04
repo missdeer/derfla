@@ -27,6 +27,7 @@ private slots:
     void on_buttonBox_accepted();
     void onKeySequenceChanged(const QKeySequence &keySequence);
     void onCurrentSkinChanged(const QString& name);
+    void onAlfredStyleUIStateChanged(int state);
 private:
     Ui::PreferenceDialog *ui;
     QCheckBox* cbStayOnTop_;
@@ -39,6 +40,8 @@ private:
     QCheckBox* cbAlfredStyleUI_;
     QComboBox* cbSkins_;
     QWidget* previewSkin_;
+    void loadThemes();
+    void loadSkins();
 };
 
 #endif // PREFERENCEDIALOG_H
