@@ -166,6 +166,7 @@ void PreferenceDialog::loadThemes()
     QSettings &settings = derflaApp->settings();
 #if defined(Q_OS_MAC)
     QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/themes/");
+    bool isDarkMode();
     QString skinPath = settings.value("theme", isDarkMode() ? ":/themes/dark.derflatheme" : ":/themes/classic.derflatheme").toString();
 #else
     QDir dir(QCoreApplication::applicationDirPath() % "/themes");
