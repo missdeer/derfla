@@ -74,8 +74,6 @@
 #include <QComboBox>
 #include <QListView>
 
-// Qt Xml
-#include <QDomDocument>
 #if defined(Q_OS_WIN)
 #define globalDefaultFontFamily "Microsoft YaHei"
 #elif defined(Q_OS_MAC)

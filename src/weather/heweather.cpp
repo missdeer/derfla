@@ -20,6 +20,7 @@ void Heweather::forecast(const QString &location)
 
     url.setQuery(query.query());
     QNetworkRequest req(url);
+    req.setAttribute(QNetworkRequest::HTTP2AllowedAttribute, true);
 
     QNetworkReply* reply = m_nam.get(req);
 
