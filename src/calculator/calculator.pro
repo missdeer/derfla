@@ -36,14 +36,85 @@ INCLUDEPATH += $$PWD $$PWD/core $$PWD/math
 
 SOURCES += \
     $$PWD/main.cpp \
-    $$PWD/core/*.cpp \
-    $$PWD/math/*.c \
-    $$PWD/math/*.cpp
+    $$PWD/core/book.cpp \
+    $$PWD/core/constants.cpp \
+    $$PWD/core/evaluator.cpp \
+    $$PWD/core/functions.cpp \
+    $$PWD/core/manualserver.cpp \
+    $$PWD/core/numberformatter.cpp \
+    $$PWD/core/opcode.cpp \
+    $$PWD/core/pageserver.cpp \
+    $$PWD/core/session.cpp \
+    $$PWD/core/sessionhistory.cpp \
+    $$PWD/core/settings.cpp \
+    $$PWD/core/userfunction.cpp \
+    $$PWD/core/variable.cpp \
+    $$PWD/math/cmath.cpp \
+    $$PWD/math/cnumberparser.cpp \
+    $$PWD/math/floatcommon.c \
+    $$PWD/math/floatconst.c \
+    $$PWD/math/floatconvert.c \
+    $$PWD/math/floaterf.c \
+    $$PWD/math/floatexp.c \
+    $$PWD/math/floatgamma.c \
+    $$PWD/math/floathmath.c \
+    $$PWD/math/floatincgamma.c \
+    $$PWD/math/floatio.c \
+    $$PWD/math/floatipower.c \
+    $$PWD/math/floatlog.c \
+    $$PWD/math/floatlogic.c \
+    $$PWD/math/floatlong.c \
+    $$PWD/math/floatnum.c \
+    $$PWD/math/floatpower.c \
+    $$PWD/math/floatseries.c \
+    $$PWD/math/floattrig.c \
+    $$PWD/math/hmath.cpp \
+    $$PWD/math/number.c \
+    $$PWD/math/quantity.cpp \
+    $$PWD/math/rational.cpp \
+    $$PWD/math/units.cpp
 
 HEADERS += \
     $$PWD/stdafx.h \
-    $$PWD/core/*.h \
-    $$PWD/math/*.h
+    $$PWD/core/book.h \
+    $$PWD/core/constants.h \
+    $$PWD/core/errors.h \
+    $$PWD/core/evaluator.h \
+    $$PWD/core/functions.h \
+    $$PWD/core/manualserver.h \
+    $$PWD/core/numberformatter.h \
+    $$PWD/core/opcode.h \
+    $$PWD/core/pageserver.h \
+    $$PWD/core/session.h \
+    $$PWD/core/sessionhistory.h \
+    $$PWD/core/settings.h \
+    $$PWD/core/userfunction.h \
+    $$PWD/core/variable.h \
+    $$PWD/math/cmath.h \
+    $$PWD/math/cnumberparser.h \
+    $$PWD/math/floatcommon.h \
+    $$PWD/math/floatconfig.h \
+    $$PWD/math/floatconst.h \
+    $$PWD/math/floatconvert.h \
+    $$PWD/math/floaterf.h \
+    $$PWD/math/floatexp.h \
+    $$PWD/math/floatgamma.h \
+    $$PWD/math/floathmath.h \
+    $$PWD/math/floatincgamma.h \
+    $$PWD/math/floatio.h \
+    $$PWD/math/floatipower.h \
+    $$PWD/math/floatlog.h \
+    $$PWD/math/floatlogic.h \
+    $$PWD/math/floatlong.h \
+    $$PWD/math/floatnum.h \
+    $$PWD/math/floatpower.h \
+    $$PWD/math/floatseries.h \
+    $$PWD/math/floattrig.h \
+    $$PWD/math/hmath.h \
+    $$PWD/math/number.h \
+    $$PWD/math/quantity.h \
+    $$PWD/math/rational.h \
+    $$PWD/math/units.h
 
 DEFINES += SPEEDCRUNCH_VERSION=\\\"master\\\"
 DEFINES += QT_USE_QSTRINGBUILDER
