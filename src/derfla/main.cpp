@@ -36,13 +36,15 @@ int main(int argc, char *argv[])
     rl.rlim_cur = qMin(rl.rlim_cur, rl.rlim_max);
     setrlimit(RLIMIT_NOFILE, &rl);
 #endif
-    SharedTools::QtSingleApplication a("Derfla", argc, argv);
 
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QCoreApplication::setApplicationName("Derfla");
     QCoreApplication::setApplicationVersion("1.0");
     QCoreApplication::setOrganizationDomain("minidump.info");
     QCoreApplication::setOrganizationName("Derfla");
 
+    SharedTools::QtSingleApplication a("Derfla", argc, argv);
     if (a.isRunning())
     {
         return 0;
