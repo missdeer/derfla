@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
     a.setOrganizationDomain("minidump.info");
     a.setOrganizationName("Derfla");
 
-    QString locale = QLocale::system().name();
+    QString locale = QLocale().uiLanguages()[0];
     QTranslator translator;
     QTranslator qtTranslator;
 

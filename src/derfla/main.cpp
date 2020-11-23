@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     qputenv("LD_LIBRARY_PATH", pathEnv.toUtf8());
 #endif
 
-    QString locale = QLocale::system().name();
+    QString locale = QLocale().uiLanguages()[0];
     QTranslator translator;
     QTranslator qtTranslator;
 
@@ -89,12 +89,9 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    if (!translator.load(QString("derfla_%1.qm").arg(QLocale::system().name()), localeDirPath))
-    {
+    if (!translator.load(QString("derfla_%1.qm").arg(locale), localeDirPath)) {
         qDebug() << "loading " << locale << " from " << localeDirPath << " failed";
-    }
-    else
-    {
+    } else {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
         if (!QApplication::installTranslator(&translator))
         {
@@ -103,19 +100,16 @@ int main(int argc, char *argv[])
     }
 
     // qt locale
-    if (!qtTranslator.load(QString("qt_%1.qm").arg(QLocale::system().name()), localeDirPath))
-    {
+    if (!qtTranslator.load(QString("qt_%1.qm").arg(locale), localeDirPath)) {
         qDebug() << "loading " << locale << " from " << localeDirPath << " failed";
-    }
-    else
-    {
+    } else {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
         if (!QApplication::installTranslator(&qtTranslator))
         {
             qDebug() << "installing qt translator failed ";
         }
     }
-    
+
     DerflaApp app;
     derflaApp = &app;
     derflaApp->createWidget();

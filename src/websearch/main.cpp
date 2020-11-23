@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    QString locale = QLocale::system().name();
+    QString locale = QLocale().uiLanguages()[0];
     QTranslator translator;
     QTranslator qtTranslator;
 
