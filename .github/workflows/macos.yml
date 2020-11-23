@@ -30,6 +30,14 @@ jobs:
           fetch-depth: 1
           submodules: true
           
+      - name: prepare Sparkle
+        run: |
+          mkdir -p 3rdparty/Sparkle
+          cd 3rdparty/Sparkle
+          curl -O -sL https://github.com/sparkle-project/Sparkle/releases/download/1.24.0/Sparkle-1.24.0.tar.xz
+          tar Jxvf Sparkle-1.24.0.tar.xz
+          cd -
+
       - name: build macos
         run: |
           mkdir build
@@ -37,9 +45,7 @@ jobs:
           qmake -r CONFIG+=release CONFIG+=qtquickcompiler ../${{ env.targetName }}.pro
           make -j 2
           cd ..
-      # tag 打包
+
       - name: package
-        if: startsWith(github.event.ref, 'refs/tags/')
         run: |
-          # 拷贝依赖
-          macdeployqt "build/${targetName}.app" -qmldir=. -verbose=1 -dmg
+          macdeployqt "bin/x86_64/${targetName}.app" -qmldir=. -verbose=1 -dmg
