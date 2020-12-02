@@ -162,10 +162,12 @@ macx: {
 win32: {
     win32-*g++* {
         DEFINES += WINVER=0x0600 _WIN32_WINNT=0x0600
+        qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../share/qt5/translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/translations/qt_zh_CN.qm)'
     }
     win32-*msvc* {
         QMAKE_CXXFLAGS_RELEASE += /Zi
         QMAKE_LFLAGS_RELEASE += /DEBUG
+        qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/translations/qt_zh_CN.qm)'
     }
     include($$PWD/../../3rdparty/qglobalshortcut/qglobalshortcut.pri)
     include($$PWD/../../3rdparty/WinSparkle/winsparkle.pri)
@@ -177,7 +179,7 @@ win32: {
     translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
 
     qti18n.depends = translate
-    qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/translations/qt_zh_CN.qm)'
+	
     # Windows icons
     RC_FILE = derfla.rc
     LIBS += -lVersion -lComctl32 -lOle32 -lGdi32
