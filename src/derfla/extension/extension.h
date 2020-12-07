@@ -73,6 +73,7 @@ private:
     DerflaActionList derflaActions_;
 
     QString findProgram();
+    QProcessEnvironment getProcessEnvironment();
 };
 
 typedef QSharedPointer<Extension> ExtensionPtr;

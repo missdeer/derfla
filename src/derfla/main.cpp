@@ -57,23 +57,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-#if defined(Q_OS_WIN)
-    auto pathEnv = QDir::toNativeSeparators(QApplication::applicationDirPath()) + ";" + qgetenv("PATH");
-    qDebug() << pathEnv;
-    qputenv("PATH", pathEnv.toUtf8()); // so that extensions can use Derfla main executable's Qt binaries
-    qputenv("QT_PLUGIN_PATH", QDir::toNativeSeparators(QApplication::applicationDirPath()).toUtf8());
-#elif defined(Q_OS_MAC)
-    QDir dir(a.applicationDirPath());
-    dir.cdUp();
-    dir.cd("Libs");
-    auto pathEnv = dir.absolutePath() + ":" + qgetenv("DYLD_LIBRARY_PATH");
-    qputenv("DYLD_LIBRARY_PATH", pathEnv.toUtf8());
-    qputenv("QT_MAC_DISABLE_FOREGROUND_APPLICATION_TRANSFORM", "1");
-#else
-    auto pathEnv = dir.absolutePath() + ":" + qgetenv("LD_LIBRARY_PATH");
-    qputenv("LD_LIBRARY_PATH", pathEnv.toUtf8());
-#endif
-
     QString locale = QLocale().uiLanguages()[0];
     QTranslator translator;
     QTranslator qtTranslator;

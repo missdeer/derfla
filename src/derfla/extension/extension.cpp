@@ -26,7 +26,12 @@ void Extension::runDaemon()
         arguments << executable_;
     }
 
-    QProcess::startDetached(program, arguments, QFileInfo(executable_).absolutePath());
+    QProcess proc;
+    proc.setProgram(program);
+    proc.setProcessEnvironment(getProcessEnvironment());
+    proc.setArguments(arguments);
+    proc.setWorkingDirectory(QFileInfo(executable_).absolutePath());
+    proc.startDetached();
 }
 
 void Extension::stopDaemon()
@@ -40,7 +45,12 @@ void Extension::stopDaemon()
     }
     arguments << "/exit";
 
-    QProcess::startDetached(program, arguments, QFileInfo(executable_).absolutePath());
+    QProcess proc;
+    proc.setProgram(program);
+    proc.setProcessEnvironment(getProcessEnvironment());
+    proc.setArguments(arguments);
+    proc.setWorkingDirectory(QFileInfo(executable_).absolutePath());
+    proc.startDetached();
 }
 
 bool Extension::query(const QString& input)
@@ -57,6 +67,7 @@ bool Extension::query(const QString& input)
         p->setProgram(findProgram());
         arguments << executable_;
     }
+    p->setProcessEnvironment(getProcessEnvironment());
     p->setWorkingDirectory(QFileInfo(executable_).absolutePath());
     arguments << input.split(QChar(' '));
     p->setArguments(arguments);
@@ -290,4 +301,26 @@ QString Extension::findProgram()
         return "";
     }
     return *it % exe;
+}
+
+QProcessEnvironment Extension::getProcessEnvironment()
+{
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+
+#if defined(Q_OS_WIN)
+    auto pathEnv = QDir::toNativeSeparators(QApplication::applicationDirPath()) + ";" + qgetenv("PATH");
+    env.insert("PATH", pathEnv.toUtf8()); // so that extensions can use Derfla main executable's Qt binaries
+    env.insert("QT_PLUGIN_PATH", QDir::toNativeSeparators(QApplication::applicationDirPath()).toUtf8());
+#elif defined(Q_OS_MAC)
+    QDir dir(a.applicationDirPath());
+    dir.cdUp();
+    dir.cd("Libs");
+    auto pathEnv = dir.absolutePath() + ":" + qgetenv("DYLD_LIBRARY_PATH");
+    env.insert("DYLD_LIBRARY_PATH", pathEnv.toUtf8());
+    env.insert("QT_MAC_DISABLE_FOREGROUND_APPLICATION_TRANSFORM", "1");
+#else
+    auto pathEnv = dir.absolutePath() + ":" + qgetenv("LD_LIBRARY_PATH");
+    env.insert("LD_LIBRARY_PATH", pathEnv.toUtf8());
+#endif
+    return env;
 }
