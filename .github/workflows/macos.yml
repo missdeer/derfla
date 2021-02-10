@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-        qt_ver: [5.15.1]
+        qt_ver: [5.15.2]
         qt_arch: [clang_64]
     env:
       targetName: Derfla
@@ -43,7 +43,7 @@ jobs:
           mkdir build
           cd build
           qmake -r CONFIG+=release CONFIG+=qtquickcompiler ../${{ env.targetName }}.pro
-          make -j 2
+          make -j `sysctl -n hw.logicalcpu`
           cd ..
 
       - name: package

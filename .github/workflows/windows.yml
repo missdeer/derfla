@@ -20,7 +20,7 @@ jobs:
     strategy:
       # 矩阵配置
       matrix:
-        qt_ver: [5.15.1]
+        qt_ver: [5.15.2]
         qt_target: [desktop]
         qt_arch: [win64_msvc2019_64, win32_msvc2019]
         # 额外设置msvc_arch
@@ -58,26 +58,3 @@ jobs:
           qmake -r CONFIG+=release CONFIG+=qtquickcompiler ..\${{ env.targetName }}.pro
           nmake
           cd ..
-      # tag 打包
-      - name: package
-        if: startsWith(github.event.ref, 'refs/tags/')
-        env:
-          VCINSTALLDIR: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC'
-          archiveName: ${{ env.targetName }}-${{ matrix.qt_arch }}
-        shell: pwsh
-        run: |
-          # 创建文件夹
-          New-Item -ItemType Directory ${env:archiveName}
-          # 拷贝exe
-          Copy-Item build\Release\${env:targetName}'.exe' ${env:archiveName}\
-          Copy-Item build\Release\Everything.exe ${env:archiveName}\
-          Copy-Item build\Release\Everything*.dll ${env:archiveName}\
-          # 拷贝依赖
-          windeployqt --qmldir . ${env:archiveName}\${env:targetName}'.exe'
-          # 打包zip
-          Compress-Archive -Path ${env:archiveName} ${env:archiveName}'.zip'
-          # 记录环境变量packageName给后续step
-          $name = ${env:archiveName}
-          echo "::set-env name=packageName::$name"
-          # 打印环境变量packageName
-          Write-Host 'packageName:'${env:packageName}
