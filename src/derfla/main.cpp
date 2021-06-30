@@ -50,16 +50,8 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    QDate d =  QLocale(QLocale::C).toDate(QString(__DATE__).simplified(), QLatin1String("MMM d yyyy"));
-    if (d.daysTo(QDate::currentDate()) > 60)
-    {
-        QMessageBox::critical(nullptr,
-                              QObject::tr("Expired"),
-                              QObject::tr("This application has been expired, please visit https://minidump.info/derfla/ for a new build."),
-                              QMessageBox::Ok);
-    }
-
-    QString locale = QLocale().uiLanguages()[0];
+    auto        uiLanguages = QLocale().uiLanguages();
+    QString     locale      = uiLanguages[0];
     QTranslator translator;
     QTranslator qtTranslator;
 
