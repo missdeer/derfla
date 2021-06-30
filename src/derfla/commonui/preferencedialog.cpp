@@ -1,9 +1,11 @@
 #include "stdafx.h"
+
+#include "preferencedialog.h"
+#include "booleaneditor.h"
 #include "derflaapp.h"
 #include "extensionmodel.h"
-#include "booleaneditor.h"
-#include "preferencedialog.h"
 #include "ui_preferencedialog.h"
+#include "util.h"
 
 PreferenceDialog::PreferenceDialog(QWidget *parent) :
     QDialog(parent),
@@ -88,6 +90,19 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     gl3->addStretch(1);
     ui->skinPage->setLayout(gl3);
 
+    ui->edtBashPath->setText(settings.value("bash").toString());
+    ui->edtZshPath->setText(settings.value("zsh").toString());
+    ui->edtPythonPath->setText(settings.value("python").toString());
+    ui->edtRubyPath->setText(settings.value("ruby").toString());
+    ui->edtPHPPath->setText(settings.value("php").toString());
+    ui->edtLuaPath->setText(settings.value("lua").toString());
+#if defined(Q_OS_MAC)
+    ui->edtAppleScriptPath->setText(settings.value("applescript(as)").toString());
+#endif
+#if defined(Q_OS_WIN)
+    ui->edtWScriptPath->setText(settings.value("wscript").toString());
+    ui->edtCScriptPath->setText(settings.value("cscript").toString());
+#endif
     ui->stackedWidget->setCurrentIndex(0);
 }
 
@@ -131,6 +146,20 @@ void PreferenceDialog::on_buttonBox_accepted()
     settings.setValue("autoupdate", cbAutoUpdate_->isChecked());
 #if defined (Q_OS_WIN) || defined(Q_OS_MAC)
     settings.setValue("autostart", cbStartWithSystem_->isChecked());
+#endif
+    settings.setValue("bash", ui->edtBashPath->text());
+    settings.setValue("zsh", ui->edtZshPath->text());
+    settings.setValue("python", ui->edtPythonPath->text());
+    settings.setValue("ruby", ui->edtRubyPath->text());
+    settings.setValue("php", ui->edtPHPPath->text());
+    settings.setValue("lua", ui->edtLuaPath->text());
+#if defined(Q_OS_MAC)
+    settings.setValue("applescript(as)", ui->edtAppleScriptPath->text());
+    settings.setValue("applescript(js)", ui->edtAppleScriptPath->text());
+#endif
+#if defined(Q_OS_WIN)
+    settings.setValue("wscript", ui->edtWScriptPath->text());
+    settings.setValue("cscript", ui->edtCScriptPath->text());
 #endif
     settings.sync();
     QDialog::accept();
@@ -208,4 +237,248 @@ void PreferenceDialog::loadSkins()
         cbSkins_->setCurrentIndex(index);
     else
         cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());    
+}
+
+void PreferenceDialog::on_btnBrowseBash_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Find Bash"),
+                                                    "",
+#if defined(Q_OS_WIN)
+                                                    tr("Bash interpretor (bash.exe);;All files (*.*)")
+#else
+                                                    tr("Bash interpretor (bash);;All files (*.*)")
+#endif
+    );
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtBashPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectBash_clicked()
+{
+#if defined(Q_OS_WIN)
+    auto fileName = util::findProgram("bash.exe");
+#else
+    auto fileName = util::findProgram("bash");
+#endif
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtBashPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowsePHP_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Find PHP"),
+                                                    "",
+#if defined(Q_OS_WIN)
+                                                    tr("PHP interpretor (php.exe);;All files (*.*)")
+#else
+                                                    tr("PHP interpretor (php);;All files (*.*)")
+#endif
+    );
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtPHPPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectPHP_clicked()
+{
+#if defined(Q_OS_WIN)
+    auto fileName = util::findProgram("php.exe");
+#else
+    auto fileName = util::findProgram("php");
+#endif
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtPHPPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowseRuby_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Find Ruby"),
+                                                    "",
+#if defined(Q_OS_WIN)
+                                                    tr("Ruby interpretor (ruby.exe);;All files (*.*)")
+#else
+                                                    tr("Ruby interpretor (ruby);;All files (*.*)")
+#endif
+    );
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtRubyPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectRuby_clicked()
+{
+#if defined(Q_OS_WIN)
+    auto fileName = util::findProgram("ruby.exe");
+#else
+    auto fileName = util::findProgram("ruby");
+#endif
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtRubyPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowsePython_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Find Python"),
+                                                    "",
+#if defined(Q_OS_WIN)
+                                                    tr("Python interpretor (python.exe);;All files (*.*)")
+#else
+                                                    tr("Python interpretor (python);;All files (*.*)")
+#endif
+    );
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtPythonPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectPython_clicked()
+{
+#if defined(Q_OS_WIN)
+    auto fileName = util::findProgram("python.exe");
+#else
+    auto fileName = util::findProgram("python");
+#endif
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtPythonPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowsePerl_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Find Perl"),
+                                                    "",
+#if defined(Q_OS_WIN)
+                                                    tr("Perl interpretor (perl.exe);;All files (*.*)")
+#else
+                                                    tr("Perl interpretor (perl);;All files (*.*)")
+#endif
+    );
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtPerlPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectPerl_clicked()
+{
+#if defined(Q_OS_WIN)
+    auto fileName = util::findProgram("perl.exe");
+#else
+    auto fileName = util::findProgram("perl");
+#endif
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtPerlPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowseZsh_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Find Zsh"),
+                                                    "",
+#if defined(Q_OS_WIN)
+                                                    tr("Zsh interpretor (zsh.exe);;All files (*.*)")
+#else
+                                                    tr("Zsh interpretor (zsh);;All files (*.*)")
+#endif
+    );
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtZshPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectZsh_clicked()
+{
+#if defined(Q_OS_WIN)
+    auto fileName = util::findProgram("zsh.exe");
+#else
+    auto fileName = util::findProgram("zsh");
+#endif
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtZshPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowseLua_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Find Lua"),
+                                                    "",
+#if defined(Q_OS_WIN)
+                                                    tr("Lua interpretor (lua.exe);;All files (*.*)")
+#else
+                                                    tr("Lua interpretor (lua);;All files (*.*)")
+#endif
+    );
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtLuaPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectLua_clicked()
+{
+#if defined(Q_OS_WIN)
+    auto fileName = util::findProgram("lua.exe");
+#else
+    auto fileName = util::findProgram("lua");
+#endif
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtLuaPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowseAppleScript_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Find AppleScript"), "", tr("AppleScript interpretor (applescript);;All files (*.*)"));
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtAppleScriptPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectAppleScript_clicked()
+{
+    auto fileName = util::findProgram("applescript");
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtAppleScriptPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowseCScript_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Find CScript"), "", tr("CScript interpretor (cscript.exe);;All files (*.*)"));
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtCScriptPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectCScript_clicked()
+{
+    auto fileName = util::findProgram("cscript.exe");
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtCScriptPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowseWScript_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Find WScript"), "", tr("WScript interpretor (wscript.exe);;All files (*.*)"));
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtWScriptPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectWScript_clicked()
+{
+    auto fileName = util::findProgram("wscript.exe");
+    if (!QFile::exists(fileName))
+        return;
+    ui->edtWScriptPath->setText(fileName);
 }

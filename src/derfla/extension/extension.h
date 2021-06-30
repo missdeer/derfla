@@ -68,8 +68,8 @@ private:
     QString id_;
     QStringList prefix_;
     QIcon waitIcon_;
-    bool daemon_;
-    QProcess* subProcess_;
+    bool             daemon_ {false};
+    QProcess *       subProcess_ {nullptr};
     DerflaActionList derflaActions_;
 
     QString findProgram();

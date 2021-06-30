@@ -1,5 +1,8 @@
 #include "stdafx.h"
+
 #include "actionexecutor.h"
+#include "derflaapp.h"
+#include "util.h"
 
 ActionExecutor::ActionExecutor(QObject *parent)
     : QObject(parent)
@@ -56,12 +59,21 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
     auto it = m.find(da->scriptExecutor());
     if (m.end() != it)
     {
-        auto option = m[da->scriptExecutor()];
+        auto       option   = m[da->scriptExecutor()];
+        QSettings &settings = derflaApp->settings();
+        auto       exe      = settings.value(da->scriptExecutor()).toString();
+        if (!QFile::exists(exe))
+        {
 #if defined(Q_OS_WIN)
-        QString exe = findProgram("/" % da->scriptExecutor() % ".exe");
+            exe = util::findProgram("/" % da->scriptExecutor() % ".exe");
 #else
-        QString exe = findProgram("/" % da->scriptExecutor());
+            exe = util::findProgram("/" % da->scriptExecutor());
 #endif
+        }
+        if (!QFile::exists(exe))
+        {
+            return false;
+        }
         QProcess* e = new QProcess;
 
         connect(e, &QProcess::errorOccurred, this, &ActionExecutor::errorOccurred);
@@ -113,7 +125,7 @@ bool ActionExecutor::shellExecute(DerflaActionPtr da)
 bool ActionExecutor::terminalCommand(DerflaActionPtr da)
 {
 #if defined(Q_OS_WIN)
-    QString args = QString("/K %1 %2").arg(da->target()).arg(da->arguments());
+    QString args = QString("/K %1 %2").arg(da->target(), da->arguments());
     ::ShellExecuteW(nullptr,
                     L"open",
                     L"cmd.exe",
@@ -194,28 +206,4 @@ bool ActionExecutor::copyText(DerflaActionPtr da)
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(da->target());
     return true;
-}
-
-QString ActionExecutor::findProgram(const QString &exe)
-{
-    QStringList envPaths;
-
-    QString path = qgetenv("PATH");
-    QStringList environment = QProcess::systemEnvironment();
-    auto it = std::find_if(environment.begin(), environment.end(),
-                           [&](const QString& env) { return env.startsWith("PATH="); });
-    if (environment.end() != it)
-        path = it->mid(5);
-#if defined(Q_OS_WIN)
-    envPaths << path.split(QChar(';'));
-#else
-    envPaths << path.split(QChar(':'));
-#endif
-
-    it = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString& p) {
-        return QFile::exists(p % exe);
-    });
-    if (envPaths.end() != it)
-        return *it % exe;
-    return exe;
 }

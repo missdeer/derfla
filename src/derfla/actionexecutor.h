@@ -27,8 +27,6 @@ private:
     bool browseInDerfla(DerflaActionPtr);
     bool copyText(DerflaActionPtr da);
 
-    QString findProgram(const QString& exe);
-
     QMap<QString, std::function<bool(DerflaActionPtr)>> actionExecutorMap_;
 };
 

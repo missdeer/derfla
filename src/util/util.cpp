@@ -92,4 +92,24 @@ void setTimestamp(qint64 ts)
     timestamp = ts;
 }
 
+QString findProgram(const QString &exe)
+{
+    QStringList envPaths;
+
+    QString     path        = qgetenv("PATH");
+    QStringList environment = QProcess::systemEnvironment();
+    auto        it          = std::find_if(environment.begin(), environment.end(), [&](const QString &env) { return env.startsWith("PATH="); });
+    if (environment.end() != it)
+        path = it->mid(5);
+#if defined(Q_OS_WIN)
+    envPaths << path.split(QChar(';'));
+#else
+    envPaths << path.split(QChar(':'));
+#endif
+
+    it = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString &p) { return QFile::exists(p % "/" % exe); });
+    if (envPaths.end() != it)
+        return QDir::toNativeSeparators(*it % "/" % exe);
+    return exe;
 }
+} // namespace util

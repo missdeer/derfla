@@ -2,12 +2,7 @@
 #include "scopedguard.h"
 #include "extension.h"
 
-Extension::Extension(QObject *parent) 
-    : QObject(parent)
-    , daemon_(false)
-    , subProcess_(nullptr)
-{
-}
+Extension::Extension(QObject *parent) : QObject(parent) {}
 
 Extension::~Extension()
 {

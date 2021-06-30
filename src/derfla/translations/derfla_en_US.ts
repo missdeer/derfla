@@ -223,6 +223,166 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
         <source>Use Alfred Style User Interface</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Interpretor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto detect path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PHP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ruby</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Python</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Perl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zsh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lua</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AppleScript</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CScript</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WScript</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find Bash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bash interpretor (bash.exe);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bash interpretor (bash);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find PHP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PHP interpretor (php.exe);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PHP interpretor (php);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find Ruby</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ruby interpretor (ruby.exe);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ruby interpretor (ruby);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find Python</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Python interpretor (python.exe);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Python interpretor (python);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find Perl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Perl interpretor (perl.exe);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Perl interpretor (perl);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find Zsh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zsh interpretor (zsh.exe);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zsh interpretor (zsh);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find Lua</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lua interpretor (lua.exe);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lua interpretor (lua);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find AppleScript</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AppleScript interpretor (applescript);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find CScript</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CScript interpretor (cscript.exe);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find WScript</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WScript interpretor (wscript.exe);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Widget</name>

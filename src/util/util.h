@@ -11,6 +11,8 @@ namespace util
     UTILSHARED_EXPORT QByteArray extractPNGIconFromFile(const QFileInfo& fi);
     UTILSHARED_EXPORT QStringList &getEnvPaths();
     UTILSHARED_EXPORT QStringList &getLocaleNames();
+    UTILSHARED_EXPORT QString      findProgram(const QString &exe);
+
 #if defined(Q_OS_MAC)
     UTILSHARED_EXPORT void HideDockIcon();
 #endif

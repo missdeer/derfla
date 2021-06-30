@@ -28,6 +28,46 @@ private slots:
     void onKeySequenceChanged(const QKeySequence &keySequence);
     void onCurrentSkinChanged(const QString& name);
     void onAlfredStyleUIStateChanged(int state);
+    void on_btnBrowseBash_clicked();
+
+    void on_btnDetectBash_clicked();
+
+    void on_btnBrowsePHP_clicked();
+
+    void on_btnDetectPHP_clicked();
+
+    void on_btnBrowseRuby_clicked();
+
+    void on_btnDetectRuby_clicked();
+
+    void on_btnBrowsePython_clicked();
+
+    void on_btnDetectPython_clicked();
+
+    void on_btnBrowsePerl_clicked();
+
+    void on_btnDetectPerl_clicked();
+
+    void on_btnBrowseZsh_clicked();
+
+    void on_btnDetectZsh_clicked();
+
+    void on_btnBrowseLua_clicked();
+
+    void on_btnDetectLua_clicked();
+
+    void on_btnBrowseAppleScript_clicked();
+
+    void on_btnDetectAppleScript_clicked();
+
+    void on_btnBrowseCScript_clicked();
+
+    void on_btnDetectCScript_clicked();
+
+    void on_btnBrowseWScript_clicked();
+
+    void on_btnDetectWScript_clicked();
+
 private:
     Ui::PreferenceDialog *ui;
     QCheckBox* cbStayOnTop_;

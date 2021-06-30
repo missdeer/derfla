@@ -22,5 +22,8 @@
         <file>rc/images/plugin.png</file>
         <file>themes/classic.derflatheme</file>
         <file>themes/dark.derflatheme</file>
+        <file>rc/images/interpretor.png</file>
+        <file>rc/images/find.png</file>
+        <file>rc/images/refresh.png</file>
     </qresource>
 </RCC>
