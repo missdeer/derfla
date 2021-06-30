@@ -225,17 +225,6 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
     </message>
 </context>
 <context>
-    <name>QObject</name>
-    <message>
-        <source>Expired</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This application has been expired, please visit https://minidump.info/derfla/ for a new build.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>Widget</name>
     <message>
         <source>Widget</source>
