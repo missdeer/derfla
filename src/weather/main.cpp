@@ -40,7 +40,8 @@ int main(int argc, char *argv[])
         return 2;
     }
 
-    QString locale = QLocale().uiLanguages()[0];
+    auto        uiLanguages = QLocale().uiLanguages();
+    auto &      locale      = uiLanguages[0];
     QTranslator translator;
     QTranslator qtTranslator;
 
