@@ -7,7 +7,7 @@ else
 	executable= "et"
 end
 description =  "Use Everything to search local file system and take actions"
-prefix = {"f", "d", "vs", "open"}
+prefix = {"f", "d", "vs", "open",  "run",  "o",  "r",  "rf",  "rd",  "rvs",  "ropen",  "rrun",  "ro",  "rr"}
 waitIconPath =  ""
 waitTitle =  "Searching..."
 waitDescription =  "Searching on local file system..."

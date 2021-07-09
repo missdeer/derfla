@@ -1,30 +1,33 @@
 #include "stdafx.h"
-#include "qtsingleapplication.h"
+
 #include <QIcon>
+
+#include "qtsingleapplication.h"
 #include "util.h"
 #if defined(Q_OS_WIN)
-#include "everythingwrapper.h"
+#    include "everythingwrapper.h"
 #elif defined(Q_OS_MAC)
-#include "mdfindwrapper.h"
+#    include "mdfindwrapper.h"
 #endif
 
 static const int maxCount = 25;
 
-bool handleFile(const QString& pattern)
+bool handleFile(const QString &pattern, bool regexpEnabled)
 {
-	QTextStream ts(stdout);
+    QTextStream ts(stdout);
     ts.setCodec("UTF-8");
-	QStringList res;
-	if (!QuickGetFilesByFileName(pattern, res, [](bool isDir){return !isDir; }, maxCount))
-	{
-		ts << "searching " << pattern << "by everything failed.";
-		return false;
-	}
+    QStringList res;
+    if (!QuickGetFilesByFileName(
+            regexpEnabled, pattern, res, [](bool isDir) { return !isDir; }, maxCount))
+    {
+        ts << "searching " << pattern << "by everything failed.";
+        return false;
+    }
 
     QJsonDocument d = QJsonDocument::fromJson("[]");
     Q_ASSERT(d.isArray());
     QJsonArray arr = d.array();
-    for (const auto& f : res)
+    for (const auto &f : qAsConst(res))
     {
         QFileInfo fi(f);
 
@@ -44,21 +47,22 @@ bool handleFile(const QString& pattern)
     return true;
 }
 
-bool handleDir(const QString& pattern)
+bool handleDir(const QString &pattern, bool regexpEnabled)
 {
-	QTextStream ts(stdout);
+    QTextStream ts(stdout);
     ts.setCodec("UTF-8");
-	QStringList res;
-	if (!QuickGetFilesByFileName(pattern, res, [](bool isDir){return isDir; }, maxCount))
-	{
-		ts << "searching " << pattern << "by everything failed.";
-		return false;
-	}
+    QStringList res;
+    if (!QuickGetFilesByFileName(
+            regexpEnabled, pattern, res, [](bool isDir) { return isDir; }, maxCount))
+    {
+        ts << "searching " << pattern << "by everything failed.";
+        return false;
+    }
 
     QJsonDocument d = QJsonDocument::fromJson("[]");
     Q_ASSERT(d.isArray());
     QJsonArray arr = d.array();
-    for (const auto& f : res)
+    for (const auto &f : qAsConst(res))
     {
         QFileInfo fi(f);
 
@@ -77,16 +81,17 @@ bool handleDir(const QString& pattern)
     return true;
 }
 
-bool handleVSOpen(const QString& pattern)
+bool handleVSOpen(const QString &pattern, bool regexpEnabled)
 {
-	QTextStream ts(stdout);
+    QTextStream ts(stdout);
     ts.setCodec("UTF-8");
-	QStringList res;
-	if (!QuickGetFilesByFileName(pattern, res, [](bool isDir){return !isDir; }, maxCount))
-	{
-		ts << "searching " << pattern << "by everything failed.";
-		return false;
-	}
+    QStringList res;
+    if (!QuickGetFilesByFileName(
+            regexpEnabled, pattern, res, [](bool isDir) { return !isDir; }, maxCount))
+    {
+        ts << "searching " << pattern << "by everything failed.";
+        return false;
+    }
 
     QFile f(":/open-in-vs.vbs");
     if (!f.open(QIODevice::ReadOnly))
@@ -97,12 +102,13 @@ bool handleVSOpen(const QString& pattern)
     QJsonDocument d = QJsonDocument::fromJson("[]");
     Q_ASSERT(d.isArray());
     QJsonArray arr = d.array();
-    for (const auto& f : res)
+    for (const auto &f : qAsConst(res))
     {
         QFileInfo fi(f);
 
         QStringList args;
-        args << QDir::toNativeSeparators(fi.absoluteFilePath()) << "1" << "1";
+        args << QDir::toNativeSeparators(fi.absoluteFilePath()) << "1"
+             << "1";
         QVariantMap m;
         m.insert("title", fi.fileName());
         m.insert("description", QDir::toNativeSeparators(fi.absolutePath()));
@@ -120,21 +126,22 @@ bool handleVSOpen(const QString& pattern)
     return true;
 }
 
-bool handleShellOpen(const QString& pattern)
+bool handleShellOpen(const QString &pattern, bool regexpEnabled)
 {
-	QTextStream ts(stdout);
+    QTextStream ts(stdout);
     ts.setCodec("UTF-8");
-	QStringList res;
-	if (!QuickGetFilesByFileName(pattern, res, [](bool){ return true; }, maxCount))
-	{
-		ts << "searching " << pattern << "by everything failed.";
-		return false;
-	}
+    QStringList res;
+    if (!QuickGetFilesByFileName(
+            regexpEnabled, pattern, res, [](bool) { return true; }, maxCount))
+    {
+        ts << "searching " << pattern << "by everything failed.";
+        return false;
+    }
 
     QJsonDocument d = QJsonDocument::fromJson("[]");
     Q_ASSERT(d.isArray());
     QJsonArray arr = d.array();
-    for (const auto& f : res)
+    for (const auto &f : qAsConst(res))
     {
         QFileInfo fi(f);
 
@@ -178,16 +185,17 @@ int main(int argc, char *argv[])
     a.setOrganizationDomain("minidump.info");
     a.setOrganizationName("Derfla");
 
-    QString locale = QLocale().uiLanguages()[0];
+    auto        uiLanguages = QLocale().uiLanguages();
+    auto &      locale      = uiLanguages[0];
     QTranslator translator;
     QTranslator qtTranslator;
 
     // main application and dynamic linked library locale
 #if defined(Q_OS_MAC)
-    QString rootDirPath = QApplication::applicationDirPath() + "/../../Resources/translations";
+    QString rootDirPath   = QApplication::applicationDirPath() + "/../../Resources/translations";
     QString localeDirPath = QApplication::applicationDirPath() + "/translations";
 #else
-    QString rootDirPath = QApplication::applicationDirPath() + "/../../translations";
+    QString rootDirPath   = QApplication::applicationDirPath() + "/../../translations";
     QString localeDirPath = QApplication::applicationDirPath() + "/translations";
 #endif
 
@@ -220,7 +228,7 @@ int main(int argc, char *argv[])
 
     if (argc == 3 || argc == 4)
     {
-        QTextStream ts( stdout );
+        QTextStream ts(stdout);
 #if defined(Q_OS_WIN)
         if (!isEverythingRunning())
         {
@@ -231,7 +239,7 @@ int main(int argc, char *argv[])
         int nArgs = 0;
 
         LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-        QString pattern = QString::fromWCharArray(argc == 3 ? szArglist[2] : szArglist[3]);
+        QString pattern   = QString::fromWCharArray(argc == 3 ? szArglist[2] : szArglist[3]);
         LocalFree(szArglist);
 #else
         QString pattern(argc == 3 ? argv[2] : argv[3]);
@@ -242,24 +250,34 @@ int main(int argc, char *argv[])
             return 0;
         }
 
-		if (argc == 4)
-		{
-			QString options(argv[2]);
+        if (argc == 4)
+        {
+            QString options(argv[2]);
 #if defined(Q_OS_WIN)
-			Everything_SetMatchWholeWord(options.contains(QChar('w'), Qt::CaseInsensitive));
-			Everything_SetMatchCase(options.contains(QChar('c'), Qt::CaseInsensitive));
-			Everything_SetRegex(options.contains(QChar('r'), Qt::CaseInsensitive));
+            Everything_SetMatchWholeWord(options.contains(QChar('w'), Qt::CaseInsensitive));
+            Everything_SetMatchCase(options.contains(QChar('c'), Qt::CaseInsensitive));
+            Everything_SetRegex(options.contains(QChar('r'), Qt::CaseInsensitive));
 #endif
-		}
+        }
 
-        QMap<QString, std::function<bool(const QString&)>> m = {
-        { "f", std::bind(&handleFile, std::placeholders::_1) },
-        { "d", std::bind(&handleDir, std::placeholders::_1) },
-        { "vs", std::bind(&handleVSOpen, std::placeholders::_1) },
-        { "open", std::bind(&handleShellOpen, std::placeholders::_1) },
-    };
+        QMap<QString, std::function<bool(const QString &)>> m = {
+            {"f", std::bind(&handleFile, std::placeholders::_1, false)},
+            {"d", std::bind(&handleDir, std::placeholders::_1, false)},
+            {"vs", std::bind(&handleVSOpen, std::placeholders::_1, false)},
+            {"open", std::bind(&handleShellOpen, std::placeholders::_1, false)},
+            {"run", std::bind(&handleShellOpen, std::placeholders::_1, false)},
+            {"o", std::bind(&handleShellOpen, std::placeholders::_1, false)},
+            {"r", std::bind(&handleShellOpen, std::placeholders::_1, false)},
+            {"rf", std::bind(&handleFile, std::placeholders::_1, true)},
+            {"rd", std::bind(&handleDir, std::placeholders::_1, true)},
+            {"rvs", std::bind(&handleVSOpen, std::placeholders::_1, true)},
+            {"ropen", std::bind(&handleShellOpen, std::placeholders::_1, true)},
+            {"rrun", std::bind(&handleShellOpen, std::placeholders::_1, true)},
+            {"rr", std::bind(&handleShellOpen, std::placeholders::_1, true)},
+            {"ro", std::bind(&handleShellOpen, std::placeholders::_1, true)},
+        };
         QString cmd(argv[1]);
-        auto it = m.find(cmd);
+        auto    it = m.find(cmd);
         if (m.end() == it)
         {
             ts << "unsupported query action";
