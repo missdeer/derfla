@@ -124,7 +124,7 @@ QString GetEverythingPath()
     return QString();
 }
 
-bool QuickGetFilesByFileName(const QString& pattern, QStringList& results, std::function<bool(bool)> checker, const int count)
+bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QStringList &results, std::function<bool(bool)> checker, const int count)
 {
     HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS,nullptr);
     if (!everything_hwnd)
@@ -149,6 +149,7 @@ bool QuickGetFilesByFileName(const QString& pattern, QStringList& results, std::
         return false;
     }
     // find
+    Everything_SetRegex(regexpEnabled);
     Everything_SetSearch(pattern.toStdWString().c_str());
     Everything_Query(TRUE);
 
