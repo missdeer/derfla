@@ -75,8 +75,6 @@ bool SkinManager::loadDerflaSkinPackage(const QString &skinPath, int &cutTop, in
                 return false;
             }
 
-            QFileInfo cfg(configuration);
-
             auto bgImageData = zr.fileData(image);
             if (!backgroundImage_.loadFromData(bgImageData))
             {
@@ -120,7 +118,7 @@ bool SkinManager::loadDerflaSkinConfigurationFile(const QString &skinPath, int &
 
     QFileInfo cfg(skinPath);
 
-    auto bgImagePath  = cfg.absolutePath() % image;
+    QString bgImagePath = cfg.absolutePath() % image;
     if (!backgroundImage_.load(bgImagePath))
     {
         qCritical() << "can't load picture from " << bgImagePath;
