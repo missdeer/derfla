@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QCoreApplication::setApplicationName("Derfla");
     QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("minidump.info");
+    QCoreApplication::setOrganizationDomain("ismisv.com");
     QCoreApplication::setOrganizationName("Derfla");
 
     SharedTools::QtSingleApplication a("Derfla", argc, argv);

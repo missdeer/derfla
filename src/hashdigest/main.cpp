@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
 
     a.setApplicationName("HashDigest");
     a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("minidump.info");
+    a.setOrganizationDomain("ismisv.com");
     a.setOrganizationName("Derfla");
 
     QTextStream ts(stdout);

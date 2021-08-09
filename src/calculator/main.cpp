@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 
     a.setApplicationName("Calculator");
     a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("minidump.info");
+    a.setOrganizationDomain("ismisv.com");
     a.setOrganizationName("Derfla");
 
 
