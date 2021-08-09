@@ -36,13 +36,11 @@ INCLUDEPATH += $$PWD/util
 
 SOURCES += \
     main.cpp \
-    youdao.cpp \
-    bing.cpp
+    youdao.cpp
 
 HEADERS += \
     stdafx.h \
-    youdao.h \
-    bing.h
+    youdao.h
 
 INCLUDEPATH += $$PWD
 

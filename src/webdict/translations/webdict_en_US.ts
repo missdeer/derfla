@@ -4,14 +4,6 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>[Pronounce] </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>[Sample] </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>[Translation] </source>
         <translation type="unfinished"></translation>
     </message>

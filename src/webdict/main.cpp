@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "qtsingleapplication.h"
+
 #include <QIcon>
-#include "youdao.h"
-#include "bing.h"
+
+#include "qtsingleapplication.h"
 #include "util.h"
+#include "youdao.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
 
     a.setApplicationName("WebDictionary");
     a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("minidump.info");
+    a.setOrganizationDomain("ismisv.com");
     a.setOrganizationName("Derfla");
     
     if (argc < 3)
@@ -91,12 +92,6 @@ int main(int argc, char *argv[])
     if (cmd == "dict" || cmd == "yd" || cmd == "youdao") {
         Youdao yd;
         yd.query(input.join(' '));
-        return a.exec();
-    }
-
-    if (cmd == "dict" || cmd == "bing"){
-        Bing bing;
-        bing.query(input.join(' '));
         return a.exec();
     }
 
