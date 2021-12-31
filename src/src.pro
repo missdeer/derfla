@@ -12,6 +12,7 @@ SUBDIRS +=  \
     webdict \
     calculator \
     weather \
+    translator \
     donate
 
 derfla.depends = util
@@ -22,3 +23,4 @@ websearch.depends = util
 webdict.depends = util
 calculator.depends = util
 weather.depends = util
+translator.depends = util

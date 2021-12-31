@@ -1,4 +1,5 @@
 QT       += core gui widgets gui-private
+equals(QT_MAJOR_VERSION, 6): QT+= core5compat
 
 TARGET = Derfla
 TEMPLATE = app
@@ -12,7 +13,6 @@ contains(QMAKE_HOST.arch, x86_64): {
     DESTDIR = $$DESTDIR/x86
 }
 
-win32-*msvc: QMAKE_CXXFLAGS += "/std:c++17"
 win32-clang-msvc: CONFIG -= precompile_header
 
 !win32: include($$PWD/../../3rdparty/UGlobalHotkey/uglobalhotkey.pri)

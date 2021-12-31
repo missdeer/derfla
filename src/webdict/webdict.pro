@@ -1,4 +1,5 @@
 QT += core gui network
+equals(QT_MAJOR_VERSION, 6): QT+= core5compat
 
 CONFIG += c++17 console precompile_header
 CONFIG -= app_bundle

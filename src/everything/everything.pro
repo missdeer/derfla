@@ -1,4 +1,5 @@
 QT += core gui xml concurrent sql gui-private
+equals(QT_MAJOR_VERSION, 6): QT+= core5compat
 
 CONFIG += c++17 console precompile_header
 CONFIG -= app_bundle
@@ -15,7 +16,6 @@ macx: {
     }
 }
 
-win32-*msvc: QMAKE_CXXFLAGS += "/std:c++17"
 win32-clang-msvc: CONFIG -= precompile_header
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 include($$PWD/../../3rdparty/Boost.pri)

@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += widgets
-
+equals(QT_MAJOR_VERSION, 6): QT+= core5compat
 TARGET = DerflaUtil
 TEMPLATE = lib
 CONFIG += c++17 precompile_header
@@ -96,7 +96,7 @@ win32: {
         QMAKE_CXXFLAGS_RELEASE += /Zi
         QMAKE_LFLAGS_RELEASE += /DEBUG
     }
-    QT += winextras
+    lessThan(QT_MAJOR_VERSION, 6): QT += winextras
     SOURCES += \
         $$PWD/win_util.cpp \
         $$PWD/WinIconProvider.cpp

@@ -1,8 +1,11 @@
 #include "stdafx.h"
-#include "scopedguard.h"
-#include "directory.h"
-#include "util.h"
+
+#include <QRegularExpression>
+
 #include "win_util.h"
+#include "directory.h"
+#include "scopedguard.h"
+#include "util.h"
 
 namespace util {
 

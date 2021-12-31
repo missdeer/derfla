@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+equals(QT_MAJOR_VERSION, 6): QT+= core5compat
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,7 +27,6 @@ macx: {
     }
 }
 
-win32-*msvc: QMAKE_CXXFLAGS += "/std:c++17"
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
