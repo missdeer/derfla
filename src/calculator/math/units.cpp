@@ -1,4 +1,4 @@
-// This file is part of the SpeedCrunch project
+﻿// This file is part of the SpeedCrunch project
 // Copyright (C) 2015 Pol Welter <polwelter@gmail.com>
 // Copyright (C) 2016 @heldercorreia
 //
@@ -17,36 +17,35 @@
 // the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 // Boston, MA 02110-1301, USA.
 
-#include "units.h"
-
-#include "quantity.h"
-#include "rational.h"
-
 #include <QString>
 #include <QStringList>
 
-#define UNIT_CACHE(name, value) \
-    const Quantity Units::name() \
-    { \
+#include "units.h"
+#include "quantity.h"
+#include "rational.h"
+
+#define UNIT_CACHE(name, value)       \
+    const Quantity Units::name()      \
+    {                                 \
         if (!m_cache.contains(#name)) \
-            m_cache[#name] = value; \
-        return (m_cache[#name]); \
+            m_cache[#name] = value;   \
+        return (m_cache[#name]);      \
     }
 
-#define BASE_UNIT_CACHE(name, dimension) \
-    const Quantity Units::name() \
-    { \
-        if (!m_cache.contains(#name)) { \
-            Quantity name(1); \
+#define BASE_UNIT_CACHE(name, dimension)        \
+    const Quantity Units::name()                \
+    {                                           \
+        if (!m_cache.contains(#name))           \
+        {                                       \
+            Quantity name(1);                   \
             name.modifyDimension(dimension, 1); \
-            m_cache[#name] = name; \
-        } \
-        return m_cache[#name]; \
+            m_cache[#name] = name;              \
+        }                                       \
+        return m_cache[#name];                  \
     }
 
 QHash<QMap<QString, Rational>, Unit> Units::m_matchLookup;
-QMap<QString, Quantity> Units::m_cache;
-
+QMap<QString, Quantity>              Units::m_cache;
 
 void Units::pushUnit(Quantity q, QString name)
 {
@@ -58,9 +57,10 @@ void Units::pushUnit(Quantity q, QString name)
 unsigned int qHash(QMap<QString, Rational> dimension)
 {
     QStringList keyList(dimension.keys());
-    QString blob("");
+    QString     blob("");
     keyList.sort();
-    for (int i = 0; i < keyList.size(); ++i) {
+    for (int i = 0; i < keyList.size(); ++i)
+    {
         keyList[i].append(dimension[keyList[i]].toString());
         blob.append(keyList[i]);
     }
@@ -73,39 +73,39 @@ unsigned int qHash(QMap<QString, Rational> dimension)
 void Units::initTable()
 {
     m_matchLookup.clear();
-    pushUnit(joule(), "newton meter");                          // energy or torque
-    pushUnit(newton(), "newton");                               // force
-    pushUnit(watt(), "watt");                                   // power
-    pushUnit(pascalx(), "pascal");                               // pressure or energy density
-    pushUnit(coulomb(), "coulomb");                             // charge
-    pushUnit(volt(), "volt");                                   // electrical potential
-    pushUnit(ohm(), "ohm");                                     // el. resistance
-    pushUnit(siemens(), "siemens");                             // el. conductance
-    pushUnit(ohm()*meter(), "ohm meter");                       // el. resistivity
-    pushUnit(siemens()/meter(), "siemens/meter");               // el. conductivity
-    pushUnit(siemens()/meter()/mole(), "siemens/(meter mole)"); // molar conductivity
-    pushUnit(farad(), "farad");                                 // capacitance
-    pushUnit(tesla(), "tesla");                                 // magnetic flux density
-    pushUnit(weber(), "weber");                                 // magnetic flux
-    pushUnit(henry(), "henry");                                 // inductance
-    pushUnit(coulomb()/cbmeter(), "coulomb/meter³");            // electric charge density
-    pushUnit(coulomb()/sqmeter(), "coulomb/meter²");            // surface charge density or el. flux
-    pushUnit(coulomb()/kilogram(), "coulomb/kilogram");         // exposure
-    pushUnit(farad()/meter(), "farad/meter");                   // permittivity
-    pushUnit(henry()/meter(), "henry/meter");                   // permeability
-    pushUnit(joule()/kilogram()/kelvin(),"joule/(kilogram kelvin)");    // specific heat capacity
-    pushUnit(joule()/mole()/kelvin(), "joule/(mole kelvin");            // molar heat capacity
-    pushUnit(mole()/second()/cbmeter(), "mole/(second meter³)");        // catalytic activity
-    pushUnit(newton()/meter(), "newton/meter");                 // surface tension
-    pushUnit(pascalx()*second(), "pascal second");               // dynamic viscosity
-    pushUnit(volt()/meter(), "volt/meter");                     // el. field
-    pushUnit(watt()/meter()/kelvin(), "watt/(meter kelvin)");   // thermal conductivity
-    pushUnit(watt()/sqmeter(), "watt/meter²");                  // heat flux
-    pushUnit(joule()/kelvin(), "joule/kelvin");                 // entropy or heat capacity
-    pushUnit(joule()/kilogram(), "joule/kilogram");             // specific energy
+    pushUnit(joule(), "newton meter");                                    // energy or torque
+    pushUnit(newton(), "newton");                                         // force
+    pushUnit(watt(), "watt");                                             // power
+    pushUnit(pascalx(), "pascal");                                        // pressure or energy density
+    pushUnit(coulomb(), "coulomb");                                       // charge
+    pushUnit(volt(), "volt");                                             // electrical potential
+    pushUnit(ohm(), "ohm");                                               // el. resistance
+    pushUnit(siemens(), "siemens");                                       // el. conductance
+    pushUnit(ohm() * meter(), "ohm meter");                               // el. resistivity
+    pushUnit(siemens() / meter(), "siemens/meter");                       // el. conductivity
+    pushUnit(siemens() / meter() / mole(), "siemens/(meter mole)");       // molar conductivity
+    pushUnit(farad(), "farad");                                           // capacitance
+    pushUnit(tesla(), "tesla");                                           // magnetic flux density
+    pushUnit(weber(), "weber");                                           // magnetic flux
+    pushUnit(henry(), "henry");                                           // inductance
+    pushUnit(coulomb() / cbmeter(), "coulomb/meter³");                    // electric charge density
+    pushUnit(coulomb() / sqmeter(), "coulomb/meter²");                    // surface charge density or el. flux
+    pushUnit(coulomb() / kilogram(), "coulomb/kilogram");                 // exposure
+    pushUnit(farad() / meter(), "farad/meter");                           // permittivity
+    pushUnit(henry() / meter(), "henry/meter");                           // permeability
+    pushUnit(joule() / kilogram() / kelvin(), "joule/(kilogram kelvin)"); // specific heat capacity
+    pushUnit(joule() / mole() / kelvin(), "joule/(mole kelvin");          // molar heat capacity
+    pushUnit(mole() / second() / cbmeter(), "mole/(second meter³)");      // catalytic activity
+    pushUnit(newton() / meter(), "newton/meter");                         // surface tension
+    pushUnit(pascalx() * second(), "pascal second");                      // dynamic viscosity
+    pushUnit(volt() / meter(), "volt/meter");                             // el. field
+    pushUnit(watt() / meter() / kelvin(), "watt/(meter kelvin)");         // thermal conductivity
+    pushUnit(watt() / sqmeter(), "watt/meter²");                          // heat flux
+    pushUnit(joule() / kelvin(), "joule/kelvin");                         // entropy or heat capacity
+    pushUnit(joule() / kilogram(), "joule/kilogram");                     // specific energy
 }
 
-void Units::findUnit(Quantity& q)
+void Units::findUnit(Quantity &q)
 {
     QString unit_name = "";
     CNumber unit(1);
@@ -115,40 +115,62 @@ void Units::findUnit(Quantity& q)
         initTable();
 
     // Match derived units.
-    if (m_matchLookup.contains(q.getDimension())) {
+    if (m_matchLookup.contains(q.getDimension()))
+    {
         Unit temp(m_matchLookup[q.getDimension()]);
         q.setDisplayUnit(temp.value.numericValue(), temp.name);
-    } else {
+    }
+    else
+    {
         // Autogenerate unit name (product of base units).
         auto dimension = q.getDimension();
-        auto i = dimension.constBegin();
-        while (i != dimension.constEnd()) {
+        auto i         = dimension.constBegin();
+        while (i != dimension.constEnd())
+        {
             auto exponent = i.value().toString();
             if (exponent.contains('/'))
-                exponent = "^(" + exponent+')';
+                exponent = "^(" + exponent + ')';
             else if (exponent == "1")
                 exponent = "";
             else
                 exponent = '^' + exponent;
 
-            if (exponent == QLatin1String("^0")) exponent = QString::fromUtf8("⁰");
-            else if (exponent == QLatin1String("^2")) exponent = QString::fromUtf8("²");
-            else if (exponent == QLatin1String("^3")) exponent = QString::fromUtf8("³");
-            else if (exponent == QLatin1String("^4")) exponent = QString::fromUtf8("⁴") ;
-            else if (exponent == QLatin1String("^5")) exponent = QString::fromUtf8("⁵") ;
-            else if (exponent == QLatin1String("^6")) exponent = QString::fromUtf8("⁶") ;
-            else if (exponent == QLatin1String("^7")) exponent = QString::fromUtf8("⁷") ;
-            else if (exponent == QLatin1String("^8")) exponent = QString::fromUtf8("⁸") ;
-            else if (exponent == QLatin1String("^9")) exponent = QString::fromUtf8("⁹") ;
-            else if (exponent == QLatin1String("^-1")) exponent = QString::fromUtf8("⁻¹");
-            else if (exponent == QLatin1String("^-2")) exponent = QString::fromUtf8("⁻²");
-            else if (exponent == QLatin1String("^-3")) exponent = QString::fromUtf8("⁻³");
-            else if (exponent == QLatin1String("^-4")) exponent = QString::fromUtf8("⁻⁴") ;
-            else if (exponent == QLatin1String("^-5")) exponent = QString::fromUtf8("⁻⁵") ;
-            else if (exponent == QLatin1String("^-6")) exponent = QString::fromUtf8("⁻⁶") ;
-            else if (exponent == QLatin1String("^-7")) exponent = QString::fromUtf8("⁻⁷") ;
-            else if (exponent == QLatin1String("^-8")) exponent = QString::fromUtf8("⁻⁸") ;
-            else if (exponent == QLatin1String("^-9")) exponent = QString::fromUtf8("⁻⁹") ;
+            if (exponent == QLatin1String("^0"))
+                exponent = QString::fromUtf8("⁰");
+            else if (exponent == QLatin1String("^2"))
+                exponent = QString::fromUtf8("²");
+            else if (exponent == QLatin1String("^3"))
+                exponent = QString::fromUtf8("³");
+            else if (exponent == QLatin1String("^4"))
+                exponent = QString::fromUtf8("⁴");
+            else if (exponent == QLatin1String("^5"))
+                exponent = QString::fromUtf8("⁵");
+            else if (exponent == QLatin1String("^6"))
+                exponent = QString::fromUtf8("⁶");
+            else if (exponent == QLatin1String("^7"))
+                exponent = QString::fromUtf8("⁷");
+            else if (exponent == QLatin1String("^8"))
+                exponent = QString::fromUtf8("⁸");
+            else if (exponent == QLatin1String("^9"))
+                exponent = QString::fromUtf8("⁹");
+            else if (exponent == QLatin1String("^-1"))
+                exponent = QString::fromUtf8("⁻¹");
+            else if (exponent == QLatin1String("^-2"))
+                exponent = QString::fromUtf8("⁻²");
+            else if (exponent == QLatin1String("^-3"))
+                exponent = QString::fromUtf8("⁻³");
+            else if (exponent == QLatin1String("^-4"))
+                exponent = QString::fromUtf8("⁻⁴");
+            else if (exponent == QLatin1String("^-5"))
+                exponent = QString::fromUtf8("⁻⁵");
+            else if (exponent == QLatin1String("^-6"))
+                exponent = QString::fromUtf8("⁻⁶");
+            else if (exponent == QLatin1String("^-7"))
+                exponent = QString::fromUtf8("⁻⁷");
+            else if (exponent == QLatin1String("^-8"))
+                exponent = QString::fromUtf8("⁻⁸");
+            else if (exponent == QLatin1String("^-9"))
+                exponent = QString::fromUtf8("⁻⁹");
 
             // TODO: Replace this with a lookup to a repository.
             if (i.key() == "length")
@@ -367,113 +389,112 @@ UNIT_CACHE(zetta, HNumber("1e21"))
 UNIT_CACHE(yotta, HNumber("1e24"))
 
 UNIT_CACHE(kibi, HNumber("1024"))
-UNIT_CACHE(mebi, kibi()*kibi())
-UNIT_CACHE(gibi, kibi()*mebi())
-UNIT_CACHE(tebi, kibi()*gibi())
-UNIT_CACHE(pebi, kibi()*tebi())
-UNIT_CACHE(exbi, kibi()*pebi())
-UNIT_CACHE(zebi, kibi()*exbi())
-UNIT_CACHE(yobi, kibi()*zebi())
+UNIT_CACHE(mebi, kibi() * kibi())
+UNIT_CACHE(gibi, kibi() * mebi())
+UNIT_CACHE(tebi, kibi() * gibi())
+UNIT_CACHE(pebi, kibi() * tebi())
+UNIT_CACHE(exbi, kibi() * pebi())
+UNIT_CACHE(zebi, kibi() * exbi())
+UNIT_CACHE(yobi, kibi() * zebi())
 
-UNIT_CACHE(newton,              meter() * kilogram() / (second()*second()))
-UNIT_CACHE(hertz,               Quantity(1) / second())
-UNIT_CACHE(pascalx,              newton() / sqmeter())
-UNIT_CACHE(joule,               newton() * meter())
-UNIT_CACHE(watt,                joule() / second())
-UNIT_CACHE(coulomb,             ampere() * second())
-UNIT_CACHE(volt,                watt() / ampere())
-UNIT_CACHE(farad,               coulomb() / volt())
-UNIT_CACHE(ohm,                 volt() / ampere())
-UNIT_CACHE(siemens,             ampere() / volt())
-UNIT_CACHE(weber,               volt() * second())
-UNIT_CACHE(tesla,               weber() / sqmeter())
-UNIT_CACHE(henry,               weber() / ampere())
-UNIT_CACHE(becquerel,           Quantity(1) / second())
-UNIT_CACHE(gray,                joule() / kilogram())
-UNIT_CACHE(sievert,             joule() / kilogram())
-UNIT_CACHE(katal,               mole() / second())
-UNIT_CACHE(steradian,           1)
-UNIT_CACHE(lumen,               candela()*steradian())
-UNIT_CACHE(lux,                 lumen()/sqmeter())
+UNIT_CACHE(newton, meter() * kilogram() / (second() * second()))
+UNIT_CACHE(hertz, Quantity(1) / second())
+UNIT_CACHE(pascalx, newton() / sqmeter())
+UNIT_CACHE(joule, newton() * meter())
+UNIT_CACHE(watt, joule() / second())
+UNIT_CACHE(coulomb, ampere() * second())
+UNIT_CACHE(volt, watt() / ampere())
+UNIT_CACHE(farad, coulomb() / volt())
+UNIT_CACHE(ohm, volt() / ampere())
+UNIT_CACHE(siemens, ampere() / volt())
+UNIT_CACHE(weber, volt() * second())
+UNIT_CACHE(tesla, weber() / sqmeter())
+UNIT_CACHE(henry, weber() / ampere())
+UNIT_CACHE(becquerel, Quantity(1) / second())
+UNIT_CACHE(gray, joule() / kilogram())
+UNIT_CACHE(sievert, joule() / kilogram())
+UNIT_CACHE(katal, mole() / second())
+UNIT_CACHE(steradian, 1)
+UNIT_CACHE(lumen, candela() * steradian())
+UNIT_CACHE(lux, lumen() / sqmeter())
 
-UNIT_CACHE(sqmeter,             meter() * meter())
-UNIT_CACHE(cbmeter,             sqmeter() * meter())
+UNIT_CACHE(sqmeter, meter() * meter())
+UNIT_CACHE(cbmeter, sqmeter() * meter())
 
-UNIT_CACHE(metric_ton,          mega()*gram())
-UNIT_CACHE(gram,                milli()*kilogram())
-UNIT_CACHE(pound,               HNumber("0.45359237") * kilogram())
-UNIT_CACHE(ounce,               pound() / HNumber(16))
-UNIT_CACHE(grain,               pound() / HNumber(7000))
-UNIT_CACHE(short_ton,           HNumber(2000) * pound())
-UNIT_CACHE(long_ton,            HNumber(2240) * pound())
-UNIT_CACHE(atomic_mass_unit,    HNumber("1.660539040e-27") * kilogram()) // http://physics.nist.gov/cgi-bin/cuu/Value?tukg
-UNIT_CACHE(carat,               HNumber(200) * milli()*gram()) // Do not confuse with karat below.
+UNIT_CACHE(metric_ton, mega() * gram())
+UNIT_CACHE(gram, milli() * kilogram())
+UNIT_CACHE(pound, HNumber("0.45359237") * kilogram())
+UNIT_CACHE(ounce, pound() / HNumber(16))
+UNIT_CACHE(grain, pound() / HNumber(7000))
+UNIT_CACHE(short_ton, HNumber(2000) * pound())
+UNIT_CACHE(long_ton, HNumber(2240) * pound())
+UNIT_CACHE(atomic_mass_unit, HNumber("1.660539040e-27") * kilogram()) // http://physics.nist.gov/cgi-bin/cuu/Value?tukg
+UNIT_CACHE(carat, HNumber(200) * milli() * gram())                    // Do not confuse with karat below.
 
-UNIT_CACHE(micron,              micro()*meter())
-UNIT_CACHE(angstrom,            HNumber("1e-10") * meter())
-UNIT_CACHE(astronomical_unit,   HNumber("149597870700") * meter()) // IAU 2012 Resolution B2.
-UNIT_CACHE(lightyear,           speed_of_light() * julian_year())
-UNIT_CACHE(lightminute,         speed_of_light() * minute())
-UNIT_CACHE(lightsecond,         speed_of_light() * second())
-UNIT_CACHE(parsec,              HNumber(648000)/HMath::pi() * astronomical_unit()) // IAU 2015 Resolution B2.
-UNIT_CACHE(inch,                HNumber("0.0254") * meter()) // International inch.
-UNIT_CACHE(foot,                HNumber(12) * inch())
-UNIT_CACHE(yard,                HNumber(36) * inch())
-UNIT_CACHE(mile,                HNumber(1760) * yard())
-UNIT_CACHE(rod,                 HNumber("5.5") * yard())
-UNIT_CACHE(furlong,             HNumber(40) * rod())
-UNIT_CACHE(fathom,              HNumber(6) * foot())
-UNIT_CACHE(nautical_mile,       HNumber("1852") * meter())
-UNIT_CACHE(cable,               HNumber("0.1") * nautical_mile())
+UNIT_CACHE(micron, micro() * meter())
+UNIT_CACHE(angstrom, HNumber("1e-10") * meter())
+UNIT_CACHE(astronomical_unit, HNumber("149597870700") * meter()) // IAU 2012 Resolution B2.
+UNIT_CACHE(lightyear, speed_of_light() * julian_year())
+UNIT_CACHE(lightminute, speed_of_light() * minute())
+UNIT_CACHE(lightsecond, speed_of_light() * second())
+UNIT_CACHE(parsec, HNumber(648000) / HMath::pi() * astronomical_unit()) // IAU 2015 Resolution B2.
+UNIT_CACHE(inch, HNumber("0.0254") * meter())                           // International inch.
+UNIT_CACHE(foot, HNumber(12) * inch())
+UNIT_CACHE(yard, HNumber(36) * inch())
+UNIT_CACHE(mile, HNumber(1760) * yard())
+UNIT_CACHE(rod, HNumber("5.5") * yard())
+UNIT_CACHE(furlong, HNumber(40) * rod())
+UNIT_CACHE(fathom, HNumber(6) * foot())
+UNIT_CACHE(nautical_mile, HNumber("1852") * meter())
+UNIT_CACHE(cable, HNumber("0.1") * nautical_mile())
 
-UNIT_CACHE(are,                 HNumber(100) * sqmeter())
-UNIT_CACHE(hectare,             HNumber(100) * are())
-UNIT_CACHE(acre,                mile()*mile() / HNumber(640))
+UNIT_CACHE(are, HNumber(100) * sqmeter())
+UNIT_CACHE(hectare, HNumber(100) * are())
+UNIT_CACHE(acre, mile() * mile() / HNumber(640))
 
-UNIT_CACHE(US_gallon,           HNumber("3.785") * liter())
-UNIT_CACHE(UK_gallon,           HNumber("4.54609") * liter())
-UNIT_CACHE(US_quart,            US_gallon() / HNumber(4))
-UNIT_CACHE(UK_quart,            UK_gallon() / HNumber(4))
-UNIT_CACHE(US_pint,             US_gallon() / HNumber(8))
-UNIT_CACHE(UK_pint,             UK_gallon() / HNumber(8))
-UNIT_CACHE(US_fluid_ounce,      US_gallon() / HNumber(128))
-UNIT_CACHE(UK_fluid_ounce,      UK_gallon() / HNumber(160))
-UNIT_CACHE(liter,               milli() * cbmeter())
+UNIT_CACHE(US_gallon, HNumber("3.785") * liter())
+UNIT_CACHE(UK_gallon, HNumber("4.54609") * liter())
+UNIT_CACHE(US_quart, US_gallon() / HNumber(4))
+UNIT_CACHE(UK_quart, UK_gallon() / HNumber(4))
+UNIT_CACHE(US_pint, US_gallon() / HNumber(8))
+UNIT_CACHE(UK_pint, UK_gallon() / HNumber(8))
+UNIT_CACHE(US_fluid_ounce, US_gallon() / HNumber(128))
+UNIT_CACHE(UK_fluid_ounce, UK_gallon() / HNumber(160))
+UNIT_CACHE(liter, milli() * cbmeter())
 
+UNIT_CACHE(minute, HNumber(60) * second())
+UNIT_CACHE(hour, HNumber(60) * minute())
+UNIT_CACHE(day, HNumber(24) * hour())
+UNIT_CACHE(week, HNumber(7) * day())
+UNIT_CACHE(julian_year, HNumber("365.25") * day())
+UNIT_CACHE(tropical_year, HNumber("365.24219") * day()) // Approx.: changes over time due to Earth's precession.
+UNIT_CACHE(sidereal_year, HNumber("365.25636") * day()) // http://hpiers.obspm.fr/eop-pc/models/constants.html
 
-UNIT_CACHE(minute,              HNumber(60) * second())
-UNIT_CACHE(hour,                HNumber(60) * minute())
-UNIT_CACHE(day,                 HNumber(24) * hour())
-UNIT_CACHE(week,                HNumber(7) * day())
-UNIT_CACHE(julian_year,         HNumber("365.25") * day())
-UNIT_CACHE(tropical_year,       HNumber("365.24219") * day()) // Approx.: changes over time due to Earth's precession.
-UNIT_CACHE(sidereal_year,       HNumber("365.25636") * day()) // http://hpiers.obspm.fr/eop-pc/models/constants.html
+UNIT_CACHE(percent, HNumber("0.01"))
+UNIT_CACHE(ppm, HNumber("1e-6"))
+UNIT_CACHE(ppb, HNumber("1e-9"))
+UNIT_CACHE(karat, Rational(1, 24).toHNumber()) // Do not confuse with carat above.
 
-UNIT_CACHE(percent,             HNumber("0.01"))
-UNIT_CACHE(ppm,                 HNumber("1e-6"))
-UNIT_CACHE(ppb,                 HNumber("1e-9"))
-UNIT_CACHE(karat,               Rational(1,24).toHNumber()) // Do not confuse with carat above.
+UNIT_CACHE(bar, HNumber("1e5") * pascalx())
+UNIT_CACHE(atmosphere, HNumber("1.01325") * bar())
+UNIT_CACHE(torr, atmosphere() / HNumber(760))
+UNIT_CACHE(pounds_per_sqinch, pound() * gravity() / (inch() * inch()))
 
-UNIT_CACHE(bar,                 HNumber("1e5") * pascalx())
-UNIT_CACHE(atmosphere,          HNumber("1.01325") * bar())
-UNIT_CACHE(torr,                atmosphere() / HNumber(760))
-UNIT_CACHE(pounds_per_sqinch,   pound() * gravity() / (inch()*inch()))
-
-UNIT_CACHE(electron_volt,       elementary_charge() * volt())
-UNIT_CACHE(calorie,             HNumber("4.1868") * joule()) // International Table calorie.
+UNIT_CACHE(electron_volt, elementary_charge() * volt())
+UNIT_CACHE(calorie, HNumber("4.1868") * joule())                // International Table calorie.
 UNIT_CACHE(british_thermal_unit, HNumber("1055.056") * joule()) // International standard ISO 31-4.
 
-UNIT_CACHE(nat,                 bit() / HMath::ln(2))
-UNIT_CACHE(hartley,             HMath::ln(10) * nat())
-UNIT_CACHE(byte,                HNumber(8) * bit())
+UNIT_CACHE(nat, bit() / HMath::ln(2))
+UNIT_CACHE(hartley, HMath::ln(10) * nat())
+UNIT_CACHE(byte, HNumber(8) * bit())
 
-UNIT_CACHE(tablespoon,          HNumber(15) * milli()*liter())
-UNIT_CACHE(teaspoon,            HNumber(5) * milli()*liter())
-UNIT_CACHE(cup,                 HNumber(240) * milli()*liter())
+UNIT_CACHE(tablespoon, HNumber(15) * milli() * liter())
+UNIT_CACHE(teaspoon, HNumber(5) * milli() * liter())
+UNIT_CACHE(cup, HNumber(240) * milli() * liter())
 
-UNIT_CACHE(gravity,             HNumber("9.80665") * newton() / kilogram()) // 3rd CGPM (1901, CR 70).
-UNIT_CACHE(speed_of_light,      HNumber(299792458) * meter() / second())
-UNIT_CACHE(elementary_charge,   HNumber("1.6021766208e-19") * coulomb()) // http://physics.nist.gov/cgi-bin/cuu/Value?e
-UNIT_CACHE(speed_of_sound_STP,  HNumber(331) * meter()/second())
-UNIT_CACHE(knot,                nautical_mile()/hour())
-UNIT_CACHE(horsepower,          HNumber(550) * foot() * pound() * gravity() / second()) // Imperial horsepower.
+UNIT_CACHE(gravity, HNumber("9.80665") * newton() / kilogram()) // 3rd CGPM (1901, CR 70).
+UNIT_CACHE(speed_of_light, HNumber(299792458) * meter() / second())
+UNIT_CACHE(elementary_charge, HNumber("1.6021766208e-19") * coulomb()) // http://physics.nist.gov/cgi-bin/cuu/Value?e
+UNIT_CACHE(speed_of_sound_STP, HNumber(331) * meter() / second())
+UNIT_CACHE(knot, nautical_mile() / hour())
+UNIT_CACHE(horsepower, HNumber(550) * foot() * pound() * gravity() / second()) // Imperial horsepower.

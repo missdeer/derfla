@@ -1,18 +1,18 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
+
 #include <QNetworkRequest>
-#include <QUrlQuery>
 #include <QUrl>
+#include <QUrlQuery>
+
 #include "heweather.h"
 
-Heweather::Heweather(QObject *parent) : QObject(parent)
-{
 
-}
+Heweather::Heweather(QObject *parent) : QObject(parent) {}
 
 void Heweather::forecast(const QString &location)
 {
     // https://free-api.heweather.net/s6/weather/forecast?parameters
-    QUrl url("https://free-api.heweather.net/s6/weather/forecast");
+    QUrl      url("https://free-api.heweather.net/s6/weather/forecast");
     QUrlQuery query;
 
     query.addQueryItem("location", location.toUtf8());
@@ -22,20 +22,19 @@ void Heweather::forecast(const QString &location)
     QNetworkRequest req(url);
     req.setAttribute(QNetworkRequest::Http2AllowedAttribute, true);
 
-    QNetworkReply* reply = m_nam.get(req);
+    QNetworkReply *reply = m_nam.get(req);
 
     connect(reply, SIGNAL(finished()), this, SLOT(onFinished()));
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
-            this, SLOT(onError(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
 }
 
 void Heweather::onFinished()
 {
-    auto* reply = qobject_cast<QNetworkReply*>(sender());
+    auto *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT(reply);
     reply->deleteLater();
-    m_content.append( reply->readAll());
+    m_content.append(reply->readAll());
 
     QJsonDocument doc = QJsonDocument::fromJson(m_content);
     if (!doc.isObject())
@@ -59,7 +58,7 @@ void Heweather::onFinished()
         QCoreApplication::exit(2);
     }
 
-    auto weather = w.toArray();
+    auto weather     = w.toArray();
     auto weatherItem = weather[0];
     if (!weatherItem.isObject())
     {
@@ -75,7 +74,7 @@ void Heweather::onFinished()
         ts << "status is " << status;
         QCoreApplication::exit(4);
     }
-    auto basic = item["basic"].toObject();
+    auto    basic    = item["basic"].toObject();
     QString location = basic["location"].toString();
 
     auto dailyForecast = item["daily_forecast"].toArray();
@@ -86,18 +85,16 @@ void Heweather::onFinished()
         auto forecast = f.toObject();
 
         QVariantMap m;
-        QString title = QString(tr("Day: %1, Night: %2, Tempe: %3℃~%4℃")).arg(forecast["cond_txt_d"].toString(),
-                forecast["cond_txt_n"].toString(),
-                forecast["tmp_min"].toString(),
-                forecast["tmp_max"].toString());
-        m.insert("title", title );
-        m.insert("target", title );
+        QString     title = tr("Day: %1, Night: %2, Tempe: %3℃~%4℃")
+                            .arg(forecast["cond_txt_d"].toString(),
+                                 forecast["cond_txt_n"].toString(),
+                                 forecast["tmp_min"].toString(),
+                                 forecast["tmp_max"].toString());
+        m.insert("title", title);
+        m.insert("target", title);
 
-        QString description = QString(tr("%1 %2 %3 %4L"))
-                .arg(forecast["date"].toString(),
-                location,
-                forecast["wind_dir"].toString(),
-                forecast["wind_sc"].toString());
+        QString description =
+            (tr("%1 %2 %3 %4L")).arg(forecast["date"].toString(), location, forecast["wind_dir"].toString(), forecast["wind_sc"].toString());
         m.insert("description", description);
         m.insert("actionType", "copyText");
 
@@ -118,15 +115,15 @@ void Heweather::onFinished()
 
 void Heweather::onError(QNetworkReply::NetworkError e)
 {
-    auto* reply = qobject_cast<QNetworkReply*>(sender());
+    auto *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT(reply);
-    qDebug() << e << reply->errorString() ;
+    qDebug() << e << reply->errorString();
     QCoreApplication::exit(1);
 }
 
 void Heweather::onReadyRead()
 {
-    auto* reply = qobject_cast<QNetworkReply*>(sender());
+    auto *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT(reply);
-    m_content.append( reply->readAll());
+    m_content.append(reply->readAll());
 }

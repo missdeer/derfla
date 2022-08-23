@@ -12,7 +12,6 @@ SUBDIRS +=  \
     webdict \
     calculator \
     weather \
-    translator \
     donate
 
 derfla.depends = util

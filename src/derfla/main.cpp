@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "derflaapp.h"
-#include "derflawidget.h"
 #include "qtsingleapplication.h"
 
 #if defined(Q_OS_WIN)
