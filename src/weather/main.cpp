@@ -24,7 +24,11 @@ int main(int argc, char *argv[])
     if (argc != 3)
     {
         QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         ts.setCodec("UTF-8");
+#else
+        ts.setEncoding(QStringConverter::Utf8);
+#endif
 
         ts << "invalid arguments";
         return 1;
@@ -34,7 +38,11 @@ int main(int argc, char *argv[])
     if (cmd != "w" && cmd != "weather")
     {
         QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         ts.setCodec("UTF-8");
+#else
+        ts.setEncoding(QStringConverter::Utf8);
+#endif
 
         ts << "invalid arguments";
         return 2;

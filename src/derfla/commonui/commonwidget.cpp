@@ -1,9 +1,10 @@
 #include "stdafx.h"
+
+#include "commonwidget.h"
 #include "derflaapp.h"
 #include "preferencedialog.h"
-#include "commonwidget.h"
-#if defined(Q_OS_WIN)
-#include <QtPlatformHeaders/QWindowsWindowFunctions>
+#if defined(Q_OS_WIN) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#    include <QtPlatformHeaders/QWindowsWindowFunctions>
 #endif
 
 CommonWidget::CommonWidget(QWidget *parent) 
@@ -19,7 +20,9 @@ CommonWidget::CommonWidget(QWidget *parent)
     
     QString keySequence = settings.value("hotkey", "Alt+Space").toString();
 #if defined(Q_OS_WIN)
+#    if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QWindowsWindowFunctions::setWindowActivationBehavior(QWindowsWindowFunctions::AlwaysActivateWindow);
+#    endif
     hotkeyManager_->setKey(QKeySequence(keySequence));
     connect(hotkeyManager_, &QGlobalShortcut::activated, derflaApp,  &DerflaApp::onShowInFront);
 #else

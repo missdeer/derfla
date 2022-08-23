@@ -54,7 +54,11 @@ int main(int argc, char *argv[])
         QString res = dbrw.search(QString(argv[1]));
 #endif
         QTextStream ts( stdout );
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         ts.setCodec("UTF-8");
+#else
+        ts.setEncoding(QStringConverter::Utf8);
+#endif
         ts << res;
         return 0;
     }

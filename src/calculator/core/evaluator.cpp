@@ -644,12 +644,13 @@ bool Evaluator::isRadixChar(const QChar &ch)
 bool Evaluator::isSeparatorChar(const QChar &ch)
 {
     // Match everything that is not alphanumeric or an operator or NUL.
-    static const QRegExp s_separatorRE("[^a-zA-Z0-9\\+\\-−\\*×⋅÷/\\^;\\(\\)%!=\\\\&\\|<>\\?#\\x0000]");
+    static const QRegularExpression s_separatorRE("[^a-zA-Z0-9\\+\\-−\\*×⋅÷/\\^;\\(\\)%!=\\\\&\\|<>\\?#\\x0000]");
 
     if (isRadixChar(ch))
         return false;
 
-    return s_separatorRE.exactMatch(ch);
+    auto match = s_separatorRE.match(ch);
+    return match.hasMatch();
 }
 
 QString Evaluator::fixNumberRadix(const QString &number)
@@ -1590,7 +1591,8 @@ void Evaluator::compile(const Tokens &tokens)
                         m_codes.append(Opcode::BOr);
                         break;
                     case Token::UnitConversion: {
-                        static const QRegExp unitNameNumberRE("(^[0-9e\\+\\-\\.,]|[0-9e\\.,]$)", Qt::CaseInsensitive);
+                        static const QRegularExpression unitNameNumberRE("(^[0-9e\\+\\-\\.,]|[0-9e\\.,]$)",
+                                                                         QRegularExpression::CaseInsensitiveOption);
                         QString              unitName = m_expression.mid(b.pos(), b.size()).simplified();
                         // Make sure the whole unit name can be used
                         // as a single operand in multiplications.
@@ -1600,7 +1602,7 @@ void Evaluator::compile(const Tokens &tokens)
                         }
                         // Protect the unit name
                         // if it starts or ends with a number.
-                        else if (unitNameNumberRE.indexIn(unitName) != -1)
+                        else if (unitNameNumberRE.match(unitName).hasMatch())
                             unitName = "(" + unitName + ")";
                         m_codes.append(Opcode(Opcode::Conv, unitName));
                         break;

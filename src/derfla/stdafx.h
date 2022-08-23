@@ -48,39 +48,38 @@
 #include <QDragEnterEvent>
 
 // Qt Widgets
-#include <QApplication>
-#include <QStyleOption>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QProgressDialog>
-#include <QMenu>
-#include <QSplitter>
-#include <QHeaderView>
-#include <QDesktopWidget>
-#include <QInputDialog>
-#include <QTabWidget>
-#include <QDialog>
-#include <QMainWindow>
-#include <QTableView>
-#include <QFileIconProvider>
-#include <QLineEdit>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QCheckBox>
-#include <QSlider>
-#include <QSpinBox>
-#include <QKeySequenceEdit>
-#include <QLabel>
-#include <QComboBox>
-#include <QListView>
+#    include <QApplication>
+#    include <QCheckBox>
+#    include <QComboBox>
+#    include <QDialog>
+#    include <QFileDialog>
+#    include <QFileIconProvider>
+#    include <QHBoxLayout>
+#    include <QHeaderView>
+#    include <QInputDialog>
+#    include <QKeySequenceEdit>
+#    include <QLabel>
+#    include <QLineEdit>
+#    include <QListView>
+#    include <QMainWindow>
+#    include <QMenu>
+#    include <QMessageBox>
+#    include <QProgressDialog>
+#    include <QSlider>
+#    include <QSpinBox>
+#    include <QSplitter>
+#    include <QStyleOption>
+#    include <QTabWidget>
+#    include <QTableView>
+#    include <QVBoxLayout>
 
-#if defined(Q_OS_WIN)
-#define globalDefaultFontFamily "Microsoft YaHei"
-#elif defined(Q_OS_MAC)
-#define globalDefaultFontFamily "PingFang CS"
-#else
-#define globalDefaultFontFamily "DejaVu Sans"
-#endif
+#    if defined(Q_OS_WIN)
+#        define globalDefaultFontFamily "Microsoft YaHei"
+#    elif defined(Q_OS_MAC)
+#        define globalDefaultFontFamily "PingFang CS"
+#    else
+#        define globalDefaultFontFamily "DejaVu Sans"
+#    endif
 
 #endif
 

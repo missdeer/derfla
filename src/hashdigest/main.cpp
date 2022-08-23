@@ -69,7 +69,11 @@ void output(QCryptographicHash::Algorithm algo, const QByteArray& data, const QB
 
     d.setArray(arr);
     QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     ts.setCodec("UTF-8");
+#else
+    ts.setEncoding(QStringConverter::Utf8);
+#endif
     ts << QString(d.toJson(QJsonDocument::Compact));
 }
 
@@ -125,7 +129,11 @@ int main(int argc, char *argv[])
     a.setOrganizationName("Derfla");
 
     QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     ts.setCodec("UTF-8");
+#else
+    ts.setEncoding(QStringConverter::Utf8);
+#endif
     if (argc != 3 && argc != 4)
     {
         ts << "invalid arguments";

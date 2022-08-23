@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
 #include <QApplication>
 #include <QMessageBox>
-#include <QDesktopWidget>
+
 #include "everythingwrapper.h"
 
 HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize)
@@ -129,16 +130,14 @@ bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QString
     HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS,nullptr);
     if (!everything_hwnd)
     {
-        QWidget* p =  QApplication::desktop()->screen();
-
-        if (QMessageBox::question(p,
-                             QObject::tr("Notice"),
-                             QObject::tr("Everything is not running, do you want to launch the Everything application?")) == QMessageBox::Yes)
+        if (QMessageBox::question(nullptr,
+                                  QObject::tr("Notice"),
+                                  QObject::tr("Everything is not running, do you want to launch the Everything application?")) == QMessageBox::Yes)
         {
             QString everythingFilePath = QApplication::applicationDirPath() % "/Everything.exe";
             if (!QFile::exists(everythingFilePath))
             {
-                QMessageBox::warning(p,
+                QMessageBox::warning(nullptr,
                                      QObject::tr("Warning"),
                                      QObject::tr("Can't find the Everything executable, please re-install everything extension."),
                                      QMessageBox::Ok);

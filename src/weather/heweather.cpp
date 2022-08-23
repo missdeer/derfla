@@ -50,7 +50,11 @@ void Heweather::onFinished()
     auto o = doc.object();
 
     QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     ts.setCodec("UTF-8");
+#else
+    ts.setEncoding(QStringConverter::Utf8);
+#endif
     auto w = o["HeWeather6"];
     if (!w.isArray())
     {

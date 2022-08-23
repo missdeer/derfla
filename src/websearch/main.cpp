@@ -28,7 +28,11 @@ bool output(const std::vector<SearchItem>& items)
 
     d.setArray(arr);
     QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     ts.setCodec("UTF-8");
+#else
+    ts.setEncoding(QStringConverter::Utf8);
+#endif
     ts << QString(d.toJson(QJsonDocument::Compact));
     return true;
 }
@@ -114,7 +118,11 @@ int main(int argc, char *argv[])
     if (argc <= 2)
     {
         QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         ts.setCodec("UTF-8");
+#else
+        ts.setEncoding(QStringConverter::Utf8);
+#endif
 
         ts << "invalid arguments";
         return 1;

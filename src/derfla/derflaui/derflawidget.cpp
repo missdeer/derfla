@@ -95,14 +95,19 @@ void DerflaWidget::mouseReleaseEvent(QMouseEvent* event)
 void DerflaWidget::paintEvent(QPaintEvent* event)
 {
     QStyleOption styleOption;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     styleOption.init(this);
+#else
+#endif
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     style()->drawPrimitive(QStyle::PE_Widget, &styleOption, &painter, this);
     QSize size(skinManager_->backgroundImage().size());
 
     if (size.width() > widgetMinWidth_)
+    {
         painter.drawPixmap(0, 0, skinManager_->backgroundImage());
+    }
     else
     {
         painter.drawPixmap(0, 0, skinManager_->leftPartBackgroundImage());

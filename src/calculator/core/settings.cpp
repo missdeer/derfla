@@ -279,7 +279,11 @@ void Settings::save()
 char Settings::radixCharacter() const
 {
     if (isRadixCharacterAuto() || isRadixCharacterBoth())
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         return QLocale().decimalPoint().toLatin1();
+#else
+        return QLocale().decimalPoint().at(0).toLatin1();
+#endif
 
     return s_radixCharacter;
 }

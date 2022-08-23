@@ -1,27 +1,29 @@
 #include "stdafx.h"
+
+#include <fstream>
+#include <functional>
+#include <iostream>
+#include <iterator>
+#include <sstream>
+#include <thread>
 #include <vector>
-#include <QGraphicsDropShadowEffect>
-#include <QPlainTextEdit>
+
+#include <QApplication>
+#include <QClipboard>
 #include <QDir>
 #include <QDirIterator>
+#include <QGraphicsDropShadowEffect>
+#include <QPlainTextEdit>
 #include <QProcess>
-#include <sstream>
-#include <iostream>
-#include <thread>
-#include <functional>
-#include <QApplication>
 #include <QThread>
-#include <QDesktopWidget>
-#include <QClipboard>
-#include <iterator>
-#include <fstream>
+
 #include "alfredwidget.h"
-#include "ui_alfredwidget.h"
 #include "alfredlistwidget.h"
-#include "listitem.h"
-#include "doublelistitem.h"
-#include "derflaapp.h"
 #include "alfredtheme.h"
+#include "derflaapp.h"
+#include "doublelistitem.h"
+#include "listitem.h"
+#include "ui_alfredwidget.h"
 
 #if defined(Q_OS_MAC)
 bool isDarkMode();

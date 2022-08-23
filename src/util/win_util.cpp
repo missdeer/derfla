@@ -114,41 +114,52 @@ namespace util {
             ScopedGuard da([pwszArguments](){delete[] pwszArguments;});
             HRESULT hr = resolveShellLink(nullptr, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
             if (FAILED(hr))
-                return;
-            QRegExp r("%([^%]+)%");
-            f = QString::fromUtf16((const ushort *)wszPath);
-            int pos = 0;
-            while ((pos = r.indexIn(f, pos)) != -1)
             {
-                QString e = r.cap(1);
+                return;
+            }
+            QRegularExpression r("%([^%]+)%");
+            f      = QString::fromUtf16((const ushort *)wszPath);
+            auto i = r.globalMatch(f);
+            while (i.hasNext())
+            {
+                auto    match = i.next();
+                QString e     = match.captured(1);
                 auto v = qgetenv(e.toStdString().c_str());
                 f.replace("%" % e % "%", v);
             }
             QFileInfo fi(f);
             if (fi.suffix() != "exe" && fi.suffix() != "msc" && fi.suffix() != "bat")
-                return;
-            QString a = QString::fromUtf16((const ushort*)pwszArguments);
-            pos = 0;
-            while ((pos = r.indexIn(a, pos)) != -1)
             {
-                QString e = r.cap(1);
+                return;
+            }
+            QString a = QString::fromUtf16((const ushort *)pwszArguments);
+            i         = r.globalMatch(a);
+            while (i.hasNext())
+            {
+                auto    match = i.next();
+                QString e     = match.captured(1);
                 auto v = qgetenv(e.toStdString().c_str());
                 a.replace("%" % e % "%", v);
             }
-            QString w = QString::fromUtf16((const ushort*)wszWorkingDirectory);
-            pos = 0;
-            while ((pos = r.indexIn(w, pos)) != -1)
+            QString w = QString::fromUtf16((const ushort *)wszWorkingDirectory);
+            i         = r.globalMatch(a);
+            while (i.hasNext())
             {
-                QString e = r.cap(1);
+                auto    match = i.next();
+                QString e     = match.captured(1);
                 auto v = qgetenv(e.toStdString().c_str());
                 w.replace("%" % e % "%", v);
             }
 
             QString desc = QString::fromUtf16((const ushort*)wszDescription);
             if (desc.isEmpty())
+            {
                 readDescriptionFromResource(f, desc);
+            }
             if (desc.isEmpty())
+            {
                 desc = f;
+            }
 
             inserter(util::extractPNGIconFromFile(fi),
                      fileInfo.baseName(),

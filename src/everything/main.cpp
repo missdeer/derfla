@@ -15,7 +15,11 @@ static const int maxCount = 25;
 bool handleFile(const QString &pattern, bool regexpEnabled)
 {
     QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     ts.setCodec("UTF-8");
+#else
+    ts.setEncoding(QStringConverter::Utf8);
+#endif
     QStringList res;
     if (!QuickGetFilesByFileName(
             regexpEnabled, pattern, res, [](bool isDir) { return !isDir; }, maxCount))
@@ -50,7 +54,11 @@ bool handleFile(const QString &pattern, bool regexpEnabled)
 bool handleDir(const QString &pattern, bool regexpEnabled)
 {
     QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     ts.setCodec("UTF-8");
+#else
+    ts.setEncoding(QStringConverter::Utf8);
+#endif
     QStringList res;
     if (!QuickGetFilesByFileName(
             regexpEnabled, pattern, res, [](bool isDir) { return isDir; }, maxCount))
@@ -84,7 +92,11 @@ bool handleDir(const QString &pattern, bool regexpEnabled)
 bool handleVSOpen(const QString &pattern, bool regexpEnabled)
 {
     QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     ts.setCodec("UTF-8");
+#else
+    ts.setEncoding(QStringConverter::Utf8);
+#endif
     QStringList res;
     if (!QuickGetFilesByFileName(
             regexpEnabled, pattern, res, [](bool isDir) { return !isDir; }, maxCount))
@@ -129,7 +141,11 @@ bool handleVSOpen(const QString &pattern, bool regexpEnabled)
 bool handleShellOpen(const QString &pattern, bool regexpEnabled)
 {
     QTextStream ts(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     ts.setCodec("UTF-8");
+#else
+    ts.setEncoding(QStringConverter::Utf8);
+#endif
     QStringList res;
     if (!QuickGetFilesByFileName(
             regexpEnabled, pattern, res, [](bool) { return true; }, maxCount))
