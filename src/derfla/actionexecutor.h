@@ -12,7 +12,7 @@ class ActionExecutor : public QObject
 public:
     explicit ActionExecutor(QObject *parent = nullptr);
 
-    bool operator()(DerflaActionPtr da);
+    bool operator()(const DerflaActionPtr& da);
 signals:
 
 public slots:

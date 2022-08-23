@@ -69,11 +69,11 @@ private slots:
 private:
     ExtensionManager *extensionManager_;
     QSystemTrayIcon* trayIcon_;
-    CommonWidget* widget_ = nullptr;
-    DerflaWidget* derflaWidget_ = nullptr;
-    AlfredWidget* alfredWidget_ = nullptr;
-    AutoUpdater* autoUpdater_ = nullptr;
-    QAction *stayOnTopAction_ = nullptr;
+    CommonWidget     *widget_ {nullptr};
+    DerflaWidget     *derflaWidget_ {nullptr};
+    AlfredWidget     *alfredWidget_ {nullptr};
+    AutoUpdater      *autoUpdater_ {nullptr};
+    QAction          *stayOnTopAction_ {nullptr};
     QSettings settings_;    
     ActionExecutor actionExecutor_;
     DerflaActionList dal_;
@@ -83,6 +83,6 @@ private:
     void createDonateDerflaActions();
 };
 
-inline DerflaApp *derflaApp = nullptr;
+inline DerflaApp *derflaApp {nullptr};
 
 #endif // DERFLAAPP_H

@@ -8,22 +8,23 @@ ActionExecutor::ActionExecutor(QObject *parent)
     : QObject(parent)
 {
     actionExecutorMap_ = {
-    { "script",             std::bind(&ActionExecutor::runScript,          this, std::placeholders::_1) },
-    { "shellExecute",       std::bind(&ActionExecutor::shellExecute,       this, std::placeholders::_1) },
-    { "terminalCommand",    std::bind(&ActionExecutor::terminalCommand,    this, std::placeholders::_1) },
-    { "openUrl",            std::bind(&ActionExecutor::openUrl,            this, std::placeholders::_1) },
-    { "revealFile",         std::bind(&ActionExecutor::revealFile,         this, std::placeholders::_1) },
-    { "browseInDerfla",     std::bind(&ActionExecutor::browseInDerfla,     this, std::placeholders::_1) },
-    { "copyText",           std::bind(&ActionExecutor::copyText,           this, std::placeholders::_1) },
-};
-
+        {"script", std::bind(&ActionExecutor::runScript, this, std::placeholders::_1)},
+        {"shellExecute", std::bind(&ActionExecutor::shellExecute, this, std::placeholders::_1)},
+        {"terminalCommand", std::bind(&ActionExecutor::terminalCommand, this, std::placeholders::_1)},
+        {"openUrl", std::bind(&ActionExecutor::openUrl, this, std::placeholders::_1)},
+        {"revealFile", std::bind(&ActionExecutor::revealFile, this, std::placeholders::_1)},
+        {"browseInDerfla", std::bind(&ActionExecutor::browseInDerfla, this, std::placeholders::_1)},
+        {"copyText", std::bind(&ActionExecutor::copyText, this, std::placeholders::_1)},
+    };
 }
 
-bool ActionExecutor::operator()(DerflaActionPtr da)
+bool ActionExecutor::operator()(const DerflaActionPtr &da)
 {
     auto it = actionExecutorMap_.find(da->actionType());
     if (actionExecutorMap_.end() == it)
+    {
         return false;
+    }
 
     auto f = it.value();
     return f(da);
@@ -34,9 +35,9 @@ void ActionExecutor::errorOccurred()
 
 }
 
-void ActionExecutor::finished(int , QProcess::ExitStatus )
+void ActionExecutor::finished(int /*unused*/, QProcess::ExitStatus /*unused*/)
 {
-    QProcess* e = qobject_cast<QProcess*>(sender());
+    auto *e = qobject_cast<QProcess *>(sender());
     e->deleteLater();
 }
 
@@ -74,7 +75,7 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
         {
             return false;
         }
-        QProcess* e = new QProcess;
+        auto *e = new QProcess;
 
         connect(e, &QProcess::errorOccurred, this, &ActionExecutor::errorOccurred);
         connect(e, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &ActionExecutor::finished);

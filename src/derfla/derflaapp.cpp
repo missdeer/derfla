@@ -22,16 +22,11 @@ DerflaApp::DerflaApp(QObject *parent)
 
 DerflaApp::~DerflaApp()
 {
-    if (trayIcon_)
-        delete trayIcon_;
-    if (extensionManager_)
-        delete extensionManager_;
-    if (derflaWidget_)
-        delete derflaWidget_;
-    if (alfredWidget_)
-        delete alfredWidget_;
-    if (autoUpdater_)
-        delete autoUpdater_;
+    delete trayIcon_;
+    delete extensionManager_;
+    delete derflaWidget_;
+    delete alfredWidget_;
+    delete autoUpdater_;
 }
 
 void DerflaApp::createWidget()
@@ -57,7 +52,9 @@ void DerflaApp::show()
 void DerflaApp::createDerflaWidget()
 {
     if (!derflaWidget_)
+    {
         derflaWidget_ = new DerflaWidget;
+    }
 }
 
 void DerflaApp::showDerflaWidget()
@@ -69,7 +66,9 @@ void DerflaApp::showDerflaWidget()
 void DerflaApp::createAlfredWidget()
 {
     if (!alfredWidget_)
+    {
         alfredWidget_ = new AlfredWidget();
+    }
 }
 
 void DerflaApp::showAlfredWidget()
@@ -83,7 +82,9 @@ void DerflaApp::autoUpdate()
     if (settings_.value("autoupdate", true).toBool())
     {
         if (!autoUpdater_)
+        {
             autoUpdater_ = AutoUpdater::createAutoUpdate();
+        }
         autoUpdater_->checkForUpdates();
     }
 }
@@ -109,12 +110,17 @@ QSettings &DerflaApp::settings()
     return settings_;
 }
 
-DerflaActionPtr DerflaApp::derflaAction(int index) 
-{ 
+DerflaActionPtr DerflaApp::derflaAction(int index)
+{
     if (index >= 0 && index < dal_.length())
+    {
         return dal_.at(index);
-    else if (index < dal_.length() + dalDonate_.length())
+    }
+
+    if (index < dal_.length() + dalDonate_.length())
+    {
         return dalDonate_.at(index - dal_.length());
+    }
     return DerflaActionPtr();
 }
 
@@ -246,61 +252,63 @@ void DerflaApp::createDonateDerflaActions()
 void DerflaApp::centerToScreen(QWidget *widget)
 {
     if (!widget)
+    {
         return;
-    QScreen* scr = qApp->primaryScreen();
+    }
+    QScreen *scr = qApp->primaryScreen();
     QSize sz = scr->availableSize();
     widget->move((sz.width() - widget->width())/2, (sz.height()-widget->height())/4);
 }
 
 void DerflaApp::createCommonActions()
-{    
-    QAction *selectFileAction = new QAction(tr("Select File"), this);
+{
+    auto *selectFileAction = new QAction(tr("Select File"), this);
     selectFileAction->setShortcut(tr("Ctrl+O"));
     connect(selectFileAction, &QAction::triggered, this, &DerflaApp::onSelectFile);
 
-    QAction *selectFolderAction = new QAction(tr("Select Folder"), this);
+    auto *selectFolderAction = new QAction(tr("Select Folder"), this);
     selectFolderAction->setShortcut(tr("Ctrl+D"));
     connect(selectFolderAction, &QAction::triggered, this, &DerflaApp::onSelectFolder);
 
-    QAction *loadSkinAction = new QAction(tr("Load &Skin"), this);
+    auto *loadSkinAction = new QAction(tr("Load &Skin"), this);
     connect(loadSkinAction, &QAction::triggered, this, &DerflaApp::onLoadSkin);
 
     stayOnTopAction_ = new QAction(tr("Stay On Top"), this);
     stayOnTopAction_->setCheckable(true);
     connect(stayOnTopAction_, &QAction::triggered, this, &DerflaApp::onStayOnTop);
 
-    QAction *checkUpdatesAction = new  QAction(tr("Check Updates..."), this);
+    auto *checkUpdatesAction = new QAction(tr("Check Updates..."), this);
     connect(checkUpdatesAction, &QAction::triggered, this, &DerflaApp::onCheckUpdates);
 
-    QAction *quitAction = new QAction(tr("E&xit"), this);
+    auto *quitAction = new QAction(tr("E&xit"), this);
     quitAction->setShortcut(tr("Ctrl+Q"));
     connect(quitAction, &QAction::triggered, this, &DerflaApp::onQuit);
 
-    QAction *showAction = new QAction(tr("Show"), this);
+    auto *showAction = new QAction(tr("Show"), this);
     connect(showAction, &QAction::triggered, this, &DerflaApp::onShowInFront);
 
-    QAction *aboutAction = new QAction(tr("About"), this);
+    auto *aboutAction = new QAction(tr("About"), this);
     connect(aboutAction, &QAction::triggered, this, &DerflaApp::onAbout);
 
-    QAction *homepageAction = new QAction(tr("Homepage"), this);
+    auto *homepageAction = new QAction(tr("Homepage"), this);
     connect(homepageAction, &QAction::triggered, [](){
         QDesktopServices::openUrl(QUrl("https://minidump.info/derfla/"));
     });
 
-    QAction *preferenceAction = new QAction(tr("Preference..."), this);
+    auto *preferenceAction = new QAction(tr("Preference..."), this);
     connect(preferenceAction, &QAction::triggered, this, &DerflaApp::onPreference);
-    
-    QMenu* trayiconMenu = new QMenu(nullptr);
-    QMenu* donateMenu = new QMenu(tr("Donate"), trayiconMenu);
-    QAction *donateViaPaypalAction = new QAction(QIcon(":rc/paypal.png"), tr("Via Paypal..."), this);
+
+    auto *trayiconMenu          = new QMenu(nullptr);
+    auto *donateMenu            = new QMenu(tr("Donate"), trayiconMenu);
+    auto *donateViaPaypalAction = new QAction(QIcon(":rc/paypal.png"), tr("Via Paypal..."), this);
     connect(donateViaPaypalAction, &QAction::triggered, this, &DerflaApp::donateViaPaypal);
     donateMenu->addAction(donateViaPaypalAction);
 
-    QAction *donateViaAlipayAction = new QAction(QIcon(":rc/alipay.png"), tr("Via Alipay..."), this);
+    auto *donateViaAlipayAction = new QAction(QIcon(":rc/alipay.png"), tr("Via Alipay..."), this);
     connect(donateViaAlipayAction, &QAction::triggered, this, &DerflaApp::donateViaAlipay);
     donateMenu->addAction(donateViaAlipayAction);
 
-    QAction *donateViaWeChatAction = new QAction(QIcon(":rc/wechat.png"), tr("Via WeChat Pay..."), this);
+    auto *donateViaWeChatAction = new QAction(QIcon(":rc/wechat.png"), tr("Via WeChat Pay..."), this);
     connect(donateViaWeChatAction, &QAction::triggered, this, &DerflaApp::donateViaWeChatPay);
     donateMenu->addAction(donateViaWeChatAction);
 
