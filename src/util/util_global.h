@@ -4,9 +4,9 @@
 #include <QtCore/qglobal.h>
 
 #if defined(UTIL_LIBRARY)
-#  define UTILSHARED_EXPORT Q_DECL_EXPORT
+#    define UTILSHARED_EXPORT Q_DECL_EXPORT
 #else
-#  define UTILSHARED_EXPORT Q_DECL_IMPORT
+#    define UTILSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
 #endif // UTIL_GLOBAL_H

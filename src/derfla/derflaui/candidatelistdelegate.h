@@ -15,8 +15,8 @@ class CandidateListDelegate : public QAbstractItemDelegate
 public:
     CandidateListDelegate(QObject *parent = 0);
 
-    void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-    QSize sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    void  paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     virtual ~CandidateListDelegate();
 };

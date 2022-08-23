@@ -1,21 +1,19 @@
 #include "stdafx.h"
-#include "commonwidget.h"
-#include "extensionmanager.h"
-#include "derflawidget.h"
+
+#include "derflaapp.h"
 #include "alfredwidget.h"
 #include "autoupdater.h"
-#include "derflaapp.h"
+#include "commonwidget.h"
+#include "derflawidget.h"
+#include "extensionmanager.h"
 
-DerflaApp::DerflaApp(QObject *parent) 
-    : QObject(parent)
-    , extensionManager_(new ExtensionManager)
-    , trayIcon_(new QSystemTrayIcon)
+DerflaApp::DerflaApp(QObject *parent) : QObject(parent), extensionManager_(new ExtensionManager), trayIcon_(new QSystemTrayIcon)
 {
     extensionManager_->loadAllFromLocal();
     connect(extensionManager_, &ExtensionManager::actionUpdated, this, &DerflaApp::onActionUpdated);
     connect(extensionManager_, &ExtensionManager::emptyAction, this, &DerflaApp::onEmptyAction);
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaApp::onTrayIconActivated);
-    
+
     createCommonActions();
     createDonateDerflaActions();
 }
@@ -36,7 +34,7 @@ void DerflaApp::createWidget()
         createAlfredWidget();
         widget_ = alfredWidget_;
     }
-    else 
+    else
     {
         createDerflaWidget();
         widget_ = derflaWidget_;
@@ -94,8 +92,8 @@ void DerflaApp::checkForUpdates()
     autoUpdate();
 }
 
-void DerflaApp::queryByExtension(const QString &text) 
-{ 
+void DerflaApp::queryByExtension(const QString &text)
+{
     extensionManager_->query(text);
 }
 
@@ -126,7 +124,7 @@ DerflaActionPtr DerflaApp::derflaAction(int index)
 
 void DerflaApp::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    switch(reason)
+    switch (reason)
     {
     case QSystemTrayIcon::DoubleClick:
         widget_->onShowInFront();
@@ -168,11 +166,12 @@ void DerflaApp::onSelectFolder()
 
 void DerflaApp::onAbout()
 {
-    QMessageBox::about(widget_, tr("Derfla"), tr(
-                           "Derfla is a cross platform productivity application, which boosts your efficiency with hotkeys, keywords, text expansion and more. "
-                           "Search your Windows and the web, and be more productive with custom actions to control your system.\r\n\r\n"
-                           "Contact me at https://minidump.info/derfla/ if you have any problem about this tool. Built at " __DATE__ " " __TIME__
-                           ));
+    QMessageBox::about(
+        widget_,
+        tr("Derfla"),
+        tr("Derfla is a cross platform productivity application, which boosts your efficiency with hotkeys, keywords, text expansion and more. "
+           "Search your Windows and the web, and be more productive with custom actions to control your system.\r\n\r\n"
+           "Contact me at https://minidump.info/derfla/ if you have any problem about this tool. Built at " __DATE__ " " __TIME__));
 }
 
 void DerflaApp::onPreference()
@@ -220,12 +219,12 @@ void DerflaApp::createDonateDerflaActions()
     daPaypal->setActionType("openUrl");
     daPaypal->setTarget("https://www.paypal.me/dfordsoft");
 
-#if defined (Q_OS_MAC)
+#if defined(Q_OS_MAC)
     QDir dir(QCoreApplication::applicationDirPath());
     dir.cdUp();
     dir.cd("Tools");
     QString target = dir.absolutePath() + "/donate";
-#elif defined (Q_OS_WIN)
+#elif defined(Q_OS_WIN)
     QString target = QCoreApplication::applicationDirPath() + "/donate.exe";
 #else
     QString target = QCoreApplication::applicationDirPath() + "/donate";
@@ -256,8 +255,8 @@ void DerflaApp::centerToScreen(QWidget *widget)
         return;
     }
     QScreen *scr = qApp->primaryScreen();
-    QSize sz = scr->availableSize();
-    widget->move((sz.width() - widget->width())/2, (sz.height()-widget->height())/4);
+    QSize    sz  = scr->availableSize();
+    widget->move((sz.width() - widget->width()) / 2, (sz.height() - widget->height()) / 4);
 }
 
 void DerflaApp::createCommonActions()
@@ -291,9 +290,7 @@ void DerflaApp::createCommonActions()
     connect(aboutAction, &QAction::triggered, this, &DerflaApp::onAbout);
 
     auto *homepageAction = new QAction(tr("Homepage"), this);
-    connect(homepageAction, &QAction::triggered, [](){
-        QDesktopServices::openUrl(QUrl("https://minidump.info/derfla/"));
-    });
+    connect(homepageAction, &QAction::triggered, []() { QDesktopServices::openUrl(QUrl("https://minidump.info/derfla/")); });
 
     auto *preferenceAction = new QAction(tr("Preference..."), this);
     connect(preferenceAction, &QAction::triggered, this, &DerflaApp::onPreference);
@@ -326,7 +323,7 @@ void DerflaApp::createCommonActions()
     trayiconMenu->addMenu(donateMenu);
     trayiconMenu->addSeparator();
     trayiconMenu->addAction(quitAction);
-    
+
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaApp::onTrayIconActivated);
     trayIcon_->setContextMenu(trayiconMenu);
     trayIcon_->setIcon(QIcon(":/derfla.ico"));

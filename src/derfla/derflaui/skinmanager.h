@@ -7,7 +7,7 @@
 class SkinManager
 {
 public:
-    bool applySkin(const QString& skin);
+    bool applySkin(const QString &skin);
 
     const QPixmap &backgroundImage() const;
 
@@ -23,22 +23,22 @@ public:
 
 private:
     const int widgetMinWidth_ = 450;
-    QPixmap backgroundImage_;
-    QPixmap leftPartBackgroundImage_;
-    QPixmap midPartBackgroundImage_;
-    QPixmap rightPartBackgroundImage_;
-    QString inputStyle_;
-    QSize skinSize_;
+    QPixmap   backgroundImage_;
+    QPixmap   leftPartBackgroundImage_;
+    QPixmap   midPartBackgroundImage_;
+    QPixmap   rightPartBackgroundImage_;
+    QString   inputStyle_;
+    QSize     skinSize_;
 
-    bool applySogouSkin(const QString& skinPath);
-    bool loadSogouSkinPackage(const QString& skinPath, int &cutTop, int &cutBottom);
-    bool applySogouMacSkin(const QString& skinPath);
-    bool loadSogouMacSkinPackage(const QString& skinPath, int &cutTop, int &cutBottom);
-    bool applyBaiduSkin(const QString& skinPath);
-    bool loadBaiduSkinPackage(const QString& skinPath, int &cutTop, int &cutBottom);
-    bool applyDerflaSkin(const QString& skinPath);
-    bool loadDerflaSkinPackage(const QString& skinPath, int &cutTop, int &cutBottom);
-    bool loadDerflaSkinConfigurationFile(const QString& skinPath, int &cutTop, int &cutBottom);
+    bool applySogouSkin(const QString &skinPath);
+    bool loadSogouSkinPackage(const QString &skinPath, int &cutTop, int &cutBottom);
+    bool applySogouMacSkin(const QString &skinPath);
+    bool loadSogouMacSkinPackage(const QString &skinPath, int &cutTop, int &cutBottom);
+    bool applyBaiduSkin(const QString &skinPath);
+    bool loadBaiduSkinPackage(const QString &skinPath, int &cutTop, int &cutBottom);
+    bool applyDerflaSkin(const QString &skinPath);
+    bool loadDerflaSkinPackage(const QString &skinPath, int &cutTop, int &cutBottom);
+    bool loadDerflaSkinConfigurationFile(const QString &skinPath, int &cutTop, int &cutBottom);
     void makeSkinImages(int cutTop, int cutBottom);
 };
 

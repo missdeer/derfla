@@ -1,14 +1,16 @@
-#include "qrcodedialog.h"
 #include <QApplication>
 #include <QTranslator>
 #include <QtCore>
 
+#include "qrcodedialog.h"
+
 bool commandLineUrlArgument()
 {
     const QStringList args = QCoreApplication::arguments();
-    for (const QString &arg : args.mid(1)) {
+    for (const QString &arg : args.mid(1))
+    {
         if (arg == "--alipay")
-            return  true;
+            return true;
     }
     return false;
 }
@@ -17,16 +19,16 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QString locale = QLocale().uiLanguages()[0];
+    QString     locale = QLocale().uiLanguages()[0];
     QTranslator translator;
     QTranslator qtTranslator;
 
     // main application and dynamic linked library locale
 #if defined(Q_OS_MAC)
-    QString rootDirPath = QApplication::applicationDirPath() + "/../../Resources/translations";
+    QString rootDirPath   = QApplication::applicationDirPath() + "/../../Resources/translations";
     QString localeDirPath = QApplication::applicationDirPath() + "/../../Resources/translations";
 #else
-    QString rootDirPath = QApplication::applicationDirPath() + "/../../translations";
+    QString rootDirPath   = QApplication::applicationDirPath() + "/../../translations";
     QString localeDirPath = QApplication::applicationDirPath() + "/translations";
 #endif
 

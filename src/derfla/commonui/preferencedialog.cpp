@@ -7,22 +7,20 @@
 #include "ui_preferencedialog.h"
 #include "util.h"
 
-PreferenceDialog::PreferenceDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::PreferenceDialog)
+PreferenceDialog::PreferenceDialog(QWidget *parent) : QDialog(parent), ui(new Ui::PreferenceDialog)
 {
     ui->setupUi(this);
     connect(ui->listWidget, &QListWidget::currentRowChanged, ui->stackedWidget, &QStackedWidget::setCurrentIndex);
 
     QSettings &settings = derflaApp->settings();
     // general settings page
-    auto* gl = new QVBoxLayout(ui->generalPage);
+    auto *gl     = new QVBoxLayout(ui->generalPage);
     cbStayOnTop_ = new QCheckBox(tr("Stay On Top"), ui->generalPage);
     cbStayOnTop_->setChecked(settings.value("stayOnTop", false).toBool());
     gl->addWidget(cbStayOnTop_);
 
-    auto* dl = new QHBoxLayout(ui->generalPage);
-    auto* label = new QLabel(tr("Delay Interval:"), ui->generalPage);
+    auto *dl    = new QHBoxLayout(ui->generalPage);
+    auto *label = new QLabel(tr("Delay Interval:"), ui->generalPage);
     dl->addWidget(label);
     sliderInterval_ = new QSlider(Qt::Horizontal, ui->generalPage);
     sliderInterval_->setRange(0, 1000);
@@ -35,8 +33,8 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     connect(sliderInterval_, &QSlider::valueChanged, sbInterval_, &QSpinBox::setValue);
     gl->addLayout(dl);
 
-    auto* hl = new QHBoxLayout(ui->generalPage);
-    auto* l = new QLabel(tr("Global Hotkey:"), ui->generalPage);
+    auto *hl = new QHBoxLayout(ui->generalPage);
+    auto *l  = new QLabel(tr("Global Hotkey:"), ui->generalPage);
     hl->addWidget(l);
     edtHotkey_ = new QKeySequenceEdit(ui->generalPage);
     edtHotkey_->setKeySequence(QKeySequence(settings.value("hotkey", "Alt+Space").toString()));
@@ -59,29 +57,29 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
 
     ui->generalPage->setLayout(gl);
     // extension settings page
-    auto* gl2 = new QVBoxLayout(ui->extensionPage);
+    auto *gl2 = new QVBoxLayout(ui->extensionPage);
 
-    listExtensions_ = new QTableView(ui->extensionPage);
+    listExtensions_     = new QTableView(ui->extensionPage);
     auto extensionModel = new ExtensionModel(listExtensions_);
     listExtensions_->setItemDelegateForColumn(4, new BooleanEditor(listExtensions_));
     listExtensions_->setModel(extensionModel);
     listExtensions_->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Stretch);
     gl2->addWidget(listExtensions_);
 
-    gl2->setContentsMargins(0,0,0,0);
+    gl2->setContentsMargins(0, 0, 0, 0);
     ui->extensionPage->setLayout(gl2);
     // skin settings page
-    auto* gl3 = new QVBoxLayout(ui->skinPage);
+    auto *gl3 = new QVBoxLayout(ui->skinPage);
 
     cbAlfredStyleUI_ = new QCheckBox(tr("Use Alfred Style User Interface"), ui->skinPage);
     connect(cbAlfredStyleUI_, &QCheckBox::stateChanged, this, &PreferenceDialog::onAlfredStyleUIStateChanged);
-        
+
     cbSkins_ = new QComboBox(ui->skinPage);
     connect(cbSkins_, &QComboBox::currentTextChanged, this, &PreferenceDialog::onCurrentSkinChanged);
-    
+
     cbAlfredStyleUI_->setChecked(settings.value("alfredStyleUI").toBool());
     gl3->addWidget(cbAlfredStyleUI_);
-    
+
     gl3->addWidget(cbSkins_);
 
     previewSkin_ = new QWidget(ui->skinPage);
@@ -121,30 +119,30 @@ void PreferenceDialog::on_buttonBox_accepted()
     settings.setValue("alfredStyleUI", cbAlfredStyleUI_->isChecked());
     if (cbAlfredStyleUI_->isChecked())
     {
-        settings.setValue("theme", cbSkins_->currentIndex() == 0 ?
-                              cbSkins_->currentText() :
-                                                                (QCoreApplication::applicationDirPath() %
-                           #if defined(Q_OS_MAC)
-                               "/../Resources/themes/"
-                           #else
-                               "/themes/"
-                           #endif
-                               % cbSkins_->currentText()));
+        settings.setValue("theme",
+                          cbSkins_->currentIndex() == 0 ? cbSkins_->currentText()
+                                                        : (QCoreApplication::applicationDirPath() %
+#if defined(Q_OS_MAC)
+                                                           "/../Resources/themes/"
+#else
+                                                           "/themes/"
+#endif
+                                                           % cbSkins_->currentText()));
     }
-    else 
+    else
     {
-        settings.setValue("skin", cbSkins_->currentIndex() == 0 ?
-                              cbSkins_->currentText() :
-                                                                (QCoreApplication::applicationDirPath() %
-                           #if defined(Q_OS_MAC)
-                               "/../Resources/skins/"
-                           #else
-                               "/skins/"
-                           #endif
-                               % cbSkins_->currentText()));
+        settings.setValue("skin",
+                          cbSkins_->currentIndex() == 0 ? cbSkins_->currentText()
+                                                        : (QCoreApplication::applicationDirPath() %
+#if defined(Q_OS_MAC)
+                                                           "/../Resources/skins/"
+#else
+                                                           "/skins/"
+#endif
+                                                           % cbSkins_->currentText()));
     }
     settings.setValue("autoupdate", cbAutoUpdate_->isChecked());
-#if defined (Q_OS_WIN) || defined(Q_OS_MAC)
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
     settings.setValue("autostart", cbStartWithSystem_->isChecked());
 #endif
     settings.setValue("bash", ui->edtBashPath->text());
@@ -172,19 +170,16 @@ void PreferenceDialog::onKeySequenceChanged(const QKeySequence &keySequence)
         return;
 }
 
-void PreferenceDialog::onCurrentSkinChanged(const QString &name)
-{
-    
-}
+void PreferenceDialog::onCurrentSkinChanged(const QString &name) {}
 
-void PreferenceDialog::onAlfredStyleUIStateChanged(int )
+void PreferenceDialog::onAlfredStyleUIStateChanged(int)
 {
     if (cbAlfredStyleUI_->isChecked())
     {
         loadThemes();
     }
-    else 
-    {        
+    else
+    {
         loadSkins();
     }
 }
@@ -194,15 +189,15 @@ void PreferenceDialog::loadThemes()
     cbSkins_->clear();
     QSettings &settings = derflaApp->settings();
 #if defined(Q_OS_MAC)
-    QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/themes/");
-    bool isDarkMode();
+    QDir    dir(QCoreApplication::applicationDirPath() % "/../Resources/themes/");
+    bool    isDarkMode();
     QString skinPath = settings.value("theme", isDarkMode() ? ":/themes/dark.derflatheme" : ":/themes/classic.derflatheme").toString();
 #else
     QDir dir(QCoreApplication::applicationDirPath() % "/themes");
     QString skinPath = settings.value("theme", ":/themes/classic.derflatheme").toString();
 #endif
     auto eil = dir.entryInfoList(QStringList() << "*.derflatheme", QDir::Files);
-    for (const auto& fi : eil)
+    for (const auto &fi : eil)
     {
         cbSkins_->addItem(fi.fileName());
     }
@@ -210,7 +205,7 @@ void PreferenceDialog::loadThemes()
     if (index >= 0)
         cbSkins_->setCurrentIndex(index);
     else
-        cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());    
+        cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());
 }
 
 void PreferenceDialog::loadSkins()
@@ -223,7 +218,7 @@ void PreferenceDialog::loadSkins()
     QDir dir(QCoreApplication::applicationDirPath() % "/skins");
 #endif
     auto eil = dir.entryInfoList(QStringList() << "*.zip", QDir::Files);
-    for (const auto& fi : eil)
+    for (const auto &fi : eil)
     {
         cbSkins_->addItem(fi.fileName());
     }
@@ -232,11 +227,11 @@ void PreferenceDialog::loadSkins()
         cbSkins_->insertItem(0, "derfla.zip");
     }
     QString skinPath = settings.value("skin", "derfla.zip").toString();
-    int index = cbSkins_->findText(skinPath);
+    int     index    = cbSkins_->findText(skinPath);
     if (index >= 0)
         cbSkins_->setCurrentIndex(index);
     else
-        cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());    
+        cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());
 }
 
 void PreferenceDialog::on_btnBrowseBash_clicked()

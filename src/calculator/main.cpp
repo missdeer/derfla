@@ -1,19 +1,21 @@
 #include "stdafx.h"
-#include "qtsingleapplication.h"
+
 #include <QIcon>
+
 #include "core/constants.h"
 #include "core/evaluator.h"
 #include "core/functions.h"
 #include "core/numberformatter.h"
-#include "core/settings.h"
 #include "core/session.h"
-#include "core/variable.h"
 #include "core/sessionhistory.h"
+#include "core/settings.h"
 #include "core/userfunction.h"
+#include "core/variable.h"
 #include "math/floatconfig.h"
+#include "qtsingleapplication.h"
 #include "util.h"
 
-bool calculate(const QString& expression)
+bool calculate(const QString &expression)
 {
     QTextStream ts(stdout);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -26,8 +28,8 @@ bool calculate(const QString& expression)
     Q_ASSERT(d.isArray());
     QJsonArray arr = d.array();
 
-    Session* m_session = new Session();
-    Evaluator*    m_evaluator = Evaluator::instance();
+    Session   *m_session   = new Session();
+    Evaluator *m_evaluator = Evaluator::instance();
     m_evaluator->setSession(m_session);
     m_evaluator->initializeBuiltInVariables();
 
@@ -39,14 +41,17 @@ bool calculate(const QString& expression)
     m_evaluator->setExpression(expr);
     Quantity result = m_evaluator->evalUpdateAns();
 
-    if (!m_evaluator->error().isEmpty()) {
+    if (!m_evaluator->error().isEmpty())
+    {
         ts << m_evaluator->error();
         return false;
     }
 
-    if (m_evaluator->isUserFunctionAssign()) {
+    if (m_evaluator->isUserFunctionAssign())
+    {
         result = CMath::nan();
-    } else if (result.isNan())
+    }
+    else if (result.isNan())
         return false;
 
     QString strToCopy(NumberFormatter::format(result));
@@ -88,7 +93,6 @@ int main(int argc, char *argv[])
     a.setOrganizationDomain("ismisv.com");
     a.setOrganizationName("Derfla");
 
-
     if (argc < 3)
     {
         QTextStream ts(stdout);
@@ -102,16 +106,16 @@ int main(int argc, char *argv[])
     }
 
     auto        uiLanguages = QLocale().uiLanguages();
-    auto &      locale      = uiLanguages[0];
+    auto       &locale      = uiLanguages[0];
     QTranslator translator;
     QTranslator qtTranslator;
 
     // main application and dynamic linked library locale
 #if defined(Q_OS_MAC)
-    QString rootDirPath = QApplication::applicationDirPath() + "/../../Resources/translations";
+    QString rootDirPath   = QApplication::applicationDirPath() + "/../../Resources/translations";
     QString localeDirPath = QApplication::applicationDirPath() + "/translations";
 #else
-    QString rootDirPath = QApplication::applicationDirPath() + "/../../translations";
+    QString rootDirPath   = QApplication::applicationDirPath() + "/../../translations";
     QString localeDirPath = QApplication::applicationDirPath() + "/translations";
 #endif
 

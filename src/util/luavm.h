@@ -1,26 +1,28 @@
 #ifndef LUAWRAPPER_H
 #define LUAWRAPPER_H
 
-#include "util_global.h"
 #include <lua.hpp>
+
 #include <QStringList>
+
+#include "util_global.h"
 
 class UTILSHARED_EXPORT LuaVM
 {
 public:
     LuaVM();
     ~LuaVM();
-    LuaVM(const LuaVM&) = delete;
-    LuaVM& operator=(const LuaVM&) = delete;
-    LuaVM(LuaVM &&) = delete;
-    LuaVM& operator=(LuaVM &&) = delete;
+    LuaVM(const LuaVM &)            = delete;
+    LuaVM &operator=(const LuaVM &) = delete;
+    LuaVM(LuaVM &&)                 = delete;
+    LuaVM &operator=(LuaVM &&)      = delete;
 
     void start();
     void shutdown();
     bool doFile(const QString &file);
     bool doScript(const QString &script);
-    
-    bool getStringArray(const QString &name, QStringList& array);
+
+    bool getStringArray(const QString &name, QStringList &array);
 
     double getDouble(const QString &name);
     double getDouble(const QString &table, const QString &name);
@@ -52,7 +54,6 @@ public:
     QString getString(const QString &t1, const QString &t2, const QString &name);
     QString getString(const QString &t1, const QString &t2, const QString &t3, const QString &name);
 
-
     bool set(const QString &name, double value);
     bool set(const QString &t1, const QString &name, double value);
     bool set(const QString &t1, const QString &t2, const QString &name, double value);
@@ -82,6 +83,7 @@ public:
     bool set(const QString &t1, const QString &name, const char *value);
     bool set(const QString &t1, const QString &t2, const QString &name, const char *value);
     bool set(const QString &t1, const QString &t2, const QString &t3, const QString &name, const char *value);
+
 private:
     lua_State *m_L = nullptr;
 

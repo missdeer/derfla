@@ -6,7 +6,6 @@
 
 #include "heweather.h"
 
-
 Heweather::Heweather(QObject *parent) : QObject(parent) {}
 
 void Heweather::forecast(const QString &location)

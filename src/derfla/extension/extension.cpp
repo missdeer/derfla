@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "scopedguard.h"
+
 #include "extension.h"
+#include "scopedguard.h"
 
 Extension::Extension(QObject *parent) : QObject(parent) {}
 
@@ -14,7 +15,7 @@ Extension::~Extension()
 void Extension::runDaemon()
 {
     QStringList arguments;
-    QString program = executable_;
+    QString     program = executable_;
     if (!executor_.isEmpty())
     {
         program = findProgram();
@@ -32,7 +33,7 @@ void Extension::runDaemon()
 void Extension::stopDaemon()
 {
     QStringList arguments;
-    QString program = executable_;
+    QString     program = executable_;
     if (!executor_.isEmpty())
     {
         program = findProgram();
@@ -48,10 +49,10 @@ void Extension::stopDaemon()
     proc.startDetached();
 }
 
-bool Extension::query(const QString& input)
+bool Extension::query(const QString &input)
 {
     QStringList arguments;
-    QProcess *p = new QProcess;
+    QProcess   *p = new QProcess;
     connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
     if (executor_.isEmpty())
     {
@@ -179,7 +180,7 @@ void Extension::setWaitIconPath(const QString &waitIconPath)
 void Extension::setWaitIconData(const QString &waitIconData)
 {
     QByteArray c = QByteArray::fromBase64(waitIconData.toUtf8());
-    QPixmap pixmap;
+    QPixmap    pixmap;
     if (pixmap.loadFromData(c))
     {
         waitIcon_ = QIcon(pixmap);
@@ -188,7 +189,7 @@ void Extension::setWaitIconData(const QString &waitIconData)
 
 void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
-    QProcess* p = qobject_cast<QProcess*>(sender());
+    QProcess *p = qobject_cast<QProcess *>(sender());
 
     p->deleteLater();
 
@@ -209,7 +210,7 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
     QByteArray output = p->readAllStandardOutput();
     // convert json output to action list
     QJsonParseError error;
-    QJsonDocument doc = QJsonDocument::fromJson(output, &error);
+    QJsonDocument   doc = QJsonDocument::fromJson(output, &error);
     qDebug() << error.errorString();
     if (doc.isArray())
     {
@@ -218,7 +219,7 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
         {
             if (!a.isObject())
                 continue;
-            QJsonObject o = a.toObject();
+            QJsonObject     o = a.toObject();
             DerflaActionPtr action(new DerflaAction);
             if (o["title"].isString())
                 action->setTitle(o["title"].toString());
@@ -239,7 +240,7 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
             if (o["iconData"].isString())
             {
                 QByteArray c = QByteArray::fromBase64(o["iconData"].toString().toUtf8());
-                QPixmap pixmap;
+                QPixmap    pixmap;
                 if (pixmap.loadFromData(c))
                     action->setIcon(QIcon(pixmap));
             }
@@ -273,10 +274,9 @@ void Extension::setId(const QString &id)
 QString Extension::findProgram()
 {
     QStringList envPaths;
-    QString path = qgetenv("PATH");
+    QString     path        = qgetenv("PATH");
     QStringList environment = QProcess::systemEnvironment();
-    auto it = std::find_if(environment.begin(), environment.end(),
-                           [&](const QString& env) { return env.startsWith("PATH="); });
+    auto        it          = std::find_if(environment.begin(), environment.end(), [&](const QString &env) { return env.startsWith("PATH="); });
     if (environment.end() != it)
         path = it->mid(5);
 #if defined(Q_OS_WIN)
@@ -287,9 +287,7 @@ QString Extension::findProgram()
     envPaths << path.split(QChar(':'));
 #endif
 
-    it = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString& p) {
-        return QFile::exists(p % exe);
-    });
+    it = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString &p) { return QFile::exists(p % exe); });
     if (envPaths.end() == it)
     {
         qDebug() << "can't find program:" << exe;

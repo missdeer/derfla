@@ -5,12 +5,12 @@
 
 class AutoUpdater
 {
-	public:
-    static  AutoUpdater *createAutoUpdate();
+public:
+    static AutoUpdater *createAutoUpdate();
 
-		virtual ~AutoUpdater();
+    virtual ~AutoUpdater();
 
-		virtual void checkForUpdates() = 0;
+    virtual void checkForUpdates() = 0;
 };
 
 #endif

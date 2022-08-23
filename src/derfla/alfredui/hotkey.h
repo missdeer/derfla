@@ -1,14 +1,16 @@
 #ifndef HOTKEY_H
 #define HOTKEY_H
 
-#include "setting.h"
-#include <QWidget>
 #include <QKeyEvent>
-#include <QString>
 #include <QLineEdit>
+#include <QString>
+#include <QWidget>
 
-namespace Ui {
-class hotkey;
+#include "setting.h"
+
+namespace Ui
+{
+    class hotkey;
 }
 
 class hotkey : public QWidget
@@ -18,8 +20,8 @@ class hotkey : public QWidget
 public:
     explicit hotkey(QWidget *parent = 0);
     ~hotkey();
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
+    void       keyPressEvent(QKeyEvent *event);
+    void       keyReleaseEvent(QKeyEvent *event);
     QLineEdit *s;
 
 private:

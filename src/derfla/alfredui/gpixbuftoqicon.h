@@ -3,10 +3,11 @@
 
 #include <QIcon>
 #undef signals
-extern "C" {
+extern "C"
+{
 #include <gtk/gtk.h>
 }
 
-QIcon* giconToQIcon(GdkPixbuf* gicon);
+QIcon *giconToQIcon(GdkPixbuf *gicon);
 
 #endif // GPIXBUFTOQICON_H

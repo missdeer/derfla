@@ -1,32 +1,30 @@
+#include <fstream>
+#include <string>
+
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QString>
+
 #include "setting.h"
+#include "config_parse.h"
 #include "hotkey.h"
 #include "ui_setting.h"
-#include "config_parse.h"
-#include <QString>
-#include <QFileDialog>
-#include <string>
-#include <fstream>
-#include <QMessageBox>
 
-
-
-Setting::Setting(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Setting)
+Setting::Setting(QWidget *parent) : QWidget(parent), ui(new Ui::Setting)
 {
     ui->setupUi(this);
-    try {
+    try
+    {
         ConfigParse cp(CONFPATH);
-        auto sects = cp.getSections();
+        auto        sects = cp.getSections();
         for (unsigned int i = 0; i != sects.size(); i++)
         {
-
             int row_count = ui->tableWidget->rowCount();
             ui->tableWidget->insertRow(row_count);
-            QTableWidgetItem *name = new QTableWidgetItem();
-            QTableWidgetItem *icon = new QTableWidgetItem();
-            QTableWidgetItem *hotkey = new QTableWidgetItem();
-            QTableWidgetItem *keyword = new QTableWidgetItem();
+            QTableWidgetItem *name     = new QTableWidgetItem();
+            QTableWidgetItem *icon     = new QTableWidgetItem();
+            QTableWidgetItem *hotkey   = new QTableWidgetItem();
+            QTableWidgetItem *keyword  = new QTableWidgetItem();
             QTableWidgetItem *argument = new QTableWidgetItem();
             name->setIcon(QIcon(QString::fromStdString(cp.getValue(sects[i], "IconAddress"))));
             name->setText(QString::fromStdString(cp.getValue(sects[i], "ScriptAddress")));
@@ -45,15 +43,15 @@ Setting::Setting(QWidget *parent) :
             ui->tableWidget->setItem(row_count, 4, argument);
         }
     }
-    catch (ConfigParseEx& e)
+    catch (ConfigParseEx &e)
     {
-        QMessageBox* x = new QMessageBox();
+        QMessageBox *x = new QMessageBox();
         x->setText(QString::fromStdString(e.msg));
         x->exec();
     }
 
     std::ifstream themeFile((THEMEPATH).c_str());
-    std::string themeName;
+    std::string   themeName;
     std::getline(themeFile, themeName);
     if (themeName == "Classic")
     {
@@ -75,10 +73,10 @@ Setting::Setting(QWidget *parent) :
 }
 void Setting::modifyItem()
 {
-    QTableWidgetItem *name = new QTableWidgetItem();
-    QTableWidgetItem *icon = new QTableWidgetItem();
-    QTableWidgetItem *hotkey = new QTableWidgetItem();
-    QTableWidgetItem *keyword = new QTableWidgetItem();
+    QTableWidgetItem *name     = new QTableWidgetItem();
+    QTableWidgetItem *icon     = new QTableWidgetItem();
+    QTableWidgetItem *hotkey   = new QTableWidgetItem();
+    QTableWidgetItem *keyword  = new QTableWidgetItem();
     QTableWidgetItem *argument = new QTableWidgetItem();
     name->setIcon(QIcon(ui->iconaddress->text()));
     name->setText(ui->fileaddress->text());
@@ -89,7 +87,8 @@ void Setting::modifyItem()
     {
         argument->setText(QObject::tr("need"));
     }
-    else {
+    else
+    {
         argument->setText(QObject::tr("none"));
     }
     ui->tableWidget->setItem(ui->tableWidget->currentRow(), 0, name);
@@ -119,7 +118,7 @@ void Setting::saveItems()
 {
     if (ui->tableWidget->rowCount() == 0)
     {
-        QMessageBox* x = new QMessageBox();
+        QMessageBox *x = new QMessageBox();
         x->setText(QString::fromStdString("The table is Null!"));
         x->exec();
         return;
@@ -140,8 +139,8 @@ void Setting::saveItems()
     out.close();
 
     std::ofstream out_theme((THEMEPATH).c_str());
-    QString theme = ui->comboBox->currentText();
-    std::string themeStr = theme.toStdString();
+    QString       theme    = ui->comboBox->currentText();
+    std::string   themeStr = theme.toStdString();
     out_theme << themeStr;
     out_theme.close();
 
@@ -151,7 +150,8 @@ void Setting::saveItems()
 
 void Setting::deleteItem()
 {
-    if (!ui->tableWidget->selectedItems().empty()) {
+    if (!ui->tableWidget->selectedItems().empty())
+    {
         ui->tableWidget->removeRow(ui->tableWidget->selectedItems()[0]->row());
     }
 }
@@ -159,10 +159,10 @@ void Setting::addItem()
 {
     int row_count = ui->tableWidget->rowCount();
     ui->tableWidget->insertRow(row_count);
-    QTableWidgetItem *name = new QTableWidgetItem();
-    QTableWidgetItem *icon = new QTableWidgetItem();
-    QTableWidgetItem *hotkey = new QTableWidgetItem();
-    QTableWidgetItem *keyword = new QTableWidgetItem();
+    QTableWidgetItem *name     = new QTableWidgetItem();
+    QTableWidgetItem *icon     = new QTableWidgetItem();
+    QTableWidgetItem *hotkey   = new QTableWidgetItem();
+    QTableWidgetItem *keyword  = new QTableWidgetItem();
     QTableWidgetItem *argument = new QTableWidgetItem();
     name->setIcon(QIcon(ui->iconaddress->text()));
     name->setText(ui->fileaddress->text());
@@ -173,7 +173,8 @@ void Setting::addItem()
     {
         argument->setText(QObject::tr("need"));
     }
-    else {
+    else
+    {
         argument->setText(QObject::tr("none"));
     }
     ui->tableWidget->setItem(row_count, 0, name);
@@ -189,18 +190,18 @@ void Setting::addItem()
 }
 void Setting::openScript()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("open file"), " ",  tr("Allfile(*.*)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("open file"), " ", tr("Allfile(*.*)"));
     ui->fileaddress->setText(fileName);
 }
 void Setting::openIcon()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("open file"), " ",  tr("Allfile(*.*)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("open file"), " ", tr("Allfile(*.*)"));
     ui->iconaddress->setText(fileName);
 }
 void Setting::pressHotkey()
 {
     hotkey *h = new hotkey;
-    h->s = this->ui->hotkey;
+    h->s      = this->ui->hotkey;
     h->show();
 }
 Setting::~Setting()

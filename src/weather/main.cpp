@@ -1,7 +1,9 @@
 #include "stdafx.h"
-#include "qtsingleapplication.h"
+
 #include <QIcon>
+
 #include "heweather.h"
+#include "qtsingleapplication.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
@@ -49,13 +51,13 @@ int main(int argc, char *argv[])
     }
 
     auto        uiLanguages = QLocale().uiLanguages();
-    auto &      locale      = uiLanguages[0];
+    auto       &locale      = uiLanguages[0];
     QTranslator translator;
     QTranslator qtTranslator;
 
     // main application and dynamic linked library locale
 #if defined(Q_OS_MAC)
-    QString rootDirPath = QApplication::applicationDirPath() + "/../../Resources/translations";
+    QString rootDirPath   = QApplication::applicationDirPath() + "/../../Resources/translations";
     QString localeDirPath = QApplication::applicationDirPath() + "/translations";
 #else
     QString rootDirPath = QApplication::applicationDirPath() + "/../../translations";
@@ -93,7 +95,7 @@ int main(int argc, char *argv[])
     int nArgs = 0;
 
     LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-    QString location(QString::fromWCharArray( szArglist[2]));
+    QString location(QString::fromWCharArray(szArglist[2]));
     LocalFree(szArglist);
 #else
     QString location(argv[2]);

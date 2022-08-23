@@ -1,19 +1,20 @@
 #include "stdafx.h"
-#include "listitem.h"
-#include "ui_listitem.h"
+
 #include <string>
-#include <QString>
-#include <QIcon>
+
 #include <QFont>
 #include <QFontMetrics>
+#include <QIcon>
 #include <QPixmap>
+#include <QString>
 
-static const int iconSize = 42;
-static const QString exeIcon = ":/rc/actions/terminal.png";
+#include "listitem.h"
+#include "ui_listitem.h"
 
-ListItem::ListItem(const QString& icon, const QString &text, const QString &cmd, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::ListItem)
+static const int     iconSize = 42;
+static const QString exeIcon  = ":/rc/actions/terminal.png";
+
+ListItem::ListItem(const QString &icon, const QString &text, const QString &cmd, QWidget *parent) : QWidget(parent), ui(new Ui::ListItem)
 {
     ui->setupUi(this);
     ui->cmd->setStyleSheet("QLabel{color: rgb(100, 100, 100)}");
@@ -40,9 +41,7 @@ ListItem::ListItem(const QString& icon, const QString &text, const QString &cmd,
     ui->icon->setPixmap(p);
 }
 
-ListItem::ListItem(const QIcon &icon, const QString &text, const QString &cmd, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::ListItem)
+ListItem::ListItem(const QIcon &icon, const QString &text, const QString &cmd, QWidget *parent) : QWidget(parent), ui(new Ui::ListItem)
 {
     ui->setupUi(this);
     ui->cmd->setStyleSheet("QLabel{color: rgb(100, 100, 100)}");

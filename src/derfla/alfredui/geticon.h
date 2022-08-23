@@ -1,20 +1,21 @@
 #ifndef GETICON_H
 #define GETICON_H
 
-#include <QtGui/QImage>
+#include <QIcon>
+#include <QPixmap>
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 #include <QtCore/QtDebug>
-#include <QIcon>
-#include <QPixmap>
+#include <QtGui/QImage>
 #undef signals
 
-extern "C" {
+extern "C"
+{
 #include <gdk/gdk.h>
 }
 
 QImage toQImage(GdkPixbuf *pixbuf);
-QIcon toQIcon(std::string icon);
-QIcon toQIcon(GdkPixbuf *pixbuf);
+QIcon  toQIcon(std::string icon);
+QIcon  toQIcon(GdkPixbuf *pixbuf);
 
 #endif // GETICON_H

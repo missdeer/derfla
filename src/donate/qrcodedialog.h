@@ -3,8 +3,9 @@
 
 #include <QDialog>
 
-namespace Ui {
-class QrcodeDialog;
+namespace Ui
+{
+    class QrcodeDialog;
 }
 
 class QrcodeDialog : public QDialog

@@ -1,9 +1,10 @@
 #ifndef ACTIONEXECUTOR_H
 #define ACTIONEXECUTOR_H
 
-#include <QObject>
 #include <QMap>
+#include <QObject>
 #include <QProcess>
+
 #include "derflaaction.h"
 
 class ActionExecutor : public QObject
@@ -12,12 +13,13 @@ class ActionExecutor : public QObject
 public:
     explicit ActionExecutor(QObject *parent = nullptr);
 
-    bool operator()(const DerflaActionPtr& da);
+    bool operator()(const DerflaActionPtr &da);
 signals:
 
 public slots:
     void errorOccurred();
     void finished(int, QProcess::ExitStatus);
+
 private:
     bool runScript(DerflaActionPtr da);
     bool shellExecute(DerflaActionPtr da);

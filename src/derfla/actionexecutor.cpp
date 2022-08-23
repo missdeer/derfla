@@ -4,8 +4,7 @@
 #include "derflaapp.h"
 #include "util.h"
 
-ActionExecutor::ActionExecutor(QObject *parent)
-    : QObject(parent)
+ActionExecutor::ActionExecutor(QObject *parent) : QObject(parent)
 {
     actionExecutorMap_ = {
         {"script", std::bind(&ActionExecutor::runScript, this, std::placeholders::_1)},
@@ -30,10 +29,7 @@ bool ActionExecutor::operator()(const DerflaActionPtr &da)
     return f(da);
 }
 
-void ActionExecutor::errorOccurred()
-{
-
-}
+void ActionExecutor::errorOccurred() {}
 
 void ActionExecutor::finished(int /*unused*/, QProcess::ExitStatus /*unused*/)
 {
@@ -44,16 +40,16 @@ void ActionExecutor::finished(int /*unused*/, QProcess::ExitStatus /*unused*/)
 bool ActionExecutor::runScript(DerflaActionPtr da)
 {
     QMap<QString, QString> m = {
-        { "bash",           "-c"},
-        { "php",            "-r"},
-        { "ruby",           "-e"},
-        { "python",         "-c"},
-        { "perl",           "-c"},
-        { "zsh",            "-c"},
-        { "lua",            "-e"},
+        {"bash", "-c"},
+        {"php", "-r"},
+        {"ruby", "-e"},
+        {"python", "-c"},
+        {"perl", "-c"},
+        {"zsh", "-c"},
+        {"lua", "-e"},
 #if defined(Q_OS_MAC)
-        { "applescript(as)","-c"},
-        { "applescript(js)","-c"},
+        {"applescript(as)", "-c"},
+        {"applescript(js)", "-c"},
 #endif
     };
 
@@ -78,7 +74,7 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
         auto *e = new QProcess;
 
         connect(e, &QProcess::errorOccurred, this, &ActionExecutor::errorOccurred);
-        connect(e, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &ActionExecutor::finished);
+        connect(e, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &ActionExecutor::finished);
 
         e->start(exe, QStringList() << option << da->target() << da->arguments().split(QChar(' ')));
     }
@@ -88,7 +84,7 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
     {
         // extract resource file
         QString localPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) % "/derfla-temp.vbs";
-        QFile f(localPath);
+        QFile   f(localPath);
         if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
             return false;
         f.write(da->target().toLocal8Bit());
@@ -114,8 +110,7 @@ bool ActionExecutor::shellExecute(DerflaActionPtr da)
         da->target(),
     };
     if (!da->arguments().isEmpty())
-        args << "--args"
-             << da->arguments().split(' ');
+        args << "--args" << da->arguments().split(' ');
     QProcess::startDetached("/usr/bin/open", args, da->workingDirectory());
 #else
     QProcess::startDetached(da->target(), da->arguments().split(' '), da->workingDirectory());
@@ -127,12 +122,7 @@ bool ActionExecutor::terminalCommand(DerflaActionPtr da)
 {
 #if defined(Q_OS_WIN)
     QString args = QString("/K %1 %2").arg(da->target(), da->arguments());
-    ::ShellExecuteW(nullptr,
-                    L"open",
-                    L"cmd.exe",
-                    args.toStdWString().c_str(),
-                    da->workingDirectory().toStdWString().c_str(),
-                    SW_SHOWNORMAL);
+    ::ShellExecuteW(nullptr, L"open", L"cmd.exe", args.toStdWString().c_str(), da->workingDirectory().toStdWString().c_str(), SW_SHOWNORMAL);
 
 #elif defined(Q_OS_MAC)
     QString cmdline = QString("/usr/bin/osascript -e 'tell application \"Terminal\" to do script \"%1 %2\"'").arg(da->target()).arg(da->arguments());
@@ -140,8 +130,8 @@ bool ActionExecutor::terminalCommand(DerflaActionPtr da)
 #else
     // console application, running in a terminal
     // konsole/xterm/gnome-terminal...
-    QStringList& paths = util::getEnvPaths();
-    for (const QString& path : paths)
+    QStringList &paths = util::getEnvPaths();
+    for (const QString &path : paths)
     {
         if (QFile::exists(path % "/konsole"))
         {
@@ -155,7 +145,7 @@ bool ActionExecutor::terminalCommand(DerflaActionPtr da)
             return true;
         }
     }
-    for (const QString& path : paths)
+    for (const QString &path : paths)
     {
         if (QFile::exists(path % "/xterm"))
         {
@@ -185,12 +175,10 @@ bool ActionExecutor::revealFile(DerflaActionPtr da)
     ::ShellExecuteW(nullptr, L"open", L"explorer.exe", arg.toStdWString().c_str(), nullptr, SW_SHOWNORMAL);
 #elif defined(Q_OS_MAC)
     QStringList scriptArgs;
-    scriptArgs << QLatin1String("-e")
-               << QString::fromLatin1("tell application \"Finder\" to reveal POSIX file \"%1\"").arg(da->target());
+    scriptArgs << QLatin1String("-e") << QString::fromLatin1("tell application \"Finder\" to reveal POSIX file \"%1\"").arg(da->target());
     QProcess::execute(QLatin1String("/usr/bin/osascript"), scriptArgs);
     scriptArgs.clear();
-    scriptArgs << QLatin1String("-e")
-               << QLatin1String("tell application \"Finder\" to activate");
+    scriptArgs << QLatin1String("-e") << QLatin1String("tell application \"Finder\" to activate");
     QProcess::execute("/usr/bin/osascript", scriptArgs);
 #else
 #endif

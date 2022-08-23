@@ -1,23 +1,28 @@
 #include "stdafx.h"
+
 #include "derflaapp.h"
 #include "qtsingleapplication.h"
 
 #if defined(Q_OS_WIN)
-class AppMutex {
+class AppMutex
+{
 public:
-    AppMutex() {
-#if defined(_WIN64)
-        m_hMutex = ::CreateMutexW(nullptr, FALSE, L"Derfla-x86_64" );
-#else
-        m_hMutex = ::CreateMutexW(nullptr, FALSE, L"Derfla-x86" );
-#endif
+    AppMutex()
+    {
+#    if defined(_WIN64)
+        m_hMutex = ::CreateMutexW(nullptr, FALSE, L"Derfla-x86_64");
+#    else
+        m_hMutex = ::CreateMutexW(nullptr, FALSE, L"Derfla-x86");
+#    endif
     }
-    ~AppMutex() {
+    ~AppMutex()
+    {
         if (m_hMutex)
         {
             ::ReleaseMutex(m_hMutex);
         }
     }
+
 private:
     HANDLE m_hMutex;
 };
@@ -67,9 +72,12 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    if (!translator.load(QString("derfla_%1.qm").arg(locale), localeDirPath)) {
+    if (!translator.load(QString("derfla_%1.qm").arg(locale), localeDirPath))
+    {
         qDebug() << "loading " << locale << " from " << localeDirPath << " failed";
-    } else {
+    }
+    else
+    {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
         if (!QApplication::installTranslator(&translator))
         {
@@ -78,9 +86,12 @@ int main(int argc, char *argv[])
     }
 
     // qt locale
-    if (!qtTranslator.load(QString("qt_%1.qm").arg(locale), localeDirPath)) {
+    if (!qtTranslator.load(QString("qt_%1.qm").arg(locale), localeDirPath))
+    {
         qDebug() << "loading " << locale << " from " << localeDirPath << " failed";
-    } else {
+    }
+    else
+    {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
         if (!QApplication::installTranslator(&qtTranslator))
         {
@@ -93,6 +104,6 @@ int main(int argc, char *argv[])
     derflaApp->createWidget();
     derflaApp->show();
     derflaApp->autoUpdate();
-    
+
     return a.exec();
 }

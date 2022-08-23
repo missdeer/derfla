@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "dbrw.h"
 
 DBRW::DBRW()
@@ -27,7 +28,7 @@ DBRW::~DBRW()
 
 QString DBRW::search(const QString &keyword, int countRequired)
 {
-	LocalFSItemList fsil; 
+    LocalFSItemList fsil;
     getLFSItems(fsil, keyword, countRequired);
 
     QJsonDocument d = QJsonDocument::fromJson("[]");
@@ -45,14 +46,14 @@ QString DBRW::search(const QString &keyword, int countRequired)
         m.insert("arguments", item->arguments());
         m.insert("workingDir", item->workingDirectory());
         m.insert("actionType", item->actionType());
-        QIcon icon = item->icon();
-        auto allSizes = icon.availableSizes();
+        QIcon icon     = item->icon();
+        auto  allSizes = icon.availableSizes();
         if (!allSizes.isEmpty())
         {
-            QSize size = allSizes.at(0);
-            auto pixmap = icon.pixmap(size);
+            QSize      size   = allSizes.at(0);
+            auto       pixmap = icon.pixmap(size);
             QByteArray bytes;
-            QBuffer buffer(&bytes);
+            QBuffer    buffer(&bytes);
             buffer.open(QIODevice::WriteOnly);
             pixmap.save(&buffer, "PNG");
             buffer.close();
@@ -64,28 +65,28 @@ QString DBRW::search(const QString &keyword, int countRequired)
     return d.toJson(QJsonDocument::Compact);
 }
 
-bool DBRW::getLFSItems(LocalFSItemList &fsil, const QString& keyword, int countRequired)
+bool DBRW::getLFSItems(LocalFSItemList &fsil, const QString &keyword, int countRequired)
 {
     QSqlDatabase db = QSqlDatabase::database(dbPath_, false);
     Q_ASSERT(db.isValid());
     Q_ASSERT(db.isOpen());
 
     QSqlQuery q(db);
-	QString sql = QString("SELECT * FROM lfs WHERE title LIKE '%'||?||'%' LIMIT %1;").arg(countRequired + 10);
-	if (!q.prepare(sql))
-		return false;
+    QString   sql = QString("SELECT * FROM lfs WHERE title LIKE '%'||?||'%' LIMIT %1;").arg(countRequired + 10);
+    if (!q.prepare(sql))
+        return false;
     if (queryActions(fsil, keyword, countRequired, q))
         return true;
 
     sql = QString("SELECT * FROM lfs WHERE description LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - fsil.length() + 10);
-	if (!q.prepare(sql))
-		return false; 
+    if (!q.prepare(sql))
+        return false;
     if (queryActions(fsil, keyword, countRequired, q))
         return true;
 
     sql = QString("SELECT * FROM lfs WHERE target LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - fsil.length() + 10);
-	if (!q.prepare(sql))
-		return false;
+    if (!q.prepare(sql))
+        return false;
     if (queryActions(fsil, keyword, countRequired, q))
         return true;
 
@@ -95,21 +96,29 @@ bool DBRW::getLFSItems(LocalFSItemList &fsil, const QString& keyword, int countR
 bool DBRW::removeOldRecords(qint64 timestamp)
 {
     QSqlQuery query(db_);
-	if (!query.prepare("DELETE FROM lfs WHERE timestamp < :timestamp;"))
-		return false;
+    if (!query.prepare("DELETE FROM lfs WHERE timestamp < :timestamp;"))
+        return false;
     query.bindValue(":timestamp", timestamp);
     return query.exec();
 }
 
-bool DBRW::insertLFS(const QByteArray &icon, const QString &title, const QString &description, const QString &target, const QString &arguments, const QString workingDirectory, qint64 timestamp, qint64 lastModified, const QString &type)
+bool DBRW::insertLFS(const QByteArray &icon,
+                     const QString    &title,
+                     const QString    &description,
+                     const QString    &target,
+                     const QString    &arguments,
+                     const QString     workingDirectory,
+                     qint64            timestamp,
+                     qint64            lastModified,
+                     const QString    &type)
 {
     Q_ASSERT(db_.isValid());
     Q_ASSERT(db_.isOpen());
     QSqlQuery query(db_);
-    QString sql = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
-		"VALUES (:icon, :title, :description, :target, :arguments, :working_directory, :timestamp, :last_modified, :type);";
-	if (!query.prepare(sql))
-		return false;
+    QString   sql = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
+                    "VALUES (:icon, :title, :description, :target, :arguments, :working_directory, :timestamp, :last_modified, :type);";
+    if (!query.prepare(sql))
+        return false;
     // save to database
     query.bindValue(":icon", icon);
     query.bindValue(":title", title);
@@ -126,7 +135,8 @@ bool DBRW::insertLFS(const QByteArray &icon, const QString &title, const QString
 bool DBRW::createDatabase()
 {
     db_ = QSqlDatabase::database(dbPath_, true);
-    if (!db_.isValid()) {
+    if (!db_.isValid())
+    {
         db_ = QSqlDatabase::addDatabase("QSQLITE", dbPath_);
     }
 
@@ -139,7 +149,8 @@ bool DBRW::createDatabase()
         }
     }
     QSqlQuery query(db_);
-    return query.exec("CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, description TEXT,target TEXT, arguments TEXT, working_directory TEXT,timestamp DATETIME,last_modified DATETIME, type TEXT);");
+    return query.exec("CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, description TEXT,target TEXT, arguments TEXT, "
+                      "working_directory TEXT,timestamp DATETIME,last_modified DATETIME, type TEXT);");
 }
 
 bool DBRW::openDatabase()
@@ -148,7 +159,8 @@ bool DBRW::openDatabase()
         return createDatabase();
 
     db_ = QSqlDatabase::database(dbPath_, true);
-    if (!db_.isValid()) {
+    if (!db_.isValid())
+    {
         db_ = QSqlDatabase::addDatabase("QSQLITE", dbPath_);
     }
 
@@ -166,17 +178,17 @@ bool DBRW::queryActions(LocalFSItemList &fsil, const QString &keyword, int count
     q.addBindValue(keyword);
     if (q.exec())
     {
-        int iconIndex = q.record().indexOf("icon");
-        int titleIndex = q.record().indexOf("title");
-        int descriptionIndex = q.record().indexOf("description");
-        int targetIndex = q.record().indexOf("target");
-        int argumentsIndex = q.record().indexOf("arguments");
+        int iconIndex             = q.record().indexOf("icon");
+        int titleIndex            = q.record().indexOf("title");
+        int descriptionIndex      = q.record().indexOf("description");
+        int targetIndex           = q.record().indexOf("target");
+        int argumentsIndex        = q.record().indexOf("arguments");
         int workingDirectoryIndex = q.record().indexOf("working_directory");
-        int typeIndex = q.record().indexOf("type");
+        int typeIndex             = q.record().indexOf("type");
         while (q.next())
         {
             LocalFSItemPtr item(new LocalFSItem);
-            QPixmap pixmap;
+            QPixmap        pixmap;
             pixmap.loadFromData(q.value(iconIndex).toByteArray());
             item->setIcon(QIcon(pixmap));
             item->setArguments(q.value(argumentsIndex).toString());
@@ -189,9 +201,8 @@ bool DBRW::queryActions(LocalFSItemList &fsil, const QString &keyword, int count
             item->setDescription(q.value(descriptionIndex).toString());
             item->setActionType(q.value(typeIndex).toString());
             auto it = std::find_if(fsil.begin(), fsil.end(), [item](LocalFSItemPtr d) {
-                    return item->title() == d->title()
-                    && item->description() == d->description();}
-                    );
+                return item->title() == d->title() && item->description() == d->description();
+            });
             if (fsil.end() == it)
                 fsil.append(item);
         }
@@ -200,7 +211,7 @@ bool DBRW::queryActions(LocalFSItemList &fsil, const QString &keyword, int count
 
         if (fsil.length() >= countRequired)
         {
-            while(fsil.length() > countRequired)
+            while (fsil.length() > countRequired)
                 fsil.removeLast();
             return true;
         }

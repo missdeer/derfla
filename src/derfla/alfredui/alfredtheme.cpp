@@ -1,23 +1,22 @@
 #include "alfredtheme.h"
 
-AlfredTheme::AlfredTheme(const QSize &dimensions,
-             const QString &groupBoxStylesheet, 
-             const QString &plainTextEditStylesheet, 
-             const QString &listWidgetStylesheet,
-             int fontSize, 
-             qreal blurRadius, 
-             const QColor &shadowColor, 
-             qreal shadowOffset) 
-    : mDimensions(dimensions)
-    , mGroupBoxStylesheet(groupBoxStylesheet)
-    , mPlainTextEditStylesheet(plainTextEditStylesheet)
-    , mListWidgetStylesheet(listWidgetStylesheet)
-    , mFontSize(fontSize)
-    , mBlurRadius(blurRadius)
-    , mShadowColor(shadowColor)
-    , mShadowOffset(shadowOffset)
+AlfredTheme::AlfredTheme(const QSize   &dimensions,
+                         const QString &groupBoxStylesheet,
+                         const QString &plainTextEditStylesheet,
+                         const QString &listWidgetStylesheet,
+                         int            fontSize,
+                         qreal          blurRadius,
+                         const QColor  &shadowColor,
+                         qreal          shadowOffset)
+    : mDimensions(dimensions),
+      mGroupBoxStylesheet(groupBoxStylesheet),
+      mPlainTextEditStylesheet(plainTextEditStylesheet),
+      mListWidgetStylesheet(listWidgetStylesheet),
+      mFontSize(fontSize),
+      mBlurRadius(blurRadius),
+      mShadowColor(shadowColor),
+      mShadowOffset(shadowOffset)
 {
-
 }
 
 const QSize &AlfredTheme::dimensions() const
@@ -40,7 +39,7 @@ void AlfredTheme::setGroupBoxStylesheet(const QString &groupBoxStylesheet)
     mGroupBoxStylesheet = groupBoxStylesheet;
 }
 
-const QString & AlfredTheme::plainTextEditStylesheet() const
+const QString &AlfredTheme::plainTextEditStylesheet() const
 {
     return mPlainTextEditStylesheet;
 }
@@ -70,7 +69,7 @@ void AlfredTheme::setBlurRadius(const qreal &blurRadius)
     mBlurRadius = blurRadius;
 }
 
-const QColor & AlfredTheme::shadowColor() const
+const QColor &AlfredTheme::shadowColor() const
 {
     return mShadowColor;
 }
@@ -119,4 +118,3 @@ void AlfredTheme::setListWidgetY(int listWidgetY)
 {
     mListWidgetY = listWidgetY;
 }
-

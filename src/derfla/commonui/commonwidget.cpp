@@ -7,34 +7,33 @@
 #    include <QtPlatformHeaders/QWindowsWindowFunctions>
 #endif
 
-CommonWidget::CommonWidget(QWidget *parent) 
+CommonWidget::CommonWidget(QWidget *parent)
     : QWidget(parent)
-    #if defined(Q_OS_WIN)
-    , hotkeyManager_(new QGlobalShortcut(this))
-    #else
-    , hotkeyManager_(new UGlobalHotkeys(this))
-    #endif
+#if defined(Q_OS_WIN)
+      ,
+      hotkeyManager_(new QGlobalShortcut(this))
+#else
+      ,
+      hotkeyManager_(new UGlobalHotkeys(this))
+#endif
 {
     QSettings &settings = derflaApp->settings();
-    stayOnTop_ = settings.value("stayOnTop", false).toBool();
-    
+    stayOnTop_          = settings.value("stayOnTop", false).toBool();
+
     QString keySequence = settings.value("hotkey", "Alt+Space").toString();
 #if defined(Q_OS_WIN)
 #    if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QWindowsWindowFunctions::setWindowActivationBehavior(QWindowsWindowFunctions::AlwaysActivateWindow);
 #    endif
     hotkeyManager_->setKey(QKeySequence(keySequence));
-    connect(hotkeyManager_, &QGlobalShortcut::activated, derflaApp,  &DerflaApp::onShowInFront);
+    connect(hotkeyManager_, &QGlobalShortcut::activated, derflaApp, &DerflaApp::onShowInFront);
 #else
     hotkeyManager_->registerHotkey(keySequence);
-    connect(hotkeyManager_, &UGlobalHotkeys::activated, derflaApp,  &DerflaApp::onShowInFront);
+    connect(hotkeyManager_, &UGlobalHotkeys::activated, derflaApp, &DerflaApp::onShowInFront);
 #endif
 }
 
-void CommonWidget::onLoadSkin()
-{
-    
-}
+void CommonWidget::onLoadSkin() {}
 
 void CommonWidget::onStayOnTop()
 {
@@ -57,15 +56,9 @@ void CommonWidget::onShowInFront()
     raise();
 }
 
-void CommonWidget::onSelectFile()
-{
+void CommonWidget::onSelectFile() {}
 
-}
-
-void CommonWidget::onSelectFolder()
-{
-    
-}
+void CommonWidget::onSelectFolder() {}
 
 bool CommonWidget::onPreference()
 {
@@ -79,7 +72,7 @@ bool CommonWidget::onPreference()
         return false;
 
     QSettings &settings = derflaApp->settings();
-    stayOnTop_ = settings.value("stayOnTop", false).toBool();
+    stayOnTop_          = settings.value("stayOnTop", false).toBool();
     derflaApp->setCheckedStayOnTopAction(stayOnTop_);
     if (stayOnTop_)
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
@@ -91,10 +84,8 @@ bool CommonWidget::onPreference()
     if (settings.value("autostart", false).toBool())
     {
 #if defined(Q_OS_WIN)
-        QString key = "Derfla";
-        QSettings registrySettings(
-                    "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-                    QSettings::NativeFormat);
+        QString   key = "Derfla";
+        QSettings registrySettings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
         registrySettings.remove(key);
         registrySettings.setValue(key, QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
         registrySettings.sync();
@@ -113,14 +104,16 @@ bool CommonWidget::onPreference()
         QString absolutePath = dir.absolutePath();
         // absolutePath will contain a "/" at the end,
         // but we want the clean path to the .app bundle
-        if ( absolutePath.length() > 0 && absolutePath.right(1) == "/" ) {
+        if (absolutePath.length() > 0 && absolutePath.right(1) == "/")
+        {
             absolutePath.chop(1);
         }
 
         // Now install the login item, if needed.
         args.clear();
         args << "-e tell application \"System Events\" to make login item at end "
-                "with properties {path:\"" + absolutePath + "\", hidden:false}";
+                "with properties {path:\"" +
+                    absolutePath + "\", hidden:false}";
 
         QProcess::execute("osascript", args);
 #endif
@@ -128,10 +121,8 @@ bool CommonWidget::onPreference()
     else
     {
 #if defined(Q_OS_WIN)
-        QString key = "Derfla";
-        QSettings registrySettings(
-                    "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-                    QSettings::NativeFormat);
+        QString   key = "Derfla";
+        QSettings registrySettings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
         registrySettings.remove(key);
         registrySettings.sync();
 #elif defined(Q_OS_MAC)
@@ -154,7 +145,4 @@ bool CommonWidget::onPreference()
     return true;
 }
 
-void CommonWidget::hideCandidateList()
-{
-
-}
+void CommonWidget::hideCandidateList() {}

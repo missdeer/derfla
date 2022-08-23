@@ -1,16 +1,17 @@
 #include "stdafx.h"
+
+#include <QIcon>
+#include <QString>
+#include <QStringList>
+
 #include "doublelistitem.h"
 #include "ui_doublelistitem.h"
-#include <QStringList>
-#include <QString>
-#include <QIcon>
 
-static const int iconSize = 42;
-static const QString exeIcon = ":/rc/actions/terminal.png";
+static const int     iconSize = 42;
+static const QString exeIcon  = ":/rc/actions/terminal.png";
 
-DoubleListItem::DoubleListItem(const QString& icon, const QString& title, const QString& description, const QString& cmd, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::DoubleListItem)
+DoubleListItem::DoubleListItem(const QString &icon, const QString &title, const QString &description, const QString &cmd, QWidget *parent)
+    : QWidget(parent), ui(new Ui::DoubleListItem)
 {
     ui->setupUi(this);
     ui->subtext->setStyleSheet("QLabel{color: rgb(100, 100, 100)}");
@@ -43,9 +44,8 @@ DoubleListItem::DoubleListItem(const QString& icon, const QString& title, const 
     ui->icon->setPixmap(p);
 }
 
-DoubleListItem::DoubleListItem(const QIcon& icon, const QString &text, const QString &description, const QString &cmd, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::DoubleListItem)
+DoubleListItem::DoubleListItem(const QIcon &icon, const QString &text, const QString &description, const QString &cmd, QWidget *parent)
+    : QWidget(parent), ui(new Ui::DoubleListItem)
 {
     ui->setupUi(this);
     ui->subtext->setStyleSheet("QLabel{color: rgb(100, 100, 100)}");
@@ -61,7 +61,7 @@ DoubleListItem::DoubleListItem(const QIcon& icon, const QString &text, const QSt
     ui->subtext->setFont(subtextFont);
     ui->subtext->setText(subfm.elidedText(description, Qt::ElideRight, ui->subtext->width()));
     ui->cmd->setText(cmd);
-    QIcon tmp = icon;
+    QIcon       tmp = icon;
     QStringList sl;
     if (tmp.isNull())
     {
@@ -70,7 +70,6 @@ DoubleListItem::DoubleListItem(const QIcon& icon, const QString &text, const QSt
     QPixmap p = tmp.pixmap(QSize(iconSize, iconSize));
     ui->icon->setPixmap(p);
 }
-
 
 DoubleListItem::~DoubleListItem()
 {

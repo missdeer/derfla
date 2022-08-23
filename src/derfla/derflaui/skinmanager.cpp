@@ -1,33 +1,34 @@
 #include "stdafx.h"
+
 #include <private/qzipreader_p.h>
-#include "luavm.h"
+
 #include "skinmanager.h"
+#include "luavm.h"
 
 void SkinManager::makeSkinImages(int cutTop, int cutBottom)
 {
     if (cutTop >= 0 && cutBottom > cutTop)
     {
-        QPixmap topPartBackgroundImage = backgroundImage_.copy(0, 0, skinSize_.width(), cutTop);
-        QPixmap cutPartBackgroundImage = backgroundImage_.copy(0, cutTop, skinSize_.width(), cutBottom - cutTop);
+        QPixmap topPartBackgroundImage    = backgroundImage_.copy(0, 0, skinSize_.width(), cutTop);
+        QPixmap cutPartBackgroundImage    = backgroundImage_.copy(0, cutTop, skinSize_.width(), cutBottom - cutTop);
         QPixmap bottomPartBackgroundImage = backgroundImage_.copy(0, cutBottom, skinSize_.width(), skinSize_.height() - cutBottom);
         skinSize_.setHeight(skinSize_.height() - (cutBottom - cutTop));
-        qDebug() << topPartBackgroundImage.size() << cutPartBackgroundImage.size() << bottomPartBackgroundImage.size() << skinSize_ << backgroundImage_.size();
+        qDebug() << topPartBackgroundImage.size() << cutPartBackgroundImage.size() << bottomPartBackgroundImage.size() << skinSize_
+                 << backgroundImage_.size();
         QPixmap t(skinSize_);
         t.fill(Qt::transparent);
         QPainter painter(&t);
         painter.drawPixmap(0, 0, skinSize_.width(), cutTop, topPartBackgroundImage);
-        painter.drawPixmap(0, cutTop, skinSize_.width(), skinSize_.height()- cutTop, bottomPartBackgroundImage);
+        painter.drawPixmap(0, cutTop, skinSize_.width(), skinSize_.height() - cutTop, bottomPartBackgroundImage);
         backgroundImage_ = t.copy(0, 0, skinSize_.width(), skinSize_.height());
     }
 
     if (skinSize_.width() < widgetMinWidth_)
     {
-        leftPartBackgroundImage_ = backgroundImage_.copy(0, 0,
-                                                         skinSize_.width() / 2 -1, skinSize_.height());
-        midPartBackgroundImage_ = backgroundImage_.copy(skinSize_.width() / 2 - 1, 0,
-                                                        2, skinSize_.height()).scaled(widgetMinWidth_ - (skinSize_.width() - 2), skinSize_.height());
-        rightPartBackgroundImage_ = backgroundImage_.copy(skinSize_.width() / 2 + 1, 0,
-                                                          skinSize_.width() / 2 - 1, skinSize_.height());
+        leftPartBackgroundImage_ = backgroundImage_.copy(0, 0, skinSize_.width() / 2 - 1, skinSize_.height());
+        midPartBackgroundImage_  = backgroundImage_.copy(skinSize_.width() / 2 - 1, 0, 2, skinSize_.height())
+                                      .scaled(widgetMinWidth_ - (skinSize_.width() - 2), skinSize_.height());
+        rightPartBackgroundImage_ = backgroundImage_.copy(skinSize_.width() / 2 + 1, 0, skinSize_.width() / 2 - 1, skinSize_.height());
 
         skinSize_.setWidth(widgetMinWidth_);
     }
@@ -35,10 +36,10 @@ void SkinManager::makeSkinImages(int cutTop, int cutBottom)
 
 bool SkinManager::applyDerflaSkin(const QString &skinPath)
 {
-    int cutTop = -1, cutBottom = -1;
+    int       cutTop = -1, cutBottom = -1;
     QFileInfo fi(skinPath);
-    if ((fi.suffix().toLower() == "zip" && !loadDerflaSkinPackage(skinPath, cutTop, cutBottom))
-            || (fi.suffix().toLower() == "derflaskin" && !loadDerflaSkinConfigurationFile(skinPath, cutTop, cutBottom)))
+    if ((fi.suffix().toLower() == "zip" && !loadDerflaSkinPackage(skinPath, cutTop, cutBottom)) ||
+        (fi.suffix().toLower() == "derflaskin" && !loadDerflaSkinConfigurationFile(skinPath, cutTop, cutBottom)))
     {
         // load by skin package - *.zip, should be decompressed first
         // load by skin configuration file - *.derflaskin
@@ -55,19 +56,19 @@ bool SkinManager::loadDerflaSkinPackage(const QString &skinPath, int &cutTop, in
     QZipReader zr(skinPath);
 
     auto fil = zr.fileInfoList();
-    for (auto & fi : fil)
+    for (auto &fi : fil)
     {
         if (fi.filePath == "skin.derflaskin" || fi.filePath == QFileInfo(skinPath).completeBaseName() % ".derflaskin")
         {
             auto configuration = zr.fileData(fi.filePath);
-            
+
             LuaVM vm;
             if (!vm.doScript(configuration))
             {
                 qCritical() << "can't parse skin configuration file" << configuration;
                 return false;
             }
-            
+
             QString image = vm.getString("image");
             if (image.isEmpty())
             {
@@ -90,7 +91,7 @@ bool SkinManager::loadDerflaSkinPackage(const QString &skinPath, int &cutTop, in
                 return false;
             }
 
-            cutTop = vm.getInt("cuttop");
+            cutTop    = vm.getInt("cuttop");
             cutBottom = vm.getInt("cutbottom");
             return true;
         }
@@ -108,7 +109,7 @@ bool SkinManager::loadDerflaSkinConfigurationFile(const QString &skinPath, int &
         qCritical() << "can't parse skin configuration file" << skinPath;
         return false;
     }
-    
+
     QString image = vm.getString("image");
     if (image.isEmpty())
     {
@@ -125,7 +126,7 @@ bool SkinManager::loadDerflaSkinConfigurationFile(const QString &skinPath, int &
         return false;
     }
     skinSize_ = backgroundImage_.size();
-    
+
     inputStyle_ = vm.getString("inputstyle");
     if (inputStyle_.isEmpty())
     {
@@ -133,19 +134,19 @@ bool SkinManager::loadDerflaSkinConfigurationFile(const QString &skinPath, int &
         return false;
     }
 
-    cutTop = vm.getInt("cuttop");
+    cutTop    = vm.getInt("cuttop");
     cutBottom = vm.getInt("cutbottom");
     return true;
 }
 
 bool SkinManager::applySkin(const QString &skin)
 {
-    QMap<QString, std::function<bool(const QString&)>> m = {
-    { "zip",        std::bind(&SkinManager::applyDerflaSkin,   this, std::placeholders::_1)},
-    { "derflaskin", std::bind(&SkinManager::applyDerflaSkin,   this, std::placeholders::_1)},
-};
+    QMap<QString, std::function<bool(const QString &)>> m = {
+        {"zip", std::bind(&SkinManager::applyDerflaSkin, this, std::placeholders::_1)},
+        {"derflaskin", std::bind(&SkinManager::applyDerflaSkin, this, std::placeholders::_1)},
+    };
     QFileInfo fi(skin);
-    auto it = m.find(fi.suffix().toLower());
+    auto      it = m.find(fi.suffix().toLower());
     if (m.end() != it)
     {
         auto f = it.value();

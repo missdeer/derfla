@@ -1,9 +1,9 @@
 #ifndef HEWEATHER_H
 #define HEWEATHER_H
 
-#include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QObject>
 
 class Heweather : public QObject
 {
@@ -11,16 +11,17 @@ class Heweather : public QObject
 public:
     explicit Heweather(QObject *parent = nullptr);
 
-    void forecast(const QString& location);
+    void forecast(const QString &location);
 signals:
 
 private slots:
     void onFinished();
     void onError(QNetworkReply::NetworkError e);
     void onReadyRead();
+
 private:
     QNetworkAccessManager m_nam;
-    QByteArray m_content;
+    QByteArray            m_content;
 };
 
 #endif // HEWEATHER_H

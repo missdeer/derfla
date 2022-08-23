@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
     a.setOrganizationName("Derfla");
 
     auto        uiLanguages = QLocale().uiLanguages();
-    auto &      locale      = uiLanguages[0];
+    auto       &locale      = uiLanguages[0];
     QTranslator translator;
     QTranslator qtTranslator;
 

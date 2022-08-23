@@ -8,45 +8,45 @@ class LocalFSItem
 {
 public:
     LocalFSItem();
-    
-    const QIcon& icon() const;
-    void setIcon(const QIcon& icon);
 
-    const QString& title() const;
-    void setTitle(const QString& title);
+    const QIcon &icon() const;
+    void         setIcon(const QIcon &icon);
 
-    const QString& description() const;
-    void setDescription(const QString& description);
+    const QString &title() const;
+    void           setTitle(const QString &title);
 
-    const QString& target() const;
-    void setTarget(const QString& target);
+    const QString &description() const;
+    void           setDescription(const QString &description);
 
-    const QString& arguments() const;
-    void setArguments(const QString& arguments);
+    const QString &target() const;
+    void           setTarget(const QString &target);
 
-    const QString& workingDirectory() const;
-    void setWorkingDirectory(const QString& workingDirectory);
+    const QString &arguments() const;
+    void           setArguments(const QString &arguments);
 
-    const QString& actionType() const;
-    void setActionType(const QString& actionType);
+    const QString &workingDirectory() const;
+    void           setWorkingDirectory(const QString &workingDirectory);
 
-    bool operator==(const LocalFSItem& da)
+    const QString &actionType() const;
+    void           setActionType(const QString &actionType);
+
+    bool operator==(const LocalFSItem &da)
     {
         return id_ == da.id_;
     }
 
 private:
-    QIcon icon_;
+    QIcon   icon_;
     QString title_;
     QString description_;
     QString target_;
     QString arguments_;
     QString workingDirectory_;
     QString actionType_;
-    QUuid id_;
+    QUuid   id_;
 };
 
 typedef QSharedPointer<LocalFSItem> LocalFSItemPtr;
-typedef QList<LocalFSItemPtr> LocalFSItemList;
+typedef QList<LocalFSItemPtr>       LocalFSItemList;
 
 #endif // LocalFSItem_H

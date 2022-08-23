@@ -1,52 +1,53 @@
 #include "stdafx.h"
-#include "qtsingleapplication.h"
+
 #include <QIcon>
+
+#include "qtsingleapplication.h"
 #include "util.h"
 
-void output(QCryptographicHash::Algorithm algo, const QByteArray& data, const QByteArray& res)
+void output(QCryptographicHash::Algorithm algo, const QByteArray &data, const QByteArray &res)
 {
     QJsonDocument d = QJsonDocument::fromJson("[]");
     Q_ASSERT(d.isArray());
     QJsonArray arr = d.array();
 
-
     QMap<QCryptographicHash::Algorithm, QString> algoIcon = {
-        { QCryptographicHash::Md4       , ":/rc/images/md4.png"        },
-        { QCryptographicHash::Md5       , ":/rc/images/md5.png"        },
-        { QCryptographicHash::Sha1      , ":/rc/images/sha1.png"       },
-        { QCryptographicHash::Sha224    , ":/rc/images/sha224.png"     },
-        { QCryptographicHash::Sha256    , ":/rc/images/sha256.png"     },
-        { QCryptographicHash::Sha384    , ":/rc/images/sha384.png"     },
-        { QCryptographicHash::Sha512    , ":/rc/images/sha512.png"     },
-        { QCryptographicHash::Sha3_224  , ":/rc/images/sha3-224.png"   },
-        { QCryptographicHash::Sha3_256  , ":/rc/images/sha3-256.png"   },
-        { QCryptographicHash::Sha3_384  , ":/rc/images/sha3-384.png"   },
-        { QCryptographicHash::Sha3_512  , ":/rc/images/sha3-512.png"   },
-        { QCryptographicHash::Keccak_224, ":/rc/images/keccak224.png"  },
-        { QCryptographicHash::Keccak_256, ":/rc/images/keccak256.png"  },
-        { QCryptographicHash::Keccak_384, ":/rc/images/keccak384.png"  },
-        { QCryptographicHash::Keccak_512, ":/rc/images/keccak512.png"  },
+        {QCryptographicHash::Md4, ":/rc/images/md4.png"},
+        {QCryptographicHash::Md5, ":/rc/images/md5.png"},
+        {QCryptographicHash::Sha1, ":/rc/images/sha1.png"},
+        {QCryptographicHash::Sha224, ":/rc/images/sha224.png"},
+        {QCryptographicHash::Sha256, ":/rc/images/sha256.png"},
+        {QCryptographicHash::Sha384, ":/rc/images/sha384.png"},
+        {QCryptographicHash::Sha512, ":/rc/images/sha512.png"},
+        {QCryptographicHash::Sha3_224, ":/rc/images/sha3-224.png"},
+        {QCryptographicHash::Sha3_256, ":/rc/images/sha3-256.png"},
+        {QCryptographicHash::Sha3_384, ":/rc/images/sha3-384.png"},
+        {QCryptographicHash::Sha3_512, ":/rc/images/sha3-512.png"},
+        {QCryptographicHash::Keccak_224, ":/rc/images/keccak224.png"},
+        {QCryptographicHash::Keccak_256, ":/rc/images/keccak256.png"},
+        {QCryptographicHash::Keccak_384, ":/rc/images/keccak384.png"},
+        {QCryptographicHash::Keccak_512, ":/rc/images/keccak512.png"},
     };
 
     QMap<QCryptographicHash::Algorithm, QString> algoName = {
-        { QCryptographicHash::Md4       , "MD4" },
-        { QCryptographicHash::Md5       , "MD5" },
-        { QCryptographicHash::Sha1      , "SHA1" },
-        { QCryptographicHash::Sha224    , "SHA224" },
-        { QCryptographicHash::Sha256    , "SHA256" },
-        { QCryptographicHash::Sha384    , "SHA384" },
-        { QCryptographicHash::Sha512    , "SHA512" },
-        { QCryptographicHash::Sha3_224  , "SHA3-224" },
-        { QCryptographicHash::Sha3_256  , "SHA3-256" },
-        { QCryptographicHash::Sha3_384  , "SHA3-384" },
-        { QCryptographicHash::Sha3_512  , "SHA3-512" },
-        { QCryptographicHash::Keccak_224, "KECCAK224" },
-        { QCryptographicHash::Keccak_256, "KECCAK256" },
-        { QCryptographicHash::Keccak_384, "KECCAK384" },
-        { QCryptographicHash::Keccak_512, "KECCAK512" },
+        {QCryptographicHash::Md4, "MD4"},
+        {QCryptographicHash::Md5, "MD5"},
+        {QCryptographicHash::Sha1, "SHA1"},
+        {QCryptographicHash::Sha224, "SHA224"},
+        {QCryptographicHash::Sha256, "SHA256"},
+        {QCryptographicHash::Sha384, "SHA384"},
+        {QCryptographicHash::Sha512, "SHA512"},
+        {QCryptographicHash::Sha3_224, "SHA3-224"},
+        {QCryptographicHash::Sha3_256, "SHA3-256"},
+        {QCryptographicHash::Sha3_384, "SHA3-384"},
+        {QCryptographicHash::Sha3_512, "SHA3-512"},
+        {QCryptographicHash::Keccak_224, "KECCAK224"},
+        {QCryptographicHash::Keccak_256, "KECCAK256"},
+        {QCryptographicHash::Keccak_384, "KECCAK384"},
+        {QCryptographicHash::Keccak_512, "KECCAK512"},
     };
     QVariantMap m;
-    m.insert("title", res );
+    m.insert("title", res);
     if (QFile::exists(QString(data)))
     {
         QFileInfo f((QString(data)));
@@ -77,14 +78,14 @@ void output(QCryptographicHash::Algorithm algo, const QByteArray& data, const QB
     ts << QString(d.toJson(QJsonDocument::Compact));
 }
 
-bool hashString(QCryptographicHash::Algorithm algo, const QByteArray& data)
+bool hashString(QCryptographicHash::Algorithm algo, const QByteArray &data)
 {
     auto res = QCryptographicHash::hash(data, algo);
     output(algo, data, res.toHex());
     return true;
 }
 
-bool hashFile(QCryptographicHash::Algorithm algo, const QString& filePath)
+bool hashFile(QCryptographicHash::Algorithm algo, const QString &filePath)
 {
     QFile f(filePath);
     if (!f.open(QIODevice::ReadOnly))
@@ -93,13 +94,13 @@ bool hashFile(QCryptographicHash::Algorithm algo, const QString& filePath)
     }
 
     QCryptographicHash h(algo);
-    const qint64 mapSize = 1024 * 1024;
-    qint64 size = f.size();
-    qint64 offset = 0;
+    const qint64       mapSize = 1024 * 1024;
+    qint64             size    = f.size();
+    qint64             offset  = 0;
     while (offset < size)
     {
         qint64 length = qMin(mapSize, size - offset);
-        auto pos = f.map(offset, length);
+        auto   pos    = f.map(offset, length);
         h.addData((const char *)pos, length);
         f.unmap(pos);
         offset += length;
@@ -141,16 +142,16 @@ int main(int argc, char *argv[])
     }
 
     auto        uiLanguages = QLocale().uiLanguages();
-    auto &      locale      = uiLanguages[0];
+    auto       &locale      = uiLanguages[0];
     QTranslator translator;
     QTranslator qtTranslator;
 
     // main application and dynamic linked library locale
 #if defined(Q_OS_MAC)
-    QString rootDirPath = QApplication::applicationDirPath() + "/../../Resources/translations";
+    QString rootDirPath   = QApplication::applicationDirPath() + "/../../Resources/translations";
     QString localeDirPath = QApplication::applicationDirPath() + "/translations";
 #else
-    QString rootDirPath = QApplication::applicationDirPath() + "/../../translations";
+    QString rootDirPath   = QApplication::applicationDirPath() + "/../../translations";
     QString localeDirPath = QApplication::applicationDirPath() + "/translations";
 #endif
 
@@ -182,21 +183,21 @@ int main(int argc, char *argv[])
     }
 
     QMap<QString, QCryptographicHash::Algorithm> algo = {
-        {"md4"       , QCryptographicHash::Md4        },
-        {"md5"       , QCryptographicHash::Md5        },
-        {"sha1"      , QCryptographicHash::Sha1       },
-        {"sha224"    , QCryptographicHash::Sha224     },
-        {"sha256"    , QCryptographicHash::Sha256     },
-        {"sha384"    , QCryptographicHash::Sha384     },
-        {"sha512"    , QCryptographicHash::Sha512     },
-        {"sha3-224"  , QCryptographicHash::Sha3_224   },
-        {"sha3-256"  , QCryptographicHash::Sha3_256   },
-        {"sha3-384"  , QCryptographicHash::Sha3_384   },
-        {"sha3-512"  , QCryptographicHash::Sha3_512   },
-        {"keccak224" , QCryptographicHash::Keccak_224 },
-        {"keccak256" , QCryptographicHash::Keccak_256 },
-        {"keccak384" , QCryptographicHash::Keccak_384 },
-        {"keccak512" , QCryptographicHash::Keccak_512 },
+        {"md4", QCryptographicHash::Md4},
+        {"md5", QCryptographicHash::Md5},
+        {"sha1", QCryptographicHash::Sha1},
+        {"sha224", QCryptographicHash::Sha224},
+        {"sha256", QCryptographicHash::Sha256},
+        {"sha384", QCryptographicHash::Sha384},
+        {"sha512", QCryptographicHash::Sha512},
+        {"sha3-224", QCryptographicHash::Sha3_224},
+        {"sha3-256", QCryptographicHash::Sha3_256},
+        {"sha3-384", QCryptographicHash::Sha3_384},
+        {"sha3-512", QCryptographicHash::Sha3_512},
+        {"keccak224", QCryptographicHash::Keccak_224},
+        {"keccak256", QCryptographicHash::Keccak_256},
+        {"keccak384", QCryptographicHash::Keccak_384},
+        {"keccak512", QCryptographicHash::Keccak_512},
     };
 
 #if defined(Q_OS_WIN)
@@ -216,12 +217,11 @@ int main(int argc, char *argv[])
 
     if (argc == 3)
     {
-
 #if defined(Q_OS_WIN)
         data = QString::fromWCharArray(szArglist[2]);
         LocalFree(szArglist);
 #else
-        data = argv[2];
+        data   = argv[2];
 #endif
         if (QFile::exists(data))
             option = "f";
@@ -231,11 +231,11 @@ int main(int argc, char *argv[])
     {
 #if defined(Q_OS_WIN)
         option = QString::fromWCharArray(szArglist[2]);
-        data = QString::fromWCharArray(szArglist[3]);
+        data   = QString::fromWCharArray(szArglist[3]);
         LocalFree(szArglist);
 #else
         option = argv[2];
-        data = argv[3];
+        data   = argv[3];
 #endif
         if (option.toLower() != "f" || !QFile::exists(data))
             option.clear();

@@ -2,10 +2,12 @@
 #define PREFERENCEDIALOG_H
 
 #include <QDialog>
+
 #include "extension.h"
 
-namespace Ui {
-class PreferenceDialog;
+namespace Ui
+{
+    class PreferenceDialog;
 }
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
@@ -26,7 +28,7 @@ public:
 private slots:
     void on_buttonBox_accepted();
     void onKeySequenceChanged(const QKeySequence &keySequence);
-    void onCurrentSkinChanged(const QString& name);
+    void onCurrentSkinChanged(const QString &name);
     void onAlfredStyleUIStateChanged(int state);
     void on_btnBrowseBash_clicked();
 
@@ -70,18 +72,18 @@ private slots:
 
 private:
     Ui::PreferenceDialog *ui;
-    QCheckBox* cbStayOnTop_;
-    QCheckBox* cbStartWithSystem_;
-    QSlider* sliderInterval_;
-    QSpinBox* sbInterval_;
-    QKeySequenceEdit* edtHotkey_;
-    QCheckBox* cbAutoUpdate_;
-    QTableView* listExtensions_;
-    QCheckBox* cbAlfredStyleUI_;
-    QComboBox* cbSkins_;
-    QWidget* previewSkin_;
-    void loadThemes();
-    void loadSkins();
+    QCheckBox            *cbStayOnTop_;
+    QCheckBox            *cbStartWithSystem_;
+    QSlider              *sliderInterval_;
+    QSpinBox             *sbInterval_;
+    QKeySequenceEdit     *edtHotkey_;
+    QCheckBox            *cbAutoUpdate_;
+    QTableView           *listExtensions_;
+    QCheckBox            *cbAlfredStyleUI_;
+    QComboBox            *cbSkins_;
+    QWidget              *previewSkin_;
+    void                  loadThemes();
+    void                  loadSkins();
 };
 
 #endif // PREFERENCEDIALOG_H

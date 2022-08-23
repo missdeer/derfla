@@ -3,9 +3,9 @@
 
 #include <QWidget>
 #if defined(Q_OS_WIN)
-#include "qglobalshortcut.h"
+#    include "qglobalshortcut.h"
 #else
-#include "uglobalhotkeys.h"
+#    include "uglobalhotkeys.h"
 #endif
 
 class CommonWidget : public QWidget
@@ -22,11 +22,11 @@ public:
     virtual bool onPreference();
     virtual void hideCandidateList();
 signals:
-    
+
 public slots:
-    
+
 protected:
-#if defined (Q_OS_WIN)
+#if defined(Q_OS_WIN)
     QGlobalShortcut *hotkeyManager_;
 #else
     UGlobalHotkeys *hotkeyManager_;

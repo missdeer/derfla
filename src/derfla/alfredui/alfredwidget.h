@@ -1,19 +1,22 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include <QWidget>
-#include <QLabel>
+#include <map>
+#include <string>
 #include <vector>
+
+#include <QLabel>
 #include <QListWidget>
 #include <QMutex>
-#include <string>
-#include <map>
-#include "plaintext.h"
+#include <QWidget>
+
 #include "commonwidget.h"
+#include "plaintext.h"
 #include "thememanager.h"
 
-namespace Ui {
-class Widget;
+namespace Ui
+{
+    class Widget;
 }
 
 class AlfredWidget : public CommonWidget
@@ -22,14 +25,14 @@ class AlfredWidget : public CommonWidget
 public:
     explicit AlfredWidget(QWidget *parent = nullptr);
     ~AlfredWidget() override;
-    AlfredWidget(const AlfredWidget&) = delete;
-    AlfredWidget& operator=(const AlfredWidget&) = delete;
-    AlfredWidget(const AlfredWidget&&) = delete;
-    AlfredWidget& operator=(const AlfredWidget&&) = delete;
-    void onTextChanged();
-    void setOne();
-    void enterCurItem();
-    void populateList();
+    AlfredWidget(const AlfredWidget &)             = delete;
+    AlfredWidget &operator=(const AlfredWidget &)  = delete;
+    AlfredWidget(const AlfredWidget &&)            = delete;
+    AlfredWidget &operator=(const AlfredWidget &&) = delete;
+    void          onTextChanged();
+    void          setOne();
+    void          enterCurItem();
+    void          populateList();
 signals:
     void done();
 private slots:
@@ -38,14 +41,15 @@ private slots:
     void onEnterItem(int index);
     void onEscape();
     void onDone();
+
 private:
-    Ui::Widget *ui;
-    PlainText *plainTextEdit;
+    Ui::Widget  *ui;
+    PlainText   *plainTextEdit;
     QListWidget *listWidget;
-    AlfredTheme* theme;
+    AlfredTheme *theme;
     ThemeManager themeManager;
-    void setUpTheme();
-    void hideCandidateList() override;
+    void         setUpTheme();
+    void         hideCandidateList() override;
 
     void onLoadSkin() override;
     void onStayOnTop() override;

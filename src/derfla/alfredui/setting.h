@@ -1,18 +1,20 @@
 #ifndef SETTING_H
 #define SETTING_H
 
-#include <QWidget>
-#include <QString>
-#include <QProcess>
-#include <QStringList>
-#include <string>
 #include <sstream>
-#include "hotkey.h"
+#include <string>
+
+#include <QProcess>
+#include <QString>
+#include <QStringList>
+#include <QWidget>
+
 #include "config.h"
+#include "hotkey.h"
 
-
-namespace Ui {
-class Setting;
+namespace Ui
+{
+    class Setting;
 }
 
 class Setting : public QWidget

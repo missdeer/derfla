@@ -32,11 +32,11 @@ signals:
     void translated(QString);
 
 private:
-    ITranslator *         m_translator;
-    TranslateHelperState  m_state {THS_IDLE};
-    QString               m_originalText;
-    QTimer *              m_timer;
-    int                   m_resultTryCount {0};
+    ITranslator         *m_translator;
+    TranslateHelperState m_state {THS_IDLE};
+    QString              m_originalText;
+    QTimer              *m_timer;
+    int                  m_resultTryCount {0};
 };
 
 #endif // TRANSLATEHELPERPAGE_H

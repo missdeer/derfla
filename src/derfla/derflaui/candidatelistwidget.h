@@ -8,6 +8,7 @@ class CandidateListWidget : public QListWidget
     Q_OBJECT
 public:
     CandidateListWidget(QWidget *parent = 0);
+
 protected:
     void keyPressEvent(QKeyEvent *event);
 signals:

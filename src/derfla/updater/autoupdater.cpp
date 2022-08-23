@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #if defined(Q_OS_WIN)
-#include "winsparkleautoupdater.h"
+#    include "winsparkleautoupdater.h"
 #elif defined(Q_OS_MAC)
-#include "SparkleAutoUpdater.h"
-#include "CocoaInitializer.h"
+#    include "CocoaInitializer.h"
+#    include "SparkleAutoUpdater.h"
 #endif
 #include "autoupdater.h"
 
@@ -18,6 +18,4 @@ AutoUpdater *AutoUpdater::createAutoUpdate()
     return nullptr;
 }
 
-AutoUpdater::~AutoUpdater()
-{
-}
+AutoUpdater::~AutoUpdater() {}

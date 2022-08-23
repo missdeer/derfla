@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QProcess>
+
 #include "dbrw.h"
 
 struct Directory;
@@ -11,7 +12,7 @@ class LocalFSScanner : public QObject
 {
     Q_OBJECT
 public:
-    explicit LocalFSScanner(DBRW& dbrw, QObject *parent = 0);
+    explicit LocalFSScanner(DBRW &dbrw, QObject *parent = 0);
     ~LocalFSScanner();
 signals:
     void finished();
@@ -25,13 +26,13 @@ private slots:
     void finished(int exitCode, QProcess::ExitStatus);
 #endif
 private:
-    DBRW& dbrw_;
-    bool stop_ = false;
-    qint64 timestamp_ = 0;
+    DBRW            &dbrw_;
+    bool             stop_      = false;
+    qint64           timestamp_ = 0;
     QList<Directory> scanDirectories_;
-    void getDirectoriesFromEnvironmentVariable();
-    void getBuiltinDirectories();
-    void scanDirectory(const Directory& d);
+    void             getDirectoriesFromEnvironmentVariable();
+    void             getBuiltinDirectories();
+    void             scanDirectory(const Directory &d);
 #if defined(Q_OS_MAC)
     void scanDockIcons();
 #endif

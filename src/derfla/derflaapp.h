@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QSettings>
 #include <QSystemTrayIcon>
+
 #include "actionexecutor.h"
 
 QT_FORWARD_DECLARE_CLASS(QAction)
@@ -17,35 +18,57 @@ class CommonWidget;
 class DerflaApp : public QObject
 {
     Q_OBJECT
-    
+
     friend class DerflaWidget;
     friend class AlfredWidget;
+
 public:
     explicit DerflaApp(QObject *parent = nullptr);
     ~DerflaApp() override;
-    
+
     void createWidget();
     void show();
-    
+
     void createDerflaWidget();
     void showDerflaWidget();
     void createAlfredWidget();
     void showAlfredWidget();
-    
+
     void autoUpdate();
     void checkForUpdates();
-    void executeAction(DerflaActionPtr da) { actionExecutor_(da);}
-    ExtensionManager *extensionManager() { return extensionManager_; }
-    void queryByExtension(const QString& text);
-    void setCheckedStayOnTopAction(bool checked);
+    void executeAction(DerflaActionPtr da)
+    {
+        actionExecutor_(da);
+    }
+    ExtensionManager *extensionManager()
+    {
+        return extensionManager_;
+    }
+    void       queryByExtension(const QString &text);
+    void       setCheckedStayOnTopAction(bool checked);
     QSettings &settings();
-    
-    bool isEmptyDerflaAction() const { return dal_.isEmpty(); }
+
+    bool isEmptyDerflaAction() const
+    {
+        return dal_.isEmpty();
+    }
     DerflaActionPtr derflaAction(int index);
-    int derflaActionCount() const { return dal_.length(); }
-    void clearDerflaAction() { dal_.clear(); }
-    DerflaActionList& derflaActions() { return dal_; }
-    DerflaActionList& donateDerflaActions() { return dalDonate_; }
+    int             derflaActionCount() const
+    {
+        return dal_.length();
+    }
+    void clearDerflaAction()
+    {
+        dal_.clear();
+    }
+    DerflaActionList &derflaActions()
+    {
+        return dal_;
+    }
+    DerflaActionList &donateDerflaActions()
+    {
+        return dalDonate_;
+    }
 signals:
     void actionUpdated();
     void emptyAction();
@@ -64,23 +87,24 @@ public slots:
     void donateViaAlipay();
     void donateViaWeChatPay();
 private slots:
-    void onActionUpdated(DerflaActionList& dal);
+    void onActionUpdated(DerflaActionList &dal);
     void onEmptyAction();
+
 private:
     ExtensionManager *extensionManager_;
-    QSystemTrayIcon* trayIcon_;
+    QSystemTrayIcon  *trayIcon_;
     CommonWidget     *widget_ {nullptr};
     DerflaWidget     *derflaWidget_ {nullptr};
     AlfredWidget     *alfredWidget_ {nullptr};
     AutoUpdater      *autoUpdater_ {nullptr};
     QAction          *stayOnTopAction_ {nullptr};
-    QSettings settings_;    
-    ActionExecutor actionExecutor_;
-    DerflaActionList dal_;
-    DerflaActionList dalDonate_;
-    void centerToScreen(QWidget* widget);    
-    void createCommonActions();
-    void createDonateDerflaActions();
+    QSettings         settings_;
+    ActionExecutor    actionExecutor_;
+    DerflaActionList  dal_;
+    DerflaActionList  dalDonate_;
+    void              centerToScreen(QWidget *widget);
+    void              createCommonActions();
+    void              createDonateDerflaActions();
 };
 
 inline DerflaApp *derflaApp {nullptr};

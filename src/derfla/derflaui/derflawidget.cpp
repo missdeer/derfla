@@ -1,25 +1,27 @@
 #include "stdafx.h"
+
 #include <private/qzipreader_p.h>
-#include "derflaapp.h"
-#include "skinmanager.h"
-#include "charlineedit.h"
-#include "extensionmanager.h"
-#include "candidatelist.h"
-#include "preferencedialog.h"
+
 #include "derflawidget.h"
+#include "candidatelist.h"
+#include "charlineedit.h"
+#include "derflaapp.h"
+#include "extensionmanager.h"
+#include "preferencedialog.h"
+#include "skinmanager.h"
 
 DerflaWidget::DerflaWidget(QWidget *parent)
-    : CommonWidget(parent)
-    , mouseMovePos_(0, 0)
-    , candidateDelayTimer_(new QTimer(this))
-    , input_(new CharLineEdit(this))
-    , candidateList_(new CandidateList(this))
-    , skinManager_(new SkinManager)
+    : CommonWidget(parent),
+      mouseMovePos_(0, 0),
+      candidateDelayTimer_(new QTimer(this)),
+      input_(new CharLineEdit(this)),
+      candidateList_(new CandidateList(this)),
+      skinManager_(new SkinManager)
 {
 #if defined(Q_OS_WIN)
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool );
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
 #else
-    setWindowFlags(Qt::FramelessWindowHint );
+    setWindowFlags(Qt::FramelessWindowHint);
 #endif
     setAttribute(Qt::WA_InputMethodEnabled);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -46,16 +48,16 @@ DerflaWidget::DerflaWidget(QWidget *parent)
 
     connect(candidateList_, &CandidateList::done, this, &DerflaWidget::onCandidateListDone);
     connect(candidateList_, &CandidateList::keyPressedEvent, this, &DerflaWidget::onCandidateListKeyPressed);
-//    QAction *logoAction = new QAction(tr("Input"), this);
-//    logoAction->setIcon(QIcon(":/derfla.ico"));
-//    input_->addAction(logoAction, QLineEdit::ActionPosition::TrailingPosition);
+    //    QAction *logoAction = new QAction(tr("Input"), this);
+    //    logoAction->setIcon(QIcon(":/derfla.ico"));
+    //    input_->addAction(logoAction, QLineEdit::ActionPosition::TrailingPosition);
     input_->setObjectName("input");
     input_->setClearButtonEnabled(false);
     connect(input_, &CharLineEdit::keyPressed, this, &DerflaWidget::keyPressEvent);
     connect(input_, &QLineEdit::textChanged, this, &DerflaWidget::onInputChanged);
     connect(input_, &CharLineEdit::focusOut, this, &DerflaWidget::onInputFocusOut);
     connect(input_, &CharLineEdit::focusIn, this, &DerflaWidget::onInputFocusIn);
-    
+
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &QWidget::customContextMenuRequested, this, &DerflaWidget::onCustomContextMenuRequested);
     connect(candidateDelayTimer_, &QTimer::timeout, this, &DerflaWidget::onCandidateDelayTimer);
@@ -84,7 +86,7 @@ void DerflaWidget::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void DerflaWidget::mouseReleaseEvent(QMouseEvent* event)
+void DerflaWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
@@ -92,7 +94,7 @@ void DerflaWidget::mouseReleaseEvent(QMouseEvent* event)
     }
 }
 
-void DerflaWidget::paintEvent(QPaintEvent* event)
+void DerflaWidget::paintEvent(QPaintEvent *event)
 {
     QStyleOption styleOption;
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -112,12 +114,14 @@ void DerflaWidget::paintEvent(QPaintEvent* event)
     {
         painter.drawPixmap(0, 0, skinManager_->leftPartBackgroundImage());
         painter.drawPixmap(skinManager_->leftPartBackgroundImage().width(), 0, skinManager_->midPartBackgroundImage());
-        painter.drawPixmap(skinManager_->leftPartBackgroundImage().width() + skinManager_->midPartBackgroundImage().width(), 0, skinManager_->rightPartBackgroundImage());
+        painter.drawPixmap(skinManager_->leftPartBackgroundImage().width() + skinManager_->midPartBackgroundImage().width(),
+                           0,
+                           skinManager_->rightPartBackgroundImage());
     }
     QWidget::paintEvent(event);
 }
 
-void DerflaWidget::moveEvent(QMoveEvent* /*event*/)
+void DerflaWidget::moveEvent(QMoveEvent * /*event*/)
 {
     if (candidateList_ && candidateList_->isVisible())
         candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
@@ -125,10 +129,10 @@ void DerflaWidget::moveEvent(QMoveEvent* /*event*/)
 
 void DerflaWidget::keyPressEvent(QKeyEvent *event)
 {
-    //qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key();
+    // qDebug() << "DerflaWidget::keyPressEvent 0:" << event->key();
     if (event->key() == Qt::Key_Escape)
     {
-        //qDebug() << "DerflaWidget::keyPressEvent escape" << candidateList_->isVisible();
+        // qDebug() << "DerflaWidget::keyPressEvent escape" << candidateList_->isVisible();
         if (candidateList_->isVisible())
             candidateList_->hide();
         else
@@ -143,13 +147,12 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
     {
         doEnter();
     }
-    else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_PageDown ||
-             event->key() == Qt::Key_Up || event->key() == Qt::Key_PageUp)
+    else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_PageDown || event->key() == Qt::Key_Up || event->key() == Qt::Key_PageUp)
     {
-        //qDebug() << "DerflaWidget::keyPressEvent 1:" << event->key();
+        // qDebug() << "DerflaWidget::keyPressEvent 1:" << event->key();
         if (candidateList_->isVisible())
         {
-            //qDebug() << "DerflaWidget::keyPressEvent 2:" << event->key();
+            // qDebug() << "DerflaWidget::keyPressEvent 2:" << event->key();
             candidateList_->activateWindow();
             candidateList_->setActiveWindowFlag(true);
             QCoreApplication::instance()->sendEvent(candidateList_, event);
@@ -172,7 +175,7 @@ void DerflaWidget::keyPressEvent(QKeyEvent *event)
         //            doTab();
         processKey();
     }
-    else if (event->key()== Qt::Key_Insert && event->modifiers() == Qt::ShiftModifier)
+    else if (event->key() == Qt::Key_Insert && event->modifiers() == Qt::ShiftModifier)
     {
         // ensure pasting text with Shift+Insert also parses input
         // longer term parsing should be done using the TextChanged event
@@ -204,7 +207,7 @@ void DerflaWidget::focusInEvent(QFocusEvent *e)
 
 void DerflaWidget::onInputChanged(const QString &text)
 {
-    //qDebug() <<  "DerflaWidget::inputChanged:" << input_->text();
+    // qDebug() <<  "DerflaWidget::inputChanged:" << input_->text();
     if (text.isEmpty())
     {
         hideCandidateList();
@@ -219,9 +222,9 @@ void DerflaWidget::onInputChanged(const QString &text)
 
 void DerflaWidget::onCandidateListKeyPressed(QKeyEvent *e)
 {
-    //qDebug() << "DerflaWidget::keyPressed" << e;
-//    if ( e->key() != Qt::Key_Escape)
-//        hideCandidateList();
+    // qDebug() << "DerflaWidget::keyPressed" << e;
+    //    if ( e->key() != Qt::Key_Escape)
+    //        hideCandidateList();
     activateWindow();
     raise();
     QCoreApplication::instance()->sendEvent(this, e);
@@ -249,12 +252,12 @@ void DerflaWidget::onLoadSkin()
 
     hideCandidateList();
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Load Derfla Skin"),
-        "",
-        tr("Derfla Skin Package (*.zip);;"
-           "Derfla Skin Configuration (*.derflaskin);;"
-           "All Supported Files (*.derflaskin *.zip);;"
-           "All files (*.*)"));
+                                                    tr("Load Derfla Skin"),
+                                                    "",
+                                                    tr("Derfla Skin Package (*.zip);;"
+                                                       "Derfla Skin Configuration (*.derflaskin);;"
+                                                       "All Supported Files (*.derflaskin *.zip);;"
+                                                       "All files (*.*)"));
     if (!QFile::exists(fileName))
         return;
     if (applySkin(fileName))
@@ -266,8 +269,8 @@ void DerflaWidget::onLoadSkin()
 
 void DerflaWidget::onStayOnTop()
 {
-    auto *action = qobject_cast<QAction*>(sender());
-    stayOnTop_ = !stayOnTop_;
+    auto *action = qobject_cast<QAction *>(sender());
+    stayOnTop_   = !stayOnTop_;
     action->setChecked(stayOnTop_);
     CommonWidget::onStayOnTop();
 }
@@ -350,16 +353,16 @@ void DerflaWidget::showCandidateList()
     if (hasFocus() || isActiveWindow() || input_->hasFocus())
     {
         candidateList_->move(mapToGlobal(QPoint(input_->x(), input_->y() + input_->height())));
-        
+
         QString inputText = input_->text().trimmed();
-    
-        candidateList_->update(inputText);        
+
+        candidateList_->update(inputText);
     }
 }
 
 void DerflaWidget::processKey()
 {
-    //qDebug() << "DerflaWidget::processKey";
+    // qDebug() << "DerflaWidget::processKey";
 }
 
 void DerflaWidget::doEnter()
@@ -371,15 +374,15 @@ void DerflaWidget::doEnter()
 
 void DerflaWidget::doTab()
 {
-    //qDebug() << "DerflaWidget::doTab";
+    // qDebug() << "DerflaWidget::doTab";
 }
 
 void DerflaWidget::doBackTab()
 {
-    //qDebug() << "DerflaWidget::doBackTab";
+    // qDebug() << "DerflaWidget::doBackTab";
 }
 
-bool DerflaWidget::applySkin(const QString& skin)
+bool DerflaWidget::applySkin(const QString &skin)
 {
     if (!skinManager_->applySkin(skin))
         return false;
@@ -393,7 +396,7 @@ bool DerflaWidget::applySkin(const QString& skin)
     input_->setFont(f);
 
     candidateList_->setInputBoxSize(input_->size());
-    
+
     return true;
 }
 
@@ -405,9 +408,9 @@ void DerflaWidget::hideCandidateList()
 
 void DerflaWidget::stopWaiting()
 {
-    QList<QAction*> actions = input_->actions();
+    QList<QAction *> actions = input_->actions();
     if (actions.isEmpty())
         return;
-    QAction* logoAction = actions.at(0);
+    QAction *logoAction = actions.at(0);
     logoAction->setIcon(QIcon(":/derfla.ico"));
 }

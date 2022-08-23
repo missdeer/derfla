@@ -1,19 +1,17 @@
 #include "stdafx.h"
+
 #include <QNetworkRequest>
-#include <QUrlQuery>
 #include <QUrl>
+#include <QUrlQuery>
+
 #include "youdao.h"
 
-Youdao::Youdao(QObject *parent)
-    : QObject(parent)
-{
-
-}
+Youdao::Youdao(QObject *parent) : QObject(parent) {}
 
 void Youdao::query(const QString &keyword)
 {
     // http://fanyi.youdao.com/openapi.do?keyfrom=f2ec-org&key=1787962561&type=data&doctype=json&version=1.1&q=
-    QUrl url("http://fanyi.youdao.com/openapi.do");
+    QUrl      url("http://fanyi.youdao.com/openapi.do");
     QUrlQuery query;
 
     query.addQueryItem("keyfrom", "f2ec-org");
@@ -27,20 +25,19 @@ void Youdao::query(const QString &keyword)
     QNetworkRequest req(url);
     req.setAttribute(QNetworkRequest::Http2AllowedAttribute, true);
 
-    QNetworkReply* reply = m_nam.get(req);
+    QNetworkReply *reply = m_nam.get(req);
 
     connect(reply, SIGNAL(finished()), this, SLOT(onFinished()));
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
-            this, SLOT(onError(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
 }
 
 void Youdao::onFinished()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT(reply);
     reply->deleteLater();
-    m_content.append( reply->readAll());
+    m_content.append(reply->readAll());
 
     QJsonDocument doc = QJsonDocument::fromJson(m_content);
     if (!doc.isObject())
@@ -49,7 +46,7 @@ void Youdao::onFinished()
         return;
     }
 
-    auto o = doc.object();
+    auto o         = doc.object();
     auto errorCode = o["errorCode"].toInt();
     if (errorCode != 0)
     {
@@ -61,8 +58,8 @@ void Youdao::onFinished()
     Q_ASSERT(d.isArray());
     QJsonArray arr = d.array();
 
-    auto query = o["query"].toString();
-    auto translation = o["translation"].toArray();
+    auto        query       = o["query"].toString();
+    auto        translation = o["translation"].toArray();
     QStringList trans;
     for (auto t : translation)
     {
@@ -70,14 +67,14 @@ void Youdao::onFinished()
     }
     auto basic = o["basic"].toObject();
     if (basic["phonetic"].isString())
-        trans.append("[" + basic["phonetic"].toString() +"]");
+        trans.append("[" + basic["phonetic"].toString() + "]");
     if (basic["us-phonetic"].isString())
-        trans.append("US [" + basic["us-phonetic"].toString() +"]");
+        trans.append("US [" + basic["us-phonetic"].toString() + "]");
     if (basic["uk-phonetic"].isString())
-        trans.append("UK [" + basic["uk-phonetic"].toString() +"]");
+        trans.append("UK [" + basic["uk-phonetic"].toString() + "]");
 
     QByteArray iconData;
-    QFile icon(":/rc/images/youdao.png");
+    QFile      icon(":/rc/images/youdao.png");
     if (icon.open(QIODevice::ReadOnly))
     {
         auto bytes = icon.readAll();
@@ -86,9 +83,9 @@ void Youdao::onFinished()
     }
 
     QVariantMap m;
-    m.insert("title", trans.join("; ") );
-    m.insert("target", trans.join("; ") );
-    m.insert("description", QObject::tr("[Translation] ") + query );
+    m.insert("title", trans.join("; "));
+    m.insert("target", trans.join("; "));
+    m.insert("description", QObject::tr("[Translation] ") + query);
     m.insert("actionType", "copyText");
     if (!iconData.isEmpty())
         m.insert("iconData", iconData);
@@ -97,11 +94,11 @@ void Youdao::onFinished()
     auto explains = basic["explains"].toArray();
     for (auto e : explains)
     {
-        auto i = e.toString();
+        auto        i = e.toString();
         QVariantMap m;
-        m.insert("title", i );
-        m.insert("target", i );
-        m.insert("description", QObject::tr("[Explain] ") + query );
+        m.insert("title", i);
+        m.insert("target", i);
+        m.insert("description", QObject::tr("[Explain] ") + query);
         m.insert("actionType", "copyText");
         if (!iconData.isEmpty())
             m.insert("iconData", iconData);
@@ -111,18 +108,18 @@ void Youdao::onFinished()
     auto web = o["web"].toArray();
     for (auto w : web)
     {
-        auto i = w.toObject();
-        QString key = i["key"].toString();
-        auto values = i["value"].toArray();
+        auto        i      = w.toObject();
+        QString     key    = i["key"].toString();
+        auto        values = i["value"].toArray();
         QStringList value;
         for (auto v : values)
         {
             value.append(v.toString());
         }
         QVariantMap m;
-        m.insert("title", value.join("; ") );
-        m.insert("target", value.join("; ") );
-        m.insert("description", QObject::tr("[Web] ") + key );
+        m.insert("title", value.join("; "));
+        m.insert("target", value.join("; "));
+        m.insert("description", QObject::tr("[Web] ") + key);
         m.insert("actionType", "copyText");
         if (!iconData.isEmpty())
             m.insert("iconData", iconData);
@@ -142,15 +139,15 @@ void Youdao::onFinished()
 
 void Youdao::onError(QNetworkReply::NetworkError e)
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT(reply);
-    qDebug() << e << reply->errorString() ;
+    qDebug() << e << reply->errorString();
     QCoreApplication::exit(1);
 }
 
 void Youdao::onReadyRead()
 {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT(reply);
-    m_content.append( reply->readAll());
+    m_content.append(reply->readAll());
 }

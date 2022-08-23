@@ -1,14 +1,15 @@
 #include "stdafx.h"
+
 #include <private/qzipreader_p.h>
+
+#include "extensionmanager.h"
 #include "luavm.h"
 #include "scopedguard.h"
-#include "extensionmanager.h"
 
-ExtensionManager::ExtensionManager(QObject *parent)
-    : QObject(parent)
+ExtensionManager::ExtensionManager(QObject *parent) : QObject(parent)
 {
     QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir d(path);
+    QDir    d(path);
     if (!d.exists())
     {
         d.mkpath(path);
@@ -35,13 +36,13 @@ bool ExtensionManager::loadAllFromLocal()
     dir.setFilter(QDir::Dirs);
     auto dirs = dir.entryInfoList();
 
-    for (const auto & d : dirs)
+    for (const auto &d : dirs)
     {
         QString filePath = d.absoluteFilePath() % "/extension.derflaext";
         if (QFile::exists(filePath))
         {
             LuaVM vm;
-            
+
             if (!vm.doFile(filePath))
                 continue;
             ExtensionPtr e(new Extension);
@@ -67,13 +68,13 @@ bool ExtensionManager::loadAllFromLocal()
                 QStringList prefixes;
                 if (vm.getStringArray("prefix", prefixes))
                 {
-                    for (const auto & p : prefixes)
+                    for (const auto &p : prefixes)
                     {
                         prefixExtensionMap_.insert(p, e);
                     }
                     e->setPrefix(prefixes);
                 }
-                else 
+                else
                 {
                     e->setPrefix(QStringList() << "");
                     prefixExtensionMap_.insert("", e);
@@ -112,7 +113,7 @@ void ExtensionManager::query(const QString &input)
         e->stopQuery();
 
     QStringList inputs = input.split(QChar(' '));
-    QString prefix;
+    QString     prefix;
 
     if (inputs.length() > 1)
         prefix = inputs.at(0);

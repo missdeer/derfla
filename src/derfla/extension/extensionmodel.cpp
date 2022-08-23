@@ -1,18 +1,15 @@
 #include "stdafx.h"
+
+#include "extensionmodel.h"
 #include "derflaapp.h"
 #include "extensionmanager.h"
-#include "extensionmodel.h"
 
-ExtensionModel::ExtensionModel( QObject *parent)
-    : QAbstractTableModel(parent)
-{
-
-}
+ExtensionModel::ExtensionModel(QObject *parent) : QAbstractTableModel(parent) {}
 
 QModelIndex ExtensionModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
-            return QModelIndex();
+        return QModelIndex();
 
     return createIndex(row, column);
 }
@@ -39,7 +36,7 @@ QVariant ExtensionModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     auto e = derflaApp->extensionManager()->extensions()[index.row()];
-    switch(index.column())
+    switch (index.column())
     {
     case 0:
         return e->id();

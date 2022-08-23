@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     a.setApplicationVersion("1.0");
     a.setOrganizationDomain("ismisv.com");
     a.setOrganizationName("Derfla");
-    
+
     if (argc < 3)
     {
         QTextStream ts(stdout);
@@ -37,13 +37,13 @@ int main(int argc, char *argv[])
     }
 
     auto        uiLanguages = QLocale().uiLanguages();
-    auto &      locale      = uiLanguages[0];
+    auto       &locale      = uiLanguages[0];
     QTranslator translator;
     QTranslator qtTranslator;
 
     // main application and dynamic linked library locale
 #if defined(Q_OS_MAC)
-    QString rootDirPath = QApplication::applicationDirPath() + "/../../Resources/translations";
+    QString rootDirPath   = QApplication::applicationDirPath() + "/../../Resources/translations";
     QString localeDirPath = QApplication::applicationDirPath() + "/translations";
 #else
     QString rootDirPath = QApplication::applicationDirPath() + "/../../translations";
@@ -77,23 +77,26 @@ int main(int argc, char *argv[])
         }
     }
 
-    QString cmd(argv[1]);
+    QString     cmd(argv[1]);
     QStringList input;
 
 #if defined(Q_OS_WIN)
     int nArgs = 0;
 
     LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-    for (int i = 2; i < argc; i++) {
+    for (int i = 2; i < argc; i++)
+    {
         input.append(QString::fromWCharArray(szArglist[i]));
     }
     LocalFree(szArglist);
 #else
-    for (int i = 2; i < argc; i++) {
+    for (int i = 2; i < argc; i++)
+    {
         input.append(QString(argv[i]));
     }
 #endif
-    if (cmd == "dict" || cmd == "yd" || cmd == "youdao") {
+    if (cmd == "dict" || cmd == "yd" || cmd == "youdao")
+    {
         Youdao yd;
         yd.query(input.join(' '));
         return a.exec();

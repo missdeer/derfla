@@ -1,17 +1,19 @@
 #include "stdafx.h"
+
+#include <iostream>
+
+#include <QTextStream>
+
 #include "qtsingleapplication.h"
 #include "scopedguard.h"
-#include <QTextStream>
-#include <iostream>
 #if defined(Q_OS_WIN)
-#include "win_util.h"
+#    include "win_util.h"
 #endif
 #include "dbrw.h"
 #include "localfsitem.h"
 #include "localfsscanner.h"
 
 using namespace std;
-
 
 int main(int argc, char *argv[])
 {
@@ -33,7 +35,7 @@ int main(int argc, char *argv[])
 
 #if defined(Q_OS_WIN)
     CoInitialize(NULL);
-    ScopedGuard cu([](){CoUninitialize();});
+    ScopedGuard cu([]() { CoUninitialize(); });
 #endif
 
     DBRW dbrw;
@@ -48,12 +50,12 @@ int main(int argc, char *argv[])
         int nArgs = 0;
 
         LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-        QString res = dbrw.search(QString::fromWCharArray(szArglist[1]));
+        QString res       = dbrw.search(QString::fromWCharArray(szArglist[1]));
         LocalFree(szArglist);
 #else
         QString res = dbrw.search(QString(argv[1]));
 #endif
-        QTextStream ts( stdout );
+        QTextStream ts(stdout);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         ts.setCodec("UTF-8");
 #else
@@ -69,7 +71,7 @@ int main(int argc, char *argv[])
     LocalFSScanner scanner(dbrw);
     scanner.start();
 
-    QObject::connect(&a, &SharedTools::QtSingleApplication::messageReceived, [&](const QString &message, QObject *){
+    QObject::connect(&a, &SharedTools::QtSingleApplication::messageReceived, [&](const QString &message, QObject *) {
         if (message.compare("/exit", Qt::CaseInsensitive) == 0)
         {
             scanner.stop();

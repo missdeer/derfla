@@ -1,9 +1,7 @@
 #include "qrcodedialog.h"
 #include "ui_qrcodedialog.h"
 
-QrcodeDialog::QrcodeDialog(bool alipay, QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::QrcodeDialog)
+QrcodeDialog::QrcodeDialog(bool alipay, QWidget *parent) : QDialog(parent), ui(new Ui::QrcodeDialog)
 {
     ui->setupUi(this);
     if (alipay)
