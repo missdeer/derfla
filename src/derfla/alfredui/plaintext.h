@@ -12,7 +12,7 @@ signals:
     void enterItem(int index);
 
 public:
-    QListWidget *listWidget;
+    QListWidget *listWidget {nullptr};
     explicit PlainText(QWidget *parent = nullptr);
     void keyPressEvent(QKeyEvent *event) override;
 };

@@ -7,8 +7,6 @@
 
 #include "plaintext.h"
 
-using namespace std;
-
 PlainText::PlainText(QWidget *parent) : QPlainTextEdit(parent) {}
 
 void PlainText::keyPressEvent(QKeyEvent *event)
@@ -19,7 +17,8 @@ void PlainText::keyPressEvent(QKeyEvent *event)
 
     if (modifiers & Qt::AltModifier)
     {
-        if (key >= Qt::Key_1 && key <= Qt::Key_1 + std::min(this->listWidget->count(), 9) - 1)
+        const int maxNum = 9;
+        if (key >= Qt::Key_1 && key <= Qt::Key_1 + std::min(this->listWidget->count(), maxNum) - 1)
         {
             emit enterItem(key - Qt::Key_1);
         }
@@ -49,7 +48,9 @@ void PlainText::keyPressEvent(QKeyEvent *event)
         }
     }
     if (modifiers & Qt::MetaModifier)
+    {
         return;
+    }
     if (modifiers & Qt::ControlModifier)
     {
         if (key != Qt::Key_C && key != Qt::Key_V && key != Qt::Key_A && key != Qt::Key_X)
