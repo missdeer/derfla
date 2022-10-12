@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Xml Network LinguistTools REQUIRED)
 find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 
 # Instruct CMake to run moc automatically when needed.
@@ -51,7 +51,6 @@ set(Derfla_headers
         ${CMAKE_CURRENT_SOURCE_DIR}/extension/extension.h 
         ${CMAKE_CURRENT_SOURCE_DIR}/extension/extensionmanager.h 
         ${CMAKE_CURRENT_SOURCE_DIR}/extension/extensionmodel.h 
-        ${CMAKE_CURRENT_SOURCE_DIR}/updater/autoupdater.h 
         ${CMAKE_CURRENT_SOURCE_DIR}/commonui/preferencedialog.h 
         ${CMAKE_CURRENT_SOURCE_DIR}/commonui/booleaneditor.h 
         ${CMAKE_CURRENT_SOURCE_DIR}/derflaapp.h 
@@ -77,7 +76,6 @@ set(Derfla_src
         ${CMAKE_CURRENT_SOURCE_DIR}/extension/extension.cpp 
         ${CMAKE_CURRENT_SOURCE_DIR}/extension/extensionmanager.cpp 
         ${CMAKE_CURRENT_SOURCE_DIR}/extension/extensionmodel.cpp 
-        ${CMAKE_CURRENT_SOURCE_DIR}/updater/autoupdater.cpp 
         ${CMAKE_CURRENT_SOURCE_DIR}/commonui/preferencedialog.cpp 
         ${CMAKE_CURRENT_SOURCE_DIR}/commonui/booleaneditor.cpp 
         ${CMAKE_CURRENT_SOURCE_DIR}/derflaapp.cpp 
@@ -94,20 +92,16 @@ set(Derfla_ui
         ${CMAKE_CURRENT_SOURCE_DIR}/commonui/preferencedialog.ui
         )
         
-IF(WIN32)
-    list(APPEND Derfla_headers ${CMAKE_CURRENT_SOURCE_DIR}/updater/winsparkleautoupdater.h)
-    list(APPEND Derfla_src ${CMAKE_CURRENT_SOURCE_DIR}/updater/winsparkleautoupdater.cpp)
-ELSE(WIN32)
+IF(APPLE)
     list(APPEND Derfla_headers 
-        ${CMAKE_CURRENT_SOURCE_DIR}/updater/SparkleAutoUpdater.h 
         ${CMAKE_CURRENT_SOURCE_DIR}/macui/CocoaInitializer.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/macui/darkmode.h
         )
     list(APPEND Derfla_src 
-        ${CMAKE_CURRENT_SOURCE_DIR}/updater/SparkleAutoUpdater.mm 
         ${CMAKE_CURRENT_SOURCE_DIR}/macui/CocoaInitializer.mm
         ${CMAKE_CURRENT_SOURCE_DIR}/macui/darkmode.mm
         )
-ENDIF(WIN32)
+ENDIF(APPLE)
 
 qt_add_resources(qrcs ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.qrc)
 
@@ -144,18 +138,19 @@ target_link_libraries(Derfla PRIVATE
         qtsingleapplication
         qtlockedfile
         DerflaUtil
+        Qt${QT_VERSION_MAJOR}::Xml
         )
 
 IF(WIN32)
-    target_link_libraries(Derfla PRIVATE qglobalshortcut WinSparkle)
+    target_link_libraries(Derfla PRIVATE qglobalshortcut)
 ELSE(WIN32)
-    target_link_libraries(Derfla PRIVATE 
-        uglobalhotkey 
+    target_link_libraries(Derfla PRIVATE
+        UGlobalHotkey 
+        qtplist
         "-framework AppKit" 
         "-framework Carbon" 
         "-framework Foundation"
         "-framework ApplicationServices" 
-        "-framework Sparkle" 
         "-framework CoreServices"
         objc
         )

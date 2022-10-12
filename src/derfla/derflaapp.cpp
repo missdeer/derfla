@@ -2,7 +2,6 @@
 
 #include "derflaapp.h"
 #include "alfredwidget.h"
-#include "autoupdater.h"
 #include "commonwidget.h"
 #include "derflawidget.h"
 #include "extensionmanager.h"
@@ -24,7 +23,6 @@ DerflaApp::~DerflaApp()
     delete extensionManager_;
     delete derflaWidget_;
     delete alfredWidget_;
-    delete autoUpdater_;
 }
 
 void DerflaApp::createWidget()
@@ -73,23 +71,6 @@ void DerflaApp::showAlfredWidget()
 {
     alfredWidget_->show();
     centerToScreen(alfredWidget_);
-}
-
-void DerflaApp::autoUpdate()
-{
-    if (settings_.value("autoupdate", true).toBool())
-    {
-        if (!autoUpdater_)
-        {
-            autoUpdater_ = AutoUpdater::createAutoUpdate();
-        }
-        autoUpdater_->checkForUpdates();
-    }
-}
-
-void DerflaApp::checkForUpdates()
-{
-    autoUpdate();
 }
 
 void DerflaApp::queryByExtension(const QString &text)
@@ -177,11 +158,6 @@ void DerflaApp::onAbout()
 void DerflaApp::onPreference()
 {
     widget_->onPreference();
-}
-
-void DerflaApp::onCheckUpdates()
-{
-    checkForUpdates();
 }
 
 void DerflaApp::donateViaPaypal()
@@ -276,9 +252,6 @@ void DerflaApp::createCommonActions()
     stayOnTopAction_->setCheckable(true);
     connect(stayOnTopAction_, &QAction::triggered, this, &DerflaApp::onStayOnTop);
 
-    auto *checkUpdatesAction = new QAction(tr("Check Updates..."), this);
-    connect(checkUpdatesAction, &QAction::triggered, this, &DerflaApp::onCheckUpdates);
-
     auto *quitAction = new QAction(tr("E&xit"), this);
     quitAction->setShortcut(tr("Ctrl+Q"));
     connect(quitAction, &QAction::triggered, this, &DerflaApp::onQuit);
@@ -318,7 +291,6 @@ void DerflaApp::createCommonActions()
     trayiconMenu->addSeparator();
     trayiconMenu->addAction(loadSkinAction);
     trayiconMenu->addAction(stayOnTopAction_);
-    trayiconMenu->addAction(checkUpdatesAction);
     trayiconMenu->addAction(preferenceAction);
     trayiconMenu->addMenu(donateMenu);
     trayiconMenu->addSeparator();

@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Sql LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Xml Sql LinguistTools REQUIRED)
 find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 
 # Instruct CMake to run moc automatically when needed.
@@ -66,6 +66,8 @@ ENDIF()
 target_link_libraries(lfs PRIVATE
         qtsingleapplication
         qtlockedfile
+        qtplist
         DerflaUtil
         Qt${QT_VERSION_MAJOR}::Sql
+        Qt${QT_VERSION_MAJOR}::Xml
         )

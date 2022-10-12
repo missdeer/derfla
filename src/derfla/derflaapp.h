@@ -1,7 +1,6 @@
 #ifndef DERFLAAPP_H
 #define DERFLAAPP_H
 
-#include <QObject>
 #include <QSettings>
 #include <QSystemTrayIcon>
 
@@ -12,7 +11,6 @@ QT_FORWARD_DECLARE_CLASS(QAction)
 class ExtensionManager;
 class DerflaWidget;
 class AlfredWidget;
-class AutoUpdater;
 class CommonWidget;
 
 class DerflaApp : public QObject
@@ -34,8 +32,6 @@ public:
     void createAlfredWidget();
     void showAlfredWidget();
 
-    void autoUpdate();
-    void checkForUpdates();
     void executeAction(DerflaActionPtr da)
     {
         actionExecutor_(da);
@@ -82,7 +78,6 @@ public slots:
     void onSelectFolder();
     void onAbout();
     void onPreference();
-    void onCheckUpdates();
     void donateViaPaypal();
     void donateViaAlipay();
     void donateViaWeChatPay();
@@ -96,7 +91,6 @@ private:
     CommonWidget     *widget_ {nullptr};
     DerflaWidget     *derflaWidget_ {nullptr};
     AlfredWidget     *alfredWidget_ {nullptr};
-    AutoUpdater      *autoUpdater_ {nullptr};
     QAction          *stayOnTopAction_ {nullptr};
     QSettings         settings_;
     ActionExecutor    actionExecutor_;

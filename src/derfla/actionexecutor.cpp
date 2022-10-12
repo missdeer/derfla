@@ -55,7 +55,7 @@ bool ActionExecutor::runScript(const DerflaActionPtr &action)
 #if defined(Q_OS_WIN)
             exe = util::findProgram("/" % action->scriptExecutor() % ".exe");
 #else
-            exe = util::findProgram("/" % da->scriptExecutor());
+            exe = util::findProgram("/" % action->scriptExecutor());
 #endif
         }
         if (!QFile::exists(exe))
@@ -122,13 +122,13 @@ bool ActionExecutor::shellExecute(const DerflaActionPtr &action)
                     SW_SHOWNORMAL);
 #elif defined(Q_OS_MAC)
     QStringList args {
-        da->target(),
+        action->target(),
     };
-    if (!da->arguments().isEmpty())
-        args << "--args" << da->arguments().split(' ');
-    QProcess::startDetached("/usr/bin/open", args, da->workingDirectory());
+    if (!action->arguments().isEmpty())
+        args << "--args" << action->arguments().split(' ');
+    QProcess::startDetached("/usr/bin/open", args, action->workingDirectory());
 #else
-    QProcess::startDetached(da->target(), da->arguments().split(' '), da->workingDirectory());
+    QProcess::startDetached(action->target(), action->arguments().split(' '), action->workingDirectory());
 #endif
     return true;
 }
@@ -140,7 +140,7 @@ bool ActionExecutor::terminalCommand(const DerflaActionPtr &action)
     ::ShellExecuteW(nullptr, L"open", L"cmd.exe", args.toStdWString().c_str(), action->workingDirectory().toStdWString().c_str(), SW_SHOWNORMAL);
 
 #elif defined(Q_OS_MAC)
-    QString cmdline = QString("/usr/bin/osascript -e 'tell application \"Terminal\" to do script \"%1 %2\"'").arg(da->target()).arg(da->arguments());
+    QString cmdline = QString("/usr/bin/osascript -e 'tell application \"Terminal\" to do script \"%1 %2\"'").arg(action->target()).arg(action->arguments());
     system(cmdline.toStdString().c_str());
 #else
     // console application, running in a terminal
@@ -153,10 +153,10 @@ bool ActionExecutor::terminalCommand(const DerflaActionPtr &action)
             QStringList args {
                 "--noclose",
                 "-e",
-                da->target(),
+                action->target(),
             };
-            args << da->arguments();
-            QProcess::startDetached(path % "/konsole", args, da->workingDirectory());
+            args << action->arguments();
+            QProcess::startDetached(path % "/konsole", args, action->workingDirectory());
             return true;
         }
     }
@@ -167,10 +167,10 @@ bool ActionExecutor::terminalCommand(const DerflaActionPtr &action)
             QStringList args {
                 "-hold",
                 "-e",
-                da->target(),
+                action->target(),
             };
-            args << da->arguments();
-            QProcess::startDetached(path % "/xterm", args, da->workingDirectory());
+            args << action->arguments();
+            QProcess::startDetached(path % "/xterm", args, action->workingDirectory());
             return true;
         }
     }
@@ -190,7 +190,7 @@ bool ActionExecutor::revealFile(const DerflaActionPtr &action)
     ::ShellExecuteW(nullptr, L"open", L"explorer.exe", arg.toStdWString().c_str(), nullptr, SW_SHOWNORMAL);
 #elif defined(Q_OS_MAC)
     QStringList scriptArgs;
-    scriptArgs << QLatin1String("-e") << QString::fromLatin1("tell application \"Finder\" to reveal POSIX file \"%1\"").arg(da->target());
+    scriptArgs << QLatin1String("-e") << QString::fromLatin1("tell application \"Finder\" to reveal POSIX file \"%1\"").arg(action->target());
     QProcess::execute(QLatin1String("/usr/bin/osascript"), scriptArgs);
     scriptArgs.clear();
     scriptArgs << QLatin1String("-e") << QLatin1String("tell application \"Finder\" to activate");

@@ -103,7 +103,6 @@ int main(int argc, char *argv[])
     derflaApp = &app;
     derflaApp->createWidget();
     derflaApp->show();
-    derflaApp->autoUpdate();
 
     return a.exec();
 }

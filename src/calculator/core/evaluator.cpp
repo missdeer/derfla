@@ -2395,17 +2395,17 @@ static void replaceSuperscriptPowersWithCaretEquivalent(QString &expr)
 {
     static const QRegularExpression  s_superscriptPowersRE("(\\x{207B})?[\\x{2070}¹²³\\x{2074}-\\x{2079}]+");
     static const QHash<QChar, QChar> s_superscriptPowersHash {
-        {L'\u207B', '-'},
-        {L'\u2070', '0'},
-        {L'\u00B9', '1'},
-        {L'\u00B2', '2'},
-        {L'\u00B3', '3'},
-        {L'\u2074', '4'},
-        {L'\u2075', '5'},
-        {L'\u2076', '6'},
-        {L'\u2077', '7'},
-        {L'\u2078', '8'},
-        {L'\u2079', '9'},
+        std::pair<QChar, QChar>{L'\u207B', '-'},
+        std::pair<QChar, QChar>{L'\u2070', '0'},
+        std::pair<QChar, QChar>{L'\u00B9', '1'},
+        std::pair<QChar, QChar>{L'\u00B2', '2'},
+        std::pair<QChar, QChar>{L'\u00B3', '3'},
+        std::pair<QChar, QChar>{L'\u2074', '4'},
+        std::pair<QChar, QChar>{L'\u2075', '5'},
+        std::pair<QChar, QChar>{L'\u2076', '6'},
+        std::pair<QChar, QChar>{L'\u2077', '7'},
+        std::pair<QChar, QChar>{L'\u2078', '8'},
+        std::pair<QChar, QChar>{L'\u2079', '9'},
     };
 
     int offset = 0;

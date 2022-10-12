@@ -26,7 +26,7 @@
 #include "ui_alfredwidget.h"
 
 #if defined(Q_OS_MAC)
-bool isDarkMode();
+#include "darkmode.h"
 #endif
 
 static const int rowSize  = 51;

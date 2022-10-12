@@ -49,7 +49,12 @@ ENDIF()
 
 target_link_libraries(UGlobalHotkey
         Qt::Widgets
-        User32
         )
+
+IF(WIN32)
+        target_link_libraries(UGlobalHotkey
+                User32
+                )
+ENDIF(WIN32)
 
 target_include_directories(UGlobalHotkey INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
