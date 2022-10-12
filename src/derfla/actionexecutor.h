@@ -13,23 +13,18 @@ class ActionExecutor : public QObject
 public:
     explicit ActionExecutor(QObject *parent = nullptr);
 
-    bool operator()(const DerflaActionPtr &da);
+    bool operator()(const DerflaActionPtr &action);
 signals:
 
-public slots:
-    void errorOccurred();
-    void finished(int, QProcess::ExitStatus);
-
 private:
-    bool runScript(DerflaActionPtr da);
-    bool shellExecute(DerflaActionPtr da);
-    bool terminalCommand(DerflaActionPtr da);
-    bool openUrl(DerflaActionPtr da);
-    bool revealFile(DerflaActionPtr da);
-    bool browseInDerfla(DerflaActionPtr);
-    bool copyText(DerflaActionPtr da);
-
-    QMap<QString, std::function<bool(DerflaActionPtr)>> actionExecutorMap_;
+    static bool runScript(const DerflaActionPtr &action);
+    static bool runAsAdministrator(const DerflaActionPtr &action);
+    static bool shellExecute(const DerflaActionPtr &action);
+    static bool terminalCommand(const DerflaActionPtr &action);
+    static bool openUrl(const DerflaActionPtr &action);
+    static bool revealFile(const DerflaActionPtr &action);
+    static bool browseInDerfla(const DerflaActionPtr &action);
+    static bool copyText(const DerflaActionPtr &action);
 };
 
 #endif // ACTIONEXECUTOR_H

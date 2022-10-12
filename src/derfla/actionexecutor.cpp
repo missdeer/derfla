@@ -4,42 +4,33 @@
 #include "derflaapp.h"
 #include "util.h"
 
-ActionExecutor::ActionExecutor(QObject *parent) : QObject(parent)
-{
-    actionExecutorMap_ = {
-        {"script", std::bind(&ActionExecutor::runScript, this, std::placeholders::_1)},
-        {"shellExecute", std::bind(&ActionExecutor::shellExecute, this, std::placeholders::_1)},
-        {"terminalCommand", std::bind(&ActionExecutor::terminalCommand, this, std::placeholders::_1)},
-        {"openUrl", std::bind(&ActionExecutor::openUrl, this, std::placeholders::_1)},
-        {"revealFile", std::bind(&ActionExecutor::revealFile, this, std::placeholders::_1)},
-        {"browseInDerfla", std::bind(&ActionExecutor::browseInDerfla, this, std::placeholders::_1)},
-        {"copyText", std::bind(&ActionExecutor::copyText, this, std::placeholders::_1)},
-    };
-}
+ActionExecutor::ActionExecutor(QObject *parent) : QObject(parent) {}
 
-bool ActionExecutor::operator()(const DerflaActionPtr &da)
+bool ActionExecutor::operator()(const DerflaActionPtr &action)
 {
-    auto it = actionExecutorMap_.find(da->actionType());
-    if (actionExecutorMap_.end() == it)
+    static QMap<QString, std::function<bool(DerflaActionPtr)>> actionExecutorMap = {
+        {"script", [](const DerflaActionPtr &action) { return runScript(action); }},
+        {"runAsAdministrator", [](const DerflaActionPtr &action) { return runAsAdministrator(action); }},
+        {"shellExecute", [](const DerflaActionPtr &action) { return shellExecute(action); }},
+        {"terminalCommand", [](const DerflaActionPtr &action) { return terminalCommand(action); }},
+        {"openUrl", [](const DerflaActionPtr &action) { return openUrl(action); }},
+        {"revealFile", [](const DerflaActionPtr &action) { return revealFile(action); }},
+        {"browseInDerfla", [](const DerflaActionPtr &action) { return browseInDerfla(action); }},
+        {"copyText", [](const DerflaActionPtr &action) { return copyText(action); }},
+    };
+    auto iter = actionExecutorMap.find(action->actionType());
+    if (actionExecutorMap.end() == iter)
     {
         return false;
     }
 
-    auto f = it.value();
-    return f(da);
+    auto executor = iter.value();
+    return executor(action);
 }
 
-void ActionExecutor::errorOccurred() {}
-
-void ActionExecutor::finished(int /*unused*/, QProcess::ExitStatus /*unused*/)
+bool ActionExecutor::runScript(const DerflaActionPtr &action)
 {
-    auto *e = qobject_cast<QProcess *>(sender());
-    e->deleteLater();
-}
-
-bool ActionExecutor::runScript(DerflaActionPtr da)
-{
-    QMap<QString, QString> m = {
+    static QMap<QString, QString> runnerMap = {
         {"bash", "-c"},
         {"php", "-r"},
         {"ruby", "-e"},
@@ -53,16 +44,16 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
 #endif
     };
 
-    auto it = m.find(da->scriptExecutor());
-    if (m.end() != it)
+    auto iter = runnerMap.find(action->scriptExecutor());
+    if (runnerMap.end() != iter)
     {
-        auto       option   = m[da->scriptExecutor()];
+        auto       option   = runnerMap[action->scriptExecutor()];
         QSettings &settings = derflaApp->settings();
-        auto       exe      = settings.value(da->scriptExecutor()).toString();
+        auto       exe      = settings.value(action->scriptExecutor()).toString();
         if (!QFile::exists(exe))
         {
 #if defined(Q_OS_WIN)
-            exe = util::findProgram("/" % da->scriptExecutor() % ".exe");
+            exe = util::findProgram("/" % action->scriptExecutor() % ".exe");
 #else
             exe = util::findProgram("/" % da->scriptExecutor());
 #endif
@@ -71,39 +62,63 @@ bool ActionExecutor::runScript(DerflaActionPtr da)
         {
             return false;
         }
-        auto *e = new QProcess;
+        auto *process = new QProcess;
 
-        connect(e, &QProcess::errorOccurred, this, &ActionExecutor::errorOccurred);
-        connect(e, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &ActionExecutor::finished);
+        connect(process, &QProcess::errorOccurred, [] {});
+        connect(process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [process](int, QProcess::ExitStatus) {
+            process->deleteLater();
+        });
 
-        e->start(exe, QStringList() << option << da->target() << da->arguments().split(QChar(' ')));
+        process->start(exe, QStringList() << option << action->target() << action->arguments().split(QChar(' ')));
     }
 
 #if defined(Q_OS_WIN)
-    if (da->scriptExecutor() == "cscript" || da->scriptExecutor() == "wscript")
+    if (action->scriptExecutor() == "cscript" || action->scriptExecutor() == "wscript")
     {
         // extract resource file
         QString localPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) % "/derfla-temp.vbs";
-        QFile   f(localPath);
-        if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        QFile   file(localPath);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        {
             return false;
-        f.write(da->target().toLocal8Bit());
-        f.close();
-        ::ShellExecuteW(nullptr, L"open", localPath.toStdWString().c_str(), da->arguments().toStdWString().c_str(), nullptr, SW_SHOWNORMAL);
+        }
+        file.write(action->target().toLocal8Bit());
+        file.close();
+        ::ShellExecuteW(nullptr, L"open", localPath.toStdWString().c_str(), action->arguments().toStdWString().c_str(), nullptr, SW_SHOWNORMAL);
     }
 #endif
 
     return true;
 }
 
-bool ActionExecutor::shellExecute(DerflaActionPtr da)
+bool ActionExecutor::runAsAdministrator(const DerflaActionPtr &action)
+{
+#if defined(Q_OS_WIN)
+    SHELLEXECUTEINFO execInfo;
+    ZeroMemory(&execInfo, sizeof(execInfo));
+    execInfo.lpFile       = action->target().toStdWString().c_str();
+    execInfo.cbSize       = sizeof(execInfo);
+    execInfo.lpVerb       = L"runas";
+    execInfo.lpParameters = action->arguments().toStdWString().c_str();
+    execInfo.lpDirectory  = action->workingDirectory().toStdWString().c_str();
+    execInfo.fMask        = SEE_MASK_NOCLOSEPROCESS;
+    execInfo.nShow        = SW_SHOWNORMAL;
+    return !ShellExecuteEx(&execInfo);
+#elif defined(Q_OS_MAC)
+#else
+#endif
+
+    return true;
+}
+
+bool ActionExecutor::shellExecute(const DerflaActionPtr &action)
 {
 #if defined(Q_OS_WIN)
     ::ShellExecuteW(nullptr,
                     L"open",
-                    da->target().toStdWString().c_str(),
-                    da->arguments().toStdWString().c_str(),
-                    da->workingDirectory().toStdWString().c_str(),
+                    action->target().toStdWString().c_str(),
+                    action->arguments().toStdWString().c_str(),
+                    action->workingDirectory().toStdWString().c_str(),
                     SW_SHOWNORMAL);
 #elif defined(Q_OS_MAC)
     QStringList args {
@@ -118,11 +133,11 @@ bool ActionExecutor::shellExecute(DerflaActionPtr da)
     return true;
 }
 
-bool ActionExecutor::terminalCommand(DerflaActionPtr da)
+bool ActionExecutor::terminalCommand(const DerflaActionPtr &action)
 {
 #if defined(Q_OS_WIN)
-    QString args = QString("/K %1 %2").arg(da->target(), da->arguments());
-    ::ShellExecuteW(nullptr, L"open", L"cmd.exe", args.toStdWString().c_str(), da->workingDirectory().toStdWString().c_str(), SW_SHOWNORMAL);
+    QString args = QString("/K %1 %2").arg(action->target(), action->arguments());
+    ::ShellExecuteW(nullptr, L"open", L"cmd.exe", args.toStdWString().c_str(), action->workingDirectory().toStdWString().c_str(), SW_SHOWNORMAL);
 
 #elif defined(Q_OS_MAC)
     QString cmdline = QString("/usr/bin/osascript -e 'tell application \"Terminal\" to do script \"%1 %2\"'").arg(da->target()).arg(da->arguments());
@@ -163,15 +178,15 @@ bool ActionExecutor::terminalCommand(DerflaActionPtr da)
     return true;
 }
 
-bool ActionExecutor::openUrl(DerflaActionPtr da)
+bool ActionExecutor::openUrl(const DerflaActionPtr &action)
 {
-    return QDesktopServices::openUrl(QUrl(da->target()));
+    return QDesktopServices::openUrl(QUrl(action->target()));
 }
 
-bool ActionExecutor::revealFile(DerflaActionPtr da)
+bool ActionExecutor::revealFile(const DerflaActionPtr &action)
 {
 #if defined(Q_OS_WIN)
-    QString arg = QString("/select,\"%1\"").arg(QDir::toNativeSeparators(da->target()));
+    QString arg = QString("/select,\"%1\"").arg(QDir::toNativeSeparators(action->target()));
     ::ShellExecuteW(nullptr, L"open", L"explorer.exe", arg.toStdWString().c_str(), nullptr, SW_SHOWNORMAL);
 #elif defined(Q_OS_MAC)
     QStringList scriptArgs;
@@ -185,14 +200,14 @@ bool ActionExecutor::revealFile(DerflaActionPtr da)
     return true;
 }
 
-bool ActionExecutor::browseInDerfla(DerflaActionPtr)
+bool ActionExecutor::browseInDerfla(const DerflaActionPtr &)
 {
     return true;
 }
 
-bool ActionExecutor::copyText(DerflaActionPtr da)
+bool ActionExecutor::copyText(const DerflaActionPtr &action)
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
-    clipboard->setText(da->target());
+    clipboard->setText(action->target());
     return true;
 }
