@@ -1,0 +1,168 @@
+cmake_minimum_required(VERSION 3.21)
+project(Derfla VERSION 1.0.0)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network LinguistTools REQUIRED)
+find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON) # if you have any .ui files
+set(CMAKE_AUTORCC OFF) # if you have any .qrc files
+
+if (MSVC)
+    add_compile_options(/utf-8)
+endif()
+
+add_compile_definitions(UTIL_LIBRARY STATIC_LINKED)
+IF(APPLE)
+    add_compile_definitions(LUA_USE_MACOSX)
+ENDIF(APPLE)
+
+include_directories(${Qt${QT_VERSION_MAJOR}Gui_PRIVATE_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui
+        ${CMAKE_CURRENT_SOURCE_DIR}/commonui
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui
+        ${CMAKE_CURRENT_SOURCE_DIR}/extension
+        ${CMAKE_CURRENT_SOURCE_DIR}/macui
+        ${CMAKE_CURRENT_SOURCE_DIR}/updater
+        )
+
+set(Derfla_headers
+        ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/alfredtheme.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/doublelistitem.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/geticon.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/listitem.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/alfredlistwidget.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/plaintext.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/alfredwidget.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/derflawidget.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/charlineedit.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/candidatelist.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/candidatelistdelegate.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/candidatelistwidget.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/skinmanager.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/extension/extension.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/extension/extensionmanager.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/extension/extensionmodel.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/updater/autoupdater.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/commonui/preferencedialog.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/commonui/booleaneditor.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaapp.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/actionexecutor.h  
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/thememanager.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/commonui/commonwidget.h
+        )
+
+set(Derfla_src
+        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/alfredtheme.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/doublelistitem.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/listitem.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/alfredlistwidget.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/plaintext.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/alfredwidget.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/derflawidget.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/charlineedit.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/candidatelist.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/candidatelistdelegate.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/candidatelistwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/skinmanager.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/extension/extension.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/extension/extensionmanager.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/extension/extensionmodel.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/updater/autoupdater.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/commonui/preferencedialog.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/commonui/booleaneditor.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaapp.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/actionexecutor.cpp  
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/thememanager.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/commonui/commonwidget.cpp
+        )
+
+set(Derfla_ui
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/doublelistitem.ui 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/listitem.ui 
+        ${CMAKE_CURRENT_SOURCE_DIR}/alfredui/alfredwidget.ui 
+        ${CMAKE_CURRENT_SOURCE_DIR}/derflaui/candidatelist.ui 
+        ${CMAKE_CURRENT_SOURCE_DIR}/commonui/preferencedialog.ui
+        )
+        
+IF(WIN32)
+    list(APPEND Derfla_headers ${CMAKE_CURRENT_SOURCE_DIR}/updater/winsparkleautoupdater.h)
+    list(APPEND Derfla_src ${CMAKE_CURRENT_SOURCE_DIR}/updater/winsparkleautoupdater.cpp)
+ELSE(WIN32)
+    list(APPEND Derfla_headers 
+        ${CMAKE_CURRENT_SOURCE_DIR}/updater/SparkleAutoUpdater.h 
+        ${CMAKE_CURRENT_SOURCE_DIR}/macui/CocoaInitializer.h
+        )
+    list(APPEND Derfla_src 
+        ${CMAKE_CURRENT_SOURCE_DIR}/updater/SparkleAutoUpdater.mm 
+        ${CMAKE_CURRENT_SOURCE_DIR}/macui/CocoaInitializer.mm
+        ${CMAKE_CURRENT_SOURCE_DIR}/macui/darkmode.mm
+        )
+ENDIF(WIN32)
+
+qt_add_resources(qrcs ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.qrc)
+
+IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+        qt_create_translation(QM_FILES 
+            ${CMAKE_SOURCE_DIR} 
+            ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_zh_CN.ts
+            ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_en_US.ts
+            OPTIONS -no-obsolete
+        )
+        qt_add_executable(Derfla 
+                ${Derfla_headers}
+                ${Derfla_src}
+                ${Derfla_ui}
+                ${qrcs}
+                ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.rc
+                )
+ELSE()
+        qt_create_translation(QM_FILES 
+            ${CMAKE_SOURCE_DIR} 
+            ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_zh_CN.ts
+            ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_en_US.ts
+        )
+        add_executable(Derfla 
+                ${Derfla_headers}
+                ${Derfla_src}
+                ${Derfla_ui}
+                ${qrcs}
+                ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.rc
+                )
+ENDIF()
+
+target_link_libraries(Derfla PRIVATE
+        qtsingleapplication
+        qtlockedfile
+        DerflaUtil
+        )
+
+IF(WIN32)
+    target_link_libraries(Derfla PRIVATE qglobalshortcut WinSparkle)
+ELSE(WIN32)
+    target_link_libraries(Derfla PRIVATE 
+        uglobalhotkey 
+        "-framework AppKit" 
+        "-framework Carbon" 
+        "-framework Foundation"
+        "-framework ApplicationServices" 
+        "-framework Sparkle" 
+        "-framework CoreServices"
+        objc
+        )
+ENDIF(WIN32)
+
+set_target_properties(Derfla PROPERTIES
+        WIN32_EXECUTABLE ON
+        MACOSX_BUNDLE ON
+        )
+    

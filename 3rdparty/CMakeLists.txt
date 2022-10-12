@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.15)
+project(3rdparty VERSION 1.0.0)
+
+add_subdirectory(lua)
+add_subdirectory(qtlockedfile)
+add_subdirectory(qtplist)
+add_subdirectory(qtsingleapplication)
+add_subdirectory(sqlite3)
+
+IF(WIN32)
+    add_subdirectory(everything)
+    add_subdirectory(qglobalshortcut)
+    add_subdirectory(WinSparkle)
+ELSE(WIN32)
+    add_subdirectory(UGlobalHotkey)
+ENDIF(WIN32)
