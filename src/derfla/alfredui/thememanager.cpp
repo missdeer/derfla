@@ -9,28 +9,38 @@ ThemeManager::ThemeManager() : m_lua(new LuaVM) {}
 AlfredTheme *ThemeManager::applyTheme(const QString &theme)
 {
     if (!QFile::exists(theme))
+    {
         return nullptr;
+    }
 
     Q_ASSERT(m_lua);
     if (theme.startsWith(":/"))
     {
-        QFile f(theme);
-        if (!f.open(QIODevice::ReadOnly))
+        QFile file(theme);
+        if (!file.open(QIODevice::ReadOnly))
+        {
             return nullptr;
-        QByteArray ba = f.readAll();
-        f.close();
+        }
+        QByteArray script = file.readAll();
+        file.close();
 
-        if (!m_lua->doScript(ba))
+        if (!m_lua->doScript(script))
+        {
             return nullptr;
+        }
     }
     else
     {
         if (!m_lua->doFile(theme))
+        {
             return nullptr;
+        }
     }
 
     if (!m_theme)
+    {
         m_theme = new AlfredTheme;
+    }
     m_theme->setBeginHeight(m_lua->getInt("beginHeight"));
     m_theme->setListWidgetY(m_lua->getInt("listWidgetY"));
     m_theme->setDimensions(QSize(m_lua->getInt("dimensions", "width"), m_lua->getInt("dimensions", "height")));
@@ -48,8 +58,6 @@ AlfredTheme *ThemeManager::applyTheme(const QString &theme)
 
 ThemeManager::~ThemeManager()
 {
-    if (m_theme)
-        delete m_theme;
-    if (m_lua)
-        delete m_lua;
+    delete m_theme;
+    delete m_lua;
 }
