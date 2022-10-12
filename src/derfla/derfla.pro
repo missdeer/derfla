@@ -3,7 +3,7 @@ equals(QT_MAJOR_VERSION, 6): QT+= core5compat
 
 TARGET = Derfla
 TEMPLATE = app
-CONFIG += c++17 precompile_header
+CONFIG += c++latest precompile_header
 PRECOMPILED_HEADER = stdafx.h
 DESTDIR = $$PWD/../../bin
 

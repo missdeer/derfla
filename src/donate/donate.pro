@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = donate
 TEMPLATE = app
-CONFIG += c++17
+CONFIG += c++latest
 CONFIG -= app_bundle
 
 macx: {

@@ -8,7 +8,7 @@ QT       += widgets
 equals(QT_MAJOR_VERSION, 6): QT+= core5compat
 TARGET = DerflaUtil
 TEMPLATE = lib
-CONFIG += c++17 precompile_header
+CONFIG += c++latest precompile_header
 PRECOMPILED_HEADER = stdafx.h
 
 macx: {
@@ -24,7 +24,7 @@ macx: {
     }
 }
 
-win32-*msvc: QMAKE_CXXFLAGS += "/std:c++17"
+win32-*msvc: QMAKE_CXXFLAGS += "/std:c++latest"
 win32-clang-msvc: CONFIG -= precompile_header
 DEFINES += UTIL_LIBRARY STATIC_LINKED
 
