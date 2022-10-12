@@ -3,11 +3,12 @@
 
 #if defined(_WIN32)
 #    define NOMINMAX
+#    include <Windows.h>
+
 #    include <Everything.h>
 #    include <PSapi.h>
 #    include <Shellapi.h>
 #    include <Shlobj.h>
-#    include <Windows.h>
 #    include <Winnt.h>
 #    include <everything_ipc.h>
 #    include <shlguid.h>

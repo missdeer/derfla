@@ -3,8 +3,9 @@
 
 #if defined(_WIN32)
 #    define NOMINMAX
-#    include <PSapi.h>
 #    include <Windows.h>
+
+#    include <PSapi.h>
 #    include <strsafe.h>
 #elif defined(Q_OS_MAC)
 #else
