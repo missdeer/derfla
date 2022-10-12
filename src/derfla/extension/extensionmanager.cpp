@@ -4,15 +4,14 @@
 
 #include "extensionmanager.h"
 #include "luavm.h"
-#include "scopedguard.h"
 
 ExtensionManager::ExtensionManager(QObject *parent) : QObject(parent)
 {
     QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir    d(path);
-    if (!d.exists())
+    QDir    dir(path);
+    if (!dir.exists())
     {
-        d.mkpath(path);
+        dir.mkpath(path);
     }
 }
 
@@ -31,66 +30,72 @@ bool ExtensionManager::loadAllFromLocal()
 #endif
     QDir dir(extensionPath);
     if (!dir.exists())
+    {
         return false;
+    }
 
     dir.setFilter(QDir::Dirs);
     auto dirs = dir.entryInfoList();
 
-    for (const auto &d : dirs)
+    for (const auto &dir : dirs)
     {
-        QString filePath = d.absoluteFilePath() % "/extension.derflaext";
+        QString filePath = dir.absoluteFilePath() % "/extension.derflaext";
         if (QFile::exists(filePath))
         {
-            LuaVM vm;
+            LuaVM luaVM;
 
-            if (!vm.doFile(filePath))
+            if (!luaVM.doFile(filePath))
+            {
                 continue;
-            ExtensionPtr e(new Extension);
-            e->setId(vm.getString("id"));
-            e->setAuthor(vm.getString("author"));
-            e->setName(vm.getString("name"));
-            QString executable = vm.getString("executable");
+            }
+            ExtensionPtr extension(new Extension);
+            extension->setId(luaVM.getString("id"));
+            extension->setAuthor(luaVM.getString("author"));
+            extension->setName(luaVM.getString("name"));
+            QString executable = luaVM.getString("executable");
             if (!executable.isEmpty())
             {
-                e->setExecutable(d.absoluteFilePath() % "/" % executable);
-                if (!QFile::exists(e->executable()))
+                extension->setExecutable(dir.absoluteFilePath() % "/" % executable);
+                if (!QFile::exists(extension->executable()))
+                {
                     continue;
+                }
             }
-            e->setDescription(vm.getString("description"));
-            e->setExecutor(vm.getString("executor"));
-            if (!vm.getString("prefix").isEmpty())
+            extension->setDescription(luaVM.getString("description"));
+            extension->setExecutor(luaVM.getString("executor"));
+            if (!luaVM.getString("prefix").isEmpty())
             {
-                e->setPrefix(QStringList() << vm.getString("prefix"));
-                prefixExtensionMap_.insert(vm.getString("prefix"), e);
+                extension->setPrefix(QStringList() << luaVM.getString("prefix"));
+                prefixExtensionMap_.insert(luaVM.getString("prefix"), extension);
             }
             else
             {
                 QStringList prefixes;
-                if (vm.getStringArray("prefix", prefixes))
+                if (luaVM.getStringArray("prefix", prefixes))
                 {
-                    for (const auto &p : prefixes)
+                    for (const auto &prefix : prefixes)
                     {
-                        prefixExtensionMap_.insert(p, e);
+                        prefixExtensionMap_.insert(prefix, extension);
                     }
-                    e->setPrefix(prefixes);
+                    extension->setPrefix(prefixes);
                 }
                 else
                 {
-                    e->setPrefix(QStringList() << "");
-                    prefixExtensionMap_.insert("", e);
+                    extension->setPrefix(QStringList() << "");
+                    prefixExtensionMap_.insert("", extension);
                 }
             }
-            e->setWaitIconPath(d.absoluteFilePath() % "/" % vm.getString("waitIconPath"));
-            e->setWaitIconData(vm.getString("waitIconData"));
-            e->setWaitTitle(vm.getString("waitTitle"));
-            e->setWaitDescription(vm.getString("waitDescription"));
-            if (vm.getBool("daemon"))
+            extension->setWaitIconPath(dir.absoluteFilePath() % "/" % luaVM.getString("waitIconPath"));
+            extension->setWaitIconData(luaVM.getString("waitIconData"));
+            extension->setWaitTitle(luaVM.getString("waitTitle"));
+            extension->setWaitDescription(luaVM.getString("waitDescription"));
+            if (luaVM.getBool("daemon"))
             {
-                e->setDaemon(true);
-                e->runDaemon();
+                extension->setDaemon(true);
+                extension->runDaemon();
             }
-            extensions_.append(e);
-            connect(e.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
+            extensions_.append(extension);
+            connect(extension.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
         }
     }
 
@@ -109,20 +114,38 @@ const QList<ExtensionPtr> &ExtensionManager::extensions() const
 
 void ExtensionManager::query(const QString &input)
 {
-    for (auto e : extensions_)
-        e->stopQuery();
+    for (const auto &extension : extensions_)
+    {
+        extension->stopQuery();
+    }
 
     QStringList inputs = input.split(QChar(' '));
     QString     prefix;
 
     if (inputs.length() > 1)
+    {
         prefix = inputs.at(0);
+    }
 
     QList<ExtensionPtr> extensions = prefixExtensionMap_.values(prefix);
 
-    for (auto e : extensions)
-        e->query(input);
-
-    if (extensions.isEmpty())
-        emit emptyAction();
+    if (!extensions.isEmpty())
+    {
+        for (const auto &extension : extensions)
+        {
+            extension->query(input);
+        }
+    }
+    else
+    {
+        bool handled = false;
+        for (const auto &extension : extensions_)
+        {
+            handled |= extension->query(input);
+        }
+        if (!handled)
+        {
+            emit emptyAction();
+        }
+    }
 }

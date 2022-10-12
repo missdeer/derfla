@@ -52,23 +52,23 @@ void Extension::stopDaemon()
 bool Extension::query(const QString &input)
 {
     QStringList arguments;
-    QProcess   *p = new QProcess;
-    connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
+    auto       *process = new QProcess;
+    connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
     if (executor_.isEmpty())
     {
-        p->setProgram(executable_);
+        process->setProgram(executable_);
     }
     else
     {
-        p->setProgram(findProgram());
+        process->setProgram(findProgram());
         arguments << executable_;
     }
-    p->setProcessEnvironment(getProcessEnvironment());
-    p->setWorkingDirectory(QFileInfo(executable_).absolutePath());
+    process->setProcessEnvironment(getProcessEnvironment());
+    process->setWorkingDirectory(QFileInfo(executable_).absolutePath());
     arguments << input.split(QChar(' '));
-    p->setArguments(arguments);
-    p->start();
-    subProcess_ = p;
+    process->setArguments(arguments);
+    process->start();
+    subProcess_ = process;
     return true;
 }
 
@@ -189,7 +189,7 @@ void Extension::setWaitIconData(const QString &waitIconData)
 
 void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
-    QProcess *p = qobject_cast<QProcess *>(sender());
+    auto *p = qobject_cast<QProcess *>(sender());
 
     p->deleteLater();
 
@@ -212,37 +212,57 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
     QJsonParseError error;
     QJsonDocument   doc = QJsonDocument::fromJson(output, &error);
     qDebug() << error.errorString();
-    if (doc.isArray())
+    if (error.error == QJsonParseError::NoError && doc.isArray())
     {
         QJsonArray array = doc.array();
-        for (auto a : array)
+        for (auto arrEle : array)
         {
-            if (!a.isObject())
-                continue;
-            QJsonObject     o = a.toObject();
-            DerflaActionPtr action(new DerflaAction);
-            if (o["title"].isString())
-                action->setTitle(o["title"].toString());
-            if (o["description"].isString())
-                action->setDescription(o["description"].toString());
-            if (o["target"].isString())
-                action->setTarget(o["target"].toString());
-            if (o["arguments"].isString())
-                action->setArguments(o["arguments"].toString());
-            if (o["workingDir"].isString())
-                action->setWorkingDirectory(o["workingDir"].toString());
-            if (o["actionType"].isString())
-                action->setActionType(o["actionType"].toString());
-            if (o["scriptExecutor"].isString())
-                action->setScriptExecutor(o["scriptExecutor"].toString());
-            if (o["iconPath"].isString())
-                action->setIcon(QIcon(o["iconPath"].toString()));
-            if (o["iconData"].isString())
+            if (!arrEle.isObject())
             {
-                QByteArray c = QByteArray::fromBase64(o["iconData"].toString().toUtf8());
+                continue;
+            }
+            QJsonObject     eleObj = arrEle.toObject();
+            DerflaActionPtr action(new DerflaAction);
+            if (eleObj["title"].isString())
+            {
+                action->setTitle(eleObj["title"].toString());
+            }
+            if (eleObj["description"].isString())
+            {
+                action->setDescription(eleObj["description"].toString());
+            }
+            if (eleObj["target"].isString())
+            {
+                action->setTarget(eleObj["target"].toString());
+            }
+            if (eleObj["arguments"].isString())
+            {
+                action->setArguments(eleObj["arguments"].toString());
+            }
+            if (eleObj["workingDir"].isString())
+            {
+                action->setWorkingDirectory(eleObj["workingDir"].toString());
+            }
+            if (eleObj["actionType"].isString())
+            {
+                action->setActionType(eleObj["actionType"].toString());
+            }
+            if (eleObj["scriptExecutor"].isString())
+            {
+                action->setScriptExecutor(eleObj["scriptExecutor"].toString());
+            }
+            if (eleObj["iconPath"].isString())
+            {
+                action->setIcon(QIcon(eleObj["iconPath"].toString()));
+            }
+            if (eleObj["iconData"].isString())
+            {
+                QByteArray iconData = QByteArray::fromBase64(eleObj["iconData"].toString().toUtf8());
                 QPixmap    pixmap;
-                if (pixmap.loadFromData(c))
+                if (pixmap.loadFromData(iconData))
+                {
                     action->setIcon(QIcon(pixmap));
+                }
             }
             derflaActions_.append(action);
         }
@@ -276,9 +296,11 @@ QString Extension::findProgram()
     QStringList envPaths;
     QString     path        = qgetenv("PATH");
     QStringList environment = QProcess::systemEnvironment();
-    auto        it          = std::find_if(environment.begin(), environment.end(), [&](const QString &env) { return env.startsWith("PATH="); });
-    if (environment.end() != it)
-        path = it->mid(5);
+    auto        iter        = std::find_if(environment.begin(), environment.end(), [&](const QString &env) { return env.startsWith("PATH="); });
+    if (environment.end() != iter)
+    {
+        path = iter->mid(5);
+    }
 #if defined(Q_OS_WIN)
     QString exe = executor_ % ".exe";
     envPaths << path.split(QChar(';'));
@@ -287,13 +309,13 @@ QString Extension::findProgram()
     envPaths << path.split(QChar(':'));
 #endif
 
-    it = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString &p) { return QFile::exists(p % exe); });
-    if (envPaths.end() == it)
+    iter = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString &p) { return QFile::exists(p % exe); });
+    if (envPaths.end() == iter)
     {
         qDebug() << "can't find program:" << exe;
-        return "";
+        return {};
     }
-    return *it % exe;
+    return *iter % exe;
 }
 
 QProcessEnvironment Extension::getProcessEnvironment()

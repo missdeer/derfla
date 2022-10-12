@@ -9,7 +9,9 @@ ExtensionModel::ExtensionModel(QObject *parent) : QAbstractTableModel(parent) {}
 QModelIndex ExtensionModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
-        return QModelIndex();
+    {
+        return {};
+    }
 
     return createIndex(row, column);
 }
@@ -27,40 +29,48 @@ int ExtensionModel::columnCount(const QModelIndex &) const
 QVariant ExtensionModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-        return QVariant();
+    {
+        return {};
+    }
 
     if (role != Qt::DisplayRole)
-        return QVariant();
+    {
+        return {};
+    }
 
     if (index.row() < 0 || index.row() >= derflaApp->extensionManager()->extensions().size())
-        return QVariant();
+    {
+        return {};
+    }
 
-    auto e = derflaApp->extensionManager()->extensions()[index.row()];
+    auto extension = derflaApp->extensionManager()->extensions()[index.row()];
     switch (index.column())
     {
     case 0:
-        return e->id();
+        return extension->id();
     case 1:
-        return e->name();
+        return extension->name();
     case 2:
-        return e->author();
+        return extension->author();
     case 3:
-        return e->description();
+        return extension->description();
     case 4:
-        return e->daemon();
+        return extension->daemon();
     case 5:
-        return QFileInfo(e->executable()).fileName();
+        return QFileInfo(extension->executable()).fileName();
     case 6:
-        return QFileInfo(e->executor()).fileName();
+        return QFileInfo(extension->executor()).fileName();
     }
 
-    return QVariant();
+    return {};
 }
 
 Qt::ItemFlags ExtensionModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
+    {
         return Qt::NoItemFlags;
+    }
 
     return QAbstractItemModel::flags(index);
 }
@@ -69,7 +79,7 @@ QVariant ExtensionModel::headerData(int section, Qt::Orientation orientation, in
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
     {
-        QMap<int, QString> m = {
+        static QMap<int, QString> headerMap = {
             {0, tr("Id")},
             {1, tr("Name")},
             {2, tr("Author")},
@@ -78,10 +88,12 @@ QVariant ExtensionModel::headerData(int section, Qt::Orientation orientation, in
             {5, tr("Executable")},
             {6, tr("Executor")},
         };
-        auto it = m.find(section);
-        if (it != m.end())
-            return QVariant(it.value());
+        auto iter = headerMap.find(section);
+        if (iter != headerMap.end())
+        {
+            return {iter.value()};
+        }
     }
 
-    return QVariant();
+    return {};
 }
