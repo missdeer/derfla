@@ -1,16 +1,34 @@
-#include "stdafx.h"
+#if defined(_WIN32)
+#    define NOMINMAX
+#    include <Windows.h>
+
+#    include <Shellapi.h>
+#    include <Shlobj.h>
+#    include <Winnt.h>
+#    include <shlguid.h>
+#    include <shobjidl.h>
+#    include <strsafe.h>
+#endif
 
 #include <QApplication>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QMessageBox>
+#include <QStandardPaths>
+#include <QStringBuilder>
 
+#include "Everything.h"
+#include "everything_ipc.h"
 #include "everythingwrapper.h"
+
 
 HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize)
 {
-    HRESULT hres;
-    IShellLink* psl;
-    WCHAR szGotPath[MAX_PATH];
-    WCHAR szDescription[MAX_PATH];
+    HRESULT         hres;
+    IShellLink     *psl;
+    WCHAR           szGotPath[MAX_PATH];
+    WCHAR           szDescription[MAX_PATH];
     WIN32_FIND_DATA wfd;
 
     *lpszPath = 0; // Assume failure
@@ -18,13 +36,13 @@ HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBuff
     CoInitialize(NULL);
     // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
     // has already been called.
-    hres = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID*)&psl);
+    hres = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
     if (SUCCEEDED(hres))
     {
-        IPersistFile* ppf;
+        IPersistFile *ppf;
 
         // Get a pointer to the IPersistFile interface.
-        hres = psl->QueryInterface(IID_IPersistFile, (void**)&ppf);
+        hres = psl->QueryInterface(IID_IPersistFile, (void **)&ppf);
 
         if (SUCCEEDED(hres))
         {
@@ -46,7 +64,7 @@ HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBuff
                 if (SUCCEEDED(hres))
                 {
                     // Get the path to the link target.
-                    hres = psl->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_RAWPATH);
+                    hres = psl->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA *)&wfd, SLGP_RAWPATH);
 
                     if (SUCCEEDED(hres))
                     {
@@ -81,11 +99,11 @@ HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBuff
 
 bool isEverythingRunning()
 {
-    HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS,nullptr);
+    HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS, nullptr);
     return everything_hwnd != nullptr;
 }
 
-void launchEverything(const QString& everythingFilePath)
+void launchEverything(const QString &everythingFilePath)
 {
     if (QFile::exists(everythingFilePath))
     {
@@ -96,24 +114,24 @@ void launchEverything(const QString& everythingFilePath)
 
 QString GetEverythingPath()
 {
-    HWND hWnd = FindWindow(EVERYTHING_IPC_WNDCLASS,nullptr);
+    HWND hWnd = FindWindow(EVERYTHING_IPC_WNDCLASS, nullptr);
     if (hWnd)
     {
-        int ret = (int)SendMessage(hWnd,EVERYTHING_WM_IPC,EVERYTHING_IPC_IS_DESKTOP_SHORTCUT,0);
+        int ret = (int)SendMessage(hWnd, EVERYTHING_WM_IPC, EVERYTHING_IPC_IS_DESKTOP_SHORTCUT, 0);
         if (!ret)
         {
             // create one
-            SendMessage(hWnd,EVERYTHING_WM_IPC,EVERYTHING_IPC_CREATE_DESKTOP_SHORTCUT,0);
+            SendMessage(hWnd, EVERYTHING_WM_IPC, EVERYTHING_IPC_CREATE_DESKTOP_SHORTCUT, 0);
         }
 
         QString path = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) % "/Search Everything.lnk");
 
-        WCHAR szTarget[MAX_PATH] = {0};
-        HRESULT hr = ResolveIt(hWnd, path.toStdString().c_str(), szTarget, sizeof(szTarget)/sizeof(szTarget[0]));
+        WCHAR   szTarget[MAX_PATH] = {0};
+        HRESULT hr                 = ResolveIt(hWnd, path.toStdString().c_str(), szTarget, sizeof(szTarget) / sizeof(szTarget[0]));
         if (!ret)
         {
             // remove the one created right now
-            SendMessage(hWnd,EVERYTHING_WM_IPC,EVERYTHING_IPC_DELETE_DESKTOP_SHORTCUT,0);
+            SendMessage(hWnd, EVERYTHING_WM_IPC, EVERYTHING_IPC_DELETE_DESKTOP_SHORTCUT, 0);
         }
         if (hr == S_OK)
         {
@@ -127,7 +145,7 @@ QString GetEverythingPath()
 
 bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QStringList &results, std::function<bool(bool)> checker, const int count)
 {
-    HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS,nullptr);
+    HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS, nullptr);
     if (!everything_hwnd)
     {
         if (QMessageBox::question(nullptr,
@@ -152,14 +170,14 @@ bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QString
     Everything_SetSearch(pattern.toStdWString().c_str());
     Everything_Query(TRUE);
 
-    for(DWORD i=0;i<Everything_GetNumResults() && results.size() < count;i++)
+    for (DWORD i = 0; i < Everything_GetNumResults() && results.size() < count; i++)
     {
         WCHAR path[MAX_PATH] = {0};
         Everything_GetResultFullPathName(i, path, MAX_PATH);
-		QString f(QString::fromStdWString(path));
-		BOOL isDir = Everything_IsFolderResult(i);
-		if (checker(isDir))
-			results.append(f);
+        QString f(QString::fromStdWString(path));
+        BOOL    isDir = Everything_IsFolderResult(i);
+        if (checker(isDir))
+            results.append(f);
     }
     Everything_Reset();
 
