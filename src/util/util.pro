@@ -24,7 +24,6 @@ macx: {
     }
 }
 
-win32-*msvc: QMAKE_CXXFLAGS += "/std:c++latest"
 win32-clang-msvc: CONFIG -= precompile_header
 DEFINES += UTIL_LIBRARY STATIC_LINKED
 
@@ -33,7 +32,6 @@ else: !macx: DEFINES += LUA_USE_LINUX
 else: DEFINES += LUA_USE_MACOSX
 
 include($$PWD/../../3rdparty/lua/src/lua.pri)
-include($$PWD/../../3rdparty/Boost.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings

@@ -19,7 +19,6 @@ macx: {
 
 win32-clang-msvc: CONFIG -= precompile_header
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
-include($$PWD/../../3rdparty/Boost.pri)
 
 include($$PWD/../util/util.pri)
 # The following define makes your compiler emit warnings if you use
