@@ -71,10 +71,12 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE OFF
         )
     
-file(GLOB QMs ${CMAKE_CURRENT_SOURCE_DIR}/translations/*.qm)
-foreach( qm ${QMs})
+
+file(GLOB QMs ${CMAKE_CURRENT_SOURCE_DIR}/translations/*.ts)
+foreach( ts ${QMs})
+        string(REGEX REPLACE "[.]ts$" ".qm" qm ${ts})
         add_custom_command(
                 TARGET ${PROJECT_NAME}  POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/
                 COMMAND ${CMAKE_COMMAND} -E copy ${qm} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/)
-endforeach( qm )
+endforeach( ts )
