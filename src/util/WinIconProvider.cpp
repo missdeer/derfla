@@ -171,7 +171,7 @@ QIcon WinIconProvider::icon(const QFileInfo &info) const
         else if (info.isSymLink() || fileExtension == "lnk") // isSymLink is case sensitive when it perhaps shouldn't be
         {
             QFileInfo targetInfo(info.symLinkTarget());
-            retIcon = icon(targetInfo);
+            retIcon = QFileIconProvider::icon(targetInfo);
         }
         else
         {
