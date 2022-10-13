@@ -41,6 +41,7 @@ private slots:
     void onEnterItem(int index);
     void onEscape();
     void onDone();
+    void onCustomContextMenuRequested(const QPoint &pos);
 
 private:
     Ui::Widget  *ui;

@@ -113,6 +113,17 @@ AlfredWidget::AlfredWidget(QWidget *parent) : CommonWidget(parent), ui(new Ui::W
     setMaximumHeight(theme->beginHeight() - 6);
     setMinimumHeight(theme->beginHeight() - 6);
     setGeometry(x(), y(), width(), theme->beginHeight());
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, &QWidget::customContextMenuRequested, this, &AlfredWidget::onCustomContextMenuRequested);
+}
+
+void AlfredWidget::onCustomContextMenuRequested(const QPoint &pos)
+{
+    Q_ASSERT(derflaApp && derflaApp->trayIcon_);
+    auto menu = derflaApp->trayIcon_->contextMenu();
+    Q_ASSERT(menu);
+    menu->exec(mapToGlobal(pos));
 }
 
 void AlfredWidget::setOne()
