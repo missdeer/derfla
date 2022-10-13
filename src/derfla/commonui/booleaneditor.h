@@ -11,41 +11,30 @@ class BooleanWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BooleanWidget(QWidget *parent = nullptr) : QWidget(parent)
-    {
-        checkBox            = new QCheckBox(this);
-        QHBoxLayout *layout = new QHBoxLayout(this);
-        layout->addWidget(checkBox, 0, Qt::AlignCenter);
-    }
+    explicit BooleanWidget(QWidget *parent = nullptr);
 
-    bool isChecked()
-    {
-        return checkBox->isChecked();
-    }
-    void setChecked(bool value)
-    {
-        checkBox->setChecked(value);
-    }
+    bool isChecked();
+    void setChecked(bool value);
 
 private:
-    QCheckBox *checkBox;
+    QCheckBox *checkBox_;
 };
 
 class BooleanEditor : public QItemDelegate
 {
     Q_OBJECT
 private:
-    BooleanWidget *checkbox;
+    BooleanWidget *checkbox_ {nullptr};
 
 public:
     explicit BooleanEditor(QObject *parent = nullptr);
-    ~BooleanEditor();
-    void     setEditorData(QWidget *editor, const QModelIndex &index) const;
-    void     setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem & /* option */, const QModelIndex & /* index */) const;
-    void     paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    ~BooleanEditor() override;
+    void     setEditorData(QWidget *editor, const QModelIndex &index) const override;
+    void     setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem & /* option */, const QModelIndex & /* index */) const override;
+    void     paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-public slots:
+private slots:
     void changed(bool);
 };
 

@@ -23,7 +23,7 @@ class PreferenceDialog : public QDialog
 
 public:
     explicit PreferenceDialog(QWidget *parent = nullptr);
-    ~PreferenceDialog();
+    ~PreferenceDialog() override;
 
 private slots:
     void on_buttonBox_accepted();
@@ -77,7 +77,6 @@ private:
     QSlider              *sliderInterval_;
     QSpinBox             *sbInterval_;
     QKeySequenceEdit     *edtHotkey_;
-    QCheckBox            *cbAutoUpdate_;
     QTableView           *listExtensions_;
     QCheckBox            *cbAlfredStyleUI_;
     QComboBox            *cbSkins_;

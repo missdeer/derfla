@@ -8,7 +8,7 @@
 #include "util.h"
 
 #if defined(Q_OS_MAC)
-#include "darkmode.h"
+#    include "darkmode.h"
 #endif
 
 PreferenceDialog::PreferenceDialog(QWidget *parent) : QDialog(parent), ui(new Ui::PreferenceDialog)
@@ -47,10 +47,6 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     hl->addWidget(edtHotkey_);
     gl->addLayout(hl);
 
-    cbAutoUpdate_ = new QCheckBox(tr("Auto Update"), ui->generalPage);
-    cbAutoUpdate_->setChecked(settings.value("autoupdate", true).toBool());
-    gl->addWidget(cbAutoUpdate_);
-
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
     cbStartWithSystem_ = new QCheckBox(tr("Start with system"), ui->generalPage);
     cbStartWithSystem_->setChecked(settings.value("autostart", false).toBool());
@@ -63,8 +59,8 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     // extension settings page
     auto *gl2 = new QVBoxLayout(ui->extensionPage);
 
-    listExtensions_     = new QTableView(ui->extensionPage);
-    auto extensionModel = new ExtensionModel(listExtensions_);
+    listExtensions_      = new QTableView(ui->extensionPage);
+    auto *extensionModel = new ExtensionModel(listExtensions_);
     listExtensions_->setItemDelegateForColumn(4, new BooleanEditor(listExtensions_));
     listExtensions_->setModel(extensionModel);
     listExtensions_->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Stretch);
@@ -100,8 +96,17 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     ui->edtLuaPath->setText(settings.value("lua").toString());
 #if defined(Q_OS_MAC)
     ui->edtAppleScriptPath->setText(settings.value("applescript(as)").toString());
+    ui->edtWScriptPath->setEnabled(false);
+    ui->edtCScriptPath->setEnabled(false);
+    ui->btnBrowseWScript->setEnabled(false);
+    ui->btnBrowseCScript->setEnabled(false);
+    ui->btnDetectWScript->setEnabled(false);
+    ui->btnDetectCScript->setEnabled(false);
 #endif
 #if defined(Q_OS_WIN)
+    ui->edtAppleScriptPath->setEnabled(false);
+    ui->btnBrowseAppleScript->setEnabled(false);
+    ui->btnDetectAppleScript->setEnabled(false);
     ui->edtWScriptPath->setText(settings.value("wscript").toString());
     ui->edtCScriptPath->setText(settings.value("cscript").toString());
 #endif
@@ -145,7 +150,6 @@ void PreferenceDialog::on_buttonBox_accepted()
 #endif
                                                            % cbSkins_->currentText()));
     }
-    settings.setValue("autoupdate", cbAutoUpdate_->isChecked());
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
     settings.setValue("autostart", cbStartWithSystem_->isChecked());
 #endif
@@ -171,7 +175,9 @@ void PreferenceDialog::onKeySequenceChanged(const QKeySequence &keySequence)
 {
     QSettings &settings = derflaApp->settings();
     if (keySequence == QKeySequence(settings.value("hotkey", "Alt+Space").toString()))
+    {
         return;
+    }
 }
 
 void PreferenceDialog::onCurrentSkinChanged(const QString &name) {}
@@ -196,19 +202,23 @@ void PreferenceDialog::loadThemes()
     QDir    dir(QCoreApplication::applicationDirPath() % "/../Resources/themes/");
     QString skinPath = settings.value("theme", isDarkMode() ? ":/themes/dark.derflatheme" : ":/themes/classic.derflatheme").toString();
 #else
-    QDir dir(QCoreApplication::applicationDirPath() % "/themes");
+    QDir    dir(QCoreApplication::applicationDirPath() % "/themes");
     QString skinPath = settings.value("theme", ":/themes/classic.derflatheme").toString();
 #endif
     auto eil = dir.entryInfoList(QStringList() << "*.derflatheme", QDir::Files);
-    for (const auto &fi : eil)
+    for (const auto &fileInfo : eil)
     {
-        cbSkins_->addItem(fi.fileName());
+        cbSkins_->addItem(fileInfo.fileName());
     }
     int index = cbSkins_->findText(skinPath);
     if (index >= 0)
+    {
         cbSkins_->setCurrentIndex(index);
+    }
     else
+    {
         cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());
+    }
 }
 
 void PreferenceDialog::loadSkins()
@@ -218,23 +228,27 @@ void PreferenceDialog::loadSkins()
 #if defined(Q_OS_MAC)
     QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/skins/");
 #else
-    QDir dir(QCoreApplication::applicationDirPath() % "/skins");
+    QDir    dir(QCoreApplication::applicationDirPath() % "/skins");
 #endif
     auto eil = dir.entryInfoList(QStringList() << "*.zip", QDir::Files);
-    for (const auto &fi : eil)
+    for (const auto &fileInfo : eil)
     {
-        cbSkins_->addItem(fi.fileName());
+        cbSkins_->addItem(fileInfo.fileName());
     }
-    if (cbSkins_->findText("derfla.zip") < 0)
+    if (cbSkins_->findText(QStringLiteral("derfla.zip")) < 0)
     {
         cbSkins_->insertItem(0, "derfla.zip");
     }
     QString skinPath = settings.value("skin", "derfla.zip").toString();
     int     index    = cbSkins_->findText(skinPath);
     if (index >= 0)
+    {
         cbSkins_->setCurrentIndex(index);
+    }
     else
+    {
         cbSkins_->setCurrentText(QFileInfo(skinPath).fileName());
+    }
 }
 
 void PreferenceDialog::on_btnBrowseBash_clicked()
@@ -249,19 +263,23 @@ void PreferenceDialog::on_btnBrowseBash_clicked()
 #endif
     );
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtBashPath->setText(fileName);
 }
 
 void PreferenceDialog::on_btnDetectBash_clicked()
 {
 #if defined(Q_OS_WIN)
-    auto fileName = util::findProgram("bash.exe");
+    auto fileName = util::findProgram(QStringLiteral("bash.exe"));
 #else
-    auto fileName = util::findProgram("bash");
+    auto fileName = util::findProgram(QStringLiteral("bash"));
 #endif
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtBashPath->setText(fileName);
 }
 
@@ -277,19 +295,23 @@ void PreferenceDialog::on_btnBrowsePHP_clicked()
 #endif
     );
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtPHPPath->setText(fileName);
 }
 
 void PreferenceDialog::on_btnDetectPHP_clicked()
 {
 #if defined(Q_OS_WIN)
-    auto fileName = util::findProgram("php.exe");
+    auto fileName = util::findProgram(QStringLiteral("php.exe"));
 #else
-    auto fileName = util::findProgram("php");
+    auto fileName = util::findProgram(QStringLiteral("php"));
 #endif
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtPHPPath->setText(fileName);
 }
 
@@ -305,19 +327,23 @@ void PreferenceDialog::on_btnBrowseRuby_clicked()
 #endif
     );
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtRubyPath->setText(fileName);
 }
 
 void PreferenceDialog::on_btnDetectRuby_clicked()
 {
 #if defined(Q_OS_WIN)
-    auto fileName = util::findProgram("ruby.exe");
+    auto fileName = util::findProgram(QStringLiteral("ruby.exe"));
 #else
-    auto fileName = util::findProgram("ruby");
+    auto fileName = util::findProgram(QStringLiteral("ruby"));
 #endif
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtRubyPath->setText(fileName);
 }
 
@@ -333,19 +359,23 @@ void PreferenceDialog::on_btnBrowsePython_clicked()
 #endif
     );
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtPythonPath->setText(fileName);
 }
 
 void PreferenceDialog::on_btnDetectPython_clicked()
 {
 #if defined(Q_OS_WIN)
-    auto fileName = util::findProgram("python.exe");
+    auto fileName = util::findProgram(QStringLiteral("python.exe"));
 #else
-    auto fileName = util::findProgram("python");
+    auto fileName = util::findProgram(QStringLiteral("python"));
 #endif
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtPythonPath->setText(fileName);
 }
 
@@ -361,19 +391,23 @@ void PreferenceDialog::on_btnBrowsePerl_clicked()
 #endif
     );
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtPerlPath->setText(fileName);
 }
 
 void PreferenceDialog::on_btnDetectPerl_clicked()
 {
 #if defined(Q_OS_WIN)
-    auto fileName = util::findProgram("perl.exe");
+    auto fileName = util::findProgram(QStringLiteral("perl.exe"));
 #else
-    auto fileName = util::findProgram("perl");
+    auto fileName = util::findProgram(QStringLiteral("perl"));
 #endif
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtPerlPath->setText(fileName);
 }
 
@@ -389,19 +423,23 @@ void PreferenceDialog::on_btnBrowseZsh_clicked()
 #endif
     );
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtZshPath->setText(fileName);
 }
 
 void PreferenceDialog::on_btnDetectZsh_clicked()
 {
 #if defined(Q_OS_WIN)
-    auto fileName = util::findProgram("zsh.exe");
+    auto fileName = util::findProgram(QStringLiteral("zsh.exe"));
 #else
-    auto fileName = util::findProgram("zsh");
+    auto fileName = util::findProgram(QStringLiteral("zsh"));
 #endif
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtZshPath->setText(fileName);
 }
 
@@ -417,19 +455,23 @@ void PreferenceDialog::on_btnBrowseLua_clicked()
 #endif
     );
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtLuaPath->setText(fileName);
 }
 
 void PreferenceDialog::on_btnDetectLua_clicked()
 {
 #if defined(Q_OS_WIN)
-    auto fileName = util::findProgram("lua.exe");
+    auto fileName = util::findProgram(QStringLiteral("lua.exe"));
 #else
-    auto fileName = util::findProgram("lua");
+    auto fileName = util::findProgram(QStringLiteral("lua"));
 #endif
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtLuaPath->setText(fileName);
 }
 
@@ -437,15 +479,19 @@ void PreferenceDialog::on_btnBrowseAppleScript_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Find AppleScript"), "", tr("AppleScript interpretor (applescript);;All files (*.*)"));
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtAppleScriptPath->setText(fileName);
 }
 
 void PreferenceDialog::on_btnDetectAppleScript_clicked()
 {
-    auto fileName = util::findProgram("applescript");
+    auto fileName = util::findProgram(QStringLiteral("applescript"));
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtAppleScriptPath->setText(fileName);
 }
 
@@ -453,15 +499,19 @@ void PreferenceDialog::on_btnBrowseCScript_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Find CScript"), "", tr("CScript interpretor (cscript.exe);;All files (*.*)"));
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtCScriptPath->setText(fileName);
 }
 
 void PreferenceDialog::on_btnDetectCScript_clicked()
 {
-    auto fileName = util::findProgram("cscript.exe");
+    auto fileName = util::findProgram(QStringLiteral("cscript.exe"));
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtCScriptPath->setText(fileName);
 }
 
@@ -469,14 +519,18 @@ void PreferenceDialog::on_btnBrowseWScript_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Find WScript"), "", tr("WScript interpretor (wscript.exe);;All files (*.*)"));
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtWScriptPath->setText(fileName);
 }
 
 void PreferenceDialog::on_btnDetectWScript_clicked()
 {
-    auto fileName = util::findProgram("wscript.exe");
+    auto fileName = util::findProgram(QStringLiteral("wscript.exe"));
     if (!QFile::exists(fileName))
+    {
         return;
+    }
     ui->edtWScriptPath->setText(fileName);
 }

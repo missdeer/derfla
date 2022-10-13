@@ -38,9 +38,13 @@ void CommonWidget::onLoadSkin() {}
 void CommonWidget::onStayOnTop()
 {
     if (stayOnTop_)
+    {
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    }
     else
+    {
         setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
+    }
     onShowInFront();
 
     QSettings &settings = derflaApp->settings();
@@ -51,7 +55,9 @@ void CommonWidget::onStayOnTop()
 void CommonWidget::onShowInFront()
 {
     if (isHidden())
+    {
         show();
+    }
     activateWindow();
     raise();
 }
@@ -69,23 +75,29 @@ bool CommonWidget::onPreference()
 #endif
     PreferenceDialog dlg(this);
     if (dlg.exec() != QDialog::Accepted)
+    {
         return false;
+    }
 
     QSettings &settings = derflaApp->settings();
     stayOnTop_          = settings.value("stayOnTop", false).toBool();
     derflaApp->setCheckedStayOnTopAction(stayOnTop_);
     if (stayOnTop_)
+    {
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    }
     else
+    {
         setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
+    }
 
     onShowInFront();
 
     if (settings.value("autostart", false).toBool())
     {
 #if defined(Q_OS_WIN)
-        QString   key = "Derfla";
-        QSettings registrySettings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+        const QString key = "Derfla";
+        QSettings registrySettings(QStringLiteral("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"), QSettings::NativeFormat);
         registrySettings.remove(key);
         registrySettings.setValue(key, QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
         registrySettings.sync();
@@ -121,8 +133,8 @@ bool CommonWidget::onPreference()
     else
     {
 #if defined(Q_OS_WIN)
-        QString   key = "Derfla";
-        QSettings registrySettings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+        const QString key = "Derfla";
+        QSettings registrySettings(QStringLiteral("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"), QSettings::NativeFormat);
         registrySettings.remove(key);
         registrySettings.sync();
 #elif defined(Q_OS_MAC)

@@ -31,7 +31,7 @@ protected:
 #else
     UGlobalHotkeys *hotkeyManager_;
 #endif
-    bool stayOnTop_;
+    bool stayOnTop_ {false};
 };
 
 #endif // COMMONWIDGET_H
