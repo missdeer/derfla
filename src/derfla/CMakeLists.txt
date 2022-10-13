@@ -172,9 +172,14 @@ foreach( ts ${QMs})
 endforeach( ts )
 
 file(GLOB SKINs ${CMAKE_CURRENT_SOURCE_DIR}/skins/*.zip)
-file(COPY ${SKINs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/skins)
-
 file(GLOB THEMEs ${CMAKE_CURRENT_SOURCE_DIR}/themes/*.derflatheme)
-file(COPY ${THEMEs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/themes)
+
+IF(APPLE) 
+        file(COPY ${SKINs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Content/Resources/skins)
+        file(COPY ${THEMEs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Content/Resources/themes)
+ELSE(APPLE)
+        file(COPY ${SKINs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/skins)
+        file(COPY ${THEMEs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/themes)
+ENDIF()
 
 target_precompile_headers(${PROJECT_NAME} PUBLIC stdafx.h)
