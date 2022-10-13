@@ -13,12 +13,12 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "DForD Software"
+            VALUE "CompanyName", "missdeer@gmail.com"
             VALUE "FileDescription", "DerflaUtil"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "DerflaUtil"
-            VALUE "LegalCopyright", "Copyright (C) 2016 - 2017 DForD Software. All rights reserved."
-            VALUE "OriginalFilename", "DerflaUtil.exe"
+            VALUE "LegalCopyright", "Copyright (C) 2016 - 2022 missdeer@gmail.com. All rights reserved."
+            VALUE "OriginalFilename", "DerflaUtil.dll"
             VALUE "ProductName", "DerflaUtil"
             VALUE "ProductVersion", "1.0.0.1"
         END

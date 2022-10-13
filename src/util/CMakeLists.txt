@@ -4,6 +4,9 @@ project(DerflaUtil VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+IF(APPLE)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Content/Libs")
+ENDIF(APPLE)
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
@@ -45,14 +48,27 @@ set(DerflaUtil_src
 qt_add_resources(qrcs ${CMAKE_CURRENT_SOURCE_DIR}/util.qrc)
 
 IF(WIN32)
-        list(APPEND DerflaUtil_src ${CMAKE_CURRENT_SOURCE_DIR}/win_util.cpp ${CMAKE_CURRENT_SOURCE_DIR}/WinIconProvider.cpp)
-        list(APPEND DerflaUtil_headers ${CMAKE_CURRENT_SOURCE_DIR}/win_util.h ${CMAKE_CURRENT_SOURCE_DIR}/WinIconProvider.h)
+        list(APPEND DerflaUtil_src 
+            ${CMAKE_CURRENT_SOURCE_DIR}/win_util.cpp 
+            ${CMAKE_CURRENT_SOURCE_DIR}/WinIconProvider.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/util.rc
+            )
+        list(APPEND DerflaUtil_headers 
+            ${CMAKE_CURRENT_SOURCE_DIR}/win_util.h 
+            ${CMAKE_CURRENT_SOURCE_DIR}/WinIconProvider.h
+            )
 ELSE(WIN32)
         IF(APPLE)
-            list(APPEND DerflaUtil_src ${CMAKE_CURRENT_SOURCE_DIR}/mac_util.mm)
+            list(APPEND DerflaUtil_src 
+                ${CMAKE_CURRENT_SOURCE_DIR}/mac_util.mm
+                )
         ELSE(APPLE)
-            list(APPEND DerflaUtil_src ${CMAKE_CURRENT_SOURCE_DIR}/unix_util.cpp)
-            list(APPEND DerflaUtil_headers ${CMAKE_CURRENT_SOURCE_DIR}/unix_util.h)
+            list(APPEND DerflaUtil_src 
+                ${CMAKE_CURRENT_SOURCE_DIR}/unix_util.cpp
+                )
+            list(APPEND DerflaUtil_headers 
+                ${CMAKE_CURRENT_SOURCE_DIR}/unix_util.h
+                )
         ENDIF(APPLE)
 ENDIF(WIN32)
 

@@ -27,44 +27,23 @@ public:
     void createWidget();
     void show();
 
-    void createDerflaWidget();
-    void showDerflaWidget();
-    void createAlfredWidget();
-    void showAlfredWidget();
+    DerflaWidget *createDerflaWidget();
+    void          showDerflaWidget();
+    AlfredWidget *createAlfredWidget();
+    void          showAlfredWidget();
 
-    void executeAction(DerflaActionPtr da)
-    {
-        actionExecutor_(da);
-    }
-    ExtensionManager *extensionManager()
-    {
-        return extensionManager_;
-    }
-    void       queryByExtension(const QString &text);
-    void       setCheckedStayOnTopAction(bool checked);
-    QSettings &settings();
+    void              executeAction(const DerflaActionPtr &action);
+    ExtensionManager *extensionManager();
+    void              queryByExtension(const QString &text);
+    void              setCheckedStayOnTopAction(bool checked);
+    QSettings        &settings();
 
-    bool isEmptyDerflaAction() const
-    {
-        return dal_.isEmpty();
-    }
-    DerflaActionPtr derflaAction(int index);
-    int             derflaActionCount() const
-    {
-        return dal_.length();
-    }
-    void clearDerflaAction()
-    {
-        dal_.clear();
-    }
-    DerflaActionList &derflaActions()
-    {
-        return dal_;
-    }
-    DerflaActionList &donateDerflaActions()
-    {
-        return dalDonate_;
-    }
+    [[nodiscard]] bool              isEmptyDerflaAction() const;
+    DerflaActionPtr                 derflaAction(int index);
+    [[nodiscard]] qsizetype         derflaActionCount() const;
+    void                            clearDerflaAction();
+    [[nodiscard]] DerflaActionList &derflaActions();
+    [[nodiscard]] DerflaActionList &donateDerflaActions();
 signals:
     void actionUpdated();
     void emptyAction();

@@ -112,7 +112,7 @@ IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_en_US.ts
             OPTIONS -no-obsolete
         )
-        qt_add_executable(Derfla 
+        qt_add_executable(${PROJECT_NAME}  
                 ${Derfla_headers}
                 ${Derfla_src}
                 ${Derfla_ui}
@@ -125,7 +125,7 @@ ELSE()
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_zh_CN.ts
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_en_US.ts
         )
-        add_executable(Derfla 
+        add_executable(${PROJECT_NAME}  
                 ${Derfla_headers}
                 ${Derfla_src}
                 ${Derfla_ui}
@@ -134,7 +134,7 @@ ELSE()
                 )
 ENDIF()
 
-target_link_libraries(Derfla PRIVATE
+target_link_libraries(${PROJECT_NAME}  PRIVATE
         qtsingleapplication
         qtlockedfile
         DerflaUtil
@@ -142,9 +142,9 @@ target_link_libraries(Derfla PRIVATE
         )
 
 IF(WIN32)
-    target_link_libraries(Derfla PRIVATE qglobalshortcut)
+    target_link_libraries(${PROJECT_NAME}  PRIVATE qglobalshortcut)
 ELSE(WIN32)
-    target_link_libraries(Derfla PRIVATE
+    target_link_libraries(${PROJECT_NAME}  PRIVATE
         UGlobalHotkey 
         qtplist
         "-framework AppKit" 
@@ -156,8 +156,16 @@ ELSE(WIN32)
         )
 ENDIF(WIN32)
 
-set_target_properties(Derfla PROPERTIES
+set_target_properties(${PROJECT_NAME}  PROPERTIES
         WIN32_EXECUTABLE ON
         MACOSX_BUNDLE ON
         )
     
+        
+file(GLOB QMs ${CMAKE_CURRENT_SOURCE_DIR}/translations/*.qm)
+foreach( qm ${QMs})
+        add_custom_command(
+                TARGET ${PROJECT_NAME}  POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/
+                COMMAND ${CMAKE_COMMAND} -E copy ${qm} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/)
+endforeach( qm )

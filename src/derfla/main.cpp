@@ -104,5 +104,5 @@ int main(int argc, char *argv[])
     derflaApp->createWidget();
     derflaApp->show();
 
-    return a.exec();
+    return QCoreApplication::exec();
 }

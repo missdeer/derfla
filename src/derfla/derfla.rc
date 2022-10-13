@@ -13,7 +13,7 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "DForD Software"
+            VALUE "CompanyName", "missdeer@gmail.com"
             VALUE "FileDescription", "Derfla - Run application/script as you want!"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "Derfla"

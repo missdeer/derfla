@@ -187,6 +187,50 @@ void Extension::setWaitIconData(const QString &waitIconData)
     }
 }
 
+void Extension::parseActionConfig(QJsonObject &eleObj, DerflaActionPtr &action)
+{
+    if (eleObj["title"].isString())
+    {
+        action->setTitle(eleObj["title"].toString());
+    }
+    if (eleObj["description"].isString())
+    {
+        action->setDescription(eleObj["description"].toString());
+    }
+    if (eleObj["target"].isString())
+    {
+        action->setTarget(eleObj["target"].toString());
+    }
+    if (eleObj["arguments"].isString())
+    {
+        action->setArguments(eleObj["arguments"].toString());
+    }
+    if (eleObj["workingDir"].isString())
+    {
+        action->setWorkingDirectory(eleObj["workingDir"].toString());
+    }
+    if (eleObj["actionType"].isString())
+    {
+        action->setActionType(eleObj["actionType"].toString());
+    }
+    if (eleObj["scriptExecutor"].isString())
+    {
+        action->setScriptExecutor(eleObj["scriptExecutor"].toString());
+    }
+    if (eleObj["iconPath"].isString())
+    {
+        action->setIcon(QIcon(eleObj["iconPath"].toString()));
+    }
+    if (eleObj["iconData"].isString())
+    {
+        auto    iconData = QByteArray::fromBase64(eleObj["iconData"].toString().toUtf8());
+        QPixmap pixmap;
+        if (pixmap.loadFromData(iconData))
+        {
+            action->setIcon(QIcon(pixmap));
+        }
+    }
+}
 void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
     auto *p = qobject_cast<QProcess *>(sender());
@@ -207,14 +251,14 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
         return;
     }
 
-    QByteArray output = p->readAllStandardOutput();
+    auto output = p->readAllStandardOutput();
     // convert json output to action list
     QJsonParseError error;
-    QJsonDocument   doc = QJsonDocument::fromJson(output, &error);
+    auto            doc = QJsonDocument::fromJson(output, &error);
     qDebug() << error.errorString();
     if (error.error == QJsonParseError::NoError && doc.isArray())
     {
-        QJsonArray array = doc.array();
+        auto array = doc.array();
         for (auto arrEle : array)
         {
             if (!arrEle.isObject())
@@ -223,47 +267,7 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
             }
             QJsonObject     eleObj = arrEle.toObject();
             DerflaActionPtr action(new DerflaAction);
-            if (eleObj["title"].isString())
-            {
-                action->setTitle(eleObj["title"].toString());
-            }
-            if (eleObj["description"].isString())
-            {
-                action->setDescription(eleObj["description"].toString());
-            }
-            if (eleObj["target"].isString())
-            {
-                action->setTarget(eleObj["target"].toString());
-            }
-            if (eleObj["arguments"].isString())
-            {
-                action->setArguments(eleObj["arguments"].toString());
-            }
-            if (eleObj["workingDir"].isString())
-            {
-                action->setWorkingDirectory(eleObj["workingDir"].toString());
-            }
-            if (eleObj["actionType"].isString())
-            {
-                action->setActionType(eleObj["actionType"].toString());
-            }
-            if (eleObj["scriptExecutor"].isString())
-            {
-                action->setScriptExecutor(eleObj["scriptExecutor"].toString());
-            }
-            if (eleObj["iconPath"].isString())
-            {
-                action->setIcon(QIcon(eleObj["iconPath"].toString()));
-            }
-            if (eleObj["iconData"].isString())
-            {
-                QByteArray iconData = QByteArray::fromBase64(eleObj["iconData"].toString().toUtf8());
-                QPixmap    pixmap;
-                if (pixmap.loadFromData(iconData))
-                {
-                    action->setIcon(QIcon(pixmap));
-                }
-            }
+            parseActionConfig(eleObj, action);
             derflaActions_.append(action);
         }
     }

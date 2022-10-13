@@ -13,11 +13,11 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "DForD Software"
+            VALUE "CompanyName", "missdeer@gmail.com"
             VALUE "FileDescription", "HashDigest - Derfla extension"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "HashDigest"
-            VALUE "LegalCopyright", "Copyright (C) 2018 DForD Software. All rights reserved."
+            VALUE "LegalCopyright", "Copyright (C) 2018 - 2022 missdeer@gmail.com. All rights reserved."
             VALUE "OriginalFilename", "HashDigest.exe"
             VALUE "ProductName", "HashDigest"
             VALUE "ProductVersion", "1.0.0.1"

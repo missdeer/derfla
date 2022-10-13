@@ -10,9 +10,29 @@ ELSE(CMAKE_BUILD_TYPE MATCHES Debug)
     set(BUILD_TYPE Release)
 ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
 
-#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin") # .a .lib
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin") # .exe
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin") # .dll .dylib .so
+
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    set(ARCH "x86_64")
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "amd64")
+    set(ARCH "x86_64")
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64")
+    # cmake reports AMD64 on Windows, but we might be building for 32-bit.
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(ARCH "x86_64")
+    else()
+        set(ARCH "x86")
+    endif()
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86")
+    set(ARCH "x86")
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "i386")
+    set(ARCH "x86")
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "i686")
+    set(ARCH "x86")
+endif()
+
+#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/${ARCH}") # .a .lib
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/${ARCH}") # .exe
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/${ARCH}") # .dll .dylib .so
 
 add_subdirectory(3rdparty)
 add_subdirectory(src)

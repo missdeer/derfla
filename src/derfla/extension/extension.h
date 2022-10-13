@@ -11,47 +11,47 @@ class Extension : public QObject
     Q_OBJECT
 public:
     explicit Extension(QObject *parent = nullptr);
-    ~Extension();
+    ~Extension() override;
 
     void runDaemon();
     void stopDaemon();
     bool query(const QString &input);
     void stopQuery();
 
-    const QString &author() const;
-    void           setAuthor(const QString &author);
+    [[nodiscard]] const QString &author() const;
+    void                         setAuthor(const QString &author);
 
-    const QString &name() const;
-    void           setName(const QString &name);
+    [[nodiscard]] const QString &name() const;
+    void                         setName(const QString &name);
 
-    const QString &description() const;
-    void           setDescription(const QString &description);
+    [[nodiscard]] const QString &description() const;
+    void                         setDescription(const QString &description);
 
-    const QString &executable() const;
-    void           setExecutable(const QString &executable);
+    [[nodiscard]] const QString &executable() const;
+    void                         setExecutable(const QString &executable);
 
-    const QString &executor() const;
-    void           setExecutor(const QString &executor);
+    [[nodiscard]] const QString &executor() const;
+    void                         setExecutor(const QString &executor);
 
-    void               setPrefix(const QStringList &prefix);
-    const QStringList &prefix();
+    void                             setPrefix(const QStringList &prefix);
+    [[nodiscard]] const QStringList &prefix();
 
-    const QString &waitTitle() const;
-    void           setWaitTitle(const QString &waitTitle);
+    [[nodiscard]] const QString &waitTitle() const;
+    void                         setWaitTitle(const QString &waitTitle);
 
-    const QString &waitDescription() const;
-    void           setWaitDescription(const QString &waitDescription);
+    [[nodiscard]] const QString &waitDescription() const;
+    void                         setWaitDescription(const QString &waitDescription);
 
-    const QIcon &waitIcon() const;
-    void         setWaitIcon(const QIcon &waitIcon);
-    void         setWaitIconPath(const QString &waitIconPath);
-    void         setWaitIconData(const QString &waitIconData);
+    [[nodiscard]] const QIcon &waitIcon() const;
+    void                       setWaitIcon(const QIcon &waitIcon);
+    void                       setWaitIconPath(const QString &waitIconPath);
+    void                       setWaitIconData(const QString &waitIconData);
 
-    const QString &id() const;
-    void           setId(const QString &id);
+    [[nodiscard]] const QString &id() const;
+    void                         setId(const QString &id);
 
-    bool daemon() const;
-    void setDaemon(bool daemon);
+    [[nodiscard]] bool daemon() const;
+    void               setDaemon(bool daemon);
 
 signals:
     void queried(DerflaActionList &);
@@ -73,10 +73,11 @@ private:
     QProcess        *subProcess_ {nullptr};
     DerflaActionList derflaActions_;
 
-    QString             findProgram();
-    QProcessEnvironment getProcessEnvironment();
+    [[nodiscard]] QString             findProgram();
+    [[nodiscard]] QProcessEnvironment getProcessEnvironment();
+    void                              parseActionConfig(QJsonObject &eleObj, DerflaActionPtr &action);
 };
 
-typedef QSharedPointer<Extension> ExtensionPtr;
+using ExtensionPtr = QSharedPointer<Extension>;
 
 #endif // Extension_H

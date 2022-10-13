@@ -4,6 +4,12 @@ project(hashdigest VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+IF(APPLE)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Content/Extensions/hashdigest")
+ELSE(APPLE)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/extensions/hashdigest")
+ENDIF(APPLE)
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/extension.derflaext" DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network LinguistTools REQUIRED)
@@ -41,7 +47,7 @@ IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/hashdigest_en_US.ts
             OPTIONS -no-obsolete
         )
-        qt_add_executable(hashdigest 
+        qt_add_executable(${PROJECT_NAME}  
                 ${hashdigest_headers}
                 ${hashdigest_src}
                 ${qrcs}
@@ -53,7 +59,7 @@ ELSE()
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/hashdigest_zh_CN.ts
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/hashdigest_en_US.ts
         )
-        add_executable(hashdigest 
+        add_executable(${PROJECT_NAME}  
                 ${hashdigest_headers}
                 ${hashdigest_src}
                 ${qrcs}
@@ -61,8 +67,17 @@ ELSE()
                 )
 ENDIF()
 
-target_link_libraries(hashdigest PRIVATE
+target_link_libraries(${PROJECT_NAME}  PRIVATE
         qtsingleapplication
         qtlockedfile
         DerflaUtil
         )
+
+        
+file(GLOB QMs ${CMAKE_CURRENT_SOURCE_DIR}/translations/*.qm)
+foreach( qm ${QMs})
+        add_custom_command(
+                TARGET ${PROJECT_NAME}  POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/
+                COMMAND ${CMAKE_COMMAND} -E copy ${qm} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/)
+endforeach( qm )

@@ -29,13 +29,11 @@ void DerflaApp::createWidget()
 {
     if (settings_.value("alfredStyleUI").toBool())
     {
-        createAlfredWidget();
-        widget_ = alfredWidget_;
+        widget_ = createAlfredWidget();
     }
     else
     {
-        createDerflaWidget();
-        widget_ = derflaWidget_;
+        widget_ = createDerflaWidget();
     }
 }
 
@@ -45,12 +43,13 @@ void DerflaApp::show()
     centerToScreen(widget_);
 }
 
-void DerflaApp::createDerflaWidget()
+DerflaWidget *DerflaApp::createDerflaWidget()
 {
     if (!derflaWidget_)
     {
         derflaWidget_ = new DerflaWidget;
     }
+    return derflaWidget_;
 }
 
 void DerflaApp::showDerflaWidget()
@@ -59,12 +58,13 @@ void DerflaApp::showDerflaWidget()
     centerToScreen(derflaWidget_);
 }
 
-void DerflaApp::createAlfredWidget()
+AlfredWidget *DerflaApp::createAlfredWidget()
 {
     if (!alfredWidget_)
     {
         alfredWidget_ = new AlfredWidget();
     }
+    return alfredWidget_;
 }
 
 void DerflaApp::showAlfredWidget()
@@ -100,7 +100,7 @@ DerflaActionPtr DerflaApp::derflaAction(int index)
     {
         return dalDonate_.at(index - dal_.length());
     }
-    return DerflaActionPtr();
+    return {};
 }
 
 void DerflaApp::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -299,6 +299,34 @@ void DerflaApp::createCommonActions()
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &DerflaApp::onTrayIconActivated);
     trayIcon_->setContextMenu(trayiconMenu);
     trayIcon_->setIcon(QIcon(":/derfla.ico"));
-    trayIcon_->setToolTip(tr("Derfla - Accelerate your keyboard!"));
+    trayIcon_->setToolTip(tr("Derfla - Run appliation/script as you want!"));
     trayIcon_->show();
+}
+qsizetype DerflaApp::derflaActionCount() const
+{
+    return dal_.length();
+}
+bool DerflaApp::isEmptyDerflaAction() const
+{
+    return dal_.isEmpty();
+}
+void DerflaApp::clearDerflaAction()
+{
+    dal_.clear();
+}
+DerflaActionList &DerflaApp::derflaActions()
+{
+    return dal_;
+}
+DerflaActionList &DerflaApp::donateDerflaActions()
+{
+    return dalDonate_;
+}
+ExtensionManager *DerflaApp::extensionManager()
+{
+    return extensionManager_;
+}
+void DerflaApp::executeAction(const DerflaActionPtr &action)
+{
+    actionExecutor_(action);
 }

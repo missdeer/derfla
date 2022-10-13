@@ -46,6 +46,7 @@ IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
                 ${donate_headers}
                 ${donate_src}
                 ${qrcs}
+                ${CMAKE_CURRENT_SOURCE_DIR}/donate.rc
                 )
 ELSE()
         qt_create_translation(QM_FILES 
@@ -57,6 +58,7 @@ ELSE()
                 ${donate_headers}
                 ${donate_src}
                 ${qrcs}
+                ${CMAKE_CURRENT_SOURCE_DIR}/donate.rc
                 )
 ENDIF()
 
