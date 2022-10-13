@@ -73,31 +73,39 @@ ELSE(WIN32)
 ENDIF(WIN32)
 
 IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-        qt_add_library(DerflaUtil SHARED
+        qt_add_library(${PROJECT_NAME} SHARED
                 ${DerflaUtil_headers}
                 ${DerflaUtil_src}
                 ${qrcs}
                 )
 ELSE()
-        add_library(DerflaUtil SHARED
+        add_library(${PROJECT_NAME} SHARED
                 ${DerflaUtil_headers}
                 ${DerflaUtil_src}
                 ${qrcs}
                 )
 ENDIF()
 
-target_link_libraries(DerflaUtil 
+target_link_libraries(${PROJECT_NAME} 
         lua
         Qt::Widgets
         Qt::Core5Compat )
 
 IF(WIN32)
-    target_link_libraries(DerflaUtil Version.lib Comctl32.lib user32.lib Ole32.lib Gdi32.lib Shell32.lib uuid.lib advapi32.lib winmm.lib)
+    target_link_libraries(${PROJECT_NAME} Version.lib Comctl32.lib user32.lib Ole32.lib Gdi32.lib Shell32.lib uuid.lib advapi32.lib winmm.lib)
 ELSE(WIN32)
     IF(APPLE)
-        target_link_libraries(DerflaUtil "-framework AppKit")
+        target_link_libraries(${PROJECT_NAME} "-framework AppKit")
     ELSE(APPLE)
     ENDIF(APPLE)
 ENDIF(WIN32)
 
-target_include_directories(DerflaUtil INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
+
+file(GLOB QMs ${CMAKE_CURRENT_SOURCE_DIR}/translations/*.qm)
+foreach( qm ${QMs})
+        add_custom_command(
+                TARGET ${PROJECT_NAME}  POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/
+                COMMAND ${CMAKE_COMMAND} -E copy ${qm} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/)
+endforeach( qm )

@@ -42,7 +42,7 @@ IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/donate_en_US.ts
             OPTIONS -no-obsolete
         )
-        qt_add_executable(donate 
+        qt_add_executable(${PROJECT_NAME} 
                 ${donate_headers}
                 ${donate_src}
                 ${qrcs}
@@ -54,7 +54,7 @@ ELSE()
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/donate_zh_CN.ts
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/donate_en_US.ts
         )
-        add_executable(donate 
+        add_executable(${PROJECT_NAME} 
                 ${donate_headers}
                 ${donate_src}
                 ${qrcs}
@@ -62,12 +62,19 @@ ELSE()
                 )
 ENDIF()
 
-target_link_libraries(donate PRIVATE
+target_link_libraries(${PROJECT_NAME} PRIVATE
         Qt${QT_VERSION_MAJOR}::Widgets
         )
 
-set_target_properties(donate PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
         WIN32_EXECUTABLE ON
         MACOSX_BUNDLE OFF
         )
     
+file(GLOB QMs ${CMAKE_CURRENT_SOURCE_DIR}/translations/*.qm)
+foreach( qm ${QMs})
+        add_custom_command(
+                TARGET ${PROJECT_NAME}  POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/
+                COMMAND ${CMAKE_COMMAND} -E copy ${qm} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/)
+endforeach( qm )
