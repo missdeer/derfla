@@ -230,9 +230,9 @@ void DerflaApp::centerToScreen(QWidget *widget)
     {
         return;
     }
-    QScreen *scr = qApp->primaryScreen();
-    QSize    sz  = scr->availableSize();
-    widget->move((sz.width() - widget->width()) / 2, (sz.height() - widget->height()) / 4);
+    QScreen *screen = QGuiApplication::screenAt(QCursor::pos());
+    QSize    size   = screen->availableSize();
+    widget->move((size.width() - widget->width()) / 2, (size.height() - widget->height()) / 4);
 }
 
 void DerflaApp::createCommonActions()
