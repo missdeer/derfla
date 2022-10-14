@@ -8,9 +8,14 @@ IF(APPLE)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Content/Libs")
 ENDIF(APPLE)
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
-find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+IF (Qt5_FOUND)
+        find_package(Qt5 COMPONENTS WinExtras REQUIRED)
+ENDIF(Qt5_FOUND)
+IF (Qt6_FOUND)
+        find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+ENDIF(Qt6_FOUND)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
@@ -19,6 +24,7 @@ set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
 if (MSVC)
     add_compile_options(/utf-8)
+    add_compile_definitions(UNICODE)
 endif()
 
 add_compile_definitions(UTIL_LIBRARY STATIC_LINKED)
@@ -88,8 +94,17 @@ ENDIF()
 
 target_link_libraries(${PROJECT_NAME} 
         lua
-        Qt::Widgets
-        Qt::Core5Compat )
+        Qt${QT_VERSION_MAJOR}::Widgets
+        )
+
+IF (Qt5_FOUND)
+    target_link_libraries(${PROJECT_NAME} 
+            Qt${QT_VERSION_MAJOR}::WinExtras )
+ENDIF(Qt5_FOUND)
+IF (Qt6_FOUND)
+    target_link_libraries(${PROJECT_NAME} 
+            Qt${QT_VERSION_MAJOR}::Core5Compat )
+ENDIF(Qt6_FOUND)
 
 IF(WIN32)
     target_link_libraries(${PROJECT_NAME} Version.lib Comctl32.lib user32.lib Ole32.lib Gdi32.lib Shell32.lib uuid.lib advapi32.lib winmm.lib)

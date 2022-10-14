@@ -5,9 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
-find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+IF (Qt6_FOUND)
+        find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+ENDIF(Qt6_FOUND)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
@@ -16,6 +18,7 @@ set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
 if (MSVC)
     add_compile_options(/utf-8)
+    add_compile_definitions(UNICODE)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} 

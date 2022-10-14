@@ -9,9 +9,11 @@ IF(APPLE)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Content/Tools")
 ENDIF(APPLE)
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core LinguistTools)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
-find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+IF (Qt6_FOUND)
+        find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+ENDIF(Qt6_FOUND)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)

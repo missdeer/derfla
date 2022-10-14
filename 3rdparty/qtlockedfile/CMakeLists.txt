@@ -5,9 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets Network)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network REQUIRED)
-find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+IF (Qt6_FOUND)
+        find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+ENDIF(Qt6_FOUND)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
@@ -16,6 +18,7 @@ set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
 if (MSVC)
     add_compile_options(/utf-8)
+    add_compile_definitions(UNICODE)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -35,20 +38,24 @@ ELSE(WIN32)
 ENDIF(WIN32)
 
 IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-        qt_add_library(qtlockedfile STATIC
+        qt_add_library(${PROJECT_NAME}  STATIC
                 ${qtlockedfile_headers}
                 ${qtlockedfile_src}
                 )
 ELSE()
-        add_library(qtlockedfile STATIC
+        add_library(${PROJECT_NAME}  STATIC
                 ${qtlockedfile_headers}
                 ${qtlockedfile_src}
                 )
 ENDIF()
 
-target_link_libraries(qtlockedfile
-        Qt::Widgets
-        Qt::Core5Compat
-        Qt::Network)
+target_link_libraries(${PROJECT_NAME} 
+        Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::Network)
+
+IF (Qt6_FOUND)
+target_link_libraries(${PROJECT_NAME} 
+        Qt${QT_VERSION_MAJOR}::Core5Compat )
+ENDIF(Qt6_FOUND)
 
 target_include_directories(qtlockedfile INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
