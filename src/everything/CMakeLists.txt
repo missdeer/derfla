@@ -16,6 +16,9 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Xml Concurrent Sql
 IF (Qt6_FOUND)
         find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 ENDIF(Qt6_FOUND)
+IF(WIN32)
+    add_compile_definitions(UNICODE)
+ENDIF(WIN32)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)

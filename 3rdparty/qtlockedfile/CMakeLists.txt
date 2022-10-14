@@ -18,8 +18,10 @@ set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
 if (MSVC)
     add_compile_options(/utf-8)
-    add_compile_definitions(UNICODE)
 endif()
+IF(WIN32)
+    add_compile_definitions(UNICODE)
+ENDIF(WIN32)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

@@ -25,6 +25,9 @@ set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 if (MSVC)
     add_compile_options(/utf-8)
 endif()
+IF(WIN32)
+    add_compile_definitions(UNICODE STRSAFE_NO_DEPRECATE)
+ENDIF(WIN32)
 
 add_compile_definitions(UTIL_LIBRARY STATIC_LINKED _USE_MATH_DEFINES SPEEDCRUNCH_VERSION="master" QT_USE_QSTRINGBUILDER)
 IF(APPLE)

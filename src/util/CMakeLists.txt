@@ -24,8 +24,10 @@ set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
 if (MSVC)
     add_compile_options(/utf-8)
-    add_compile_definitions(UNICODE)
 endif()
+IF(WIN32)
+    add_compile_definitions(UNICODE)
+ENDIF(WIN32)
 
 add_compile_definitions(UTIL_LIBRARY STATIC_LINKED)
 IF(APPLE)
@@ -107,6 +109,7 @@ IF (Qt6_FOUND)
 ENDIF(Qt6_FOUND)
 
 IF(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
     target_link_libraries(${PROJECT_NAME} Version.lib Comctl32.lib user32.lib Ole32.lib Gdi32.lib Shell32.lib uuid.lib advapi32.lib winmm.lib)
 ELSE(WIN32)
     IF(APPLE)
