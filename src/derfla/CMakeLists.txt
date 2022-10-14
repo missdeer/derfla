@@ -181,6 +181,5 @@ IF(APPLE)
 ELSE(APPLE)
         file(COPY ${SKINs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/skins)
         file(COPY ${THEMEs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/themes)
-ENDIF()
-
-target_precompile_headers(${PROJECT_NAME} PRIVATE stdafx.h)
+        target_precompile_headers(${PROJECT_NAME} PRIVATE stdafx.h)
+ENDIF(APPLE)
