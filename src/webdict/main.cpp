@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
     {
         Youdao yd;
         yd.query(input.join(' '));
-        return a.exec();
+        return QCoreApplication::exec();
     }
 
     return -1;

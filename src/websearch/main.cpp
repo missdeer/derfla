@@ -214,7 +214,9 @@ int main(int argc, char *argv[])
         }
 #endif
         if (!f(keyword.trimmed()))
+        {
             return 1;
+        }
     }
 
     return 0;

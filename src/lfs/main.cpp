@@ -66,7 +66,9 @@ int main(int argc, char *argv[])
     }
 
     if (a.isRunning())
+    {
         return 0;
+    }
 
     LocalFSScanner scanner(dbrw);
     scanner.start();
@@ -75,9 +77,9 @@ int main(int argc, char *argv[])
         if (message.compare("/exit", Qt::CaseInsensitive) == 0)
         {
             scanner.stop();
-            a.quit();
+            QCoreApplication::quit();
         }
     });
 
-    return a.exec();
+    return QCoreApplication::exec();
 }

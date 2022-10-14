@@ -102,5 +102,5 @@ int main(int argc, char *argv[])
 #endif
     Heweather he;
     he.forecast(location);
-    return a.exec();
+    return QCoreApplication::exec();
 }

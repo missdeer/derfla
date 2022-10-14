@@ -62,5 +62,5 @@ int main(int argc, char *argv[])
     QrcodeDialog w(commandLineUrlArgument());
     w.show();
 
-    return a.exec();
+    return QCoreApplication::exec();
 }
