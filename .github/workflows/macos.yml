@@ -45,6 +45,6 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -G Ninja ..
-          ninja
+          make -j `sysctl -n hw.logicalcpu`
           cd ..
 
