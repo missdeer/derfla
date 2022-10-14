@@ -112,7 +112,7 @@ qt_add_resources(qrcs ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.qrc)
 
 IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         qt_create_translation(QM_FILES 
-            ${CMAKE_SOURCE_DIR} 
+            ${CMAKE_CURRENT_SOURCE_DIR} 
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_zh_CN.ts
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_en_US.ts
             OPTIONS -no-obsolete
@@ -127,7 +127,7 @@ IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
                 )
 ELSE()
         qt5_create_translation(QM_FILES 
-            ${CMAKE_SOURCE_DIR} 
+            ${CMAKE_CURRENT_SOURCE_DIR} 
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_zh_CN.ts
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_en_US.ts
         )
