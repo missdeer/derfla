@@ -113,16 +113,16 @@ target_link_libraries(${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::Widgets
         )
 
-IF (Qt5_FOUND)
-    target_link_libraries(${PROJECT_NAME} 
-            Qt${QT_VERSION_MAJOR}::WinExtras )
-ENDIF(Qt5_FOUND)
 IF (Qt6_FOUND)
     target_link_libraries(${PROJECT_NAME} 
             Qt${QT_VERSION_MAJOR}::Core5Compat )
 ENDIF(Qt6_FOUND)
 
 IF(WIN32)
+    IF (Qt5_FOUND)
+        target_link_libraries(${PROJECT_NAME} 
+                Qt${QT_VERSION_MAJOR}::WinExtras )
+    ENDIF(Qt5_FOUND)
     set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
     target_link_libraries(${PROJECT_NAME} Version.lib Comctl32.lib user32.lib Ole32.lib Gdi32.lib Shell32.lib uuid.lib advapi32.lib winmm.lib)
 ELSE(WIN32)
