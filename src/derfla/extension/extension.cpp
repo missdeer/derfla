@@ -9,7 +9,9 @@ Extension::~Extension()
 {
     stopQuery();
     if (daemon_)
+    {
         stopDaemon();
+    }
 }
 
 void Extension::runDaemon()
@@ -18,7 +20,7 @@ void Extension::runDaemon()
     QString     program = executable_;
     if (!executor_.isEmpty())
     {
-        program = findProgram();
+        program = QStandardPaths::findExecutable(executor_);
         arguments << executable_;
     }
 
@@ -36,7 +38,7 @@ void Extension::stopDaemon()
     QString     program = executable_;
     if (!executor_.isEmpty())
     {
-        program = findProgram();
+        program = QStandardPaths::findExecutable(executor_);
         arguments << executable_;
     }
     arguments << "/exit";
@@ -60,7 +62,7 @@ bool Extension::query(const QString &input)
     }
     else
     {
-        process->setProgram(findProgram());
+        process->setProgram(QStandardPaths::findExecutable(executor_));
         arguments << executable_;
     }
     process->setProcessEnvironment(getProcessEnvironment());
@@ -293,33 +295,6 @@ const QString &Extension::id() const
 void Extension::setId(const QString &id)
 {
     id_ = id;
-}
-
-QString Extension::findProgram()
-{
-    QStringList envPaths;
-    QString     path        = qgetenv("PATH");
-    QStringList environment = QProcess::systemEnvironment();
-    auto        iter        = std::find_if(environment.begin(), environment.end(), [&](const QString &env) { return env.startsWith("PATH="); });
-    if (environment.end() != iter)
-    {
-        path = iter->mid(5);
-    }
-#if defined(Q_OS_WIN)
-    QString exe = executor_ % ".exe";
-    envPaths << path.split(QChar(';'));
-#else
-    QString exe = executor_;
-    envPaths << path.split(QChar(':'));
-#endif
-
-    iter = std::find_if(envPaths.begin(), envPaths.end(), [&exe](const QString &p) { return QFile::exists(p % exe); });
-    if (envPaths.end() == iter)
-    {
-        qDebug() << "can't find program:" << exe;
-        return {};
-    }
-    return *iter % exe;
 }
 
 QProcessEnvironment Extension::getProcessEnvironment()

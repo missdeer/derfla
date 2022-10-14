@@ -271,11 +271,7 @@ void PreferenceDialog::on_btnBrowseBash_clicked()
 
 void PreferenceDialog::on_btnDetectBash_clicked()
 {
-#if defined(Q_OS_WIN)
-    auto fileName = util::findProgram(QStringLiteral("bash.exe"));
-#else
-    auto fileName = util::findProgram(QStringLiteral("bash"));
-#endif
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("bash")));
     if (!QFile::exists(fileName))
     {
         return;
@@ -303,11 +299,7 @@ void PreferenceDialog::on_btnBrowsePHP_clicked()
 
 void PreferenceDialog::on_btnDetectPHP_clicked()
 {
-#if defined(Q_OS_WIN)
-    auto fileName = util::findProgram(QStringLiteral("php.exe"));
-#else
-    auto fileName = util::findProgram(QStringLiteral("php"));
-#endif
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("php")));
     if (!QFile::exists(fileName))
     {
         return;
@@ -335,11 +327,7 @@ void PreferenceDialog::on_btnBrowseRuby_clicked()
 
 void PreferenceDialog::on_btnDetectRuby_clicked()
 {
-#if defined(Q_OS_WIN)
-    auto fileName = util::findProgram(QStringLiteral("ruby.exe"));
-#else
-    auto fileName = util::findProgram(QStringLiteral("ruby"));
-#endif
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("ruby")));
     if (!QFile::exists(fileName))
     {
         return;
@@ -367,11 +355,7 @@ void PreferenceDialog::on_btnBrowsePython_clicked()
 
 void PreferenceDialog::on_btnDetectPython_clicked()
 {
-#if defined(Q_OS_WIN)
-    auto fileName = util::findProgram(QStringLiteral("python.exe"));
-#else
-    auto fileName = util::findProgram(QStringLiteral("python"));
-#endif
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("python")));
     if (!QFile::exists(fileName))
     {
         return;
@@ -399,11 +383,7 @@ void PreferenceDialog::on_btnBrowsePerl_clicked()
 
 void PreferenceDialog::on_btnDetectPerl_clicked()
 {
-#if defined(Q_OS_WIN)
-    auto fileName = util::findProgram(QStringLiteral("perl.exe"));
-#else
-    auto fileName = util::findProgram(QStringLiteral("perl"));
-#endif
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("perl")));
     if (!QFile::exists(fileName))
     {
         return;
@@ -431,11 +411,7 @@ void PreferenceDialog::on_btnBrowseZsh_clicked()
 
 void PreferenceDialog::on_btnDetectZsh_clicked()
 {
-#if defined(Q_OS_WIN)
-    auto fileName = util::findProgram(QStringLiteral("zsh.exe"));
-#else
-    auto fileName = util::findProgram(QStringLiteral("zsh"));
-#endif
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("zsh")));
     if (!QFile::exists(fileName))
     {
         return;
@@ -463,11 +439,7 @@ void PreferenceDialog::on_btnBrowseLua_clicked()
 
 void PreferenceDialog::on_btnDetectLua_clicked()
 {
-#if defined(Q_OS_WIN)
-    auto fileName = util::findProgram(QStringLiteral("lua.exe"));
-#else
-    auto fileName = util::findProgram(QStringLiteral("lua"));
-#endif
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("lua")));
     if (!QFile::exists(fileName))
     {
         return;
@@ -487,7 +459,7 @@ void PreferenceDialog::on_btnBrowseAppleScript_clicked()
 
 void PreferenceDialog::on_btnDetectAppleScript_clicked()
 {
-    auto fileName = util::findProgram(QStringLiteral("applescript"));
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("applescript")));
     if (!QFile::exists(fileName))
     {
         return;
@@ -507,7 +479,8 @@ void PreferenceDialog::on_btnBrowseCScript_clicked()
 
 void PreferenceDialog::on_btnDetectCScript_clicked()
 {
-    auto fileName = util::findProgram(QStringLiteral("cscript.exe"));
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("cscript")));
+
     if (!QFile::exists(fileName))
     {
         return;
@@ -527,7 +500,7 @@ void PreferenceDialog::on_btnBrowseWScript_clicked()
 
 void PreferenceDialog::on_btnDetectWScript_clicked()
 {
-    auto fileName = util::findProgram(QStringLiteral("wscript.exe"));
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("wscript")));
     if (!QFile::exists(fileName))
     {
         return;

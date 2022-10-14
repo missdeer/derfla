@@ -73,7 +73,6 @@ private:
     QProcess        *subProcess_ {nullptr};
     DerflaActionList derflaActions_;
 
-    [[nodiscard]] QString             findProgram();
     [[nodiscard]] QProcessEnvironment getProcessEnvironment();
     void                              parseActionConfig(QJsonObject &eleObj, DerflaActionPtr &action);
 };

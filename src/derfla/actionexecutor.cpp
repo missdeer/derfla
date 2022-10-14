@@ -52,11 +52,7 @@ bool ActionExecutor::runScript(const DerflaActionPtr &action)
         auto       exe      = settings.value(action->scriptExecutor()).toString();
         if (!QFile::exists(exe))
         {
-#if defined(Q_OS_WIN)
-            exe = util::findProgram("/" % action->scriptExecutor() % ".exe");
-#else
-            exe = util::findProgram("/" % action->scriptExecutor());
-#endif
+            exe = QStandardPaths::findExecutable(action->scriptExecutor());
         }
         if (!QFile::exists(exe))
         {
@@ -140,7 +136,8 @@ bool ActionExecutor::terminalCommand(const DerflaActionPtr &action)
     ::ShellExecuteW(nullptr, L"open", L"cmd.exe", args.toStdWString().c_str(), action->workingDirectory().toStdWString().c_str(), SW_SHOWNORMAL);
 
 #elif defined(Q_OS_MAC)
-    QString cmdline = QString("/usr/bin/osascript -e 'tell application \"Terminal\" to do script \"%1 %2\"'").arg(action->target()).arg(action->arguments());
+    QString cmdline =
+        QString("/usr/bin/osascript -e 'tell application \"Terminal\" to do script \"%1 %2\"'").arg(action->target()).arg(action->arguments());
     system(cmdline.toStdString().c_str());
 #else
     // console application, running in a terminal
