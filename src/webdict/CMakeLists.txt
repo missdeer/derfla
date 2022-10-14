@@ -58,10 +58,11 @@ IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
                 ${webdict_headers}
                 ${webdict_src}
                 ${qrcs}
+                ${QM_FILES}
                 ${CMAKE_CURRENT_SOURCE_DIR}/webdict.rc
                 )
 ELSE()
-        qt_create_translation(QM_FILES 
+        qt5_create_translation(QM_FILES 
             ${CMAKE_SOURCE_DIR} 
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/webdict_zh_CN.ts
             ${CMAKE_CURRENT_SOURCE_DIR}/translations/webdict_en_US.ts
@@ -70,6 +71,7 @@ ELSE()
                 ${webdict_headers}
                 ${webdict_src}
                 ${qrcs}
+                ${QM_FILES}
                 ${CMAKE_CURRENT_SOURCE_DIR}/webdict.rc
                 )
 ENDIF()
@@ -81,13 +83,12 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE
         )
 
 
-file(GLOB QMs ${CMAKE_CURRENT_SOURCE_DIR}/translations/*.ts)
-foreach( ts ${QMs})
-        string(REGEX REPLACE "[.]ts$" ".qm" qm ${ts})
+file(GLOB QMs ${CMAKE_CURRENT_BINARY_DIR}/translations/*.qm)
+foreach( qm ${QMs})
         add_custom_command(
                 TARGET ${PROJECT_NAME}  POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/
                 COMMAND ${CMAKE_COMMAND} -E copy ${qm} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/)
-endforeach( ts )
+endforeach( qm )
 
 target_precompile_headers(${PROJECT_NAME} PUBLIC stdafx.h)

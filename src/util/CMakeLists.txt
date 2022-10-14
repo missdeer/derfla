@@ -8,8 +8,8 @@ IF(APPLE)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Content/Libs")
 ENDIF(APPLE)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 IF (Qt5_FOUND)
         find_package(Qt5 COMPONENTS WinExtras REQUIRED)
 ENDIF(Qt5_FOUND)
@@ -81,16 +81,30 @@ ELSE(WIN32)
 ENDIF(WIN32)
 
 IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+        qt_create_translation(QM_FILES 
+                ${CMAKE_SOURCE_DIR} 
+                ${CMAKE_CURRENT_SOURCE_DIR}/translations/util_zh_CN.ts
+                ${CMAKE_CURRENT_SOURCE_DIR}/translations/util_en_US.ts
+                OPTIONS -no-obsolete
+        )
         qt_add_library(${PROJECT_NAME} SHARED
                 ${DerflaUtil_headers}
                 ${DerflaUtil_src}
                 ${qrcs}
+                ${QM_FILES}
                 )
 ELSE()
+        qt5_create_translation(QM_FILES 
+                ${CMAKE_SOURCE_DIR}
+                ${CMAKE_CURRENT_SOURCE_DIR}/translations/util_zh_CN.ts
+                ${CMAKE_CURRENT_SOURCE_DIR}/translations/util_en_US.ts
+        ) 
+       
         add_library(${PROJECT_NAME} SHARED
                 ${DerflaUtil_headers}
                 ${DerflaUtil_src}
                 ${qrcs}
+                ${QM_FILES}
                 )
 ENDIF()
 
@@ -121,13 +135,12 @@ ENDIF(WIN32)
 target_include_directories(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
 
 
-file(GLOB QMs ${CMAKE_CURRENT_SOURCE_DIR}/translations/*.ts)
-foreach( ts ${QMs})
-        string(REGEX REPLACE "[.]ts$" ".qm" qm ${ts})
+file(GLOB QMs ${CMAKE_CURRENT_BINARY_DIR}/*.qm)
+foreach( qm ${QMs})
         add_custom_command(
                 TARGET ${PROJECT_NAME}  POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/
                 COMMAND ${CMAKE_COMMAND} -E copy ${qm} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/)
-endforeach( ts )
+endforeach( qm )
 
 target_precompile_headers(${PROJECT_NAME} PUBLIC stdafx.h)
