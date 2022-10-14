@@ -12,139 +12,134 @@
 <context>
     <name>DerflaApp</name>
     <message>
-        <location filename="../derflaapp.cpp" line="171"/>
+        <location filename="../derflaapp.cpp" line="152"/>
         <source>Derfla</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="171"/>
+        <location filename="../derflaapp.cpp" line="153"/>
         <source>Derfla is a cross platform productivity application, which boosts your efficiency with hotkeys, keywords, text expansion and more. Search your Windows and the web, and be more productive with custom actions to control your system.<byte value="xd"/>
 <byte value="xd"/>
 Contact me at https://minidump.info/derfla/ if you have any problem about this tool. Built at </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../derflaapp.cpp" line="192"/>
+        <location filename="../derflaapp.cpp" line="209"/>
         <location filename="../derflaapp.cpp" line="217"/>
-        <location filename="../derflaapp.cpp" line="234"/>
-        <location filename="../derflaapp.cpp" line="242"/>
         <source>Donate to support me</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="218"/>
+        <location filename="../derflaapp.cpp" line="193"/>
         <source>Donate via Paypal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="235"/>
+        <location filename="../derflaapp.cpp" line="210"/>
         <source>Donate via Alipay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="243"/>
+        <location filename="../derflaapp.cpp" line="218"/>
         <source>Donate via WeChat pay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="265"/>
+        <location filename="../derflaapp.cpp" line="240"/>
         <source>Select File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="266"/>
+        <location filename="../derflaapp.cpp" line="241"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="269"/>
+        <location filename="../derflaapp.cpp" line="244"/>
         <source>Select Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="270"/>
+        <location filename="../derflaapp.cpp" line="245"/>
         <source>Ctrl+D</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="273"/>
+        <location filename="../derflaapp.cpp" line="248"/>
         <source>Load &amp;Skin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="276"/>
+        <location filename="../derflaapp.cpp" line="251"/>
         <source>Stay On Top</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="280"/>
-        <source>Check Updates...</source>
+        <location filename="../derflaapp.cpp" line="302"/>
+        <source>Derfla - Run appliation/script as you want!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="283"/>
+        <location filename="../derflaapp.cpp" line="255"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="284"/>
+        <location filename="../derflaapp.cpp" line="256"/>
         <source>Ctrl+Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="287"/>
+        <location filename="../derflaapp.cpp" line="259"/>
         <source>Show</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="290"/>
+        <location filename="../derflaapp.cpp" line="262"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="293"/>
+        <location filename="../derflaapp.cpp" line="265"/>
         <source>Homepage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="298"/>
+        <location filename="../derflaapp.cpp" line="268"/>
         <source>Preference...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="302"/>
+        <location filename="../derflaapp.cpp" line="272"/>
         <source>Donate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="303"/>
+        <location filename="../derflaapp.cpp" line="273"/>
         <source>Via Paypal...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="307"/>
+        <location filename="../derflaapp.cpp" line="277"/>
         <source>Via Alipay...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="311"/>
+        <location filename="../derflaapp.cpp" line="281"/>
         <source>Via WeChat Pay...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../derflaapp.cpp" line="333"/>
-        <source>Derfla - Accelerate your keyboard!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DerflaWidget</name>
     <message>
-        <location filename="../derflaui/derflawidget.cpp" line="252"/>
+        <location filename="../derflaui/derflawidget.cpp" line="255"/>
         <source>Load Derfla Skin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaui/derflawidget.cpp" line="254"/>
+        <location filename="../derflaui/derflawidget.cpp" line="257"/>
         <source>Derfla Skin Package (*.zip);;Derfla Skin Configuration (*.derflaskin);;All Supported Files (*.derflaskin *.zip);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -170,37 +165,37 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
 <context>
     <name>ExtensionModel</name>
     <message>
-        <location filename="../extension/extensionmodel.cpp" line="76"/>
+        <location filename="../extension/extensionmodel.cpp" line="83"/>
         <source>Id</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../extension/extensionmodel.cpp" line="77"/>
+        <location filename="../extension/extensionmodel.cpp" line="84"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../extension/extensionmodel.cpp" line="78"/>
+        <location filename="../extension/extensionmodel.cpp" line="85"/>
         <source>Author</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../extension/extensionmodel.cpp" line="79"/>
+        <location filename="../extension/extensionmodel.cpp" line="86"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../extension/extensionmodel.cpp" line="80"/>
+        <location filename="../extension/extensionmodel.cpp" line="87"/>
         <source>Daemon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../extension/extensionmodel.cpp" line="81"/>
+        <location filename="../extension/extensionmodel.cpp" line="88"/>
         <source>Executable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../extension/extensionmodel.cpp" line="82"/>
+        <location filename="../extension/extensionmodel.cpp" line="89"/>
         <source>Executor</source>
         <translation type="unfinished"></translation>
     </message>
@@ -329,168 +324,295 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="20"/>
+        <location filename="../commonui/preferencedialog.cpp" line="22"/>
         <source>Stay On Top</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="25"/>
+        <location filename="../commonui/preferencedialog.cpp" line="27"/>
         <source>Delay Interval:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="39"/>
+        <location filename="../commonui/preferencedialog.cpp" line="41"/>
         <source>Global Hotkey:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="48"/>
-        <source>Auto Update</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../commonui/preferencedialog.cpp" line="53"/>
+        <location filename="../commonui/preferencedialog.cpp" line="51"/>
         <source>Start with system</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="76"/>
+        <location filename="../commonui/preferencedialog.cpp" line="74"/>
         <source>Use Alfred Style User Interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="245"/>
+        <location filename="../commonui/preferencedialog.cpp" line="257"/>
         <source>Find Bash</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="248"/>
+        <location filename="../commonui/preferencedialog.cpp" line="260"/>
         <source>Bash interpretor (bash.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="250"/>
+        <location filename="../commonui/preferencedialog.cpp" line="262"/>
         <source>Bash interpretor (bash);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="273"/>
+        <location filename="../commonui/preferencedialog.cpp" line="289"/>
         <source>Find PHP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="276"/>
+        <location filename="../commonui/preferencedialog.cpp" line="292"/>
         <source>PHP interpretor (php.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="278"/>
+        <location filename="../commonui/preferencedialog.cpp" line="294"/>
         <source>PHP interpretor (php);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="301"/>
+        <location filename="../commonui/preferencedialog.cpp" line="321"/>
         <source>Find Ruby</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="304"/>
+        <location filename="../commonui/preferencedialog.cpp" line="324"/>
         <source>Ruby interpretor (ruby.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="306"/>
+        <location filename="../commonui/preferencedialog.cpp" line="326"/>
         <source>Ruby interpretor (ruby);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="329"/>
+        <location filename="../commonui/preferencedialog.cpp" line="353"/>
         <source>Find Python</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="332"/>
+        <location filename="../commonui/preferencedialog.cpp" line="356"/>
         <source>Python interpretor (python.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="334"/>
+        <location filename="../commonui/preferencedialog.cpp" line="358"/>
         <source>Python interpretor (python);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="357"/>
+        <location filename="../commonui/preferencedialog.cpp" line="385"/>
         <source>Find Perl</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="360"/>
+        <location filename="../commonui/preferencedialog.cpp" line="388"/>
         <source>Perl interpretor (perl.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="362"/>
+        <location filename="../commonui/preferencedialog.cpp" line="390"/>
         <source>Perl interpretor (perl);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="385"/>
+        <location filename="../commonui/preferencedialog.cpp" line="417"/>
         <source>Find Zsh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="388"/>
+        <location filename="../commonui/preferencedialog.cpp" line="420"/>
         <source>Zsh interpretor (zsh.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="390"/>
+        <location filename="../commonui/preferencedialog.cpp" line="422"/>
         <source>Zsh interpretor (zsh);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="413"/>
+        <location filename="../commonui/preferencedialog.cpp" line="449"/>
         <source>Find Lua</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="416"/>
+        <location filename="../commonui/preferencedialog.cpp" line="452"/>
         <source>Lua interpretor (lua.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="418"/>
+        <location filename="../commonui/preferencedialog.cpp" line="454"/>
         <source>Lua interpretor (lua);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="440"/>
+        <location filename="../commonui/preferencedialog.cpp" line="480"/>
         <source>Find AppleScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="440"/>
+        <location filename="../commonui/preferencedialog.cpp" line="480"/>
         <source>AppleScript interpretor (applescript);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="456"/>
+        <location filename="../commonui/preferencedialog.cpp" line="500"/>
         <source>Find CScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="456"/>
+        <location filename="../commonui/preferencedialog.cpp" line="500"/>
         <source>CScript interpretor (cscript.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="472"/>
+        <location filename="../commonui/preferencedialog.cpp" line="520"/>
         <source>Find WScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="472"/>
+        <location filename="../commonui/preferencedialog.cpp" line="520"/>
         <source>WScript interpretor (wscript.exe);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <location filename="../alfredui/setting.cpp" line="88"/>
+        <location filename="../alfredui/setting.cpp" line="174"/>
+        <source>need</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.cpp" line="92"/>
+        <location filename="../alfredui/setting.cpp" line="178"/>
+        <source>none</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Setting</name>
+    <message>
+        <location filename="../alfredui/setting.ui" line="20"/>
+        <source>Mutate Preferences</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="32"/>
+        <source>save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="45"/>
+        <source>delete item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="59"/>
+        <source>script address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="67"/>
+        <source>icon address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="72"/>
+        <source>hotkey</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="77"/>
+        <source>keyword</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="82"/>
+        <source>Argument</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="90"/>
+        <location filename="../alfredui/setting.ui" line="135"/>
+        <location filename="../alfredui/setting.ui" line="159"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="97"/>
+        <source>Argument Required</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="104"/>
+        <source>hotkey:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="111"/>
+        <source>Icon address:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="118"/>
+        <source>Script address:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="142"/>
+        <source>keyword:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="185"/>
+        <source>add item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="211"/>
+        <source>Modify item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="231"/>
+        <source>Height(0.1-0.9):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="249"/>
+        <source>Classic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="254"/>
+        <source>Dark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.ui" line="262"/>
+        <source>Theme:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.cpp" line="193"/>
+        <location filename="../alfredui/setting.cpp" line="198"/>
+        <source>open file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/setting.cpp" line="193"/>
+        <location filename="../alfredui/setting.cpp" line="198"/>
+        <source>Allfile(*.*)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -499,6 +621,19 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
     <message>
         <location filename="../alfredui/alfredwidget.ui" line="34"/>
         <source>Widget</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>hotkey</name>
+    <message>
+        <location filename="../alfredui/hotkey.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../alfredui/hotkey.ui" line="25"/>
+        <source>&lt; press key&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

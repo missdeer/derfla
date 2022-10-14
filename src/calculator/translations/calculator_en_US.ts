@@ -1904,12 +1904,12 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../main.cpp" line="56"/>
+        <location filename="../main.cpp" line="61"/>
         <source>Result: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="57"/>
+        <location filename="../main.cpp" line="62"/>
         <source>Expr: %1</source>
         <translation type="unfinished"></translation>
     </message>
