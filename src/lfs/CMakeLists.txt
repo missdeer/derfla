@@ -49,11 +49,17 @@ set(lfs_src
         ${CMAKE_CURRENT_SOURCE_DIR}/localfsitem.cpp
         )
 
+
+set(TS_FILES 
+        ${CMAKE_CURRENT_SOURCE_DIR}/translations/lfs_zh_CN.ts
+        ${CMAKE_CURRENT_SOURCE_DIR}/translations/lfs_en_US.ts
+        )
+set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations")
+
 IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         qt_create_translation(QM_FILES 
             ${CMAKE_CURRENT_SOURCE_DIR} 
-            ${CMAKE_CURRENT_SOURCE_DIR}/translations/lfs_zh_CN.ts
-            ${CMAKE_CURRENT_SOURCE_DIR}/translations/lfs_en_US.ts
+            ${TS_FILES}
             OPTIONS -no-obsolete
         )
         qt_add_executable(${PROJECT_NAME}  
@@ -65,8 +71,7 @@ IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 ELSE()
         qt5_create_translation(QM_FILES 
             ${CMAKE_CURRENT_SOURCE_DIR} 
-            ${CMAKE_CURRENT_SOURCE_DIR}/translations/lfs_zh_CN.ts
-            ${CMAKE_CURRENT_SOURCE_DIR}/translations/lfs_en_US.ts
+            ${TS_FILES}
         )
         add_executable(${PROJECT_NAME}  
                 ${lfs_headers}
@@ -85,14 +90,4 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE
         Qt${QT_VERSION_MAJOR}::Xml
         )
 
-        
-
-file(GLOB QMs ${CMAKE_CURRENT_BINARY_DIR}/*.qm)
-foreach( qm ${QMs})
-        add_custom_command(
-                TARGET ${PROJECT_NAME}  POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/
-                COMMAND ${CMAKE_COMMAND} -E copy ${qm} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/)
-endforeach( qm )
-
-target_precompile_headers(${PROJECT_NAME} PUBLIC stdafx.h)
+target_precompile_headers(${PROJECT_NAME} PRIVATE stdafx.h)
