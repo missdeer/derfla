@@ -43,6 +43,10 @@ set(DerflaUtil_headers
         ${CMAKE_CURRENT_SOURCE_DIR}/derflaaction.h
         ${CMAKE_CURRENT_SOURCE_DIR}/scopedguard.h
         ${CMAKE_CURRENT_SOURCE_DIR}/luavm.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/sqlite/Sqlite3Constants.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/sqlite/Sqlite3DBManager.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/sqlite/Sqlite3Helper.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/sqlite/Sqlite3Statement.h
         )
 
 set(DerflaUtil_src
@@ -51,6 +55,9 @@ set(DerflaUtil_src
         ${CMAKE_CURRENT_SOURCE_DIR}/derflaaction.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/scopedguard.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/luavm.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/sqlite/Sqlite3DBManager.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/sqlite/Sqlite3Helper.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/sqlite/Sqlite3Statement.cpp
         )
 
 qt_add_resources(qrcs ${CMAKE_CURRENT_SOURCE_DIR}/util.qrc)
@@ -114,6 +121,7 @@ ENDIF()
 
 target_link_libraries(${PROJECT_NAME} 
         lua
+        sqlite3
         Qt${QT_VERSION_MAJOR}::Widgets
         )
 
