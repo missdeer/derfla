@@ -4,6 +4,8 @@
 #include <vector>
 #include <sqlite3.h>
 
+#include <QtCore>
+
 #include "Sqlite3Helper.h"
 #include "Sqlite3Constants.h"
 
@@ -14,6 +16,7 @@ Sqlite3StatementPtr Sqlite3Helper::compile(const char *szSQL)
     if (!m_db)
     {
         // CUBELOG_ERROR_FMT("'%s' null db pointer", szSQL);
+        qCritical() << szSQL << "null db pointer";
         return nullptr;
     }
 
@@ -22,6 +25,9 @@ Sqlite3StatementPtr Sqlite3Helper::compile(const char *szSQL)
     if (res != SQLITE_OK)
     {
         // CUBELOG_ERROR_FMT("prepare SQL statement '%s' failed: %d - %s", szSQL, res, (const char *)sqlite3_errmsg(m_db));
+        const char *szError = (const char *)sqlite3_errmsg(m_db);
+        qCritical() << "prepare SQL statement" << szSQL << "failed:" << res << "-" << szError;
+        return nullptr;
     }
 
     return std::make_shared<Sqlite3Statement>(m_db, pVM);
@@ -34,7 +40,7 @@ Sqlite3StatementPtr Sqlite3Helper::compile(const std::string &sql)
 
 Sqlite3StatementPtr Sqlite3Helper::compile(const QString &sql)
 {
-    return compile((const char *)sql.data());
+    return compile(sql.toStdString().c_str());
 }
 
 int Sqlite3Helper::execDML(const char *szSQL)
@@ -44,9 +50,10 @@ int Sqlite3Helper::execDML(const char *szSQL)
     do
     {
         auto stmt = compile(szSQL);
-        if (!stmt->isValid())
+        if (!stmt || !stmt->isValid())
         {
             // CUBELOG_ERROR_FMT("'%s' null pVM, quit", szSQL);
+            qCritical() << szSQL << "null pVM, quit";
             return SQLITE_ERROR;
         }
 
@@ -54,8 +61,8 @@ int Sqlite3Helper::execDML(const char *szSQL)
 
         if (nRet == SQLITE_ERROR)
         {
-            const char *szError = (const char *)sqlite3_errmsg(m_db);
             // CUBELOG_ERROR_FMT("step SQL statement '%s' failed: %s", szSQL, szError);
+            qCritical() << "step SQL statement " << szSQL << "failed:" << nRet << "-" << (const char *)sqlite3_errmsg(m_db);
             sqlite3_finalize(stmt->m_pVM);
             break;
         }
@@ -72,12 +79,17 @@ int Sqlite3Helper::execDML(const std::string &sql)
 
 int Sqlite3Helper::execDML(const QString &sql)
 {
-    return execDML((const char *)sql.data());
+    return execDML(sql.toStdString().c_str());
 }
 
 bool Sqlite3Helper::isQueryOk(int result)
 {
     return (result == SQLITE_DONE || result == SQLITE_ROW);
+}
+
+bool Sqlite3Helper::isOk(int result)
+{
+    return result == SQLITE_OK;
 }
 
 bool Sqlite3Helper::canQueryLoop(int result)
@@ -114,7 +126,7 @@ int Sqlite3Helper::countRow(const std::string &sql)
 
 int Sqlite3Helper::countRow(const QString &sql)
 {
-    return countRow((const char *)sql.data());
+    return countRow(sql.toStdString().c_str());
 }
 
 bool Sqlite3Helper::isDatabaseOpened()
@@ -129,7 +141,7 @@ int Sqlite3Helper::checkExists(const std::string &field, const std::string &name
     do
     {
         auto stmt = compile(SQL_STATEMENT_SELECT_SQLITE_MASTER);
-        if (!stmt->isValid())
+        if (!stmt || !stmt->isValid())
         {
             return -1;
         }
@@ -149,10 +161,12 @@ int Sqlite3Helper::checkExists(const std::string &field, const std::string &name
             if (size > 0)
             {
                 // CUBELOG_INFO_FMT("found expected %s:%s", field.c_str(), name.c_str());
+                qDebug() << "found expected" << QString::fromStdString(field) << ":" << QString::fromStdString(name);
                 return size;
             }
 
             // CUBELOG_INFO_FMT("not found expected %s:%s", field.c_str(), name.c_str());
+            qDebug() << "not found expected" << QString::fromStdString(field) << ":" << QString::fromStdString(name);
             return 0;
         }
     } while (nRet == SQLITE_SCHEMA);

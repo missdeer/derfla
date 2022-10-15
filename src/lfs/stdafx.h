@@ -45,12 +45,6 @@
 #    include <QUrl>
 #    include <QtCore>
 
-// Qt Sql
-#    include <QSqlDatabase>
-#    include <QSqlDriver>
-#    include <QSqlError>
-#    include <QSqlQuery>
-#    include <QSqlRecord>
 #endif
 
 #endif // STDAFX_H

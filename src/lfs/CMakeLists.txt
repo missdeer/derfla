@@ -12,7 +12,7 @@ ENDIF(APPLE)
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/extension.derflaext" DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Xml Sql LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Xml LinguistTools REQUIRED)
 IF (Qt6_FOUND)
         find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 ENDIF(Qt6_FOUND)
@@ -86,7 +86,6 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE
         qtlockedfile
         qtplist
         DerflaUtil
-        Qt${QT_VERSION_MAJOR}::Sql
         Qt${QT_VERSION_MAJOR}::Xml
         )
 

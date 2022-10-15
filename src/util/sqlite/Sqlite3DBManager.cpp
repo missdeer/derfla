@@ -9,15 +9,9 @@
 
 Sqlite3DBManager Sqlite3DBManager::m_instance;
 
-bool Sqlite3DBManager::createTablesAndIndexes()
-{
-    // no additional tables or indexes are required
-    return true;
-}
-
 void Sqlite3DBManager::regenerateSavePoint()
 {
-    std::string                     chars("abcdefghijklmnopqrstuvwxyz"
+    static const std::string        chars("abcdefghijklmnopqrstuvwxyz"
                                           "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                           "1234567890");
     std::random_device              rng;
@@ -38,25 +32,29 @@ void Sqlite3DBManager::clearSavePoint()
 
 bool Sqlite3DBManager::setSavePoint()
 {
-    std::string sql = "SAVEPOINT " + m_savePoint + ";";
+    std::string sql = "SAVEPOINT '" + m_savePoint + "';";
     if (m_sqlite.execDML(sql) != SQLITE_OK)
     {
         // CUBELOG_ERROR("Cannot set savepoint.");
+        qCritical() << "Cannot set savepoint.";
         return false;
     }
     // CUBELOG_INFO_FMT("set savepoint %s", m_savePoint.c_str());
+    qDebug() << "set savepoint" << QString::fromStdString(m_savePoint);
     return true;
 }
 
 bool Sqlite3DBManager::releaseSavePoint()
 {
-    std::string sql = "RELEASE " + m_savePoint + ";";
+    std::string sql = "RELEASE '" + m_savePoint + "';";
     if (m_sqlite.execDML(sql) != SQLITE_OK)
     {
         // CUBELOG_ERROR("Cannot release savepoint.");
+        qCritical() << "Cannot release savepoint.";
         return false;
     }
     // CUBELOG_INFO_FMT("released savepoint %s", m_savePoint.c_str());
+    qDebug() << "released savepoint" << QString::fromStdString(m_savePoint);
     return true;
 }
 
@@ -65,18 +63,34 @@ Sqlite3DBManager &Sqlite3DBManager::instance()
     return m_instance;
 }
 
-bool Sqlite3DBManager::open(const std::string &dbPath)
+bool Sqlite3DBManager::open(const QString &dbPath, bool readOnly)
 {
-    if (sqlite3_open_v2(dbPath.c_str(), &m_db, SQLITE_OPEN_READWRITE, nullptr) != SQLITE_OK)
+    return open(dbPath.toUtf8().constData(), readOnly);
+}
+
+bool Sqlite3DBManager::open(const std::string &dbPath, bool readOnly)
+{
+    return open(dbPath.c_str(), readOnly);
+}
+
+bool Sqlite3DBManager::open(const char *dbPath, bool readOnly)
+{
+    if (sqlite3_open_v2(dbPath, &m_db, (readOnly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_READWRITE), nullptr) != SQLITE_OK)
     {
         // CUBELOG_ERROR_FMT("Cannot open the database '%s'.", dbPath.c_str());
+        qCritical() << "Cannot open the database" << QString::fromUtf8(dbPath);
         return false;
     }
 
-    regenerateSavePoint();
-    setSavePoint();
+    Q_ASSERT(m_db);
+    if (!readOnly)
+    {
+        regenerateSavePoint();
+        setSavePoint();
+    }
 
     // CUBELOG_INFO_FMT("The database '%s' is opened.", dbPath.c_str());
+    qDebug() << "The database" << QString::fromStdString(dbPath) << "is opened";
     return true;
 }
 
@@ -85,32 +99,37 @@ bool Sqlite3DBManager::close()
     if (!m_db)
     {
         // CUBELOG_WARN("database is not opened");
+        qWarning() << "database is not opened";
         return true;
     }
-    int rc = sqlite3_close_v2(m_db);
-    // CUBELOG_DEBUG_FMT("Close db result: %d - %s", rc, (const char *)sqlite3_errmsg(m_db));
-    while (rc == SQLITE_BUSY)
+    int result = sqlite3_close_v2(m_db);
+    while (result == SQLITE_BUSY)
     {
+        // CUBELOG_DEBUG_FMT("Close db result: %d - %s", rc, (const char *)sqlite3_errmsg(m_db));
+        qDebug() << "Close db result: " << result << (const char *)sqlite3_errmsg(m_db);
         sqlite3_stmt *stmt = sqlite3_next_stmt(m_db, nullptr);
         if (stmt)
         {
-            rc = sqlite3_finalize(stmt);
-            if (rc == SQLITE_OK)
+            result = sqlite3_finalize(stmt);
+            if (result == SQLITE_OK)
             {
-                rc = sqlite3_close_v2(m_db);
+                result = sqlite3_close_v2(m_db);
                 // CUBELOG_DEBUG_FMT("Secondary try closing db result: %d - %s", rc, (const char *)sqlite3_errmsg(m_db));
+                qDebug() << "Secondary try closing db result: " << result << (const char *)sqlite3_errmsg(m_db);
             }
         }
     }
 
-    if (rc != SQLITE_OK)
+    if (result != SQLITE_OK)
     {
         // CUBELOG_ERROR_FMT("Closing db failed: %d - %s", rc, (const char *)sqlite3_errmsg(m_db));
+        qCritical() << "Closing db failed:" << result << (const char *)sqlite3_errmsg(m_db);
         return false;
     }
 
     m_db = nullptr;
     // CUBELOG_DEBUG("Closed database");
+    qDebug() << "database closed";
     return true;
 }
 
@@ -122,33 +141,48 @@ bool Sqlite3DBManager::save()
     return setSavePoint();
 }
 
+bool Sqlite3DBManager::create(const QString &dbPath)
+{
+    return create(dbPath.toUtf8().constData());
+}
+
 bool Sqlite3DBManager::create(const std::string &dbPath)
 {
-    if (sqlite3_open_v2(dbPath.c_str(), &m_db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, nullptr) != SQLITE_OK)
+    return create(dbPath.c_str());
+}
+
+bool Sqlite3DBManager::create(const char *dbPath)
+{
+    if (sqlite3_open_v2(dbPath, &m_db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, nullptr) != SQLITE_OK)
     {
         // CUBELOG_ERROR_FMT("Cannot create the database '%s'", dbPath.c_str());
+        qCritical() << "Cannot create the database" << QString::fromUtf8(dbPath);
         return false;
     }
     // CUBELOG_INFO_FMT("The database is created at '%s'", dbPath.c_str());
+    qInfo() << "The database is created at" << QString::fromStdString(dbPath);
 
     // CUBELOG_INFO("set sqlite options for performance issue");
+    qDebug() << "set sqlite options for performance issue";
 
     if (m_sqlite.execDML(SQL_STATEMENT_CACHE_SIZE) != SQLITE_OK)
     {
         // CUBELOG_ERROR("Cannot set cache size.");
+        qCritical() << "Cannot set cache size.";
         return false;
     }
 
     if (m_sqlite.execDML(SQL_STATEMENT_ENABLE_FOREIGN_KEYS) != SQLITE_OK)
     {
         // CUBELOG_ERROR("Cannot enable the foreign keys.");
+        qCritical() << "Cannot enable the foreign keys.";
         return false;
     }
 
     regenerateSavePoint();
     setSavePoint();
 
-    return createTablesAndIndexes();
+    return true;
 }
 
 void Sqlite3DBManager::lock()
@@ -169,4 +203,8 @@ Sqlite3Helper &Sqlite3DBManager::engine()
 Sqlite3DBManager::~Sqlite3DBManager()
 {
     close();
+}
+bool Sqlite3DBManager::isOpened() const
+{
+    return m_db != nullptr;
 }

@@ -13,12 +13,17 @@ class UTILSHARED_EXPORT Sqlite3DBManager
 public:
     static Sqlite3DBManager &instance();
 
-    bool open(const std::string &dbPath);
-    bool close();
-    bool save();
-    bool create(const std::string &dbPath);
-    void lock();
-    void unlock();
+    bool               open(const QString &dbPath, bool readOnly);
+    bool               open(const std::string &dbPath, bool readOnly);
+    bool               open(const char *dbPath, bool readOnly);
+    [[nodiscard]] bool isOpened() const;
+    bool               close();
+    bool               save();
+    bool               create(const QString &dbPath);
+    bool               create(const std::string &dbPath);
+    bool               create(const char *dbPath);
+    void               lock();
+    void               unlock();
 
     Sqlite3Helper &engine();
 
@@ -32,7 +37,6 @@ private:
     Sqlite3Helper m_sqlite;
     std::mutex    m_mutex;
     std::string   m_savePoint;
-    bool          createTablesAndIndexes();
     void          regenerateSavePoint();
     void          clearSavePoint();
     bool          setSavePoint();

@@ -1,18 +1,19 @@
 #include "stdafx.h"
 
 #include "dbrw.h"
+#include "Sqlite3DBManager.h"
 
-DBRW::DBRW()
+DBRW::DBRW(bool readOnly)
 {
     dbPath_ = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir d(dbPath_);
-    if (!d.exists())
+    QDir dir(dbPath_);
+    if (!dir.exists())
     {
-        d.mkpath(dbPath_);
+        dir.mkpath(dbPath_);
     }
-    dbPath_.append("/cache.db");
+    dbPath_ = QDir::toNativeSeparators(dir.absoluteFilePath("cache.db"));
 
-    if (!openDatabase())
+    if (!openDatabase(readOnly))
     {
         qCritical() << "can't open cache database";
     }
@@ -20,10 +21,7 @@ DBRW::DBRW()
 
 DBRW::~DBRW()
 {
-    if (db_.isValid() && db_.isOpen())
-    {
-        db_.close();
-    }
+    Sqlite3DBManager::instance().close();
 }
 
 QString DBRW::search(const QString &keyword, int countRequired)
@@ -31,21 +29,25 @@ QString DBRW::search(const QString &keyword, int countRequired)
     LocalFSItemList fsil;
     getLFSItems(fsil, keyword, countRequired);
 
-    QJsonDocument d = QJsonDocument::fromJson("[]");
-    Q_ASSERT(d.isArray());
-    QJsonArray arr = d.array();
-    for (auto item : fsil)
+    QJsonDocument doc = QJsonDocument::fromJson("[]");
+    Q_ASSERT(doc.isArray());
+    QJsonArray arr = doc.array();
+    for (const auto &item : fsil)
     {
-        QVariantMap m;
-        m.insert("title", item->title());
+        QVariantMap varMap;
+        varMap.insert("title", item->title());
         if (item->description() != item->title())
-            m.insert("description", item->description());
+        {
+            varMap.insert("description", item->description());
+        }
         else
-            m.insert("description", item->target());
-        m.insert("target", item->target());
-        m.insert("arguments", item->arguments());
-        m.insert("workingDir", item->workingDirectory());
-        m.insert("actionType", item->actionType());
+        {
+            varMap.insert("description", item->target());
+        }
+        varMap.insert("target", item->target());
+        varMap.insert("arguments", item->arguments());
+        varMap.insert("workingDir", item->workingDirectory());
+        varMap.insert("actionType", item->actionType());
         QIcon icon     = item->icon();
         auto  allSizes = icon.availableSizes();
         if (!allSizes.isEmpty())
@@ -57,49 +59,81 @@ QString DBRW::search(const QString &keyword, int countRequired)
             buffer.open(QIODevice::WriteOnly);
             pixmap.save(&buffer, "PNG");
             buffer.close();
-            m.insert("iconData", bytes.toBase64());
+            varMap.insert("iconData", bytes.toBase64());
         }
-        arr.append(QJsonObject::fromVariantMap(m));
+        arr.append(QJsonObject::fromVariantMap(varMap));
     }
-    d.setArray(arr);
-    return d.toJson(QJsonDocument::Compact);
+    doc.setArray(arr);
+    return doc.toJson(QJsonDocument::Compact);
 }
 
 bool DBRW::getLFSItems(LocalFSItemList &fsil, const QString &keyword, int countRequired)
 {
-    QSqlDatabase db = QSqlDatabase::database(dbPath_, false);
-    Q_ASSERT(db.isValid());
-    Q_ASSERT(db.isOpen());
+    auto &dbMgr = Sqlite3DBManager::instance();
+    Q_ASSERT(dbMgr.isOpened());
+    auto &engine = dbMgr.engine();
 
-    QSqlQuery q(db);
-    QString   sql = QString("SELECT * FROM lfs WHERE title LIKE '%'||?||'%' LIMIT %1;").arg(countRequired + 10);
-    if (!q.prepare(sql))
+    QString sql = QString("SELECT icon, title, description, target, arguments, working_directory, type FROM lfs WHERE title LIKE '%%1%' LIMIT %2;")
+                      .arg(keyword)
+                      .arg(countRequired + 10);
+    auto stmt = engine.compile(sql);
+    if (!stmt || !stmt->isValid())
+    {
         return false;
-    if (queryActions(fsil, keyword, countRequired, q))
+    }
+    if (queryActions(fsil, countRequired, stmt))
+    {
         return true;
+    }
 
-    sql = QString("SELECT * FROM lfs WHERE description LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - fsil.length() + 10);
-    if (!q.prepare(sql))
+    sql = QString("SELECT icon, title, description, target, arguments, working_directory, type FROM lfs WHERE description LIKE '%%1%' LIMIT %2;")
+              .arg(keyword)
+              .arg(countRequired - fsil.length() + 10);
+    stmt = engine.compile(sql);
+    if (!stmt || !stmt->isValid())
+    {
         return false;
-    if (queryActions(fsil, keyword, countRequired, q))
+    }
+    if (queryActions(fsil, countRequired, stmt))
+    {
         return true;
+    }
 
-    sql = QString("SELECT * FROM lfs WHERE target LIKE '%'||?||'%' LIMIT %1;").arg(countRequired - fsil.length() + 10);
-    if (!q.prepare(sql))
+    sql = QString("SELECT icon, title, description, target, arguments, working_directory, type FROM lfs WHERE target LIKE '%%1%' LIMIT %2;")
+              .arg(keyword)
+              .arg(countRequired - fsil.length() + 10);
+    stmt = engine.compile(sql);
+    if (!stmt || !stmt->isValid())
+    {
         return false;
-    if (queryActions(fsil, keyword, countRequired, q))
+    }
+    if (queryActions(fsil, countRequired, stmt))
+    {
         return true;
+    }
 
     return false;
 }
 
 bool DBRW::removeOldRecords(qint64 timestamp)
 {
-    QSqlQuery query(db_);
-    if (!query.prepare("DELETE FROM lfs WHERE timestamp < :timestamp;"))
+    auto &dbMgr  = Sqlite3DBManager::instance();
+    auto &engine = dbMgr.engine();
+    auto  stmt   = engine.compile("DELETE FROM lfs WHERE timestamp < :timestamp;");
+    if (!stmt || !stmt->isValid())
+    {
+        // CUBELOG_ERROR("compiling sql 'DELETE FROM lfs WHERE timestamp < :timestamp' failed");
+        qCritical() << "compiling sql 'DELETE FROM lfs WHERE timestamp < :timestamp' failed";
         return false;
-    query.bindValue(":timestamp", timestamp);
-    return query.exec();
+    }
+    stmt->bind(":timestamp", timestamp);
+    if (stmt->execDML() >= 0)
+    {
+        engine.vacuum();
+        dbMgr.save();
+        return true;
+    }
+    return false;
 }
 
 bool DBRW::insertLFS(const QByteArray &icon,
@@ -107,114 +141,117 @@ bool DBRW::insertLFS(const QByteArray &icon,
                      const QString    &description,
                      const QString    &target,
                      const QString    &arguments,
-                     const QString     workingDirectory,
+                     const QString    &workingDirectory,
                      qint64            timestamp,
                      qint64            lastModified,
                      const QString    &type)
 {
-    Q_ASSERT(db_.isValid());
-    Q_ASSERT(db_.isOpen());
-    QSqlQuery query(db_);
-    QString   sql = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
-                    "VALUES (:icon, :title, :description, :target, :arguments, :working_directory, :timestamp, :last_modified, :type);";
-    if (!query.prepare(sql))
+    auto   &engine = Sqlite3DBManager::instance().engine();
+    QString sql    = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
+                     "VALUES (:icon, :title, :description, :target, :arguments, :working_directory, :timestamp, :last_modified, :type);";
+    auto    stmt   = engine.compile(sql);
+    if (!stmt || !stmt->isValid())
+    {
         return false;
+    }
     // save to database
-    query.bindValue(":icon", icon);
-    query.bindValue(":title", title);
-    query.bindValue(":description", description);
-    query.bindValue(":target", target);
-    query.bindValue(":arguments", arguments);
-    query.bindValue(":working_directory", workingDirectory);
-    query.bindValue(":timestamp", timestamp);
-    query.bindValue(":last_modified", lastModified);
-    query.bindValue(":type", type);
-    return query.exec();
+    stmt->bind(":icon", (const unsigned char *)icon.data(), icon.length());
+    stmt->bind(":title", title);
+    stmt->bind(":description", description);
+    stmt->bind(":target", target);
+    stmt->bind(":arguments", arguments);
+    stmt->bind(":working_directory", workingDirectory);
+    stmt->bind(":timestamp", timestamp);
+    stmt->bind(":last_modified", lastModified);
+    stmt->bind(":type", type);
+    if (stmt->execDML() > 0)
+    {
+        Sqlite3DBManager::instance().save();
+        return true;
+    }
+    return false;
 }
 
 bool DBRW::createDatabase()
 {
-    db_ = QSqlDatabase::database(dbPath_, true);
-    if (!db_.isValid())
+    auto &dbMgr = Sqlite3DBManager::instance();
+    if (!dbMgr.create(dbPath_))
     {
-        db_ = QSqlDatabase::addDatabase("QSQLITE", dbPath_);
+        return false;
     }
-
-    db_.setDatabaseName(dbPath_);
-    if (!db_.isOpen())
+    Q_ASSERT(dbMgr.isOpened());
+    auto &engine = dbMgr.engine();
+    auto  result =
+        engine.execDML("CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, description TEXT,target TEXT, arguments TEXT, "
+                       "working_directory TEXT,timestamp DATETIME,last_modified DATETIME, type TEXT);");
+    if (Sqlite3Helper::isOk(result))
     {
-        if (!db_.open())
-        {
-            return false;
-        }
-    }
-    QSqlQuery query(db_);
-    return query.exec("CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, description TEXT,target TEXT, arguments TEXT, "
-                      "working_directory TEXT,timestamp DATETIME,last_modified DATETIME, type TEXT);");
-}
-
-bool DBRW::openDatabase()
-{
-    if (!QFile::exists(dbPath_))
-        return createDatabase();
-
-    db_ = QSqlDatabase::database(dbPath_, true);
-    if (!db_.isValid())
-    {
-        db_ = QSqlDatabase::addDatabase("QSQLITE", dbPath_);
-    }
-
-    db_.setDatabaseName(dbPath_);
-
-    if (db_.isOpen())
-    {
+        dbMgr.save();
         return true;
     }
-    return db_.open();
+    return false;
 }
 
-bool DBRW::queryActions(LocalFSItemList &fsil, const QString &keyword, int countRequired, QSqlQuery &q)
+bool DBRW::openDatabase(bool readOnly)
 {
-    q.addBindValue(keyword);
-    if (q.exec())
+    if (!readOnly && !QFile::exists(dbPath_))
     {
-        int iconIndex             = q.record().indexOf("icon");
-        int titleIndex            = q.record().indexOf("title");
-        int descriptionIndex      = q.record().indexOf("description");
-        int targetIndex           = q.record().indexOf("target");
-        int argumentsIndex        = q.record().indexOf("arguments");
-        int workingDirectoryIndex = q.record().indexOf("working_directory");
-        int typeIndex             = q.record().indexOf("type");
-        while (q.next())
-        {
-            LocalFSItemPtr item(new LocalFSItem);
-            QPixmap        pixmap;
-            pixmap.loadFromData(q.value(iconIndex).toByteArray());
-            item->setIcon(QIcon(pixmap));
-            item->setArguments(q.value(argumentsIndex).toString());
-            item->setTarget(q.value(targetIndex).toString());
-            QString workingDirectory = q.value(workingDirectoryIndex).toString();
-            if (workingDirectory.isEmpty())
-                workingDirectory = QFileInfo(item->target()).absolutePath();
-            item->setWorkingDirectory(workingDirectory);
-            item->setTitle(q.value(titleIndex).toString());
-            item->setDescription(q.value(descriptionIndex).toString());
-            item->setActionType(q.value(typeIndex).toString());
-            auto it = std::find_if(fsil.begin(), fsil.end(), [item](LocalFSItemPtr d) {
-                return item->title() == d->title() && item->description() == d->description();
-            });
-            if (fsil.end() == it)
-                fsil.append(item);
-        }
-        q.clear();
-        q.finish();
-
-        if (fsil.length() >= countRequired)
-        {
-            while (fsil.length() > countRequired)
-                fsil.removeLast();
-            return true;
-        }
+        return createDatabase();
     }
+
+    return Sqlite3DBManager::instance().open(dbPath_, readOnly);
+}
+
+bool DBRW::queryActions(LocalFSItemList &fsil, int countRequired, Sqlite3StatementPtr &stmt)
+{
+    auto &engine = Sqlite3DBManager::instance().engine();
+
+    bool eof  = false;
+    int  nRet = 0;
+    do
+    {
+        nRet = stmt->execQuery(eof);
+        if (Sqlite3Helper::isQueryOk(nRet))
+        {
+            while (!eof)
+            {
+                LocalFSItemPtr item(new LocalFSItem);
+                QPixmap        pixmap;
+                pixmap.loadFromData(stmt->getBlob(0));
+                item->setIcon(QIcon(pixmap));
+                item->setTitle(stmt->getQString(1));
+                item->setDescription(stmt->getQString(2));
+                item->setTarget(stmt->getQString(3));
+                item->setArguments(stmt->getQString(4));
+                QString workingDirectory = stmt->getQString(5);
+                if (workingDirectory.isEmpty())
+                {
+                    workingDirectory = QFileInfo(item->target()).absolutePath();
+                }
+                item->setWorkingDirectory(workingDirectory);
+                item->setActionType(stmt->getQString(6));
+                qDebug() << item->title() << item->description() << item->target() << item->arguments() << item->workingDirectory()
+                         << item->actionType();
+                auto iter = std::find_if(fsil.begin(), fsil.end(), [&item](const auto &d) {
+                    return item->title() == d->title() && item->description() == d->description();
+                });
+                if (fsil.end() == iter)
+                {
+                    fsil.append(item);
+                }
+                stmt->nextRow(eof);
+            }
+        }
+    } while (Sqlite3Helper::canQueryLoop(nRet));
+
+    if (fsil.length() >= countRequired)
+    {
+        while (fsil.length() > countRequired)
+        {
+            fsil.removeLast();
+        }
+        return true;
+    }
+
     return false;
 }

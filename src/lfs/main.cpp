@@ -38,7 +38,6 @@ int main(int argc, char *argv[])
     ScopedGuard cu([]() { CoUninitialize(); });
 #endif
 
-    DBRW dbrw;
     if (argc == 2)
     {
         if (QString(argv[1]).compare("/exit", Qt::CaseInsensitive) == 0 && a.isRunning())
@@ -46,6 +45,7 @@ int main(int argc, char *argv[])
             a.sendMessage("/exit");
             return 0;
         }
+        DBRW dbrw(true);
 #if defined(Q_OS_WIN)
         int nArgs = 0;
 
@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    DBRW           dbrw(false);
     LocalFSScanner scanner(dbrw);
     scanner.start();
 

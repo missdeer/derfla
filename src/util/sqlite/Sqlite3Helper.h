@@ -21,8 +21,9 @@ public:
     int                 execDML(const char *szSQL);
     int                 execDML(const std::string &sql);
     int                 execDML(const QString &sql);
-    bool                isQueryOk(int result);
-    bool                canQueryLoop(int result);
+    static bool         isQueryOk(int result);
+    static bool         isOk(int result);
+    static bool         canQueryLoop(int result);
 
     int countRow(const char *szSQL);
     int countRow(const std::string &sql);

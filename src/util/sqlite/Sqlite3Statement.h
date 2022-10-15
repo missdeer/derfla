@@ -27,6 +27,7 @@ public:
     void bind(int nParam, int64_t nValue);
     void bind(int nParam, double dValue);
     void bind(int nParam, const unsigned char *blobValue, int nLen);
+    void bind(int nParam, const QByteArray &blobValue);
     void bindNull(int nParam);
     int  bindParameterIndex(const char *szParam);
     void bind(const char *szParam, const QString &value);
@@ -37,6 +38,7 @@ public:
     void bind(const char *szParam, int64_t nValue);
     void bind(const char *szParam, double dwValue);
     void bind(const char *szParam, const unsigned char *blobValue, int nLen);
+    void bind(const char *szParam, const QByteArray &blobValue);
     void bindNull(const char *szParam);
     int  bindParameterIndex(const std::string &szParam);
     void bind(const std::string &szParam, const QString &value);
@@ -46,6 +48,7 @@ public:
     void bind(const std::string &szParam, int64_t nValue);
     void bind(const std::string &szParam, double dwValue);
     void bind(const std::string &szParam, const unsigned char *blobValue, int nLen);
+    void bind(const std::string &szParam, const QByteArray &blobValue);
     void bindNull(const std::string &szParam);
     int  bindParameterIndex(const QString &szParam);
     void bind(const QString &szParam, const QString &value);
@@ -55,6 +58,7 @@ public:
     void bind(const QString &szParam, int64_t nValue);
     void bind(const QString &szParam, double dwValue);
     void bind(const QString &szParam, const unsigned char *blobValue, int nLen);
+    void bind(const QString &szParam, const QByteArray &blobValue);
     void bindNull(const QString &szParam);
 
     int execDML();
@@ -67,6 +71,7 @@ public:
     std::int64_t getInt64(int column);
     std::string  getString(int column);
     QString      getQString(int column);
+    QByteArray   getBlob(int column);
 
     std::string getLastErrorString();
 
