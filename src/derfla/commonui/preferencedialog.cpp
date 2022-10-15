@@ -94,6 +94,9 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     ui->edtRubyPath->setText(settings.value("ruby").toString());
     ui->edtPHPPath->setText(settings.value("php").toString());
     ui->edtLuaPath->setText(settings.value("lua").toString());
+    ui->edtNodePath->setText(settings.value("node").toString());
+    ui->edtTclPath->setText(settings.value("tcl").toString());
+    ui->edtShPath->setText(settings.value("sh").toString());
 #if defined(Q_OS_MAC)
     ui->edtAppleScriptPath->setText(settings.value("applescript(as)").toString());
     ui->edtWScriptPath->setEnabled(false);
@@ -159,6 +162,9 @@ void PreferenceDialog::on_buttonBox_accepted()
     settings.setValue("ruby", ui->edtRubyPath->text());
     settings.setValue("php", ui->edtPHPPath->text());
     settings.setValue("lua", ui->edtLuaPath->text());
+    settings.setValue("node", ui->edtNodePath->text());
+    settings.setValue("tcl", ui->edtTclPath->text());
+    settings.setValue("sh", ui->edtShPath->text());
 #if defined(Q_OS_MAC)
     settings.setValue("applescript(as)", ui->edtAppleScriptPath->text());
     settings.setValue("applescript(js)", ui->edtAppleScriptPath->text());
@@ -202,7 +208,7 @@ void PreferenceDialog::loadThemes()
     QDir    dir(QCoreApplication::applicationDirPath() % "/../Resources/themes/");
     QString skinPath = settings.value("theme", isDarkMode() ? ":/themes/dark.derflatheme" : ":/themes/classic.derflatheme").toString();
 #else
-    QDir    dir(QCoreApplication::applicationDirPath() % "/themes");
+    QDir dir(QCoreApplication::applicationDirPath() % "/themes");
     QString skinPath = settings.value("theme", ":/themes/classic.derflatheme").toString();
 #endif
     auto eil = dir.entryInfoList(QStringList() << "*.derflatheme", QDir::Files);
@@ -228,7 +234,7 @@ void PreferenceDialog::loadSkins()
 #if defined(Q_OS_MAC)
     QDir dir(QCoreApplication::applicationDirPath() % "/../Resources/skins/");
 #else
-    QDir    dir(QCoreApplication::applicationDirPath() % "/skins");
+    QDir dir(QCoreApplication::applicationDirPath() % "/skins");
 #endif
     auto eil = dir.entryInfoList(QStringList() << "*.zip", QDir::Files);
     for (const auto &fileInfo : eil)
