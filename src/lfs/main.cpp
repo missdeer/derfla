@@ -44,24 +44,25 @@ int main(int argc, char *argv[])
             app.sendMessage("/exit");
             return 0;
         }
-        DBRW dbrw(true);
+        QTextStream stream(stdout);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        stream.setCodec("UTF-8");
+#else
+        stream.setEncoding(QStringConverter::Utf8);
+#endif
+        LocalSocket localSocket(stream, nullptr);
+        localSocket.connectToServer(lfsLocalPipe);
 #if defined(Q_OS_WIN)
         int nArgs = 0;
 
         LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-        QString res       = dbrw.search(QString::fromWCharArray(szArglist[1]));
+        localSocket.write(QString::fromWCharArray(szArglist[1]).toUtf8());
         LocalFree(szArglist);
 #else
-        QString res = dbrw.search(QString(argv[1]));
+        localSocket.write(argv[1]);
 #endif
-        QTextStream ts(stdout);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        ts.setCodec("UTF-8");
-#else
-        ts.setEncoding(QStringConverter::Utf8);
-#endif
-        ts << res;
-        return 0;
+
+        return QCoreApplication::exec();
     }
 
     if (app.isRunning())
@@ -81,7 +82,7 @@ int main(int argc, char *argv[])
         }
     });
 
-    LocalServer localServer;
+    LocalServer localServer(dbrw);
     localServer.listen(lfsLocalPipe);
 
     return QCoreApplication::exec();
