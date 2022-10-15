@@ -34,12 +34,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += $$PWD/util
 
 SOURCES += \
+    localserver.cpp \
+    localsocket.cpp \
     main.cpp \
     dbrw.cpp \
     localfsscanner.cpp \
     localfsitem.cpp
 
 HEADERS += \
+    localserver.h \
+    localsocket.h \
     stdafx.h \
     dbrw.h \
     localfsscanner.h \

@@ -4,14 +4,12 @@
 
 #include <QTextStream>
 
+#include "dbrw.h"
+#include "localfsscanner.h"
+#include "localserver.h"
+#include "localsocket.h"
 #include "qtsingleapplication.h"
 #include "scopedguard.h"
-#if defined(Q_OS_WIN)
-#    include "win_util.h"
-#endif
-#include "dbrw.h"
-#include "localfsitem.h"
-#include "localfsscanner.h"
 
 using namespace std;
 
@@ -26,23 +24,24 @@ int main(int argc, char *argv[])
     setrlimit(RLIMIT_NOFILE, &rl);
 #endif
 
-    SharedTools::QtSingleApplication a("LFS", argc, argv);
+    SharedTools::QtSingleApplication app("LFS", argc, argv);
 
-    a.setApplicationName("LFS");
-    a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("ismisv.com");
-    a.setOrganizationName("Derfla");
+    QCoreApplication::setApplicationName("LFS");
+    QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setOrganizationDomain("ismisv.com");
+    QCoreApplication::setOrganizationName("Derfla");
 
 #if defined(Q_OS_WIN)
     CoInitialize(NULL);
     ScopedGuard cu([]() { CoUninitialize(); });
 #endif
 
+    const QString lfsLocalPipe(R"(\\.\pipe\lfsLocalPipe)");
     if (argc == 2)
     {
-        if (QString(argv[1]).compare("/exit", Qt::CaseInsensitive) == 0 && a.isRunning())
+        if (QString(argv[1]).compare("/exit", Qt::CaseInsensitive) == 0 && app.isRunning())
         {
-            a.sendMessage("/exit");
+            app.sendMessage("/exit");
             return 0;
         }
         DBRW dbrw(true);
@@ -65,7 +64,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    if (a.isRunning())
+    if (app.isRunning())
     {
         return 0;
     }
@@ -74,13 +73,16 @@ int main(int argc, char *argv[])
     LocalFSScanner scanner(dbrw);
     scanner.start();
 
-    QObject::connect(&a, &SharedTools::QtSingleApplication::messageReceived, [&](const QString &message, QObject *) {
+    QObject::connect(&app, &SharedTools::QtSingleApplication::messageReceived, [&](const QString &message, QObject *) {
         if (message.compare("/exit", Qt::CaseInsensitive) == 0)
         {
             scanner.stop();
             QCoreApplication::quit();
         }
     });
+
+    LocalServer localServer;
+    localServer.listen(lfsLocalPipe);
 
     return QCoreApplication::exec();
 }

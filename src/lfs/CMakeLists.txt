@@ -40,6 +40,8 @@ set(lfs_headers
         ${CMAKE_CURRENT_SOURCE_DIR}/localfsscanner.h
         ${CMAKE_CURRENT_SOURCE_DIR}/dbrw.h
         ${CMAKE_CURRENT_SOURCE_DIR}/localfsitem.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/localserver.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/localsocket.h
         )
 
 set(lfs_src
@@ -47,6 +49,8 @@ set(lfs_src
         ${CMAKE_CURRENT_SOURCE_DIR}/localfsscanner.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/dbrw.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/localfsitem.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/localserver.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/localsocket.cpp
         )
 
 
