@@ -31,6 +31,7 @@ win32: DEFINES +=
 else: !macx: DEFINES += LUA_USE_LINUX
 else: DEFINES += LUA_USE_MACOSX
 
+include($$PWD/../../3rdparty/sqlite3/sqlite3.pri)
 include($$PWD/../../3rdparty/lua/src/lua.pri)
 include($$PWD/../../3rdparty/qtsingleapplication/qtsingleapplication.pri)
 # The following define makes your compiler emit warnings if you use
@@ -49,7 +50,10 @@ SOURCES += \
     $$PWD/util.cpp \
     $$PWD/derflaaction.cpp \
     $$PWD/scopedguard.cpp \
-    $$PWD/luavm.cpp
+    $$PWD/luavm.cpp \
+    sqlite/Sqlite3DBManager.cpp \
+    sqlite/Sqlite3Helper.cpp \
+    sqlite/Sqlite3Statement.cpp
 
 HEADERS += \
     $$PWD/util_global.h \
@@ -58,7 +62,11 @@ HEADERS += \
     $$PWD/util.h \
     $$PWD/derflaaction.h \
     $$PWD/scopedguard.h  \
-    $$PWD/luavm.h
+    $$PWD/luavm.h \
+    sqlite/Sqlite3Constants.h \
+    sqlite/Sqlite3DBManager.h \
+    sqlite/Sqlite3Helper.h \
+    sqlite/Sqlite3Statement.h
 
 INCLUDEPATH += $$PWD
 

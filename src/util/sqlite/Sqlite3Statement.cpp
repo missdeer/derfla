@@ -4,7 +4,9 @@
 
 #include "Sqlite3Statement.h"
 
-Sqlite3Statement::Sqlite3Statement(sqlite3 *&db, sqlite3_stmt *pVM) : m_db(db), m_pVM(pVM) {}
+Sqlite3Statement::Sqlite3Statement(sqlite3 *&database, sqlite3_stmt *pVM) : m_db(database), m_pVM(pVM) {}
+
+void Sqlite3Statement::bind(int nParam, const QString &value) {}
 
 void Sqlite3Statement::bind(const char *szParam, const char *szValue, int nLen /*= -1*/)
 {
@@ -12,19 +14,19 @@ void Sqlite3Statement::bind(const char *szParam, const char *szValue, int nLen /
     bind(nParam, szValue, nLen);
 }
 
-void Sqlite3Statement::bind(const char *szParam, int const nValue)
+void Sqlite3Statement::bind(const char *szParam, int nValue)
 {
     int nParam = bindParameterIndex(szParam);
     bind(nParam, nValue);
 }
 
-void Sqlite3Statement::bind(const char *szParam, int64_t const nValue)
+void Sqlite3Statement::bind(const char *szParam, int64_t nValue)
 {
     int nParam = bindParameterIndex(szParam);
     bind(nParam, nValue);
 }
 
-void Sqlite3Statement::bind(const char *szParam, double const dwValue)
+void Sqlite3Statement::bind(const char *szParam, double dwValue)
 {
     int nParam = bindParameterIndex(szParam);
     bind(nParam, dwValue);
@@ -57,17 +59,17 @@ void Sqlite3Statement::bind(const std::string &szParam, const std::string &szVal
     bind(szParam.c_str(), szValue.c_str(), szValue.size());
 }
 
-void Sqlite3Statement::bind(const std::string &szParam, const int nValue)
+void Sqlite3Statement::bind(const std::string &szParam, int nValue)
 {
     bind(szParam.c_str(), nValue);
 }
 
-void Sqlite3Statement::bind(const std::string &szParam, const int64_t nValue)
+void Sqlite3Statement::bind(const std::string &szParam, int64_t nValue)
 {
     bind(szParam.c_str(), nValue);
 }
 
-void Sqlite3Statement::bind(const std::string &szParam, const double dwValue)
+void Sqlite3Statement::bind(const std::string &szParam, double dwValue)
 {
     bind(szParam.c_str(), dwValue);
 }
@@ -85,6 +87,51 @@ void Sqlite3Statement::bind(const std::string &szParam, const std::string_view &
 void Sqlite3Statement::bindNull(const std::string &szParam)
 {
     bindNull(szParam.c_str());
+}
+
+int Sqlite3Statement::bindParameterIndex(const QString &szParam)
+{
+    return bindParameterIndex((const char *)szParam.data());
+}
+
+void Sqlite3Statement::bind(const QString &szParam, const QString &value)
+{
+    bind((const char *)szParam.data(), (const char *)value.data());
+}
+
+void Sqlite3Statement::bind(const QString &szParam, const std::string &szValue)
+{
+    bind((const char *)szParam.data(), szValue.c_str());
+}
+
+void Sqlite3Statement::bind(const QString &szParam, const std::string_view &szValue)
+{
+    bind((const char *)szParam.data(), szValue);
+}
+
+void Sqlite3Statement::bind(const QString &szParam, int nValue)
+{
+    bind((const char *)szParam.data(), nValue);
+}
+
+void Sqlite3Statement::bind(const QString &szParam, int64_t nValue)
+{
+    bind((const char *)szParam.data(), nValue);
+}
+
+void Sqlite3Statement::bind(const QString &szParam, double dwValue)
+{
+    bind((const char *)szParam.data(), dwValue);
+}
+
+void Sqlite3Statement::bind(const QString &szParam, const unsigned char *blobValue, int nLen)
+{
+    bind((const char *)szParam.data(), blobValue, nLen);
+}
+
+void Sqlite3Statement::bindNull(const QString &szParam)
+{
+    bindNull((const char *)szParam.data());
 }
 
 void Sqlite3Statement::bind(int nParam, const char *szValue, int nLen /*= -1*/)
@@ -116,7 +163,7 @@ void Sqlite3Statement::bind(int nParam, const std::string_view &szValue)
     bind(nParam, szValue.data(), szValue.size());
 }
 
-void Sqlite3Statement::bind(int nParam, const int nValue)
+void Sqlite3Statement::bind(int nParam, int nValue)
 {
     if (!isDatabaseOpened())
     {
@@ -135,7 +182,7 @@ void Sqlite3Statement::bind(int nParam, const int nValue)
     }
 }
 
-void Sqlite3Statement::bind(int nParam, const int64_t nValue)
+void Sqlite3Statement::bind(int nParam, int64_t nValue)
 {
     if (!isDatabaseOpened())
     {
@@ -154,7 +201,7 @@ void Sqlite3Statement::bind(int nParam, const int64_t nValue)
     }
 }
 
-void Sqlite3Statement::bind(int nParam, const double dValue)
+void Sqlite3Statement::bind(int nParam, double dValue)
 {
     if (!isDatabaseOpened())
     {
@@ -234,9 +281,19 @@ int Sqlite3Statement::bindParameterIndex(const char *szParam)
     return nParam;
 }
 
+void Sqlite3Statement::bind(const char *szParam, const QString &value)
+{
+    bind(szParam, (const char *)value.data());
+}
+
 int Sqlite3Statement::bindParameterIndex(const std::string &szParam)
 {
     return bindParameterIndex(szParam.c_str());
+}
+
+void Sqlite3Statement::bind(const std::string &szParam, const QString &value)
+{
+    bind(szParam.c_str(), (const char *)value.data());
 }
 
 int Sqlite3Statement::execDML()
@@ -393,9 +450,14 @@ std::string Sqlite3Statement::getString(int column)
     return {(const char *)sqlite3_column_text(m_pVM, column), (std::string::size_type)sqlite3_column_bytes(m_pVM, column)};
 }
 
+QString Sqlite3Statement::getQString(int column)
+{
+    return QString::fromStdString(getString(column));
+}
+
 std::string Sqlite3Statement::getLastErrorString()
 {
-    return (const char *)sqlite3_errmsg(m_db);
+    return sqlite3_errmsg(m_db);
 }
 
 int Sqlite3Statement::countRow()

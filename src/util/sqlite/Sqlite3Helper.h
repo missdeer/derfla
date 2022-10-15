@@ -17,17 +17,21 @@ public:
 
     Sqlite3StatementPtr compile(const char *szSQL);
     Sqlite3StatementPtr compile(const std::string &sql);
+    Sqlite3StatementPtr compile(const QString &sql);
     int                 execDML(const char *szSQL);
     int                 execDML(const std::string &sql);
+    int                 execDML(const QString &sql);
     bool                isQueryOk(int result);
     bool                canQueryLoop(int result);
 
     int countRow(const char *szSQL);
     int countRow(const std::string &sql);
+    int countRow(const QString &sql);
 
     bool isDatabaseOpened();
 
     int checkExists(const std::string &field, const std::string &name);
+    int checkExists(const QString &field, const QString &name);
 
     bool createTablesAndIndexes(std::map<std::string, const char *> &tablesMap, std::map<std::string, const char *> &indexesMap);
 

@@ -32,6 +32,11 @@ Sqlite3StatementPtr Sqlite3Helper::compile(const std::string &sql)
     return compile(sql.c_str());
 }
 
+Sqlite3StatementPtr Sqlite3Helper::compile(const QString &sql)
+{
+    return compile((const char *)sql.data());
+}
+
 int Sqlite3Helper::execDML(const char *szSQL)
 {
     int nRet = SQLITE_OK;
@@ -63,6 +68,11 @@ int Sqlite3Helper::execDML(const char *szSQL)
 int Sqlite3Helper::execDML(const std::string &sql)
 {
     return execDML(sql.c_str());
+}
+
+int Sqlite3Helper::execDML(const QString &sql)
+{
+    return execDML((const char *)sql.data());
 }
 
 bool Sqlite3Helper::isQueryOk(int result)
@@ -100,6 +110,11 @@ int Sqlite3Helper::countRow(const char *szSQL)
 int Sqlite3Helper::countRow(const std::string &sql)
 {
     return countRow(sql.c_str());
+}
+
+int Sqlite3Helper::countRow(const QString &sql)
+{
+    return countRow((const char *)sql.data());
 }
 
 bool Sqlite3Helper::isDatabaseOpened()
@@ -143,6 +158,11 @@ int Sqlite3Helper::checkExists(const std::string &field, const std::string &name
     } while (nRet == SQLITE_SCHEMA);
 
     return 0;
+}
+
+int Sqlite3Helper::checkExists(const QString &field, const QString &name)
+{
+    return checkExists(field.toStdString(), name.toStdString());
 }
 
 bool Sqlite3Helper::createTablesAndIndexes(std::map<std::string, const char *> &tablesMap, std::map<std::string, const char *> &indexesMap)
