@@ -28,12 +28,11 @@ void LocalSocket::onDisconnected()
 
 void LocalSocket::onErrorOccurred(QLocalSocket::LocalSocketError socketError)
 {
+    qCritical() << "local socket error " << socketError;
     auto *localSocket = qobject_cast<QLocalSocket *>(sender());
     Q_ASSERT(localSocket);
-    qCritical() << "local socket error " << socketError;
-    if (!msgRead_.isEmpty())
+    if (connected_)
     {
-        stream_ << QString(msgRead_);
         localSocket->disconnectFromServer();
     }
 }
@@ -60,14 +59,14 @@ void LocalSocket::onReadyRead()
 {
     auto *localSocket = qobject_cast<QLocalSocket *>(sender());
     Q_ASSERT(localSocket);
-    msgRead_.append(localSocket->readAll());
+    stream_ << QString(localSocket->readAll());
+    localSocket->disconnectFromServer();
 }
 
 void LocalSocket::onReadChannelFinished()
 {
     auto *localSocket = qobject_cast<QLocalSocket *>(sender());
     Q_ASSERT(localSocket);
-    msgRead_.append(localSocket->readAll());
-    stream_ << QString(msgRead_);
+    stream_ << QString(localSocket->readAll());
     localSocket->disconnectFromServer();
 }

@@ -21,7 +21,11 @@ DBRW::DBRW(bool readOnly)
 
 DBRW::~DBRW()
 {
-    Sqlite3DBManager::instance().close();
+    auto &dbMgr = Sqlite3DBManager::instance();
+    if (dbMgr.isOpened())
+    {
+        dbMgr.close();
+    }
 }
 
 QString DBRW::search(const QString &keyword, int countRequired)

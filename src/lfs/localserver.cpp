@@ -31,6 +31,7 @@ void LocalServer::onLocalSocketReadyRead()
     auto msg = localSocket->readAll();
     auto res = dbrw_.search(QString(msg));
     localSocket->write(res.toUtf8());
+    localSocket->flush();
     localSocket->close();
 }
 

@@ -22,7 +22,6 @@ private:
     bool         connected_ {false};
     QTextStream &stream_;
     QByteArray   msgToWrite_;
-    QByteArray   msgRead_;
     void         flushCachedMsg();
 };
 
