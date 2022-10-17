@@ -50,14 +50,16 @@ int main(int argc, char *argv[])
 #else
         stream.setEncoding(QStringConverter::Utf8);
 #endif
+        QTimer::singleShot(1500, [] { QCoreApplication::quit(); });
         LocalSocket localSocket(stream, nullptr);
         localSocket.connectToServer(lfsLocalPipe);
 #if defined(Q_OS_WIN)
         int nArgs = 0;
 
         LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-        localSocket.write(QString::fromWCharArray(szArglist[1]).toUtf8());
+        auto    args      = QString::fromWCharArray(szArglist[1]).toUtf8();
         LocalFree(szArglist);
+        localSocket.write(args);
 #else
         localSocket.write(argv[1]);
 #endif
