@@ -5,18 +5,18 @@
 
 #include "util_global.h"
 
-class UTILSHARED_EXPORT WinIconProvider : QFileIconProvider
+class UTILSHARED_EXPORT WinIconProvider : public QFileIconProvider
 {
 public:
     WinIconProvider();
-    ~WinIconProvider();
+    ~WinIconProvider() override;
 
-    virtual QIcon icon(const QFileInfo &info) const;
-    void          setPreferredIconSize(int size);
+    [[nodiscard]] QIcon icon(const QFileInfo &info) const override;
+    void                setPreferredIconSize(int size);
 
 private:
     bool addIconFromImageList(int imageListIndex, int iconIndex, QIcon &icon) const;
-    bool addIconFromShellFactory(QString filePath, QIcon &icon) const;
+    bool addIconFromShellFactory(const QString &filePath, QIcon &icon) const;
 
     int preferredSize;
 };
