@@ -24,7 +24,7 @@ namespace util
 
     static void ReadBytes(HANDLE hFile, LPVOID buffer, DWORD size)
     {
-        DWORD bytes = 0;
+        DWORD bytes;
 
         if (!ReadFile(hFile, buffer, size, &bytes, nullptr))
         {
@@ -36,10 +36,10 @@ namespace util
         }
     }
 
-    void readDescriptionFromResource(const QString &filePath, QString &desc)
+    void readDescriptionFromResource(const QString &f, QString &desc)
     {
         DWORD verHandle = NULL;
-        DWORD verSize   = GetFileVersionInfoSize(filePath.toStdWString().c_str(), &verHandle);
+        DWORD verSize   = GetFileVersionInfoSize(f.toStdWString().c_str(), &verHandle);
 
         ScopedGuard ch([verHandle]() { CloseHandle(reinterpret_cast<HANDLE>(verHandle)); });
 
@@ -47,14 +47,15 @@ namespace util
         {
             return;
         }
-        auto *verData = new char[verSize];
+        LPSTR verData = new char[verSize];
         ZeroMemory(verData, verSize);
 
         ScopedGuard deleteVerData([verData]() { delete[] verData; });
-        if (!GetFileVersionInfo(filePath.toStdWString().c_str(), verHandle, verSize, verData))
+        if (!GetFileVersionInfo(f.toStdWString().c_str(), verHandle, verSize, verData))
         {
             return;
         }
+        HRESULT hr = S_OK;
 
         struct LANGANDCODEPAGE
         {
@@ -72,9 +73,9 @@ namespace util
         UINT         dwBytes                = 0;
         for (size_t i = 0; i < (cbTranslate / sizeof(struct LANGANDCODEPAGE)); i++)
         {
-            auto hRes = StringCchPrintf(
+            hr = StringCchPrintf(
                 SubBlock, subBlockSize, L"\\StringFileInfo\\%04x%04x\\FileDescription", lpTranslate[i].wLanguage, lpTranslate[i].wCodePage);
-            if (SUCCEEDED(hRes))
+            if (SUCCEEDED(hr))
             {
                 LPBYTE lpBuffer = nullptr;
                 // Retrieve file description for language and code page "i".
@@ -86,10 +87,10 @@ namespace util
         }
     }
 
-    void processFile(const Directory &directory, const QFileInfo &fileInfo, LFSInserter inserter)
+    void processFile(const Directory &d, const QFileInfo &fileInfo, LFSInserter inserter)
     {
-        QString filePath(directory.directory + QDir::separator() + fileInfo.fileName());
-        filePath.replace("\\\\", "\\");
+        QString f(d.directory + QDir::separator() + fileInfo.fileName());
+        f.replace("\\\\", "\\");
         if (fileInfo.suffix() == "lnk")
         {
             WCHAR        wszPath[MAX_PATH]             = {0};
@@ -98,84 +99,80 @@ namespace util
             const size_t argumentsLength               = 65535;
             WCHAR       *pwszArguments                 = new WCHAR[argumentsLength];
             ScopedGuard  da([pwszArguments]() { delete[] pwszArguments; });
-            HRESULT hRes = resolveShellLink(nullptr, filePath.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
-            if (FAILED(hRes))
+            HRESULT      hr = resolveShellLink(nullptr, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
+            if (FAILED(hr))
             {
                 return;
             }
             QRegularExpression r("%([^%]+)%");
-            filePath  = QString::fromUtf16((const ushort *)wszPath);
-            auto iter = r.globalMatch(filePath);
-            while (iter.hasNext())
+            f      = QString::fromUtf16((const ushort *)wszPath);
+            auto i = r.globalMatch(f);
+            while (i.hasNext())
             {
-                auto match = iter.next();
-                auto env   = match.captured(1);
-                auto val   = qgetenv(env.toStdString().c_str());
-                filePath.replace("%" % env % "%", val);
+                auto    match = i.next();
+                QString e     = match.captured(1);
+                auto    v     = qgetenv(e.toStdString().c_str());
+                f.replace("%" % e % "%", v);
             }
-            QFileInfo fileInfo(filePath);
-            if (fileInfo.suffix() != "exe" && fileInfo.suffix() != "msc" && fileInfo.suffix() != "bat")
+            QFileInfo fi(f);
+            if (fi.suffix() != "exe" && fi.suffix() != "msc" && fi.suffix() != "bat")
             {
                 return;
             }
-            auto args = QString::fromUtf16((const ushort *)pwszArguments);
-            iter      = r.globalMatch(args);
-            while (iter.hasNext())
+            QString a = QString::fromUtf16((const ushort *)pwszArguments);
+            i         = r.globalMatch(a);
+            while (i.hasNext())
             {
-                auto match = iter.next();
-                auto env   = match.captured(1);
-                auto val   = qgetenv(env.toStdString().c_str());
-                args.replace("%" % env % "%", val);
+                auto    match = i.next();
+                QString e     = match.captured(1);
+                auto    v     = qgetenv(e.toStdString().c_str());
+                a.replace("%" % e % "%", v);
             }
-            auto workingDirectory = QString::fromUtf16((const ushort *)wszWorkingDirectory);
-            iter                  = r.globalMatch(args);
-            while (iter.hasNext())
+            QString w = QString::fromUtf16((const ushort *)wszWorkingDirectory);
+            i         = r.globalMatch(a);
+            while (i.hasNext())
             {
-                auto match = iter.next();
-                auto env   = match.captured(1);
-                auto val   = qgetenv(env.toStdString().c_str());
-                workingDirectory.replace("%" % env % "%", val);
-            }
-
-            auto desc = QString::fromUtf16((const ushort *)wszDescription);
-            if (desc.isEmpty())
-            {
-                readDescriptionFromResource(filePath, desc);
-            }
-            if (desc.isEmpty())
-            {
-                desc = filePath;
+                auto    match = i.next();
+                QString e     = match.captured(1);
+                auto    v     = qgetenv(e.toStdString().c_str());
+                w.replace("%" % e % "%", v);
             }
 
-            inserter(util::extractPNGIconFromFile(fileInfo),
+            QString desc = QString::fromUtf16((const ushort *)wszDescription);
+            if (desc.isEmpty())
+            {
+                readDescriptionFromResource(f, desc);
+            }
+            if (desc.isEmpty())
+            {
+                desc = f;
+            }
+
+            inserter(util::extractPNGIconFromFile(fi),
                      fileInfo.baseName(),
                      desc,
-                     filePath,
-                     args,
-                     workingDirectory,
+                     f,
+                     a,
+                     w,
                      timestamp,
                      fileInfo.lastModified().toMSecsSinceEpoch(),
-                     isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? QStringLiteral("terminalCommand")
-                                                                                                 : QStringLiteral("shellExecute"));
+                     isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? "terminalCommand" : "shellExecute");
             return;
         }
 
         QString desc;
-        readDescriptionFromResource(filePath, desc);
+        readDescriptionFromResource(f, desc);
         if (desc.isEmpty())
-        {
-            desc = filePath;
-        }
+            desc = f;
         inserter(util::extractPNGIconFromFile(fileInfo),
                  fileInfo.fileName(),
                  desc,
-                 filePath,
-                 {},
-                 QDir::toNativeSeparators(QFileInfo(filePath).absolutePath()),
+                 f,
+                 "",
+                 QDir::toNativeSeparators(QFileInfo(f).absolutePath()),
                  timestamp,
                  fileInfo.lastModified().toMSecsSinceEpoch(),
-                 isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? QStringLiteral("terminalCommand")
-                                                                                             : QStringLiteral("shellExecute"));
+                 isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? "terminalCommand" : "shellExecute");
     }
 
     HRESULT resolveShellLink(
@@ -187,11 +184,11 @@ namespace util
 
         // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
         // has already been called.
-        HRESULT hRes = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
-        if (FAILED(hRes))
+        HRESULT hres = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
+        if (FAILED(hres))
         {
             qCritical() << "CoCreateInstance failed";
-            return hRes;
+            return hres;
         }
 
         ScopedGuard releasePsl([psl]() { psl->Release(); });
@@ -199,106 +196,106 @@ namespace util
         IPersistFile *ppf;
 
         // Get a pointer to the IPersistFile interface.
-        hRes = psl->QueryInterface(IID_IPersistFile, (void **)&ppf);
+        hres = psl->QueryInterface(IID_IPersistFile, (void **)&ppf);
 
-        if (FAILED(hRes))
+        if (FAILED(hres))
         {
             qWarning() << "psl->QueryInterface(IID_IPersistFile, (void**)&ppf) failed";
-            return hRes;
+            return hres;
         }
 
         ScopedGuard releasePpf([ppf]() { ppf->Release(); });
 
         // Load the shortcut.
-        hRes = ppf->Load(lpszLinkFile, STGM_READ);
+        hres = ppf->Load(lpszLinkFile, STGM_READ);
 
-        if (FAILED(hRes))
+        if (FAILED(hres))
         {
             qWarning() << "ppf->Load(lpszLinkFile, STGM_READ) failed";
-            return hRes;
+            return hres;
         }
         // Resolve the link.
-        hRes = psl->Resolve(hwnd, 0);
+        hres = psl->Resolve(hwnd, 0);
 
-        if (FAILED(hRes))
+        if (FAILED(hres))
         {
             qWarning() << "psl->Resolve(hwnd, 0) failed";
-            return hRes;
+            return hres;
         }
 
         // Get the path to the link target.
         WIN32_FIND_DATA wfd;
         WCHAR           szGotPath[MAX_PATH] = {0};
-        hRes                                = psl->GetPath(szGotPath, MAX_PATH, &wfd, SLGP_RAWPATH);
+        hres                                = psl->GetPath(szGotPath, MAX_PATH, &wfd, SLGP_RAWPATH);
 
-        if (FAILED(hRes))
+        if (FAILED(hres))
         {
             qWarning() << "psl->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_RAWPATH) failed";
-            return hRes;
+            return hres;
         }
 
-        hRes = StringCbCopy(lpszPath, MAX_PATH, szGotPath);
-        if (FAILED(hRes))
+        hres = StringCbCopy(lpszPath, MAX_PATH, szGotPath);
+        if (FAILED(hres))
         {
             // Handle the error
             qWarning() << "failed StringCbCopy(lpszPath, iPathBufferSize, szGotPath)";
-            return hRes;
+            return hres;
         }
 
         // Get the description of the target.
         WCHAR szDescription[1024 * 8] = {0};
-        hRes                          = psl->GetDescription(szDescription, 1024 * 8);
+        hres                          = psl->GetDescription(szDescription, 1024 * 8);
 
-        if (FAILED(hRes))
+        if (FAILED(hres))
         {
             qWarning() << "psl->GetDescription(szDescription, MAX_PATH) failed";
-            return hRes;
+            return hres;
         }
 
-        hRes = StringCbCopy(lpszDescription, 1024 * 8, szDescription);
-        if (FAILED(hRes))
+        hres = StringCbCopy(lpszDescription, 1024 * 8, szDescription);
+        if (FAILED(hres))
         {
             // Handle the error
             qWarning() << "failed StringCbCopy(lpszDescription, MAX_PATH, szDescription)";
-            return hRes;
+            return hres;
         }
         // Get the working directory
         WCHAR szWorkingDirectory[MAX_PATH] = {0};
-        hRes                               = psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH);
-        if (FAILED(hRes))
+        hres                               = psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH);
+        if (FAILED(hres))
         {
             qWarning() << "psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH) failed";
-            return hRes;
+            return hres;
         }
 
-        hRes = StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory);
-        if (FAILED(hRes))
+        hres = StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory);
+        if (FAILED(hres))
         {
             // Handle the error
             qWarning() << "failed StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory)";
-            return hRes;
+            return hres;
         }
 
         // Get arguments
         const size_t argumentsLength = 65535;
         WCHAR       *pszArguments    = new WCHAR[argumentsLength];
         ScopedGuard  da([pszArguments]() { delete[] pszArguments; });
-        hRes = psl->GetArguments(pszArguments, argumentsLength);
-        if (FAILED(hRes))
+        hres = psl->GetArguments(pszArguments, argumentsLength);
+        if (FAILED(hres))
         {
             qWarning() << "psl->GetArguments(pszArguments, argumentsLength) failed";
-            return hRes;
+            return hres;
         }
 
-        hRes = StringCbCopy(lpszArguments, argumentsLength, pszArguments);
-        if (FAILED(hRes))
+        hres = StringCbCopy(lpszArguments, argumentsLength, pszArguments);
+        if (FAILED(hres))
         {
             // Handle the error
             qWarning() << "failed StringCbCopy(lpszArguments, argumentsLength, pszArguments)";
-            return hRes;
+            return hres;
         }
 
-        return hRes;
+        return hres;
     }
 
 #define XFER_BUFFER_SIZE 2048
