@@ -24,7 +24,7 @@ namespace util
 
     static void ReadBytes(HANDLE hFile, LPVOID buffer, DWORD size)
     {
-        DWORD bytes;
+        DWORD bytes = 0;
 
         if (!ReadFile(hFile, buffer, size, &bytes, nullptr))
         {
@@ -36,32 +36,31 @@ namespace util
         }
     }
 
-    void readDescriptionFromResource(const QString &f, QString &desc)
+    QString readDescriptionFromResource(const QString &filePath)
     {
         DWORD verHandle = NULL;
-        DWORD verSize   = GetFileVersionInfoSize(f.toStdWString().c_str(), &verHandle);
+        DWORD verSize   = GetFileVersionInfoSize(filePath.toStdWString().c_str(), &verHandle);
 
         ScopedGuard ch([verHandle]() { CloseHandle(reinterpret_cast<HANDLE>(verHandle)); });
 
         if (!verSize)
         {
-            return;
+            return {};
         }
-        LPSTR verData = new char[verSize];
+        auto *verData = new char[verSize];
         ZeroMemory(verData, verSize);
 
         ScopedGuard deleteVerData([verData]() { delete[] verData; });
-        if (!GetFileVersionInfo(f.toStdWString().c_str(), verHandle, verSize, verData))
+        if (!GetFileVersionInfo(filePath.toStdWString().c_str(), verHandle, verSize, verData))
         {
-            return;
+            return {};
         }
-        HRESULT hr = S_OK;
 
         struct LANGANDCODEPAGE
         {
             WORD wLanguage;
             WORD wCodePage;
-        } *lpTranslate;
+        } *lpTranslate = nullptr;
 
         // Read the list of languages and code pages.
         UINT cbTranslate = 0;
@@ -73,24 +72,24 @@ namespace util
         UINT         dwBytes                = 0;
         for (size_t i = 0; i < (cbTranslate / sizeof(struct LANGANDCODEPAGE)); i++)
         {
-            hr = StringCchPrintf(
+            auto hRes = StringCchPrintf(
                 SubBlock, subBlockSize, L"\\StringFileInfo\\%04x%04x\\FileDescription", lpTranslate[i].wLanguage, lpTranslate[i].wCodePage);
-            if (SUCCEEDED(hr))
+            if (SUCCEEDED(hRes))
             {
                 LPBYTE lpBuffer = nullptr;
                 // Retrieve file description for language and code page "i".
                 VerQueryValue(verData, SubBlock, (LPVOID *)&lpBuffer, &dwBytes);
 
-                desc = QString::fromUtf16((const ushort *)lpBuffer);
-                break;
+                return QString::fromUtf16((const ushort *)lpBuffer);
             }
         }
+        return {};
     }
 
-    void processFile(const Directory &d, const QFileInfo &fileInfo, LFSInserter inserter)
+    void processFile(const Directory &directory, const QFileInfo &fileInfo, LFSInserter inserter)
     {
-        QString f(d.directory + QDir::separator() + fileInfo.fileName());
-        f.replace("\\\\", "\\");
+        QString filePath(directory.directory + QDir::separator() + fileInfo.fileName());
+        filePath.replace("\\\\", "\\");
         if (fileInfo.suffix() == "lnk")
         {
             WCHAR        wszPath[MAX_PATH]             = {0};
@@ -98,81 +97,84 @@ namespace util
             WCHAR        wszDescription[1024 * 8]      = {0};
             const size_t argumentsLength               = 65535;
             WCHAR       *pwszArguments                 = new WCHAR[argumentsLength];
-            ScopedGuard  da([pwszArguments]() { delete[] pwszArguments; });
-            HRESULT      hr = resolveShellLink(nullptr, f.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
-            if (FAILED(hr))
+            ScopedGuard  sgReleaseArray([pwszArguments]() { delete[] pwszArguments; });
+            auto hRes = resolveShellLink(nullptr, filePath.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
+            if (FAILED(hRes))
             {
                 return;
             }
-            QRegularExpression r("%([^%]+)%");
-            f      = QString::fromUtf16((const ushort *)wszPath);
-            auto i = r.globalMatch(f);
-            while (i.hasNext())
+            QRegularExpression reg("%([^%]+)%");
+            filePath  = QString::fromUtf16((const ushort *)wszPath);
+            auto iter = reg.globalMatch(filePath);
+            while (iter.hasNext())
             {
-                auto    match = i.next();
-                QString e     = match.captured(1);
-                auto    v     = qgetenv(e.toStdString().c_str());
-                f.replace("%" % e % "%", v);
+                auto match = iter.next();
+                auto env   = match.captured(1);
+                auto val   = qgetenv(env.toStdString().c_str());
+                filePath.replace("%" % env % "%", val);
             }
-            QFileInfo fi(f);
-            if (fi.suffix() != "exe" && fi.suffix() != "msc" && fi.suffix() != "bat")
+            QFileInfo fileInfo(filePath);
+            if (fileInfo.suffix() != "exe" && fileInfo.suffix() != "msc" && fileInfo.suffix() != "bat")
             {
                 return;
             }
-            QString a = QString::fromUtf16((const ushort *)pwszArguments);
-            i         = r.globalMatch(a);
-            while (i.hasNext())
+            auto args = QString::fromUtf16((const ushort *)pwszArguments);
+            iter      = reg.globalMatch(args);
+            while (iter.hasNext())
             {
-                auto    match = i.next();
-                QString e     = match.captured(1);
-                auto    v     = qgetenv(e.toStdString().c_str());
-                a.replace("%" % e % "%", v);
+                auto match = iter.next();
+                auto env   = match.captured(1);
+                auto val   = qgetenv(env.toStdString().c_str());
+                args.replace("%" % env % "%", val);
             }
-            QString w = QString::fromUtf16((const ushort *)wszWorkingDirectory);
-            i         = r.globalMatch(a);
-            while (i.hasNext())
+            auto workingDirectory = QString::fromUtf16((const ushort *)wszWorkingDirectory);
+            iter                  = reg.globalMatch(args);
+            while (iter.hasNext())
             {
-                auto    match = i.next();
-                QString e     = match.captured(1);
-                auto    v     = qgetenv(e.toStdString().c_str());
-                w.replace("%" % e % "%", v);
-            }
-
-            QString desc = QString::fromUtf16((const ushort *)wszDescription);
-            if (desc.isEmpty())
-            {
-                readDescriptionFromResource(f, desc);
-            }
-            if (desc.isEmpty())
-            {
-                desc = f;
+                auto match = iter.next();
+                auto env   = match.captured(1);
+                auto val   = qgetenv(env.toStdString().c_str());
+                workingDirectory.replace("%" % env % "%", val);
             }
 
-            inserter(util::extractPNGIconFromFile(fi),
+            auto desc = QString::fromUtf16((const ushort *)wszDescription);
+            if (desc.isEmpty())
+            {
+                desc = readDescriptionFromResource(filePath);
+            }
+            if (desc.isEmpty())
+            {
+                desc = filePath;
+            }
+
+            inserter(util::extractPNGIconFromFile(fileInfo),
                      fileInfo.baseName(),
                      desc,
-                     f,
-                     a,
-                     w,
+                     filePath,
+                     args,
+                     workingDirectory,
                      timestamp,
                      fileInfo.lastModified().toMSecsSinceEpoch(),
-                     isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? "terminalCommand" : "shellExecute");
+                     isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? QStringLiteral("terminalCommand")
+                                                                                                 : QStringLiteral("shellExecute"));
             return;
         }
 
-        QString desc;
-        readDescriptionFromResource(f, desc);
+        QString desc = readDescriptionFromResource(filePath);
         if (desc.isEmpty())
-            desc = f;
+        {
+            desc = filePath;
+        }
         inserter(util::extractPNGIconFromFile(fileInfo),
                  fileInfo.fileName(),
                  desc,
-                 f,
-                 "",
-                 QDir::toNativeSeparators(QFileInfo(f).absolutePath()),
+                 filePath,
+                 {},
+                 QDir::toNativeSeparators(QFileInfo(filePath).absolutePath()),
                  timestamp,
                  fileInfo.lastModified().toMSecsSinceEpoch(),
-                 isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? "terminalCommand" : "shellExecute");
+                 isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? QStringLiteral("terminalCommand")
+                                                                                             : QStringLiteral("shellExecute"));
     }
 
     HRESULT resolveShellLink(
@@ -184,118 +186,118 @@ namespace util
 
         // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
         // has already been called.
-        HRESULT hres = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
-        if (FAILED(hres))
+        HRESULT hRes = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
+        if (FAILED(hRes))
         {
             qCritical() << "CoCreateInstance failed";
-            return hres;
+            return hRes;
         }
 
         ScopedGuard releasePsl([psl]() { psl->Release(); });
 
-        IPersistFile *ppf;
+        IPersistFile *ppf = nullptr;
 
         // Get a pointer to the IPersistFile interface.
-        hres = psl->QueryInterface(IID_IPersistFile, (void **)&ppf);
+        hRes = psl->QueryInterface(IID_IPersistFile, (void **)&ppf);
 
-        if (FAILED(hres))
+        if (FAILED(hRes))
         {
             qWarning() << "psl->QueryInterface(IID_IPersistFile, (void**)&ppf) failed";
-            return hres;
+            return hRes;
         }
 
         ScopedGuard releasePpf([ppf]() { ppf->Release(); });
 
         // Load the shortcut.
-        hres = ppf->Load(lpszLinkFile, STGM_READ);
+        hRes = ppf->Load(lpszLinkFile, STGM_READ);
 
-        if (FAILED(hres))
+        if (FAILED(hRes))
         {
             qWarning() << "ppf->Load(lpszLinkFile, STGM_READ) failed";
-            return hres;
+            return hRes;
         }
         // Resolve the link.
-        hres = psl->Resolve(hwnd, 0);
+        hRes = psl->Resolve(hwnd, 0);
 
-        if (FAILED(hres))
+        if (FAILED(hRes))
         {
             qWarning() << "psl->Resolve(hwnd, 0) failed";
-            return hres;
+            return hRes;
         }
 
         // Get the path to the link target.
         WIN32_FIND_DATA wfd;
         WCHAR           szGotPath[MAX_PATH] = {0};
-        hres                                = psl->GetPath(szGotPath, MAX_PATH, &wfd, SLGP_RAWPATH);
+        hRes                                = psl->GetPath(szGotPath, MAX_PATH, &wfd, SLGP_RAWPATH);
 
-        if (FAILED(hres))
+        if (FAILED(hRes))
         {
             qWarning() << "psl->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_RAWPATH) failed";
-            return hres;
+            return hRes;
         }
 
-        hres = StringCbCopy(lpszPath, MAX_PATH, szGotPath);
-        if (FAILED(hres))
+        hRes = StringCbCopy(lpszPath, MAX_PATH, szGotPath);
+        if (FAILED(hRes))
         {
             // Handle the error
             qWarning() << "failed StringCbCopy(lpszPath, iPathBufferSize, szGotPath)";
-            return hres;
+            return hRes;
         }
 
         // Get the description of the target.
         WCHAR szDescription[1024 * 8] = {0};
-        hres                          = psl->GetDescription(szDescription, 1024 * 8);
+        hRes                          = psl->GetDescription(szDescription, 1024 * 8);
 
-        if (FAILED(hres))
+        if (FAILED(hRes))
         {
             qWarning() << "psl->GetDescription(szDescription, MAX_PATH) failed";
-            return hres;
+            return hRes;
         }
 
-        hres = StringCbCopy(lpszDescription, 1024 * 8, szDescription);
-        if (FAILED(hres))
+        hRes = StringCbCopy(lpszDescription, 1024 * 8, szDescription);
+        if (FAILED(hRes))
         {
             // Handle the error
             qWarning() << "failed StringCbCopy(lpszDescription, MAX_PATH, szDescription)";
-            return hres;
+            return hRes;
         }
         // Get the working directory
         WCHAR szWorkingDirectory[MAX_PATH] = {0};
-        hres                               = psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH);
-        if (FAILED(hres))
+        hRes                               = psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH);
+        if (FAILED(hRes))
         {
             qWarning() << "psl->GetWorkingDirectory(szWorkingDirectory, MAX_PATH) failed";
-            return hres;
+            return hRes;
         }
 
-        hres = StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory);
-        if (FAILED(hres))
+        hRes = StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory);
+        if (FAILED(hRes))
         {
             // Handle the error
             qWarning() << "failed StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory)";
-            return hres;
+            return hRes;
         }
 
         // Get arguments
         const size_t argumentsLength = 65535;
         WCHAR       *pszArguments    = new WCHAR[argumentsLength];
-        ScopedGuard  da([pszArguments]() { delete[] pszArguments; });
-        hres = psl->GetArguments(pszArguments, argumentsLength);
-        if (FAILED(hres))
+        ScopedGuard  sgReleaseArray([pszArguments]() { delete[] pszArguments; });
+        hRes = psl->GetArguments(pszArguments, argumentsLength);
+        if (FAILED(hRes))
         {
             qWarning() << "psl->GetArguments(pszArguments, argumentsLength) failed";
-            return hres;
+            return hRes;
         }
 
-        hres = StringCbCopy(lpszArguments, argumentsLength, pszArguments);
-        if (FAILED(hres))
+        hRes = StringCbCopy(lpszArguments, argumentsLength, pszArguments);
+        if (FAILED(hRes))
         {
             // Handle the error
             qWarning() << "failed StringCbCopy(lpszArguments, argumentsLength, pszArguments)";
-            return hres;
+            return hRes;
         }
 
-        return hres;
+        return hRes;
     }
 
 #define XFER_BUFFER_SIZE 2048
@@ -306,11 +308,11 @@ namespace util
 
     bool isConsoleApplication(const QString &path)
     {
-        DWORD SectionOffset;
-        DWORD CoffHeaderOffset;
+        DWORD SectionOffset    = 0;
+        DWORD CoffHeaderOffset = 0;
         DWORD MoreDosHeader[16];
 
-        ULONG ntSignature;
+        ULONG ntSignature = 0;
 
         IMAGE_DOS_HEADER      image_dos_header;
         IMAGE_FILE_HEADER     image_file_header;
@@ -327,7 +329,7 @@ namespace util
             return false;
         }
 
-        ScopedGuard ch([&hImage]() { CloseHandle(hImage); });
+        ScopedGuard sgCloseHandle([&hImage] { CloseHandle(hImage); });
         /*
          *  Read the MS-DOS image header.
          */
