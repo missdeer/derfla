@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>689</width>
-    <height>812</height>
+    <height>589</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -129,15 +129,15 @@
        <widget class="QWidget" name="pluginPage"/>
        <widget class="QWidget" name="skinPage"/>
        <widget class="QWidget" name="interpretorPage">
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
             <string>Bash</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="0" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
             <widget class="QLineEdit" name="edtBashPath"/>
@@ -172,14 +172,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="1" column="0">
           <widget class="QLabel" name="label_11">
            <property name="text">
             <string>Sh</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="1" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_12">
            <item>
             <widget class="QLineEdit" name="edtShPath"/>
@@ -214,14 +214,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="2" column="0">
           <widget class="QLabel" name="label_12">
            <property name="text">
             <string>Node</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="2" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_13">
            <item>
             <widget class="QLineEdit" name="edtNodePath"/>
@@ -256,14 +256,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="3" column="0">
           <widget class="QLabel" name="label_13">
            <property name="text">
             <string>TCL</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="3" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_14">
            <item>
             <widget class="QLineEdit" name="edtTclPath"/>
@@ -298,14 +298,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="4" column="0">
           <widget class="QLabel" name="label_2">
            <property name="text">
             <string>PHP</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="4" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
             <widget class="QLineEdit" name="edtPHPPath"/>
@@ -340,14 +340,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="5" column="0">
           <widget class="QLabel" name="label_3">
            <property name="text">
             <string>Ruby</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="5" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <widget class="QLineEdit" name="edtRubyPath"/>
@@ -382,14 +382,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="6" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
             <string>Python</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="6" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
             <widget class="QLineEdit" name="edtPythonPath"/>
@@ -424,14 +424,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="7" column="0">
           <widget class="QLabel" name="label_5">
            <property name="text">
             <string>Perl</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="7" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
             <widget class="QLineEdit" name="edtPerlPath"/>
@@ -466,14 +466,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="8" column="0">
           <widget class="QLabel" name="label_6">
            <property name="text">
             <string>Zsh</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="8" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
             <widget class="QLineEdit" name="edtZshPath"/>
@@ -508,14 +508,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="9" column="0">
           <widget class="QLabel" name="label_7">
            <property name="text">
             <string>Lua</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="9" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <property name="spacing">
             <number>7</number>
@@ -553,14 +553,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="10" column="0">
           <widget class="QLabel" name="label_8">
            <property name="text">
             <string>AppleScript</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="10" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_9">
            <item>
             <widget class="QLineEdit" name="edtAppleScriptPath"/>
@@ -595,14 +595,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="11" column="0">
           <widget class="QLabel" name="label_9">
            <property name="text">
             <string>CScript</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="11" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_10">
            <item>
             <widget class="QLineEdit" name="edtCScriptPath"/>
@@ -637,14 +637,14 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="12" column="0">
           <widget class="QLabel" name="label_10">
            <property name="text">
             <string>WScript</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="12" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_11">
            <item>
             <widget class="QLineEdit" name="edtWScriptPath"/>
@@ -678,19 +678,6 @@
             </widget>
            </item>
           </layout>
-         </item>
-         <item>
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>4</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </widget>

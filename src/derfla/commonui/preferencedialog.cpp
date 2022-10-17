@@ -285,6 +285,90 @@ void PreferenceDialog::on_btnDetectBash_clicked()
     ui->edtBashPath->setText(fileName);
 }
 
+void PreferenceDialog::on_btnBrowseSh_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Find Sh"),
+                                                    "",
+#if defined(Q_OS_WIN)
+                                                    tr("Sh interpretor (sh.exe);;All files (*.*)")
+#else
+                                                    tr("Sh interpretor (sh);;All files (*.*)")
+#endif
+    );
+    if (!QFile::exists(fileName))
+    {
+        return;
+    }
+    ui->edtShPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectSh_clicked()
+{
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("sh")));
+    if (!QFile::exists(fileName))
+    {
+        return;
+    }
+    ui->edtShPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowseNode_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Find Node"),
+                                                    "",
+#if defined(Q_OS_WIN)
+                                                    tr("Node interpretor (node.exe);;All files (*.*)")
+#else
+                                                    tr("Node interpretor (node);;All files (*.*)")
+#endif
+    );
+    if (!QFile::exists(fileName))
+    {
+        return;
+    }
+    ui->edtNodePath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectNode_clicked()
+{
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("node")));
+    if (!QFile::exists(fileName))
+    {
+        return;
+    }
+    ui->edtNodePath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnBrowseTcl_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Find Tcl"),
+                                                    "",
+#if defined(Q_OS_WIN)
+                                                    tr("Tcl interpretor (tcl.exe);;All files (*.*)")
+#else
+                                                    tr("Tcl interpretor (tcl);;All files (*.*)")
+#endif
+    );
+    if (!QFile::exists(fileName))
+    {
+        return;
+    }
+    ui->edtTclPath->setText(fileName);
+}
+
+void PreferenceDialog::on_btnDetectTcl_clicked()
+{
+    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("tcl")));
+    if (!QFile::exists(fileName))
+    {
+        return;
+    }
+    ui->edtTclPath->setText(fileName);
+}
+
 void PreferenceDialog::on_btnBrowsePHP_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,

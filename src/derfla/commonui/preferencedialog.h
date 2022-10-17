@@ -34,6 +34,18 @@ private slots:
 
     void on_btnDetectBash_clicked();
 
+    void on_btnBrowseSh_clicked();
+
+    void on_btnDetectSh_clicked();
+
+    void on_btnBrowseNode_clicked();
+
+    void on_btnDetectNode_clicked();
+
+    void on_btnBrowseTcl_clicked();
+
+    void on_btnDetectTcl_clicked();
+
     void on_btnBrowsePHP_clicked();
 
     void on_btnDetectPHP_clicked();
