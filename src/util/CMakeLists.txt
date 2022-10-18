@@ -91,7 +91,12 @@ set(TS_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/translations/util_zh_CN.ts
         ${CMAKE_CURRENT_SOURCE_DIR}/translations/util_en_US.ts
         )
-set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations")
+
+IF(APPLE)
+        set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Contents/Resources/translations")
+ELSE(APPLE)
+        set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations")
+ENDIF(APPLE)
 
 IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         qt_create_translation(QM_FILES 

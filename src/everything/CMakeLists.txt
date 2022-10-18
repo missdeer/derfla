@@ -86,15 +86,19 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE
         qtsingleapplication
         qtlockedfile
         DerflaUtil
-        everythingWrapper
         Qt${QT_VERSION_MAJOR}::Xml
         Qt${QT_VERSION_MAJOR}::Concurrent
         Qt${QT_VERSION_MAJOR}::Sql
         )
 
+IF(WIN32)
+    target_link_libraries(${PROJECT_NAME}  PRIVATE everythingWrapper)
+ENDIF(WIN32)
+
 IF(APPLE)
     target_link_libraries(${PROJECT_NAME}  PRIVATE objc "-framework CoreServices")
+ELSE(APPLE)
+    target_precompile_headers(${PROJECT_NAME} PRIVATE stdafx.h)
 ENDIF(APPLE)
 set_target_properties(${PROJECT_NAME}  PROPERTIES OUTPUT_NAME "et")
         
-target_precompile_headers(${PROJECT_NAME} PRIVATE stdafx.h)

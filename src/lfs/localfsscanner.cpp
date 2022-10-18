@@ -147,11 +147,13 @@ void LocalFSScanner::scanDirectory(const Directory &directory)
 void LocalFSScanner::getBuiltinDirectories()
 {
     auto homePath = qgetenv("HOME");
-    scanDirectories_ << Directory("/Applications", true) << Directory(homePath + "/Applications", true)
-                     << Directory("/Applications/Xcode.app/Contents/Applications", false) << Directory("/Developer/Applications", false)
-                     << Directory(homePath, false) << Directory(homePath + "/Library/PreferencePanes", false) << Directory("/usr/local/Cellar", true)
-                     << Directory("/opt/homebrew-cask/Caskroom", false) << Directory("/System/Library/PerferencePanes", false)
-                     << Directory("/System/Library/CoreServices/Applications", true);
+    scanDirectories_ << Directory(QStringLiteral("/Applications"), true) << Directory(homePath + "/Applications", true)
+                     << Directory(QStringLiteral("/Applications/Xcode.app/Contents/Applications"), false)
+                     << Directory(QStringLiteral("/Developer/Applications"), false) << Directory(homePath, false)
+                     << Directory(homePath + "/Library/PreferencePanes", false) << Directory(QStringLiteral("/usr/local/Cellar"), true)
+                     << Directory(QStringLiteral("/opt/homebrew-cask/Caskroom"), false)
+                     << Directory(QStringLiteral("/System/Library/PerferencePanes"), false)
+                     << Directory(QStringLiteral("/System/Library/CoreServices/Applications"), true);
 }
 
 void LocalFSScanner::scanDirectory(const Directory &d)
@@ -160,17 +162,21 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     QThread::yieldCurrentThread();
 
     if (QFileInfo(d.directory).suffix() == "framework")
+    {
         return;
+    }
 
     QDir          dir(d.directory);
-    QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::Files | QDir::Readable);
+    QFileInfoList list = dir.entryInfoList(QStringList() << QStringLiteral("*"), QDir::Files | QDir::Readable);
     check_stop;
     if (d.recursive)
+    {
         list << dir.entryInfoList(QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot);
+    }
     else
-        list << dir.entryInfoList(QStringList() << "*.app"
-                                                << "*.prefPane",
-                                  QDir::AllDirs | QDir::NoDotAndDotDot);
+    {
+        list << dir.entryInfoList(QStringList() << QStringLiteral("*.app") << QStringLiteral("*.prefPane"), QDir::AllDirs | QDir::NoDotAndDotDot);
+    }
 
     check_stop;
     for (const auto &fileInfo : list)
@@ -184,11 +190,9 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                             fileInfo.fileName(),
                             f,
                             f,
-                            "",
+                            {},
                             QFileInfo(f).filePath(),
-                            timestamp_,
-                            fileInfo.lastModified().toMSecsSinceEpoch(),
-                            fileInfo.isDir() ? "shellExecute" : "terminalCommand");
+                            fileInfo.isDir() ? QStringLiteral("shellExecute") : QStringLiteral("terminalCommand"));
         }
         else if (fileInfo.isDir() && d.recursive)
         {
@@ -262,15 +266,8 @@ void LocalFSScanner::finished(int exitCode, QProcess::ExitStatus)
                     cfurl = cfurl.left(cfurl.length() - 1);
 
                     QFileInfo fileInfo(cfurl);
-                    dbrw_.insertLFS(util::extractPNGIconFromFile(fileInfo),
-                                    fileLabel,
-                                    fileLabel,
-                                    cfurl,
-                                    "",
-                                    fileInfo.filePath(),
-                                    timestamp_,
-                                    fileInfo.lastModified().toMSecsSinceEpoch(),
-                                    "shellExecute");
+                    dbrw_.insertLFS(
+                        util::extractPNGIconFromFile(fileInfo), fileLabel, fileLabel, cfurl, {}, fileInfo.filePath(), QStringLiteral("shellExecute"));
                 }
             }
         }
@@ -321,9 +318,7 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                               std::placeholders::_4,
                               std::placeholders::_5,
                               std::placeholders::_6,
-                              std::placeholders::_7,
-                              std::placeholders::_8,
-                              std::placeholders::_9);
+                              std::placeholders::_7);
     for (const auto &fi : list)
         util::processFile(d, fi, inserter);
 

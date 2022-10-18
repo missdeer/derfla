@@ -111,12 +111,7 @@ bool DBRW::getLFSItems(LocalFSItemList &fsil, const QString &keyword, int countR
     {
         return false;
     }
-    if (queryActions(fsil, countRequired, stmt))
-    {
-        return true;
-    }
-
-    return false;
+    return queryActions(fsil, countRequired, stmt);
 }
 
 bool DBRW::insertLFS(const QByteArray &icon,

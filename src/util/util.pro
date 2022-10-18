@@ -51,9 +51,9 @@ SOURCES += \
     $$PWD/derflaaction.cpp \
     $$PWD/scopedguard.cpp \
     $$PWD/luavm.cpp \
-    sqlite/Sqlite3DBManager.cpp \
-    sqlite/Sqlite3Helper.cpp \
-    sqlite/Sqlite3Statement.cpp
+    $$PWD/sqlite/Sqlite3DBManager.cpp \
+    $$PWD/sqlite/Sqlite3Helper.cpp \
+    $$PWD/sqlite/Sqlite3Statement.cpp
 
 HEADERS += \
     $$PWD/util_global.h \
@@ -63,10 +63,10 @@ HEADERS += \
     $$PWD/derflaaction.h \
     $$PWD/scopedguard.h  \
     $$PWD/luavm.h \
-    sqlite/Sqlite3Constants.h \
-    sqlite/Sqlite3DBManager.h \
-    sqlite/Sqlite3Helper.h \
-    sqlite/Sqlite3Statement.h
+    $$PWD/sqlite/Sqlite3Constants.h \
+    $$PWD/sqlite/Sqlite3DBManager.h \
+    $$PWD/sqlite/Sqlite3Helper.h \
+    $$PWD/sqlite/Sqlite3Statement.h
 
 INCLUDEPATH += $$PWD
 

@@ -35,7 +35,6 @@ SOURCES += $$PWD/main.cpp\
     $$PWD/extension/extension.cpp \
     $$PWD/extension/extensionmanager.cpp \
     $$PWD/extension/extensionmodel.cpp \
-    $$PWD/updater/autoupdater.cpp \
     $$PWD/commonui/preferencedialog.cpp \
     $$PWD/commonui/booleaneditor.cpp \
     $$PWD/derflaapp.cpp \
@@ -60,7 +59,6 @@ HEADERS  += $$PWD/stdafx.h \
     $$PWD/extension/extension.h \
     $$PWD/extension/extensionmanager.h \
     $$PWD/extension/extensionmodel.h \
-    $$PWD/updater/autoupdater.h \
     $$PWD/commonui/preferencedialog.h \
     $$PWD/commonui/booleaneditor.h \
     $$PWD/derflaapp.h \
@@ -114,32 +112,22 @@ macx: {
     INCLUDEPATH += $$PWD/macui
 
     OBJECTIVE_SOURCES += \
-        $$PWD/updater/SparkleAutoUpdater.mm \
         $$PWD/macui/CocoaInitializer.mm \
         $$PWD/macui/darkmode.mm
-    HEADERS += $$PWD/macui/CocoaInitializer.h \
-        $$PWD/updater/SparkleAutoUpdater.h
+    HEADERS += $$PWD/macui/CocoaInitializer.h 
 
-    LIBS += -F$$PWD/../../3rdparty/Sparkle \
+    LIBS += \
         -framework AppKit \
         -framework Carbon \
         -framework Foundation \
         -framework ApplicationServices \
-        -framework Sparkle \
         -framework CoreServices -lobjc
     QMAKE_LFLAGS += -Wl,-rpath,@loader_path/../Frameworks
-    QMAKE_LFLAGS += -F$$PWD/../../3rdparty/Sparkle
-    QMAKE_CXXFLAGS += -F$$PWD/../../3rdparty/Sparkle
-    QMAKE_CFLAGS += -F$$PWD/../../3rdparty/Sparkle
-    QMAKE_OBJECTIVE_CFLAGS += -F$$PWD/../../3rdparty/Sparkle
 
     QMAKE_POST_LINK = mkdir -p $$DESTDIR/Derfla.app/Contents/Frameworks && \
-        rm -rf $$DESTDIR/Derfla.app/Contents/Frameworks/Sparkle.framework && \
-        cp -avf $$PWD/../../3rdparty/Sparkle/Sparkle.framework $$DESTDIR/Derfla.app/Contents/Frameworks && \
         install_name_tool -change libDerflaUtil.1.dylib @executable_path/../Libs/libDerflaUtil.1.dylib $$DESTDIR/Derfla.app/Contents/MacOS/Derfla && \
         cp -avf $$PWD/skins  $$DESTDIR/Derfla.app/Contents/Resources && \
-        cp -avf $$PWD/themes $$DESTDIR/Derfla.app/Contents/Resources && \
-        cp $$PWD/rc/updater-dsa-pub.pem $$DESTDIR/Derfla.app/Contents/Resources/dsa_pub.pem
+        cp -avf $$PWD/themes $$DESTDIR/Derfla.app/Contents/Resources 
 
     QMAKE_INFO_PLIST = osxInfo.plist
 
@@ -169,11 +157,6 @@ win32: {
         qti18n.commands = '$(COPY_FILE) $$shell_path($$[QT_INSTALL_BINS]/../translations/qt_zh_CN.qm) $$shell_path($${DESTDIR}/translations/qt_zh_CN.qm)'
     }
     include($$PWD/../../3rdparty/qglobalshortcut/qglobalshortcut.pri)
-    include($$PWD/../../3rdparty/WinSparkle/winsparkle.pri)
-    SOURCES += \
-        $$PWD/updater/winsparkleautoupdater.cpp
-    HEADERS += \
-        $$PWD/updater/winsparkleautoupdater.h
 
     translate.commands = '$(COPY_DIR) $$shell_path($$PWD/translations) $$shell_path($$DESTDIR/translations)'
 
@@ -183,17 +166,11 @@ win32: {
     RC_FILE = derfla.rc
     LIBS += -lVersion -lComctl32 -lOle32 -lGdi32
 
-    contains(QMAKE_HOST.arch, x86_64): {
-        copy_winsparkle.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/WinSparkle/x64/Release/WinSparkle.dll) $$shell_path($$DESTDIR)'
-    }
-    else: {
-        copy_winsparkle.commands = '$(COPY_FILE) $$shell_path($$PWD/../../3rdparty/WinSparkle/Release/WinSparkle.dll) $$shell_path($$DESTDIR)'
-    }
     copy_skin.commands = '$(COPY_DIR) $$shell_path($$PWD/skins) $$shell_path($$DESTDIR/skins)'
     copy_theme.commands = '$(COPY_DIR) $$shell_path($$PWD/themes) $$shell_path($$DESTDIR/themes)'
 
-    QMAKE_EXTRA_TARGETS += copy_winsparkle copy_skin copy_theme
-    POST_TARGETDEPS += copy_winsparkle copy_skin copy_theme
+    QMAKE_EXTRA_TARGETS += copy_skin copy_theme
+    POST_TARGETDEPS += copy_skin copy_theme
 }
 
 RESOURCES += \

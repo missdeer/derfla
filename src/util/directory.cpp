@@ -2,4 +2,4 @@
 
 #include "directory.h"
 
-Directory::Directory(const QString &d, bool r) : directory(d), recursive(r) {}
+Directory::Directory(const QString &dir, bool recur) : directory(dir), recursive(recur) {}

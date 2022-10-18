@@ -5,7 +5,7 @@
 
 struct UTILSHARED_EXPORT Directory
 {
-    Directory(const QString &d, bool r);
+    Directory(const QString &dir, bool recursive);
     QString directory;
     bool    recursive = false;
 };

@@ -19,7 +19,10 @@ HEADERS += \
     $$PWD/directory.h \
     $$PWD/util.h \
     $$PWD/derflaaction.h \
-    $$PWD/scopedguard.h
+    $$PWD/scopedguard.h \
+    $$PWD/sqlite/Sqlite3DBManager.h \
+    $$PWD/sqlite/Sqlite3Helper.h \
+    $$PWD/sqlite/Sqlite3Statement.h
 
 win32: {
     HEADERS += \

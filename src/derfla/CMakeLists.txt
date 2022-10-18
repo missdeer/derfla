@@ -181,6 +181,16 @@ file(GLOB SKINs ${CMAKE_CURRENT_SOURCE_DIR}/skins/*.zip)
 file(GLOB THEMEs ${CMAKE_CURRENT_SOURCE_DIR}/themes/*.derflatheme)
 
 IF(APPLE) 
+        set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/derfla.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+        set_target_properties(${PROJECT_NAME}  PROPERTIES
+                RESOURCE "./derfla.icns"
+                MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME} 
+                MACOSX_BUNDLE_GUI_IDENTIFIER "com.ismisv.derfla"
+                MACOSX_BUNDLE_ICON_FILE "derfla.icns"
+                MACOSX_BUNDLE_INFO_STRING "Derfla"    
+                MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/osxInfo.plist"
+        )
+        file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/derfla.icns" DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Contents/Resources)
         file(COPY ${SKINs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Contents/Resources/skins)
         file(COPY ${THEMEs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Contents/Resources/themes)
 ELSE(APPLE)
@@ -188,3 +198,4 @@ ELSE(APPLE)
         file(COPY ${THEMEs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/themes)
         target_precompile_headers(${PROJECT_NAME} PRIVATE stdafx.h)
 ENDIF(APPLE)
+
