@@ -13,7 +13,7 @@ class LocalFSScanner : public QObject
     Q_OBJECT
 public:
     explicit LocalFSScanner(DBRW &dbrw, QObject *parent = 0);
-    ~LocalFSScanner();
+    ~LocalFSScanner() override;
 signals:
     void finished();
     void scanRequired();
@@ -27,12 +27,11 @@ private slots:
 #endif
 private:
     DBRW            &dbrw_;
-    bool             stop_      = false;
-    qint64           timestamp_ = 0;
+    bool             stop_ = false;
     QList<Directory> scanDirectories_;
     void             getDirectoriesFromEnvironmentVariable();
     void             getBuiltinDirectories();
-    void             scanDirectory(const Directory &d);
+    void             scanDirectory(const Directory &directory);
 #if defined(Q_OS_MAC)
     void scanDockIcons();
 #endif

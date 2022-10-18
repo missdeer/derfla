@@ -14,16 +14,18 @@
 #include "directory.h"
 #include "localfsscanner.h"
 
-using namespace std;
-
 #define check_stop                         \
     do                                     \
     {                                      \
         if (stop_)                         \
+        {                                  \
             return;                        \
+        }                                  \
         QThread::yieldCurrentThread();     \
         QCoreApplication::processEvents(); \
     } while (0)
+
+const int scanInterval = 3600;
 
 LocalFSScanner::LocalFSScanner(DBRW &dbrw, QObject *parent) : QObject(parent), dbrw_(dbrw), stop_(false)
 {
@@ -46,9 +48,6 @@ void LocalFSScanner::stop()
 
 void LocalFSScanner::scan()
 {
-    timestamp_ = QDateTime::currentDateTime().toMSecsSinceEpoch();
-    util::setTimestamp(timestamp_);
-
 #if defined(Q_OS_MAC)
     scanDockIcons();
 #endif
@@ -58,21 +57,25 @@ void LocalFSScanner::scan()
     getDirectoriesFromEnvironmentVariable();
     std::sort(
         scanDirectories_.begin(), scanDirectories_.end(), [&](const Directory &d1, const Directory &d2) { return d1.directory < d2.directory; });
-    auto it = std::unique(scanDirectories_.begin(), scanDirectories_.end(), [&](const Directory &d1, const Directory &d2) {
+    auto iter = std::unique(scanDirectories_.begin(), scanDirectories_.end(), [&](const Directory &d1, const Directory &d2) {
         return QDir(d1.directory) == QDir(d2.directory);
     });
-    scanDirectories_.erase(it, scanDirectories_.end());
+    scanDirectories_.erase(iter, scanDirectories_.end());
 
-    for (const auto &d : scanDirectories_)
-        scanDirectory(d);
-    dbrw_.removeOldRecords(timestamp_);
+    for (const auto &directory : scanDirectories_)
+    {
+        scanDirectory(directory);
+    }
+    // dbrw_.removeOldRecords(timestamp_);
+    dbrw_.removeInvalidRecords();
     emit finished();
+    QTimer::singleShot(scanInterval, this, &LocalFSScanner::scanRequired);
 }
 
 void LocalFSScanner::getDirectoriesFromEnvironmentVariable()
 {
     QStringList &paths = util::getEnvPaths();
-    std::for_each(paths.begin(), paths.end(), [&](const QString &p) { scanDirectories_.append(Directory(p, false)); });
+    std::for_each(paths.begin(), paths.end(), [this](const QString &dirPath) { scanDirectories_.append(Directory(dirPath, false)); });
 }
 
 #if defined(Q_OS_WIN)
@@ -92,28 +95,25 @@ void LocalFSScanner::getBuiltinDirectories()
         {FOLDERID_Recent, false},
     };
 
-    for (auto p : dirs)
+    for (auto dirPath : dirs)
     {
         LPWSTR  wszPath = nullptr;
-        HRESULT hr      = SHGetKnownFolderPath(p.first, 0, nullptr, &wszPath);
-        if (SUCCEEDED(hr))
+        HRESULT hRes    = SHGetKnownFolderPath(dirPath.first, 0, nullptr, &wszPath);
+        if (SUCCEEDED(hRes))
         {
-            scanDirectories_ << Directory(QString::fromUtf16(reinterpret_cast<const ushort *>(wszPath)), p.second);
+            scanDirectories_ << Directory(QString::fromUtf16(reinterpret_cast<const ushort *>(wszPath)), dirPath.second);
             CoTaskMemFree(wszPath);
         }
     }
 }
 
-void LocalFSScanner::scanDirectory(const Directory &d)
+void LocalFSScanner::scanDirectory(const Directory &directory)
 {
     check_stop;
-    QDir dir(d.directory);
+    QDir dir(directory.directory);
 
-    QFileInfoList list = dir.entryInfoList(QStringList() << "*.exe"
-                                                         << "*.msc"
-                                                         << "*.bat"
-                                                         << "*.lnk",
-                                           QDir::Files);
+    QFileInfoList list = dir.entryInfoList(
+        QStringList() << QStringLiteral("*.exe") << QStringLiteral("*.msc") << QStringLiteral("*.bat") << QStringLiteral("*.lnk"), QDir::Files);
     check_stop;
 
     auto inserter = std::bind(&DBRW::insertLFS,
@@ -124,23 +124,21 @@ void LocalFSScanner::scanDirectory(const Directory &d)
                               std::placeholders::_4,
                               std::placeholders::_5,
                               std::placeholders::_6,
-                              std::placeholders::_7,
-                              std::placeholders::_8,
-                              std::placeholders::_9);
-    for (const auto &fi : list)
+                              std::placeholders::_7);
+    for (const auto &fileInfo : list)
     {
         check_stop;
-        util::processFile(d, fi, inserter);
+        util::processFile(directory, fileInfo, inserter);
     }
 
     check_stop;
-    if (d.recursive)
+    if (directory.recursive)
     {
-        QFileInfoList list = dir.entryInfoList(QStringList() << "*", QDir::NoDotAndDotDot | QDir::AllDirs);
+        QFileInfoList list = dir.entryInfoList(QStringList() << QStringLiteral("*"), QDir::NoDotAndDotDot | QDir::AllDirs);
         for (const auto &fileInfo : list)
         {
             check_stop;
-            scanDirectory(Directory(d.directory + QDir::separator() + fileInfo.fileName(), true));
+            scanDirectory(Directory(directory.directory + QDir::separator() + fileInfo.fileName(), true));
         }
     }
 }

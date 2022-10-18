@@ -119,54 +119,31 @@ bool DBRW::getLFSItems(LocalFSItemList &fsil, const QString &keyword, int countR
     return false;
 }
 
-bool DBRW::removeOldRecords(qint64 timestamp)
-{
-    auto &dbMgr  = Sqlite3DBManager::instance();
-    auto &engine = dbMgr.engine();
-    auto  stmt   = engine.compile("DELETE FROM lfs WHERE timestamp < :timestamp;");
-    if (!stmt || !stmt->isValid())
-    {
-        // CUBELOG_ERROR("compiling sql 'DELETE FROM lfs WHERE timestamp < :timestamp' failed");
-        qCritical() << "compiling sql 'DELETE FROM lfs WHERE timestamp < :timestamp' failed";
-        return false;
-    }
-    stmt->bind(":timestamp", timestamp);
-    if (stmt->execDML() >= 0)
-    {
-        engine.vacuum();
-        dbMgr.save();
-        return true;
-    }
-    return false;
-}
-
 bool DBRW::insertLFS(const QByteArray &icon,
                      const QString    &title,
                      const QString    &description,
                      const QString    &target,
                      const QString    &arguments,
                      const QString    &workingDirectory,
-                     qint64            timestamp,
-                     qint64            lastModified,
                      const QString    &type)
 {
-    auto   &engine = Sqlite3DBManager::instance().engine();
-    QString sql    = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
-                     "VALUES (:icon, :title, :description, :target, :arguments, :working_directory, :timestamp, :last_modified, :type);";
-    auto    stmt   = engine.compile(sql);
+    auto       &engine = Sqlite3DBManager::instance().engine();
+    const char *sql    = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, last_modified, type) "
+                         "SELECT :icon, :title, :description, :target, :arguments, :working_directory, unixepoch(datetime('now', 'localtime')), :type"
+                         "WHERE not exists (select * from lfs where title = :title AND description = :description AND target = :target AND arguments = "
+                         ":arguments AND working_directory = :working_directory AND type = :type);";
+    auto        stmt   = engine.compile(sql);
     if (!stmt || !stmt->isValid())
     {
         return false;
     }
     // save to database
-    stmt->bind(":icon", (const unsigned char *)icon.data(), icon.length());
+    stmt->bind(":icon", icon);
     stmt->bind(":title", title);
     stmt->bind(":description", description);
     stmt->bind(":target", target);
     stmt->bind(":arguments", arguments);
     stmt->bind(":working_directory", workingDirectory);
-    stmt->bind(":timestamp", timestamp);
-    stmt->bind(":last_modified", lastModified);
     stmt->bind(":type", type);
     if (stmt->execDML() > 0)
     {
@@ -185,9 +162,9 @@ bool DBRW::createDatabase()
     }
     Q_ASSERT(dbMgr.isOpened());
     auto &engine = dbMgr.engine();
-    auto  result =
-        engine.execDML("CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, description TEXT,target TEXT, arguments TEXT, "
-                       "working_directory TEXT,timestamp DATETIME,last_modified DATETIME, type TEXT);");
+    auto  result = engine.execDML(
+        "CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, description TEXT,target TEXT, arguments TEXT, "
+         "working_directory TEXT,timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,last_modified DATETIME DEFAULT CURRENT_TIMESTAMP, type TEXT);");
     if (Sqlite3Helper::isOk(result))
     {
         dbMgr.save();
@@ -258,4 +235,21 @@ bool DBRW::queryActions(LocalFSItemList &fsil, int countRequired, Sqlite3Stateme
     }
 
     return false;
+}
+bool DBRW::removeInvalidRecords()
+{
+    auto &engine = Sqlite3DBManager::instance().engine();
+    auto  stmt   = engine.compile("DELETE FROM lfs WHERE file_not_exists(target);");
+    if (!stmt->isValid())
+    {
+        qCritical() << "compiling sql failed";
+        return false;
+    }
+
+    if (stmt->execDML() < 0)
+    {
+        qCritical() << "deleting records that target not exists failed";
+        return false;
+    }
+    return true;
 }

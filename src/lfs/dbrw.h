@@ -16,15 +16,13 @@ public:
     ~DBRW();
 
     QString search(const QString &keyword, int countRequired = 50);
-    bool    removeOldRecords(qint64 timestamp);
+    bool    removeInvalidRecords();
     bool    insertLFS(const QByteArray &icon,
                       const QString    &title,
                       const QString    &description,
                       const QString    &target,
                       const QString    &arguments,
                       const QString    &workingDirectory,
-                      qint64            timestamp,
-                      qint64            lastModified,
                       const QString    &type);
 signals:
 
@@ -38,7 +36,7 @@ private:
     bool    queryActions(LocalFSItemList &fsil, int countRequired, Sqlite3StatementPtr &query);
 };
 
-using LFSInserter = std::function<bool(
-    const QByteArray &, const QString &, const QString &, const QString &, const QString &, const QString &, qint64, qint64, const QString &)>;
+using LFSInserter =
+    std::function<bool(const QByteArray &, const QString &, const QString &, const QString &, const QString &, const QString &, const QString &)>;
 
 #endif // DBRW_H
