@@ -153,8 +153,6 @@ namespace util
                      filePath,
                      args,
                      workingDirectory,
-                     timestamp,
-                     fileInfo.lastModified().toMSecsSinceEpoch(),
                      isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? QStringLiteral("terminalCommand")
                                                                                                  : QStringLiteral("shellExecute"));
             return;
@@ -171,8 +169,6 @@ namespace util
                  filePath,
                  {},
                  QDir::toNativeSeparators(QFileInfo(filePath).absolutePath()),
-                 timestamp,
-                 fileInfo.lastModified().toMSecsSinceEpoch(),
                  isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? QStringLiteral("terminalCommand")
                                                                                              : QStringLiteral("shellExecute"));
     }

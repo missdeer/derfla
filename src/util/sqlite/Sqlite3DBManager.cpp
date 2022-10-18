@@ -83,6 +83,9 @@ bool Sqlite3DBManager::open(const char *dbPath, bool readOnly)
     }
 
     Q_ASSERT(m_db);
+
+    m_sqlite.registerCustomFunctions();
+
     if (!readOnly)
     {
         regenerateSavePoint();
@@ -159,6 +162,9 @@ bool Sqlite3DBManager::create(const char *dbPath)
         qCritical() << "Cannot create the database" << QString::fromUtf8(dbPath);
         return false;
     }
+
+    Q_ASSERT(m_db);
+
     // CUBELOG_INFO_FMT("The database is created at '%s'", dbPath.c_str());
     qInfo() << "The database is created at" << QString::fromStdString(dbPath);
 
@@ -178,6 +184,8 @@ bool Sqlite3DBManager::create(const char *dbPath)
         qCritical() << "Cannot enable the foreign keys.";
         return false;
     }
+
+    m_sqlite.registerCustomFunctions();
 
     regenerateSavePoint();
     setSavePoint();

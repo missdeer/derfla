@@ -4,6 +4,7 @@
 #include <vector>
 #include <sqlite3.h>
 
+#include <QFile>
 #include <QtCore>
 
 #include "Sqlite3Helper.h"
@@ -255,4 +256,22 @@ std::int64_t Sqlite3Helper::lastInsertRowId()
         return sqlite3_last_insert_rowid(m_db);
     }
     return -1;
+}
+void Sqlite3Helper::fileNotExists(sqlite3_context *ctx, int, sqlite3_value **argv)
+{
+    QString filePath(reinterpret_cast<const char *>(sqlite3_value_text(argv[0])));
+    bool    notExists = !QFile::exists(filePath);
+
+    if (notExists)
+    {
+        sqlite3_result_int(ctx, 1);
+    }
+    else
+    {
+        sqlite3_result_int(ctx, 0);
+    }
+}
+void Sqlite3Helper::registerCustomFunctions()
+{
+    sqlite3_create_function_v2(m_db, "file_not_exists", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, this, &Sqlite3Helper::fileNotExists, NULL, NULL, NULL);
 }

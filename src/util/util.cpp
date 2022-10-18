@@ -87,8 +87,4 @@ namespace util
         return envPaths;
     }
 
-    void setTimestamp(qint64 ts)
-    {
-        timestamp = ts;
-    }
 } // namespace util

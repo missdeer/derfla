@@ -5,10 +5,8 @@
 
 namespace util
 {
-    inline qint64                  timestamp = 0;
-    UTILSHARED_EXPORT void         setTimestamp(qint64 ts);
     UTILSHARED_EXPORT QByteArray   extractPNGFromIcon(const QString &filePath);
-    UTILSHARED_EXPORT QByteArray   extractPNGIconFromFile(const QFileInfo &fi);
+    UTILSHARED_EXPORT QByteArray   extractPNGIconFromFile(const QFileInfo &fileInfo);
     UTILSHARED_EXPORT QStringList &getEnvPaths();
     UTILSHARED_EXPORT QStringList &getLocaleNames();
 

@@ -9,8 +9,8 @@
 
 struct Directory;
 
-using LFSInserter = std::function<bool(
-    const QByteArray &, const QString &, const QString &, const QString &, const QString &, const QString &, qint64, qint64, const QString &)>;
+using LFSInserter =
+    std::function<bool(const QByteArray &, const QString &, const QString &, const QString &, const QString &, const QString &, const QString &)>;
 
 namespace util
 {

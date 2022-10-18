@@ -9,6 +9,8 @@
 
 struct sqlite3;
 struct sqlite3_stmt;
+struct sqlite3_context;
+struct sqlite3_value;
 
 class UTILSHARED_EXPORT Sqlite3Helper
 {
@@ -44,6 +46,9 @@ public:
 
     std::int64_t lastInsertRowId();
 
+    void registerCustomFunctions();
+
 private:
-    sqlite3 *&m_db;
+    sqlite3   *&m_db;
+    static void fileNotExists(sqlite3_context *ctx, int, sqlite3_value **argv);
 };
