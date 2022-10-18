@@ -124,9 +124,11 @@ bool DBRW::insertLFS(const QByteArray &icon,
 {
     auto       &engine = Sqlite3DBManager::instance().engine();
     const char *sql    = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, last_modified, type) "
-                         "SELECT :icon, :title, :description, :target, :arguments, :working_directory, unixepoch(datetime('now', 'localtime')), :type"
-                         "WHERE not exists (select * from lfs where title = :title AND description = :description AND target = :target AND arguments = "
-                         ":arguments AND working_directory = :working_directory AND type = :type);";
+                         "SELECT icon, title, description, target, arguments, working_directory, last_modified, type "
+                         "FROM ( SELECT :icon AS icon, :title AS title, :description AS description, :target AS target, :arguments AS arguments, "
+                         ":working_directory AS working_directory, unixepoch(datetime('now', 'localtime')) AS last_modified, :type AS type ) t "
+                         "WHERE NOT EXISTS (SELECT 1 FROM lfs WHERE lfs.title = t.title AND lfs.description = t.description AND lfs.target = t.target "
+                         "AND lfs.arguments = t.arguments AND lfs.working_directory = t.working_directory AND lfs.type = t.type);";
     auto        stmt   = engine.compile(sql);
     if (!stmt || !stmt->isValid())
     {
