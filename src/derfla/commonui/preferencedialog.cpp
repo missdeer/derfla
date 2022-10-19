@@ -272,17 +272,17 @@ void PreferenceDialog::on_btnBrowseBash_clicked()
     {
         return;
     }
-    ui->edtBashPath->setText(fileName);
+    ui->edtBashPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectBash_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("bash")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("bash"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtBashPath->setText(fileName);
+    ui->edtBashPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowseSh_clicked()
@@ -300,17 +300,17 @@ void PreferenceDialog::on_btnBrowseSh_clicked()
     {
         return;
     }
-    ui->edtShPath->setText(fileName);
+    ui->edtShPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectSh_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("sh")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("sh"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtShPath->setText(fileName);
+    ui->edtShPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowseNode_clicked()
@@ -328,17 +328,17 @@ void PreferenceDialog::on_btnBrowseNode_clicked()
     {
         return;
     }
-    ui->edtNodePath->setText(fileName);
+    ui->edtNodePath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectNode_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("node")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("node"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtNodePath->setText(fileName);
+    ui->edtNodePath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowseTcl_clicked()
@@ -356,17 +356,17 @@ void PreferenceDialog::on_btnBrowseTcl_clicked()
     {
         return;
     }
-    ui->edtTclPath->setText(fileName);
+    ui->edtTclPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectTcl_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("tcl")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("tcl"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtTclPath->setText(fileName);
+    ui->edtTclPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowsePHP_clicked()
@@ -384,17 +384,17 @@ void PreferenceDialog::on_btnBrowsePHP_clicked()
     {
         return;
     }
-    ui->edtPHPPath->setText(fileName);
+    ui->edtPHPPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectPHP_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("php")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("php"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtPHPPath->setText(fileName);
+    ui->edtPHPPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowseRuby_clicked()
@@ -412,17 +412,17 @@ void PreferenceDialog::on_btnBrowseRuby_clicked()
     {
         return;
     }
-    ui->edtRubyPath->setText(fileName);
+    ui->edtRubyPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectRuby_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("ruby")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("ruby"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtRubyPath->setText(fileName);
+    ui->edtRubyPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowsePython_clicked()
@@ -440,17 +440,17 @@ void PreferenceDialog::on_btnBrowsePython_clicked()
     {
         return;
     }
-    ui->edtPythonPath->setText(fileName);
+    ui->edtPythonPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectPython_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("python")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("python"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtPythonPath->setText(fileName);
+    ui->edtPythonPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowsePerl_clicked()
@@ -468,17 +468,17 @@ void PreferenceDialog::on_btnBrowsePerl_clicked()
     {
         return;
     }
-    ui->edtPerlPath->setText(fileName);
+    ui->edtPerlPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectPerl_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("perl")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("perl"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtPerlPath->setText(fileName);
+    ui->edtPerlPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowseZsh_clicked()
@@ -496,17 +496,17 @@ void PreferenceDialog::on_btnBrowseZsh_clicked()
     {
         return;
     }
-    ui->edtZshPath->setText(fileName);
+    ui->edtZshPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectZsh_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("zsh")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("zsh"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtZshPath->setText(fileName);
+    ui->edtZshPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowseLua_clicked()
@@ -524,17 +524,17 @@ void PreferenceDialog::on_btnBrowseLua_clicked()
     {
         return;
     }
-    ui->edtLuaPath->setText(fileName);
+    ui->edtLuaPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectLua_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("lua")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("lua"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtLuaPath->setText(fileName);
+    ui->edtLuaPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowseAppleScript_clicked()
@@ -544,17 +544,17 @@ void PreferenceDialog::on_btnBrowseAppleScript_clicked()
     {
         return;
     }
-    ui->edtAppleScriptPath->setText(fileName);
+    ui->edtAppleScriptPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectAppleScript_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("applescript")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("applescript"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtAppleScriptPath->setText(fileName);
+    ui->edtAppleScriptPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowseCScript_clicked()
@@ -564,18 +564,18 @@ void PreferenceDialog::on_btnBrowseCScript_clicked()
     {
         return;
     }
-    ui->edtCScriptPath->setText(fileName);
+    ui->edtCScriptPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectCScript_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("cscript")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("cscript"));
 
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtCScriptPath->setText(fileName);
+    ui->edtCScriptPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnBrowseWScript_clicked()
@@ -585,15 +585,15 @@ void PreferenceDialog::on_btnBrowseWScript_clicked()
     {
         return;
     }
-    ui->edtWScriptPath->setText(fileName);
+    ui->edtWScriptPath->setText(QDir::toNativeSeparators(fileName));
 }
 
 void PreferenceDialog::on_btnDetectWScript_clicked()
 {
-    auto fileName = QDir::toNativeSeparators(QStandardPaths::findExecutable(QStringLiteral("wscript")));
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("wscript"));
     if (!QFile::exists(fileName))
     {
         return;
     }
-    ui->edtWScriptPath->setText(fileName);
+    ui->edtWScriptPath->setText(QDir::toNativeSeparators(fileName));
 }
