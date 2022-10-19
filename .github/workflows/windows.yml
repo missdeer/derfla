@@ -56,7 +56,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -G Ninja ..
           ninja
-          cd ..\bin\${{ maxtrix.output_dir }}
+          cd ..\bin\${{ matrix.output_dir }}
           windeployqt.exe Derfla.exe
           windeployqt.exe DerflaUtil.dll
           cd ..\..
@@ -64,7 +64,7 @@ jobs:
       - name: upload executable artifact
         uses: actions/upload-artifact@v1
         with:
-          path: bin/${{ maxtrix.output_dir }}
+          path: bin/${{ matrix.output_dir }}
           name: Derfla-${{ matrix.qt_arch }}-${{ matrix.qt_ver }}
 
           
@@ -178,7 +178,7 @@ jobs:
           cd build
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja ..
           ninja
-          cd ../bin/${{ maxtrix.output_dir }}
+          cd ../bin/${{ matrix.output_dir }}
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe Derfla.exe
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe DerflaUtil.dll
           cd ../..          
@@ -186,5 +186,5 @@ jobs:
       - name: upload executable artifact
         uses: actions/upload-artifact@v1
         with:
-          path: bin/${{ maxtrix.output_dir }}
+          path: bin/${{ matrix.output_dir }}
           name: Derfla-${{ matrix.qt_arch }}
