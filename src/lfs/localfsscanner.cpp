@@ -25,7 +25,7 @@
         QCoreApplication::processEvents(); \
     } while (0)
 
-const int scanInterval = 3600;
+const int scanInterval = 3600 * 1000;
 
 LocalFSScanner::LocalFSScanner(DBRW &dbrw, QObject *parent) : QObject(parent), dbrw_(dbrw), stop_(false)
 {
@@ -82,14 +82,14 @@ void LocalFSScanner::getDirectoriesFromEnvironmentVariable()
 void LocalFSScanner::getBuiltinDirectories()
 {
     std::vector<std::pair<REFKNOWNFOLDERID, bool>> dirs {
-        {FOLDERID_ApplicationShortcuts, false},
-        {FOLDERID_AppsFolder, false},
+        {FOLDERID_ApplicationShortcuts, true},
+        {FOLDERID_AppsFolder, true},
         {FOLDERID_StartMenu, true},
         {FOLDERID_CommonStartMenu, true},
         {FOLDERID_ControlPanelFolder, true},
-        {FOLDERID_Desktop, false},
-        {FOLDERID_PublicDesktop, false},
-        {FOLDERID_QuickLaunch, false},
+        {FOLDERID_Desktop, true},
+        {FOLDERID_PublicDesktop, true},
+        {FOLDERID_QuickLaunch, true},
         {FOLDERID_UserPinned, true},
         {FOLDERID_History, false},
         {FOLDERID_Recent, false},
@@ -109,6 +109,7 @@ void LocalFSScanner::getBuiltinDirectories()
 
 void LocalFSScanner::scanDirectory(const Directory &directory)
 {
+    qDebug() << "scanning directoriy" << directory.directory << directory.recursive;
     check_stop;
     QDir dir(directory.directory);
 
@@ -130,6 +131,7 @@ void LocalFSScanner::scanDirectory(const Directory &directory)
         check_stop;
         util::processFile(directory, fileInfo, inserter);
     }
+    dbrw_.save();
 
     check_stop;
     if (directory.recursive)
@@ -138,7 +140,7 @@ void LocalFSScanner::scanDirectory(const Directory &directory)
         for (const auto &fileInfo : list)
         {
             check_stop;
-            scanDirectory(Directory(directory.directory + QDir::separator() + fileInfo.fileName(), true));
+            scanDirectory(Directory(dir.absoluteFilePath(fileInfo.fileName()), true));
         }
     }
 }

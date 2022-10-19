@@ -13,7 +13,7 @@ class DBRW : public QObject
     Q_OBJECT
 public:
     explicit DBRW(bool readOnly = false);
-    ~DBRW();
+    ~DBRW() override;
 
     QString search(const QString &keyword, int countRequired = 50);
     bool    removeInvalidRecords();
@@ -24,6 +24,7 @@ public:
                       const QString    &arguments,
                       const QString    &workingDirectory,
                       const QString    &type);
+    void    save();
 signals:
 
 public slots:

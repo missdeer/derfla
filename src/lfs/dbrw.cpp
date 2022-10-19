@@ -123,10 +123,11 @@ bool DBRW::insertLFS(const QByteArray &icon,
                      const QString    &type)
 {
     auto       &engine = Sqlite3DBManager::instance().engine();
-    const char *sql    = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, last_modified, type) "
-                         "SELECT icon, title, description, target, arguments, working_directory, last_modified, type "
+    const char *sql    = "INSERT INTO lfs (icon, title, description, target, arguments, working_directory, timestamp, last_modified, type) "
+                         "SELECT icon, title, description, target, arguments, working_directory, timestamp, last_modified, type "
                          "FROM ( SELECT :icon AS icon, :title AS title, :description AS description, :target AS target, :arguments AS arguments, "
-                         ":working_directory AS working_directory, unixepoch(datetime('now', 'localtime')) AS last_modified, :type AS type ) t "
+                         ":working_directory AS working_directory, unixepoch(datetime('now', 'localtime')) AS timestamp, unixepoch(datetime('now', "
+                         "'localtime')) AS last_modified, :type AS type ) t "
                          "WHERE NOT EXISTS (SELECT 1 FROM lfs WHERE lfs.title = t.title AND lfs.description = t.description AND lfs.target = t.target "
                          "AND lfs.arguments = t.arguments AND lfs.working_directory = t.working_directory AND lfs.type = t.type);";
     auto        stmt   = engine.compile(sql);
@@ -144,7 +145,6 @@ bool DBRW::insertLFS(const QByteArray &icon,
     stmt->bind(":type", type);
     if (stmt->execDML() > 0)
     {
-        Sqlite3DBManager::instance().save();
         return true;
     }
     return false;
@@ -249,4 +249,8 @@ bool DBRW::removeInvalidRecords()
         return false;
     }
     return true;
+}
+void DBRW::save()
+{
+    Sqlite3DBManager::instance().save();
 }

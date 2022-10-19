@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include <QFileInfo>
 #include <QRegularExpression>
 
 #include "win_util.h"
@@ -9,7 +10,6 @@
 
 namespace util
 {
-
     static DWORD AbsoluteSeek(HANDLE hFile, DWORD offset)
     {
         DWORD newOffset;
@@ -90,8 +90,9 @@ namespace util
     {
         QString filePath(directory.directory + QDir::separator() + fileInfo.fileName());
         filePath.replace("\\\\", "\\");
-        if (fileInfo.suffix() == "lnk")
+        if (fileInfo.suffix().compare("lnk", Qt::CaseInsensitive) == 0)
         {
+            qDebug() << "link file" << filePath;
             WCHAR        wszPath[MAX_PATH]             = {0};
             WCHAR        wszWorkingDirectory[MAX_PATH] = {0};
             WCHAR        wszDescription[1024 * 8]      = {0};
@@ -101,6 +102,7 @@ namespace util
             auto hRes = resolveShellLink(nullptr, filePath.toStdWString().c_str(), wszPath, wszWorkingDirectory, wszDescription, pwszArguments);
             if (FAILED(hRes))
             {
+                qWarning() << filePath << "resolving failed";
                 return;
             }
             QRegularExpression reg("%([^%]+)%");
@@ -113,9 +115,11 @@ namespace util
                 auto val   = qgetenv(env.toStdString().c_str());
                 filePath.replace("%" % env % "%", val);
             }
-            QFileInfo fileInfo(filePath);
-            if (fileInfo.suffix() != "exe" && fileInfo.suffix() != "msc" && fileInfo.suffix() != "bat")
+            QFileInfo fiTarget(filePath);
+            if (fiTarget.suffix().compare("exe", Qt::CaseInsensitive) != 0 && fiTarget.suffix().compare("msc", Qt::CaseInsensitive) != 0 &&
+                fiTarget.suffix().compare("bat", Qt::CaseInsensitive) != 0)
             {
+                qDebug() << filePath << "not expected suffix";
                 return;
             }
             auto args = QString::fromUtf16((const ushort *)pwszArguments);
@@ -147,13 +151,14 @@ namespace util
                 desc = filePath;
             }
 
+            qDebug() << "add" << fiTarget;
             inserter(util::extractPNGIconFromFile(fileInfo),
                      fileInfo.baseName(),
                      desc,
                      filePath,
                      args,
                      workingDirectory,
-                     isConsoleApplication(QDir::toNativeSeparators(fileInfo.absoluteFilePath())) ? QStringLiteral("terminalCommand")
+                     isConsoleApplication(QDir::toNativeSeparators(fiTarget.absoluteFilePath())) ? QStringLiteral("terminalCommand")
                                                                                                  : QStringLiteral("shellExecute"));
             return;
         }
@@ -232,6 +237,17 @@ namespace util
             return hRes;
         }
 
+        QRegularExpression reg("%([^%]+)%");
+        auto               filePath = QString::fromUtf16((const ushort *)szGotPath);
+        auto               iter     = reg.globalMatch(filePath);
+        while (iter.hasNext())
+        {
+            auto match = iter.next();
+            auto env   = match.captured(1);
+            auto val   = qgetenv(env.toStdString().c_str());
+            filePath.replace("%" % env % "%", val);
+        }
+
         hRes = StringCbCopy(lpszPath, MAX_PATH, szGotPath);
         if (FAILED(hRes))
         {
@@ -241,20 +257,22 @@ namespace util
         }
 
         // Get the description of the target.
-        WCHAR szDescription[1024 * 8] = {0};
-        hRes                          = psl->GetDescription(szDescription, 1024 * 8);
+        const size_t descLength     = 65535;
+        WCHAR       *pszDescription = new WCHAR[descLength];
+        ScopedGuard  sgReleaseDescription([pszDescription]() { delete[] pszDescription; });
+        hRes = psl->GetDescription(pszDescription, descLength);
 
         if (FAILED(hRes))
         {
-            qWarning() << "psl->GetDescription(szDescription, MAX_PATH) failed";
-            return hRes;
+            qWarning() << "psl->GetDescription(szDescription, 65535) failed" << QString::fromUtf16((const ushort *)szGotPath) << hRes;
+            StringCbCopy(pszDescription, descLength, szGotPath);
         }
 
-        hRes = StringCbCopy(lpszDescription, 1024 * 8, szDescription);
+        hRes = StringCbCopy(lpszDescription, descLength, pszDescription);
         if (FAILED(hRes))
         {
             // Handle the error
-            qWarning() << "failed StringCbCopy(lpszDescription, MAX_PATH, szDescription)";
+            qWarning() << "failed StringCbCopy(lpszDescription, 65535, szDescription)" << QString::fromUtf16((const ushort *)szGotPath);
             return hRes;
         }
         // Get the working directory
@@ -271,7 +289,9 @@ namespace util
         {
             // Handle the error
             qWarning() << "failed StringCbCopy(lpszWorkingDirectory, MAX_PATH, szWorkingDirectory)";
-            return hRes;
+            QFileInfo fileInfo(QString::fromUtf16((const ushort *)szGotPath));
+            auto      dir = fileInfo.absolutePath();
+            StringCbCopy(szWorkingDirectory, MAX_PATH, dir.toStdWString().c_str());
         }
 
         // Get arguments
@@ -282,7 +302,6 @@ namespace util
         if (FAILED(hRes))
         {
             qWarning() << "psl->GetArguments(pszArguments, argumentsLength) failed";
-            return hRes;
         }
 
         hRes = StringCbCopy(lpszArguments, argumentsLength, pszArguments);
