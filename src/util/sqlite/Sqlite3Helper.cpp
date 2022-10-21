@@ -16,7 +16,6 @@ Sqlite3StatementPtr Sqlite3Helper::compile(const char *szSQL)
 {
     if (!m_db)
     {
-        // CUBELOG_ERROR_FMT("'%s' null db pointer", szSQL);
         qCritical() << szSQL << "null db pointer";
         return nullptr;
     }
@@ -25,7 +24,6 @@ Sqlite3StatementPtr Sqlite3Helper::compile(const char *szSQL)
     int           res = sqlite3_prepare(m_db, szSQL, -1, &pVM, nullptr);
     if (res != SQLITE_OK)
     {
-        // CUBELOG_ERROR_FMT("prepare SQL statement '%s' failed: %d - %s", szSQL, res, (const char *)sqlite3_errmsg(m_db));
         const char *szError = (const char *)sqlite3_errmsg(m_db);
         qCritical() << "prepare SQL statement" << szSQL << "failed:" << res << "-" << szError;
         return nullptr;
@@ -53,7 +51,6 @@ int Sqlite3Helper::execDML(const char *szSQL)
         auto stmt = compile(szSQL);
         if (!stmt || !stmt->isValid())
         {
-            // CUBELOG_ERROR_FMT("'%s' null pVM, quit", szSQL);
             qCritical() << szSQL << "null pVM, quit";
             return SQLITE_ERROR;
         }
@@ -62,7 +59,6 @@ int Sqlite3Helper::execDML(const char *szSQL)
 
         if (nRet == SQLITE_ERROR)
         {
-            // CUBELOG_ERROR_FMT("step SQL statement '%s' failed: %s", szSQL, szError);
             qCritical() << "step SQL statement " << szSQL << "failed:" << nRet << "-" << (const char *)sqlite3_errmsg(m_db);
             sqlite3_finalize(stmt->m_pVM);
             break;
@@ -161,12 +157,10 @@ int Sqlite3Helper::checkExists(const std::string &field, const std::string &name
 
             if (size > 0)
             {
-                // CUBELOG_INFO_FMT("found expected %s:%s", field.c_str(), name.c_str());
                 qDebug() << "found expected" << QString::fromStdString(field) << ":" << QString::fromStdString(name);
                 return size;
             }
 
-            // CUBELOG_INFO_FMT("not found expected %s:%s", field.c_str(), name.c_str());
             qDebug() << "not found expected" << QString::fromStdString(field) << ":" << QString::fromStdString(name);
             return 0;
         }
@@ -182,7 +176,6 @@ int Sqlite3Helper::checkExists(const QString &field, const QString &name)
 
 bool Sqlite3Helper::createTablesAndIndexes(std::map<std::string, const char *> &tablesMap, std::map<std::string, const char *> &indexesMap)
 {
-    // CUBELOG_INFO("creating tables");
     for (auto &kv : tablesMap)
     {
         int res = checkExists("table", kv.first);
@@ -194,17 +187,14 @@ bool Sqlite3Helper::createTablesAndIndexes(std::map<std::string, const char *> &
 
         if (!res)
         {
-            // CUBELOG_DEBUG_FMT("creating table: %s", kv.first.c_str());
             if (execDML(kv.second) != SQLITE_OK)
             {
                 const char *szError = (const char *)sqlite3_errmsg(m_db);
-                // CUBELOG_ERROR_FMT("Cannot create table: %s, %s", kv.first.c_str(), szError);
                 return false;
             }
         }
     }
 
-    // CUBELOG_INFO("creating indexes");
     for (auto &kv : indexesMap)
     {
         int res = checkExists("index", kv.first);
@@ -216,11 +206,9 @@ bool Sqlite3Helper::createTablesAndIndexes(std::map<std::string, const char *> &
 
         if (!res)
         {
-            // CUBELOG_DEBUG_FMT("creating index: %s", kv.first.c_str());
             if (execDML(kv.second) != SQLITE_OK)
             {
                 const char *szError = (const char *)sqlite3_errmsg(m_db);
-                // CUBELOG_ERROR_FMT("Cannot create index: %s, %s", kv.first.c_str(), szError);
                 return false;
             }
         }

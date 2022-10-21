@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    DBRW           dbrw(false);
+    DBRW           dbrw;
     LocalFSScanner scanner(dbrw);
     scanner.start();
 

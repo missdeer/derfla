@@ -35,11 +35,9 @@ bool Sqlite3DBManager::setSavePoint()
     std::string sql = "SAVEPOINT '" + m_savePoint + "';";
     if (m_sqlite.execDML(sql) != SQLITE_OK)
     {
-        // CUBELOG_ERROR("Cannot set savepoint.");
         qCritical() << "Cannot set savepoint.";
         return false;
     }
-    // CUBELOG_INFO_FMT("set savepoint %s", m_savePoint.c_str());
     qDebug() << "set savepoint" << QString::fromStdString(m_savePoint);
     return true;
 }
@@ -49,11 +47,9 @@ bool Sqlite3DBManager::releaseSavePoint()
     std::string sql = "RELEASE '" + m_savePoint + "';";
     if (m_sqlite.execDML(sql) != SQLITE_OK)
     {
-        // CUBELOG_ERROR("Cannot release savepoint.");
         qCritical() << "Cannot release savepoint.";
         return false;
     }
-    // CUBELOG_INFO_FMT("released savepoint %s", m_savePoint.c_str());
     qDebug() << "released savepoint" << QString::fromStdString(m_savePoint);
     return true;
 }
@@ -77,7 +73,6 @@ bool Sqlite3DBManager::open(const char *dbPath, bool readOnly)
 {
     if (sqlite3_open_v2(dbPath, &m_db, (readOnly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_READWRITE), nullptr) != SQLITE_OK)
     {
-        // CUBELOG_ERROR_FMT("Cannot open the database '%s'.", dbPath.c_str());
         qCritical() << "Cannot open the database" << QString::fromUtf8(dbPath);
         return false;
     }
@@ -92,7 +87,6 @@ bool Sqlite3DBManager::open(const char *dbPath, bool readOnly)
         setSavePoint();
     }
 
-    // CUBELOG_INFO_FMT("The database '%s' is opened.", dbPath.c_str());
     qDebug() << "The database" << QString::fromStdString(dbPath) << "is opened";
     return true;
 }
@@ -101,14 +95,12 @@ bool Sqlite3DBManager::close()
 {
     if (!m_db)
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return true;
     }
     int result = sqlite3_close_v2(m_db);
     while (result == SQLITE_BUSY)
     {
-        // CUBELOG_DEBUG_FMT("Close db result: %d - %s", rc, (const char *)sqlite3_errmsg(m_db));
         qDebug() << "Close db result: " << result << (const char *)sqlite3_errmsg(m_db);
         sqlite3_stmt *stmt = sqlite3_next_stmt(m_db, nullptr);
         if (stmt)
@@ -117,7 +109,6 @@ bool Sqlite3DBManager::close()
             if (result == SQLITE_OK)
             {
                 result = sqlite3_close_v2(m_db);
-                // CUBELOG_DEBUG_FMT("Secondary try closing db result: %d - %s", rc, (const char *)sqlite3_errmsg(m_db));
                 qDebug() << "Secondary try closing db result: " << result << (const char *)sqlite3_errmsg(m_db);
             }
         }
@@ -125,13 +116,11 @@ bool Sqlite3DBManager::close()
 
     if (result != SQLITE_OK)
     {
-        // CUBELOG_ERROR_FMT("Closing db failed: %d - %s", rc, (const char *)sqlite3_errmsg(m_db));
         qCritical() << "Closing db failed:" << result << (const char *)sqlite3_errmsg(m_db);
         return false;
     }
 
     m_db = nullptr;
-    // CUBELOG_DEBUG("Closed database");
     qDebug() << "database closed";
     return true;
 }
@@ -142,6 +131,16 @@ bool Sqlite3DBManager::save()
     // always set a new save point
     regenerateSavePoint();
     return setSavePoint();
+}
+
+bool Sqlite3DBManager::saveAndClose()
+{
+    if (!releaseSavePoint())
+    {
+        return false;
+    }
+
+    return close();
 }
 
 bool Sqlite3DBManager::create(const QString &dbPath)
@@ -158,29 +157,24 @@ bool Sqlite3DBManager::create(const char *dbPath)
 {
     if (sqlite3_open_v2(dbPath, &m_db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, nullptr) != SQLITE_OK)
     {
-        // CUBELOG_ERROR_FMT("Cannot create the database '%s'", dbPath.c_str());
         qCritical() << "Cannot create the database" << QString::fromUtf8(dbPath);
         return false;
     }
 
     Q_ASSERT(m_db);
 
-    // CUBELOG_INFO_FMT("The database is created at '%s'", dbPath.c_str());
     qInfo() << "The database is created at" << QString::fromStdString(dbPath);
 
-    // CUBELOG_INFO("set sqlite options for performance issue");
     qDebug() << "set sqlite options for performance issue";
 
     if (m_sqlite.execDML(SQL_STATEMENT_CACHE_SIZE) != SQLITE_OK)
     {
-        // CUBELOG_ERROR("Cannot set cache size.");
         qCritical() << "Cannot set cache size.";
         return false;
     }
 
     if (m_sqlite.execDML(SQL_STATEMENT_ENABLE_FOREIGN_KEYS) != SQLITE_OK)
     {
-        // CUBELOG_ERROR("Cannot enable the foreign keys.");
         qCritical() << "Cannot enable the foreign keys.";
         return false;
     }
@@ -193,16 +187,6 @@ bool Sqlite3DBManager::create(const char *dbPath)
     return true;
 }
 
-void Sqlite3DBManager::lock()
-{
-    m_mutex.lock();
-}
-
-void Sqlite3DBManager::unlock()
-{
-    m_mutex.unlock();
-}
-
 Sqlite3Helper &Sqlite3DBManager::engine()
 {
     return m_sqlite;
@@ -212,7 +196,53 @@ Sqlite3DBManager::~Sqlite3DBManager()
 {
     close();
 }
+
 bool Sqlite3DBManager::isOpened() const
 {
     return m_db != nullptr;
+}
+
+bool Sqlite3DBManager::loadOrSaveInMemory(const QString &dbPath, bool isSave)
+{
+    sqlite3 *pFile = nullptr; /* Database connection opened on zFilename */
+
+    /* Open the database file identified by zFilename. Exit early if this fails
+    ** for any reason. */
+    int rc = sqlite3_open(dbPath.toUtf8().constData(), &pFile);
+    if (rc == SQLITE_OK)
+    {
+        /* If this is a 'load' operation (isSave==0), then data is copied
+        ** from the database file just opened to database pInMemory.
+        ** Otherwise, if this is a 'save' operation (isSave==1), then data
+        ** is copied from pInMemory to pFile.  Set the variables pFrom and
+        ** pTo accordingly. */
+        auto *pFrom = (isSave ? m_db : pFile);
+        auto *pTo   = (isSave ? pFile : m_db);
+
+        /* Set up the backup procedure to copy from the "main" database of
+        ** connection pFile to the main database of connection pInMemory.
+        ** If something goes wrong, pBackup will be set to NULL and an error
+        ** code and message left in connection pTo.
+        **
+        ** If the backup object is successfully created, call backup_step()
+        ** to copy data from pFile to pInMemory. Then call backup_finish()
+        ** to release resources associated with the pBackup object.  If an
+        ** error occurred, then an error code and message will be left in
+        ** connection pTo. If no error occurred, then the error code belonging
+        ** to pTo is set to SQLITE_OK.
+        */
+        auto *pBackup = sqlite3_backup_init(pTo, "main", pFrom, "main");
+        if (pBackup)
+        {
+            (void)sqlite3_backup_step(pBackup, -1);
+            (void)sqlite3_backup_finish(pBackup);
+        }
+        rc = sqlite3_errcode(pTo);
+    }
+
+    /* Close the database connection opened on database file zFilename
+    ** and return the result of this function. */
+    (void)sqlite3_close(pFile);
+    return rc;
+    return true;
 }

@@ -138,20 +138,17 @@ void Sqlite3Statement::bind(int nParam, const char *szValue, int nLen /*= -1*/)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return;
     }
     int nRes = sqlite3_bind_text(m_pVM, nParam, szValue, nLen, SQLITE_TRANSIENT);
     if (nRes != SQLITE_OK)
     {
-        // CUBELOG_ERROR("Error binding string param");
         qCritical() << "Error binding string param";
     }
 }
@@ -170,20 +167,17 @@ void Sqlite3Statement::bind(int nParam, int nValue)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return;
     }
     int nRes = sqlite3_bind_int(m_pVM, nParam, nValue);
     if (nRes != SQLITE_OK)
     {
-        // CUBELOG_ERROR("Error binding int param");
         qCritical() << "Error binding int param";
     }
 }
@@ -192,20 +186,17 @@ void Sqlite3Statement::bind(int nParam, int64_t nValue)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return;
     }
     int nRes = sqlite3_bind_int64(m_pVM, nParam, nValue);
     if (nRes != SQLITE_OK)
     {
-        // CUBELOG_ERROR("Error binding int param");
         qCritical() << "Error binding int param";
     }
 }
@@ -214,20 +205,17 @@ void Sqlite3Statement::bind(int nParam, double dValue)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return;
     }
     int nRes = sqlite3_bind_double(m_pVM, nParam, dValue);
     if (nRes != SQLITE_OK)
     {
-        // CUBELOG_ERROR("Error binding double param");
         qCritical() << "Error binding double param";
     }
 }
@@ -236,20 +224,17 @@ void Sqlite3Statement::bind(int nParam, const unsigned char *blobValue, int nLen
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return;
     }
     int nRes = sqlite3_bind_blob(m_pVM, nParam, (const void *)blobValue, nLen, SQLITE_TRANSIENT);
     if (nRes != SQLITE_OK)
     {
-        // CUBELOG_ERROR("Error binding blob param");
         qCritical() << "Error binding blob param";
     }
 }
@@ -258,13 +243,11 @@ void Sqlite3Statement::bindNull(int nParam)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return;
     }
@@ -272,7 +255,6 @@ void Sqlite3Statement::bindNull(int nParam)
 
     if (nRes != SQLITE_OK)
     {
-        // CUBELOG_ERROR("Error binding NULL param");
         qCritical() << "Error binding NULL param";
     }
 }
@@ -281,13 +263,11 @@ int Sqlite3Statement::bindParameterIndex(const char *szParam)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return -1;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return -1;
     }
@@ -295,7 +275,6 @@ int Sqlite3Statement::bindParameterIndex(const char *szParam)
 
     if (!nParam)
     {
-        // CUBELOG_ERROR_FMT("Parameter '%s' is not valid for this statement", szParam);
         qCritical() << "parameter is not valid for this statement";
     }
 
@@ -321,13 +300,11 @@ int Sqlite3Statement::execDML()
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return -1;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return -1;
     }
@@ -339,7 +316,6 @@ int Sqlite3Statement::execDML()
         if (sqlite3_finalize(m_pVM) != SQLITE_OK)
         {
             const char *szError = (const char *)sqlite3_errmsg(m_db);
-            // CUBELOG_ERROR(szError);
             qCritical() << szError;
             return -1;
         }
@@ -349,7 +325,6 @@ int Sqlite3Statement::execDML()
     {
         sqlite3_finalize(m_pVM);
         const char *szError = (const char *)sqlite3_errmsg(m_db);
-        // CUBELOG_ERROR(szError);
         qCritical() << szError;
     }
     return -1;
@@ -378,7 +353,6 @@ int Sqlite3Statement::execQuery(bool &eof)
         return nRet;
 
     const char *szError = (const char *)sqlite3_errmsg(m_db);
-    // CUBELOG_ERROR(szError);
     qCritical() << szError;
     return -1;
 }
@@ -402,7 +376,6 @@ int Sqlite3Statement::nextRow(bool &eof)
     {
         nRet                = sqlite3_finalize(m_pVM);
         const char *szError = (const char *)sqlite3_errmsg(m_db);
-        // CUBELOG_ERROR(szError);
         qCritical() << szError;
         return nRet;
     }
@@ -415,7 +388,6 @@ int Sqlite3Statement::endQuery()
     if (nRet != SQLITE_OK && nRet != SQLITE_DONE)
     {
         const char *szError = (const char *)sqlite3_errmsg(m_db);
-        // CUBELOG_ERROR(szError);
         qCritical() << szError;
     }
     return nRet;
@@ -425,13 +397,11 @@ int Sqlite3Statement::getInt(int column)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return -1;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return -1;
     }
@@ -442,13 +412,11 @@ double Sqlite3Statement::getDouble(int column)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return -1;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return -1;
     }
@@ -459,13 +427,11 @@ std::int64_t Sqlite3Statement::getInt64(int column)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return -1;
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return -1;
     }
@@ -476,13 +442,11 @@ std::string Sqlite3Statement::getString(int column)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return {};
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return {};
     }
@@ -533,13 +497,11 @@ QByteArray Sqlite3Statement::getBlob(int column)
 {
     if (!isDatabaseOpened())
     {
-        // CUBELOG_WARN("database is not opened");
         qWarning() << "database is not opened";
         return {};
     }
     if (!m_pVM)
     {
-        // CUBELOG_ERROR("VM null pointer");
         qCritical() << "VM null pointer";
         return {};
     }

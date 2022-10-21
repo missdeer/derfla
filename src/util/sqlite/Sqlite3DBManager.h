@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <mutex>
 
 #include "Sqlite3Helper.h"
 #include "util_global.h"
@@ -19,11 +18,11 @@ public:
     [[nodiscard]] bool isOpened() const;
     bool               close();
     bool               save();
+    bool               saveAndClose();
     bool               create(const QString &dbPath);
     bool               create(const std::string &dbPath);
     bool               create(const char *dbPath);
-    void               lock();
-    void               unlock();
+    bool               loadOrSaveInMemory(const QString &dbPath, bool isSave);
 
     Sqlite3Helper &engine();
 
@@ -35,7 +34,6 @@ private:
 
     sqlite3      *m_db {nullptr};
     Sqlite3Helper m_sqlite;
-    std::mutex    m_mutex;
     std::string   m_savePoint;
     void          regenerateSavePoint();
     void          clearSavePoint();

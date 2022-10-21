@@ -40,4 +40,8 @@ void LocalServer::onLocalSocketErrorOccurred(QLocalSocket::LocalSocketError sock
     auto *localSocket = qobject_cast<QLocalSocket *>(sender());
     Q_ASSERT(localSocket);
     qCritical() << "local socket error" << socketError;
+    if (localSocket->isOpen())
+    {
+        localSocket->close();
+    }
 }

@@ -12,7 +12,7 @@ class DBRW : public QObject
 {
     Q_OBJECT
 public:
-    explicit DBRW(bool readOnly = false);
+    DBRW();
     ~DBRW() override;
 
     QString search(const QString &keyword, int countRequired = 50);
@@ -32,7 +32,7 @@ public slots:
 private:
     QString dbPath_;
     bool    createDatabase();
-    bool    openDatabase(bool readOnly);
+    bool    openDatabase();
     bool    getLFSItems(LocalFSItemList &fsil, const QString &keyword, int countRequired = 50);
     bool    queryActions(LocalFSItemList &fsil, int countRequired, Sqlite3StatementPtr &query);
 };

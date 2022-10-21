@@ -3,7 +3,7 @@
 #include "dbrw.h"
 #include "Sqlite3DBManager.h"
 
-DBRW::DBRW(bool readOnly)
+DBRW::DBRW()
 {
     dbPath_ = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     QDir dir(dbPath_);
@@ -13,9 +13,14 @@ DBRW::DBRW(bool readOnly)
     }
     dbPath_ = QDir::toNativeSeparators(dir.absoluteFilePath("cache.db"));
 
-    if (!openDatabase(readOnly))
+    if (!createDatabase())
     {
-        qCritical() << "can't open cache database";
+        qFatal("can't create in memory database");
+        return;
+    }
+    if (Sqlite3DBManager::instance().loadOrSaveInMemory(dbPath_, false))
+    {
+        qCritical() << "cannot load database from file to memory";
     }
 }
 
@@ -24,7 +29,8 @@ DBRW::~DBRW()
     auto &dbMgr = Sqlite3DBManager::instance();
     if (dbMgr.isOpened())
     {
-        dbMgr.close();
+        dbMgr.loadOrSaveInMemory(dbPath_, true);
+        dbMgr.saveAndClose();
     }
 }
 
@@ -153,7 +159,7 @@ bool DBRW::insertLFS(const QByteArray &icon,
 bool DBRW::createDatabase()
 {
     auto &dbMgr = Sqlite3DBManager::instance();
-    if (!dbMgr.create(dbPath_))
+    if (!dbMgr.create(":memory:"))
     {
         return false;
     }
@@ -162,22 +168,7 @@ bool DBRW::createDatabase()
     auto  result = engine.execDML(
         "CREATE TABLE lfs(id INTEGER PRIMARY KEY AUTOINCREMENT,icon BLOB, title TEXT, description TEXT,target TEXT, arguments TEXT, "
          "working_directory TEXT,timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,last_modified DATETIME DEFAULT CURRENT_TIMESTAMP, type TEXT);");
-    if (Sqlite3Helper::isOk(result))
-    {
-        dbMgr.save();
-        return true;
-    }
-    return false;
-}
-
-bool DBRW::openDatabase(bool readOnly)
-{
-    if (!readOnly && !QFile::exists(dbPath_))
-    {
-        return createDatabase();
-    }
-
-    return Sqlite3DBManager::instance().open(dbPath_, readOnly);
+    return Sqlite3Helper::isOk(result);
 }
 
 bool DBRW::queryActions(LocalFSItemList &fsil, int countRequired, Sqlite3StatementPtr &stmt)
