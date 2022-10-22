@@ -209,7 +209,7 @@ void LocalFSScanner::scanDockIcons()
 {
     auto  homePath = qgetenv("HOME");
     auto *process  = new QProcess;
-    connect(process, &QProcess::finished, this, &LocalFSScanner::onFinished);
+    connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &LocalFSScanner::onFinished);
     process->setProgram("/usr/bin/plutil");
     process->setArguments(QStringList() << "-convert"
                                         << "xml1" << homePath + "/Library/Preferences/com.apple.dock.plist"
