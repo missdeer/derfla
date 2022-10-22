@@ -11,7 +11,6 @@
 #include "qtsingleapplication.h"
 #include "scopedguard.h"
 
-using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -34,9 +33,11 @@ int main(int argc, char *argv[])
 #if defined(Q_OS_WIN)
     CoInitialize(NULL);
     ScopedGuard cu([]() { CoUninitialize(); });
+    const QString lfsLocalPipe(R"(\\.\pipe\lfsLocalPipe)");
+#else
+    const QString lfsLocalPipe(R"(/tmp/lfsLocalPipe)");
 #endif
 
-    const QString lfsLocalPipe(R"(\\.\pipe\lfsLocalPipe)");
     if (argc == 2)
     {
         if (QString(argv[1]).compare("/exit", Qt::CaseInsensitive) == 0 && app.isRunning())
@@ -73,6 +74,13 @@ int main(int argc, char *argv[])
     }
 
     DBRW           dbrw;
+
+    LocalServer localServer(dbrw);
+    if ( localServer.listen(lfsLocalPipe)) {
+        qDebug() << "listen on" << lfsLocalPipe;
+    }
+
+
     LocalFSScanner scanner(dbrw);
     scanner.start();
 
@@ -83,9 +91,5 @@ int main(int argc, char *argv[])
             QCoreApplication::quit();
         }
     });
-
-    LocalServer localServer(dbrw);
-    localServer.listen(lfsLocalPipe);
-
     return QCoreApplication::exec();
 }

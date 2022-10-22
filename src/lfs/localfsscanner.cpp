@@ -64,6 +64,7 @@ void LocalFSScanner::scan()
 
     for (const auto &directory : scanDirectories_)
     {
+        qDebug() << "scan directory:" << directory.directory;
         scanDirectory(directory);
     }
     // dbrw_.removeOldRecords(timestamp_);
@@ -148,30 +149,30 @@ void LocalFSScanner::scanDirectory(const Directory &directory)
 #elif defined(Q_OS_MAC)
 void LocalFSScanner::getBuiltinDirectories()
 {
-    auto homePath = qgetenv("HOME");
-    scanDirectories_ << Directory(QStringLiteral("/Applications"), true) << Directory(homePath + "/Applications", true)
+    QDir homePath(QString(qgetenv("HOME")));
+    scanDirectories_ << Directory(QStringLiteral("/Applications"), true) << Directory(homePath.absoluteFilePath("Applications"), true)
                      << Directory(QStringLiteral("/Applications/Xcode.app/Contents/Applications"), false)
-                     << Directory(QStringLiteral("/Developer/Applications"), false) << Directory(homePath, false)
-                     << Directory(homePath + "/Library/PreferencePanes", false) << Directory(QStringLiteral("/usr/local/Cellar"), true)
-                     << Directory(QStringLiteral("/opt/homebrew-cask/Caskroom"), false)
+                     << Directory(QStringLiteral("/Developer/Applications"), false) << Directory(homePath.absolutePath(), false)
+                     << Directory(homePath.absoluteFilePath("Library/PreferencePanes"), false)
+                     << Directory(QStringLiteral("/opt/homebrew/bin"), false) << Directory(QStringLiteral("/opt/homebrew-cask/Caskroom"), false)
                      << Directory(QStringLiteral("/System/Library/PerferencePanes"), false)
                      << Directory(QStringLiteral("/System/Library/CoreServices/Applications"), true);
 }
 
-void LocalFSScanner::scanDirectory(const Directory &d)
+void LocalFSScanner::scanDirectory(const Directory &directory)
 {
     check_stop;
     QThread::yieldCurrentThread();
 
-    if (QFileInfo(d.directory).suffix() == "framework")
+    if (QFileInfo(directory.directory).suffix() == "framework")
     {
         return;
     }
 
-    QDir          dir(d.directory);
+    QDir          dir(directory.directory);
     QFileInfoList list = dir.entryInfoList(QStringList() << QStringLiteral("*"), QDir::Files | QDir::Readable);
     check_stop;
-    if (d.recursive)
+    if (directory.recursive)
     {
         list << dir.entryInfoList(QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot);
     }
@@ -184,22 +185,22 @@ void LocalFSScanner::scanDirectory(const Directory &d)
     for (const auto &fileInfo : list)
     {
         check_stop;
-        QString f(d.directory + QDir::separator() + fileInfo.fileName());
+        QString filePath(dir.absoluteFilePath(fileInfo.fileName()));
         if ((fileInfo.isFile() && fileInfo.permission(QFile::ExeGroup)) ||
             (fileInfo.isDir() && (fileInfo.suffix() == "app" || fileInfo.suffix() == "prefPane")))
         {
             dbrw_.insertLFS(util::extractPNGIconFromFile(fileInfo),
                             fileInfo.fileName(),
-                            f,
-                            f,
+                            filePath,
+                            filePath,
                             {},
-                            QFileInfo(f).filePath(),
+                            QFileInfo(filePath).filePath(),
                             fileInfo.isDir() ? QStringLiteral("shellExecute") : QStringLiteral("terminalCommand"));
         }
-        else if (fileInfo.isDir() && d.recursive)
+        else if (fileInfo.isDir() && directory.recursive)
         {
             check_stop;
-            scanDirectory(Directory {f, true});
+            scanDirectory(Directory {filePath, true});
         }
     }
 }
@@ -207,70 +208,81 @@ void LocalFSScanner::scanDirectory(const Directory &d)
 void LocalFSScanner::scanDockIcons()
 {
     auto  homePath = qgetenv("HOME");
-    auto *p        = new QProcess;
-    connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
-    p->setProgram("/usr/bin/plutil");
-    p->setArguments(QStringList() << "-convert"
-                                  << "xml1" << homePath + "/Library/Preferences/com.apple.dock.plist"
-                                  << "-o"
-                                  << "-");
-    p->start();
+    auto *process  = new QProcess;
+    connect(process, &QProcess::finished, this, &LocalFSScanner::onFinished);
+    process->setProgram("/usr/bin/plutil");
+    process->setArguments(QStringList() << "-convert"
+                                        << "xml1" << homePath + "/Library/Preferences/com.apple.dock.plist"
+                                        << "-o"
+                                        << "-");
+    process->start();
 }
 
-void LocalFSScanner::finished(int exitCode, QProcess::ExitStatus)
+void LocalFSScanner::onFinished(int exitCode, QProcess::ExitStatus)
 {
-    auto *p = qobject_cast<QProcess *>(sender());
+    auto *process = qobject_cast<QProcess *>(sender());
 
-    p->deleteLater();
+    process->deleteLater();
 
     if (exitCode != 0)
+    {
         return;
+    }
 
-    QByteArray output = p->readAllStandardOutput();
+    QByteArray output = process->readAllStandardOutput();
 
     QBuffer     buf(&output);
     QVariantMap rootMap = PListParser::parsePList(&buf).toMap();
 
-    auto it = rootMap.find("persistent-apps");
-    if (rootMap.end() != it)
+    auto iter = rootMap.find("persistent-apps");
+    if (rootMap.end() == iter)
     {
-        auto papps = it.value();
-        if (papps.canConvert<QVariantList>())
+        return;
+    }
+
+    if (auto pApps = iter.value(); pApps.canConvert<QVariantList>())
+    {
+        auto iter = pApps.value<QSequentialIterable>();
+        for (const QVariant &variant : iter)
         {
-            auto it = papps.value<QSequentialIterable>();
-            for (const QVariant &v : it)
+            auto item       = variant.toMap();
+            auto tileDataIt = item.find("tile-data");
+            if (item.end() == tileDataIt)
             {
-                auto item       = v.toMap();
-                auto tileDataIt = item.find("tile-data");
-                if (item.end() == tileDataIt)
-                    continue;
+                continue;
+            }
 
-                auto tileData = tileDataIt.value().toMap();
+            auto tileData = tileDataIt.value().toMap();
 
-                auto fileLabelIt = tileData.find("file-label");
-                if (tileData.end() == fileLabelIt)
-                    continue;
-                QString fileLabel = fileLabelIt.value().toString();
+            auto fileLabelIt = tileData.find("file-label");
+            if (tileData.end() == fileLabelIt)
+            {
+                continue;
+            }
+            QString fileLabel = fileLabelIt.value().toString();
 
-                auto fileDataIt = tileData.find("file-data");
-                if (tileData.end() == fileDataIt)
-                    continue;
+            auto fileDataIt = tileData.find("file-data");
+            if (tileData.end() == fileDataIt)
+            {
+                continue;
+            }
 
-                auto fileData = fileDataIt.value().toMap();
-                auto cfurlIt  = fileData.find("_CFURLString");
-                if (fileData.end() == cfurlIt)
-                    continue;
-                QString cfurl = QByteArray::fromPercentEncoding(cfurlIt.value().toByteArray());
+            auto fileData = fileDataIt.value().toMap();
+            auto cfurlIt  = fileData.find("_CFURLString");
+            if (fileData.end() == cfurlIt)
+            {
+                continue;
+            }
+            QString cfurl = QByteArray::fromPercentEncoding(cfurlIt.value().toByteArray());
 
-                if (cfurl.startsWith("file://") && cfurl.endsWith(".app/"))
-                {
-                    cfurl = cfurl.right(cfurl.length() - 7);
-                    cfurl = cfurl.left(cfurl.length() - 1);
+            if (cfurl.startsWith("file://") && cfurl.endsWith(".app/"))
+            {
+                cfurl = cfurl.right(cfurl.length() - 7);
+                cfurl = cfurl.left(cfurl.length() - 1);
 
-                    QFileInfo fileInfo(cfurl);
-                    dbrw_.insertLFS(
-                        util::extractPNGIconFromFile(fileInfo), fileLabel, fileLabel, cfurl, {}, fileInfo.filePath(), QStringLiteral("shellExecute"));
-                }
+                QFileInfo fileInfo(cfurl);
+                dbrw_.insertLFS(
+                    util::extractPNGIconFromFile(fileInfo), fileLabel, fileLabel, cfurl, {}, fileInfo.filePath(), QStringLiteral("shellExecute"));
             }
         }
     }

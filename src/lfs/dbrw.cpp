@@ -20,7 +20,7 @@ DBRW::DBRW()
     }
     if (Sqlite3DBManager::instance().loadOrSaveInMemory(dbPath_, false))
     {
-        qCritical() << "cannot load database from file to memory";
+        qCritical() << QString("cannot load database from file '%1' to memory").arg(dbPath_);
     }
 }
 

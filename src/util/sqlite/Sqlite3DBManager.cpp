@@ -244,5 +244,4 @@ bool Sqlite3DBManager::loadOrSaveInMemory(const QString &dbPath, bool isSave)
     ** and return the result of this function. */
     (void)sqlite3_close(pFile);
     return rc;
-    return true;
 }

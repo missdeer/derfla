@@ -23,7 +23,7 @@ public slots:
 private slots:
     void scan();
 #if defined(Q_OS_MAC)
-    void finished(int exitCode, QProcess::ExitStatus);
+    void onFinished(int exitCode, QProcess::ExitStatus);
 #endif
 private:
     DBRW            &dbrw_;
