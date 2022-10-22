@@ -97,6 +97,7 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     ui->edtNodePath->setText(settings.value("node").toString());
     ui->edtTclPath->setText(settings.value("tcl").toString());
     ui->edtShPath->setText(settings.value("sh").toString());
+    ui->edtPerlPath->setText(settings.value("perl").toString());
 #if defined(Q_OS_MAC)
     ui->edtAppleScriptPath->setText(settings.value("applescript(as)").toString());
     ui->edtWScriptPath->setEnabled(false);
@@ -165,6 +166,7 @@ void PreferenceDialog::on_buttonBox_accepted()
     settings.setValue("node", ui->edtNodePath->text());
     settings.setValue("tcl", ui->edtTclPath->text());
     settings.setValue("sh", ui->edtShPath->text());
+    settings.setValue("perl", ui->edtPerlPath->text());
 #if defined(Q_OS_MAC)
     settings.setValue("applescript(as)", ui->edtAppleScriptPath->text());
     settings.setValue("applescript(js)", ui->edtAppleScriptPath->text());

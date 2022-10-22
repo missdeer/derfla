@@ -246,101 +246,101 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="136"/>
+        <location filename="../commonui/preferencedialog.ui" line="145"/>
         <source>Bash</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="148"/>
-        <location filename="../commonui/preferencedialog.ui" line="190"/>
-        <location filename="../commonui/preferencedialog.ui" line="232"/>
-        <location filename="../commonui/preferencedialog.ui" line="274"/>
-        <location filename="../commonui/preferencedialog.ui" line="316"/>
-        <location filename="../commonui/preferencedialog.ui" line="358"/>
-        <location filename="../commonui/preferencedialog.ui" line="400"/>
-        <location filename="../commonui/preferencedialog.ui" line="442"/>
-        <location filename="../commonui/preferencedialog.ui" line="484"/>
-        <location filename="../commonui/preferencedialog.ui" line="529"/>
-        <location filename="../commonui/preferencedialog.ui" line="571"/>
-        <location filename="../commonui/preferencedialog.ui" line="613"/>
-        <location filename="../commonui/preferencedialog.ui" line="655"/>
+        <location filename="../commonui/preferencedialog.ui" line="157"/>
+        <location filename="../commonui/preferencedialog.ui" line="199"/>
+        <location filename="../commonui/preferencedialog.ui" line="241"/>
+        <location filename="../commonui/preferencedialog.ui" line="283"/>
+        <location filename="../commonui/preferencedialog.ui" line="325"/>
+        <location filename="../commonui/preferencedialog.ui" line="367"/>
+        <location filename="../commonui/preferencedialog.ui" line="409"/>
+        <location filename="../commonui/preferencedialog.ui" line="451"/>
+        <location filename="../commonui/preferencedialog.ui" line="493"/>
+        <location filename="../commonui/preferencedialog.ui" line="538"/>
+        <location filename="../commonui/preferencedialog.ui" line="580"/>
+        <location filename="../commonui/preferencedialog.ui" line="622"/>
+        <location filename="../commonui/preferencedialog.ui" line="664"/>
         <source>Browse</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="162"/>
-        <location filename="../commonui/preferencedialog.ui" line="204"/>
-        <location filename="../commonui/preferencedialog.ui" line="246"/>
-        <location filename="../commonui/preferencedialog.ui" line="288"/>
-        <location filename="../commonui/preferencedialog.ui" line="330"/>
-        <location filename="../commonui/preferencedialog.ui" line="372"/>
-        <location filename="../commonui/preferencedialog.ui" line="414"/>
-        <location filename="../commonui/preferencedialog.ui" line="456"/>
-        <location filename="../commonui/preferencedialog.ui" line="498"/>
-        <location filename="../commonui/preferencedialog.ui" line="543"/>
-        <location filename="../commonui/preferencedialog.ui" line="585"/>
-        <location filename="../commonui/preferencedialog.ui" line="627"/>
-        <location filename="../commonui/preferencedialog.ui" line="669"/>
+        <location filename="../commonui/preferencedialog.ui" line="171"/>
+        <location filename="../commonui/preferencedialog.ui" line="213"/>
+        <location filename="../commonui/preferencedialog.ui" line="255"/>
+        <location filename="../commonui/preferencedialog.ui" line="297"/>
+        <location filename="../commonui/preferencedialog.ui" line="339"/>
+        <location filename="../commonui/preferencedialog.ui" line="381"/>
+        <location filename="../commonui/preferencedialog.ui" line="423"/>
+        <location filename="../commonui/preferencedialog.ui" line="465"/>
+        <location filename="../commonui/preferencedialog.ui" line="507"/>
+        <location filename="../commonui/preferencedialog.ui" line="552"/>
+        <location filename="../commonui/preferencedialog.ui" line="594"/>
+        <location filename="../commonui/preferencedialog.ui" line="636"/>
+        <location filename="../commonui/preferencedialog.ui" line="678"/>
         <source>Auto detect path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="178"/>
+        <location filename="../commonui/preferencedialog.ui" line="187"/>
         <source>Sh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="220"/>
+        <location filename="../commonui/preferencedialog.ui" line="229"/>
         <source>Node</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="262"/>
+        <location filename="../commonui/preferencedialog.ui" line="271"/>
         <source>TCL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="304"/>
+        <location filename="../commonui/preferencedialog.ui" line="313"/>
         <source>PHP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="346"/>
+        <location filename="../commonui/preferencedialog.ui" line="355"/>
         <source>Ruby</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="388"/>
+        <location filename="../commonui/preferencedialog.ui" line="397"/>
         <source>Python</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="430"/>
+        <location filename="../commonui/preferencedialog.ui" line="439"/>
         <source>Perl</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="472"/>
+        <location filename="../commonui/preferencedialog.ui" line="481"/>
         <source>Zsh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="514"/>
+        <location filename="../commonui/preferencedialog.ui" line="523"/>
         <source>Lua</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="559"/>
+        <location filename="../commonui/preferencedialog.ui" line="568"/>
         <source>AppleScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="601"/>
+        <location filename="../commonui/preferencedialog.ui" line="610"/>
         <source>CScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="643"/>
+        <location filename="../commonui/preferencedialog.ui" line="652"/>
         <source>WScript</source>
         <translation type="unfinished"></translation>
     </message>
@@ -370,182 +370,182 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="263"/>
+        <location filename="../commonui/preferencedialog.cpp" line="265"/>
         <source>Find Bash</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="266"/>
+        <location filename="../commonui/preferencedialog.cpp" line="268"/>
         <source>Bash interpretor (bash.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="268"/>
+        <location filename="../commonui/preferencedialog.cpp" line="270"/>
         <source>Bash interpretor (bash);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="291"/>
+        <location filename="../commonui/preferencedialog.cpp" line="293"/>
         <source>Find Sh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="294"/>
+        <location filename="../commonui/preferencedialog.cpp" line="296"/>
         <source>Sh interpretor (sh.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="296"/>
+        <location filename="../commonui/preferencedialog.cpp" line="298"/>
         <source>Sh interpretor (sh);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="319"/>
+        <location filename="../commonui/preferencedialog.cpp" line="321"/>
         <source>Find Node</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="322"/>
+        <location filename="../commonui/preferencedialog.cpp" line="324"/>
         <source>Node interpretor (node.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="324"/>
+        <location filename="../commonui/preferencedialog.cpp" line="326"/>
         <source>Node interpretor (node);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="347"/>
+        <location filename="../commonui/preferencedialog.cpp" line="349"/>
         <source>Find Tcl</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="350"/>
+        <location filename="../commonui/preferencedialog.cpp" line="352"/>
         <source>Tcl interpretor (tcl.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="352"/>
+        <location filename="../commonui/preferencedialog.cpp" line="354"/>
         <source>Tcl interpretor (tcl);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="375"/>
+        <location filename="../commonui/preferencedialog.cpp" line="377"/>
         <source>Find PHP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="378"/>
+        <location filename="../commonui/preferencedialog.cpp" line="380"/>
         <source>PHP interpretor (php.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="380"/>
+        <location filename="../commonui/preferencedialog.cpp" line="382"/>
         <source>PHP interpretor (php);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="403"/>
+        <location filename="../commonui/preferencedialog.cpp" line="405"/>
         <source>Find Ruby</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="406"/>
+        <location filename="../commonui/preferencedialog.cpp" line="408"/>
         <source>Ruby interpretor (ruby.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="408"/>
+        <location filename="../commonui/preferencedialog.cpp" line="410"/>
         <source>Ruby interpretor (ruby);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="431"/>
+        <location filename="../commonui/preferencedialog.cpp" line="433"/>
         <source>Find Python</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="434"/>
+        <location filename="../commonui/preferencedialog.cpp" line="436"/>
         <source>Python interpretor (python.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="436"/>
+        <location filename="../commonui/preferencedialog.cpp" line="438"/>
         <source>Python interpretor (python);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="459"/>
+        <location filename="../commonui/preferencedialog.cpp" line="461"/>
         <source>Find Perl</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="462"/>
+        <location filename="../commonui/preferencedialog.cpp" line="464"/>
         <source>Perl interpretor (perl.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="464"/>
+        <location filename="../commonui/preferencedialog.cpp" line="466"/>
         <source>Perl interpretor (perl);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="487"/>
+        <location filename="../commonui/preferencedialog.cpp" line="489"/>
         <source>Find Zsh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="490"/>
+        <location filename="../commonui/preferencedialog.cpp" line="492"/>
         <source>Zsh interpretor (zsh.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="492"/>
+        <location filename="../commonui/preferencedialog.cpp" line="494"/>
         <source>Zsh interpretor (zsh);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="515"/>
+        <location filename="../commonui/preferencedialog.cpp" line="517"/>
         <source>Find Lua</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="518"/>
+        <location filename="../commonui/preferencedialog.cpp" line="520"/>
         <source>Lua interpretor (lua.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="520"/>
+        <location filename="../commonui/preferencedialog.cpp" line="522"/>
         <source>Lua interpretor (lua);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="542"/>
+        <location filename="../commonui/preferencedialog.cpp" line="544"/>
         <source>Find AppleScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="542"/>
+        <location filename="../commonui/preferencedialog.cpp" line="544"/>
         <source>AppleScript interpretor (applescript);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="562"/>
+        <location filename="../commonui/preferencedialog.cpp" line="564"/>
         <source>Find CScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="562"/>
+        <location filename="../commonui/preferencedialog.cpp" line="564"/>
         <source>CScript interpretor (cscript.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="583"/>
+        <location filename="../commonui/preferencedialog.cpp" line="585"/>
         <source>Find WScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.cpp" line="583"/>
+        <location filename="../commonui/preferencedialog.cpp" line="585"/>
         <source>WScript interpretor (wscript.exe);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
