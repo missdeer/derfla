@@ -29,6 +29,7 @@ void LocalServer::onLocalSocketReadyRead()
     auto *localSocket = qobject_cast<QLocalSocket *>(sender());
     Q_ASSERT(localSocket);
     auto msg = localSocket->readAll();
+    qDebug() << "received search request:" << QString(msg);
     auto res = dbrw_.search(QString(msg));
     localSocket->write(res.toUtf8());
     localSocket->flush();
@@ -39,7 +40,7 @@ void LocalServer::onLocalSocketErrorOccurred(QLocalSocket::LocalSocketError sock
 {
     auto *localSocket = qobject_cast<QLocalSocket *>(sender());
     Q_ASSERT(localSocket);
-    qCritical() << "local socket error" << socketError;
+    qCritical() << "local server got socket error" << socketError;
     if (localSocket->isOpen())
     {
         localSocket->close();

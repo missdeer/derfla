@@ -199,7 +199,7 @@ bool DBRW::queryActions(LocalFSItemList &fsil, int countRequired, Sqlite3Stateme
                 }
                 item->setWorkingDirectory(workingDirectory);
                 item->setActionType(stmt->getQString(6));
-                qDebug() << item->title() << item->description() << item->target() << item->arguments() << item->workingDirectory()
+                qDebug() << __FUNCTION__ << item->title() << item->description() << item->target() << item->arguments() << item->workingDirectory()
                          << item->actionType();
                 auto iter = std::find_if(fsil.begin(), fsil.end(), [&item](const auto &d) {
                     return item->title() == d->title() && item->description() == d->description();

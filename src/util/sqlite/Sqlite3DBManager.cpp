@@ -194,7 +194,10 @@ Sqlite3Helper &Sqlite3DBManager::engine()
 
 Sqlite3DBManager::~Sqlite3DBManager()
 {
-    close();
+    if (isOpened())
+    {
+        close();
+    }
 }
 
 bool Sqlite3DBManager::isOpened() const
@@ -208,7 +211,11 @@ bool Sqlite3DBManager::loadOrSaveInMemory(const QString &dbPath, bool isSave)
 
     /* Open the database file identified by zFilename. Exit early if this fails
     ** for any reason. */
+#if defined(Q_OS_WIN)
     int rc = sqlite3_open(dbPath.toUtf8().constData(), &pFile);
+#else
+    int rc = sqlite3_open(dbPath.toStdString().c_str(), &pFile);
+#endif
     if (rc == SQLITE_OK)
     {
         /* If this is a 'load' operation (isSave==0), then data is copied
@@ -239,9 +246,13 @@ bool Sqlite3DBManager::loadOrSaveInMemory(const QString &dbPath, bool isSave)
         }
         rc = sqlite3_errcode(pTo);
     }
+    else
+    {
+        qCritical() << "cannot open file" << dbPath;
+    }
 
     /* Close the database connection opened on database file zFilename
     ** and return the result of this function. */
     (void)sqlite3_close(pFile);
-    return rc;
+    return rc == SQLITE_OK;
 }

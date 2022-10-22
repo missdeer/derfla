@@ -15,6 +15,7 @@ LocalSocket::LocalSocket(QTextStream &stream, QObject *parent) : QLocalSocket {p
 
 void LocalSocket::onConnected()
 {
+    qDebug() << __FUNCTION__;
     connected_ = true;
     flushCachedMsg();
 }
@@ -59,7 +60,9 @@ void LocalSocket::onReadyRead()
 {
     auto *localSocket = qobject_cast<QLocalSocket *>(sender());
     Q_ASSERT(localSocket);
-    stream_ << QString(localSocket->readAll());
+    auto res =QString(localSocket->readAll());
+    qDebug() << __FUNCTION__ << res;
+    stream_ << res;
     localSocket->disconnectFromServer();
 }
 
@@ -67,6 +70,8 @@ void LocalSocket::onReadChannelFinished()
 {
     auto *localSocket = qobject_cast<QLocalSocket *>(sender());
     Q_ASSERT(localSocket);
-    stream_ << QString(localSocket->readAll());
+    auto res =QString(localSocket->readAll());
+    qDebug() << __FUNCTION__ << res;
+    stream_ << res;
     localSocket->disconnectFromServer();
 }

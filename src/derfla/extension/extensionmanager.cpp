@@ -37,9 +37,10 @@ bool ExtensionManager::loadAllFromLocal()
     dir.setFilter(QDir::Dirs);
     auto dirs = dir.entryInfoList();
 
-    for (const auto &dir : dirs)
+    for (const auto &dirInfo : dirs)
     {
-        QString filePath = dir.absoluteFilePath() % "/extension.derflaext";
+        QDir    dir(dirInfo.absoluteFilePath());
+        QString filePath = dir.absoluteFilePath("extension.derflaext");
         if (QFile::exists(filePath))
         {
             LuaVM luaVM;
@@ -55,7 +56,7 @@ bool ExtensionManager::loadAllFromLocal()
             QString executable = luaVM.getString("executable");
             if (!executable.isEmpty())
             {
-                extension->setExecutable(dir.absoluteFilePath() % "/" % executable);
+                extension->setExecutable(dir.absoluteFilePath(executable));
                 if (!QFile::exists(extension->executable()))
                 {
                     continue;
@@ -85,7 +86,7 @@ bool ExtensionManager::loadAllFromLocal()
                     prefixExtensionMap_.insert("", extension);
                 }
             }
-            extension->setWaitIconPath(dir.absoluteFilePath() % "/" % luaVM.getString("waitIconPath"));
+            extension->setWaitIconPath(dir.absoluteFilePath(luaVM.getString("waitIconPath")));
             extension->setWaitIconData(luaVM.getString("waitIconData"));
             extension->setWaitTitle(luaVM.getString("waitTitle"));
             extension->setWaitDescription(luaVM.getString("waitDescription"));
