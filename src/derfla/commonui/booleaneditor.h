@@ -16,6 +16,8 @@ public:
     bool isChecked();
     void setChecked(bool value);
 
+    QCheckBox *checkBox();
+
 private:
     QCheckBox *checkBox_;
 };

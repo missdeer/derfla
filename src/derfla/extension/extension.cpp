@@ -55,7 +55,7 @@ bool Extension::query(const QString &input)
 {
     QStringList arguments;
     auto       *process = new QProcess;
-    connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
+    connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &Extension::finished);
     if (executor_.isEmpty())
     {
         process->setProgram(executable_);

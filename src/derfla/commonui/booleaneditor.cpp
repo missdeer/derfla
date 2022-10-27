@@ -16,9 +16,14 @@ void BooleanWidget::setChecked(bool value)
     checkBox_->setChecked(value);
 }
 
+QCheckBox *BooleanWidget::checkBox()
+{
+    return checkBox_;
+}
+
 BooleanEditor::BooleanEditor(QObject *parent) : QItemDelegate(parent) {}
 
-BooleanEditor::~BooleanEditor() {}
+BooleanEditor::~BooleanEditor() = default;
 
 void BooleanEditor::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
@@ -40,7 +45,8 @@ void BooleanEditor::setModelData(QWidget *editor, QAbstractItemModel *model, con
 QWidget *BooleanEditor::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &) const
 {
     auto *editor = new BooleanWidget(parent);
-    connect(editor, SIGNAL(toggled(bool)), this, SLOT(changed(bool)));
+
+    connect(editor->checkBox(), QOverload<bool>::of(&QCheckBox::toggled), this, &BooleanEditor::changed);
 
     return editor;
 }
