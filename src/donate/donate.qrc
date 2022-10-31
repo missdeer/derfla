@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>rc/qrcode/alipay.jpg</file>
-        <file>rc/qrcode/wepay.jpg</file>
-        <file>donate.png</file>
-    </qresource>
-</RCC>

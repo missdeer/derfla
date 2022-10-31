@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PreferenceDialog</class>
+ <widget class="QDialog" name="PreferenceDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>689</width>
+    <height>652</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Preference</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
+     <item>
+      <widget class="QListWidget" name="listWidget">
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QAbstractScrollArea::AdjustToContents</enum>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::NoDragDrop</enum>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="textElideMode">
+        <enum>Qt::ElideNone</enum>
+       </property>
+       <property name="movement">
+        <enum>QListView::Static</enum>
+       </property>
+       <property name="flow">
+        <enum>QListView::LeftToRight</enum>
+       </property>
+       <property name="resizeMode">
+        <enum>QListView::Adjust</enum>
+       </property>
+       <property name="layoutMode">
+        <enum>QListView::SinglePass</enum>
+       </property>
+       <property name="gridSize">
+        <size>
+         <width>96</width>
+         <height>96</height>
+        </size>
+       </property>
+       <property name="viewMode">
+        <enum>QListView::IconMode</enum>
+       </property>
+       <property name="uniformItemSizes">
+        <bool>true</bool>
+       </property>
+       <property name="currentRow">
+        <number>-1</number>
+       </property>
+       <item>
+        <property name="text">
+         <string>General</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../Derfla.qrc">
+          <normaloff>:/rc/images/general.png</normaloff>:/rc/images/general.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Extension</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../Derfla.qrc">
+          <normaloff>:/rc/images/extension.png</normaloff>:/rc/images/extension.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Plugin</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../Derfla.qrc">
+          <normaloff>:/rc/images/plugin.png</normaloff>:/rc/images/plugin.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Skin</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../Derfla.qrc">
+          <normaloff>:/rc/images/skin.png</normaloff>:/rc/images/skin.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Interpretor</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../Derfla.qrc">
+          <normaloff>:/rc/images/interpretor.png</normaloff>:/rc/images/interpretor.png</iconset>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QStackedWidget" name="stackedWidget">
+       <property name="currentIndex">
+        <number>4</number>
+       </property>
+       <widget class="QWidget" name="generalPage"/>
+       <widget class="QWidget" name="extensionPage"/>
+       <widget class="QWidget" name="pluginPage"/>
+       <widget class="QWidget" name="skinPage"/>
+       <widget class="QWidget" name="interpretorPage">
+        <layout class="QFormLayout" name="formLayout">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMaximumSize</enum>
+         </property>
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::ExpandingFieldsGrow</enum>
+         </property>
+         <property name="verticalSpacing">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Bash</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLineEdit" name="edtBashPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseBash">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectBash">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>Sh</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_12">
+           <item>
+            <widget class="QLineEdit" name="edtShPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseSh">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectSh">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>Node</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_13">
+           <item>
+            <widget class="QLineEdit" name="edtNodePath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseNode">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectNode">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>TCL</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_14">
+           <item>
+            <widget class="QLineEdit" name="edtTclPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseTcl">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectTcl">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>PHP</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLineEdit" name="edtPHPPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowsePHP">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectPHP">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Ruby</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLineEdit" name="edtRubyPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseRuby">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectRuby">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Python</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLineEdit" name="edtPythonPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowsePython">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectPython">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Perl</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLineEdit" name="edtPerlPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowsePerl">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectPerl">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Zsh</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QLineEdit" name="edtZshPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseZsh">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectZsh">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="9" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Lua</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <property name="spacing">
+            <number>-1</number>
+           </property>
+           <item>
+            <widget class="QLineEdit" name="edtLuaPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseLua">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectLua">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="10" column="0">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>AppleScript</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <widget class="QLineEdit" name="edtAppleScriptPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseAppleScript">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectAppleScript">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="11" column="0">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>CScript</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <widget class="QLineEdit" name="edtCScriptPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseCScript">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectCScript">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="12" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>WScript</string>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QLineEdit" name="edtWScriptPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowseWScript">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectWScript">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../Derfla.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>PreferenceDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>PreferenceDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
