@@ -22,10 +22,9 @@
 
 HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize)
 {
-    HRESULT         hres;
-    IShellLink     *psl;
-    WCHAR           szGotPath[MAX_PATH];
-    WCHAR           szDescription[MAX_PATH];
+    IShellLink     *psl                     = nullptr;
+    WCHAR           szGotPath[MAX_PATH]     = {0};
+    WCHAR           szDescription[MAX_PATH] = {0};
     WIN32_FIND_DATA wfd;
 
     *lpszPath = 0; // Assume failure
@@ -33,10 +32,10 @@ HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBuff
     CoInitialize(NULL);
     // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
     // has already been called.
-    hres = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
+    HRESULT hres = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
     if (SUCCEEDED(hres))
     {
-        IPersistFile *ppf;
+        IPersistFile *ppf = nullptr;
 
         // Get a pointer to the IPersistFile interface.
         hres = psl->QueryInterface(IID_IPersistFile, (void **)&ppf);
@@ -113,23 +112,24 @@ QString GetEverythingPath()
             SendMessage(hWnd, EVERYTHING_WM_IPC, EVERYTHING_IPC_CREATE_DESKTOP_SHORTCUT, 0);
         }
 
-        QString path = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) % "/Search Everything.lnk");
+        QDir    deskDir(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+        QString path = QDir::toNativeSeparators(deskDir.absoluteFilePath("Search Everything.lnk"));
 
         WCHAR   szTarget[MAX_PATH] = {0};
-        HRESULT hr                 = ResolveIt(hWnd, path.toStdString().c_str(), szTarget, sizeof(szTarget) / sizeof(szTarget[0]));
+        HRESULT hResult            = ResolveIt(hWnd, path.toStdString().c_str(), szTarget, sizeof(szTarget) / sizeof(szTarget[0]));
         if (!ret)
         {
             // remove the one created right now
             SendMessage(hWnd, EVERYTHING_WM_IPC, EVERYTHING_IPC_DELETE_DESKTOP_SHORTCUT, 0);
         }
-        if (hr == S_OK)
+        if (hResult == S_OK)
         {
-            QFileInfo f(QString::fromWCharArray(szTarget));
-            return f.absoluteFilePath();
+            QFileInfo fileInfo(QString::fromWCharArray(szTarget));
+            return fileInfo.absoluteFilePath();
         }
     }
 
-    return QString();
+    return {};
 }
 
 bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QStringList &results, std::function<bool(bool)> checker, const int count)
@@ -163,10 +163,12 @@ bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QString
     {
         WCHAR path[MAX_PATH] = {0};
         Everything_GetResultFullPathName(i, path, MAX_PATH);
-        QString f(QString::fromStdWString(path));
-        BOOL    isDir = Everything_IsFolderResult(i);
+        QString filePath(QString::fromStdWString(path));
+        bool    isDir = !!Everything_IsFolderResult(i);
         if (checker(isDir))
-            results.append(f);
+        {
+            results.append(filePath);
+        }
     }
     Everything_Reset();
 
