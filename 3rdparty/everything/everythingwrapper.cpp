@@ -1,14 +1,12 @@
-#if defined(_WIN32)
-#    define NOMINMAX
-#    include <Windows.h>
 
-#    include <Shellapi.h>
-#    include <Shlobj.h>
-#    include <Winnt.h>
-#    include <shlguid.h>
-#    include <shobjidl.h>
-#    include <strsafe.h>
-#endif
+#include <Windows.h>
+
+#include <cstring>
+#include <Shellapi.h>
+#include <Shlobj.h>
+#include <Winnt.h>
+#include <shlguid.h>
+#include <shobjidl.h>
 
 #include <QApplication>
 #include <QDir>
@@ -18,10 +16,9 @@
 #include <QStandardPaths>
 #include <QStringBuilder>
 
+#include "everythingwrapper.h"
 #include "Everything.h"
 #include "everything_ipc.h"
-#include "everythingwrapper.h"
-
 
 HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize)
 {
@@ -73,15 +70,7 @@ HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBuff
 
                         if (SUCCEEDED(hres))
                         {
-                            hres = StringCbCopy(lpszPath, iPathBufferSize, szGotPath);
-                            if (SUCCEEDED(hres))
-                            {
-                                // Handle success
-                            }
-                            else
-                            {
-                                // Handle the error
-                            }
+                            wcscpy_s(lpszPath, iPathBufferSize, szGotPath);
                         }
                     }
                 }
