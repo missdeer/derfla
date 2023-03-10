@@ -1,4 +1,4 @@
-#import <CoreServices/CoreServices.h>
+﻿#import <CoreServices/CoreServices.h>
 #import <Foundation/Foundation.h>
 #import <QString>
 #import <QtCore/QtCore>
@@ -7,8 +7,8 @@
 
 bool QuickGetFilesByFileName(bool regexpEnabled, const QString &fileName,
                              QStringList &results,
-                             std::function<bool(bool)> checker,
-                             const int maxCount) {
+                             const std::function<bool(bool)> &checker,
+                             int maxCount) {
   QString queryString =
       QString("* == \"%1\"wcd || kMDItemFSName = \"%1\"c").arg(fileName);
   CFStringRef rawQuery = CFStringCreateWithCString(

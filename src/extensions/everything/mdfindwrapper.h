@@ -1,6 +1,7 @@
-#ifndef MDFINDWRAPPER_H
+﻿#ifndef MDFINDWRAPPER_H
 #define MDFINDWRAPPER_H
 
-bool QuickGetFilesByFileName(bool regexpEnabled, const QString &fileName, QStringList &results, std::function<bool(bool)> checker, const int count);
+bool QuickGetFilesByFileName(
+    bool regexpEnabled, const QString &fileName, QStringList &results, const std::function<bool(bool)> &checker, int maxCount);
 
 #endif // MDFINDWRAPPER_H
