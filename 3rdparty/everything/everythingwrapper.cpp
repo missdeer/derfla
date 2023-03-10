@@ -1,6 +1,7 @@
-
+﻿
 #include <Windows.h>
 
+#include <array>
 #include <cstring>
 #include <Shellapi.h>
 #include <Shlobj.h>
@@ -22,14 +23,15 @@
 
 HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize)
 {
-    IShellLink     *psl                     = nullptr;
-    WCHAR           szGotPath[MAX_PATH]     = {0};
-    WCHAR           szDescription[MAX_PATH] = {0};
-    WIN32_FIND_DATA wfd;
+    IShellLink *psl = nullptr;
+
+    std::array<wchar_t, MAX_PATH> szGotPath {};
+    std::array<wchar_t, MAX_PATH> szDescription {};
+    WIN32_FIND_DATA               wfd;
 
     *lpszPath = 0; // Assume failure
 
-    CoInitialize(NULL);
+    CoInitialize(nullptr);
     // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
     // has already been called.
     HRESULT hres = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
@@ -42,15 +44,15 @@ HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBuff
 
         if (SUCCEEDED(hres))
         {
-            WCHAR wsz[MAX_PATH] = {0};
+            std::array<wchar_t, MAX_PATH> wsz {};
 
             // Ensure that the string is Unicode.
-            MultiByteToWideChar(CP_ACP, 0, lpszLinkFile, -1, wsz, MAX_PATH);
+            MultiByteToWideChar(CP_ACP, 0, lpszLinkFile, -1, wsz.data(), MAX_PATH);
             // Add code here to check return value from MultiByteWideChar
             // for success.
 
             // Load the shortcut.
-            hres = ppf->Load(wsz, STGM_READ);
+            hres = ppf->Load(wsz.data(), STGM_READ);
 
             if (SUCCEEDED(hres))
             {
@@ -60,16 +62,16 @@ HRESULT ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBuff
                 if (SUCCEEDED(hres))
                 {
                     // Get the path to the link target.
-                    hres = psl->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA *)&wfd, SLGP_RAWPATH);
+                    hres = psl->GetPath(szGotPath.data(), MAX_PATH, &wfd, SLGP_RAWPATH);
 
                     if (SUCCEEDED(hres))
                     {
                         // Get the description of the target.
-                        hres = psl->GetDescription(szDescription, MAX_PATH);
+                        hres = psl->GetDescription(szDescription.data(), MAX_PATH);
 
                         if (SUCCEEDED(hres))
                         {
-                            wcscpy_s(lpszPath, iPathBufferSize, szGotPath);
+                            wcscpy_s(lpszPath, iPathBufferSize, static_cast<LPCWSTR>(szGotPath.data()));
                         }
                     }
                 }
@@ -105,7 +107,7 @@ QString GetEverythingPath()
     HWND hWnd = FindWindow(EVERYTHING_IPC_WNDCLASS, nullptr);
     if (hWnd)
     {
-        int ret = (int)SendMessage(hWnd, EVERYTHING_WM_IPC, EVERYTHING_IPC_IS_DESKTOP_SHORTCUT, 0);
+        auto ret = SendMessage(hWnd, EVERYTHING_WM_IPC, EVERYTHING_IPC_IS_DESKTOP_SHORTCUT, 0);
         if (!ret)
         {
             // create one
@@ -115,8 +117,8 @@ QString GetEverythingPath()
         QDir    deskDir(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
         QString path = QDir::toNativeSeparators(deskDir.absoluteFilePath("Search Everything.lnk"));
 
-        WCHAR   szTarget[MAX_PATH] = {0};
-        HRESULT hResult            = ResolveIt(hWnd, path.toStdString().c_str(), szTarget, sizeof(szTarget) / sizeof(szTarget[0]));
+        std::array<wchar_t, MAX_PATH> szTarget {};
+        HRESULT                       hResult = ResolveIt(hWnd, path.toStdString().c_str(), szTarget.data(), sizeof(szTarget) / sizeof(szTarget[0]));
         if (!ret)
         {
             // remove the one created right now
@@ -124,7 +126,7 @@ QString GetEverythingPath()
         }
         if (hResult == S_OK)
         {
-            QFileInfo fileInfo(QString::fromWCharArray(szTarget));
+            QFileInfo fileInfo(QString::fromWCharArray(static_cast<LPCWSTR>(szTarget.data())));
             return fileInfo.absoluteFilePath();
         }
     }
@@ -132,10 +134,9 @@ QString GetEverythingPath()
     return {};
 }
 
-bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QStringList &results, std::function<bool(bool)> checker, const int count)
+bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QStringList &results, const std::function<bool(bool)> &pfChecker, int count)
 {
-    HWND everything_hwnd = FindWindow(EVERYTHING_IPC_WNDCLASS, nullptr);
-    if (!everything_hwnd)
+    if (!isEverythingRunning())
     {
         if (QMessageBox::question(nullptr,
                                   QObject::tr("Notice"),
@@ -161,11 +162,11 @@ bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QString
 
     for (DWORD i = 0; i < Everything_GetNumResults() && results.size() < count; i++)
     {
-        WCHAR path[MAX_PATH] = {0};
-        Everything_GetResultFullPathName(i, path, MAX_PATH);
-        QString filePath(QString::fromStdWString(path));
+        std::array<wchar_t, MAX_PATH> path {};
+        Everything_GetResultFullPathName(i, path.data(), MAX_PATH);
+        QString filePath(QString::fromStdWString(path.data()));
         bool    isDir = !!Everything_IsFolderResult(i);
-        if (checker(isDir))
+        if (pfChecker(isDir))
         {
             results.append(filePath);
         }

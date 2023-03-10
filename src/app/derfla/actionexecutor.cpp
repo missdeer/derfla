@@ -203,7 +203,7 @@ bool ActionExecutor::revealFile(const DerflaActionPtr &action)
     return true;
 }
 
-bool ActionExecutor::browseUrl(const DerflaActionPtr &)
+bool ActionExecutor::browseUrl(const DerflaActionPtr & /*unused*/)
 {
     return true;
 }

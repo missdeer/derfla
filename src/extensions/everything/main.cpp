@@ -140,7 +140,7 @@ bool handleVSOpen(const QString &pattern, bool regexpEnabled)
     return true;
 }
 
-bool handleShellOpen(const QString &pattern, bool regexpEnabled)
+bool handleShellOpen(const QString &pattern, bool regexpEnabled, bool executableOnly)
 {
     QTextStream stdoutTs(stdout);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -280,20 +280,20 @@ int main(int argc, char *argv[])
         }
 
         QMap<QString, std::function<bool(const QString &)>> handlerMap = {
-            {"f", std::bind(&handleFile, std::placeholders::_1, false)},
-            {"d", std::bind(&handleDir, std::placeholders::_1, false)},
-            {"vs", std::bind(&handleVSOpen, std::placeholders::_1, false)},
-            {"open", std::bind(&handleShellOpen, std::placeholders::_1, false)},
-            {"run", std::bind(&handleShellOpen, std::placeholders::_1, false)},
-            {"o", std::bind(&handleShellOpen, std::placeholders::_1, false)},
-            {"r", std::bind(&handleShellOpen, std::placeholders::_1, false)},
-            {"rf", std::bind(&handleFile, std::placeholders::_1, true)},
-            {"rd", std::bind(&handleDir, std::placeholders::_1, true)},
-            {"rvs", std::bind(&handleVSOpen, std::placeholders::_1, true)},
-            {"ropen", std::bind(&handleShellOpen, std::placeholders::_1, true)},
-            {"rrun", std::bind(&handleShellOpen, std::placeholders::_1, true)},
-            {"rr", std::bind(&handleShellOpen, std::placeholders::_1, true)},
-            {"ro", std::bind(&handleShellOpen, std::placeholders::_1, true)},
+            {"f", [](auto &&cmd) { return handleFile(std::forward<decltype(cmd)>(cmd), false); }},
+            {"d", [](auto &&cmd) { return handleDir(std::forward<decltype(cmd)>(cmd), false); }},
+            {"vs", [](auto &&cmd) { return handleVSOpen(std::forward<decltype(cmd)>(cmd), false); }},
+            {"open", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), false, false); }},
+            {"run", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), false, true); }},
+            {"o", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), false, false); }},
+            {"r", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), false, true); }},
+            {"rf", [](auto &&cmd) { return handleFile(std::forward<decltype(cmd)>(cmd), true); }},
+            {"rd", [](auto &&cmd) { return handleDir(std::forward<decltype(cmd)>(cmd), true); }},
+            {"rvs", [](auto &&cmd) { return handleVSOpen(std::forward<decltype(cmd)>(cmd), true); }},
+            {"ropen", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), true, false); }},
+            {"rrun", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), true, true); }},
+            {"rr", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), true, true); }},
+            {"ro", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), true, false); }},
         };
         QString cmd(argv[1]);
         auto    iter = handlerMap.find(cmd);

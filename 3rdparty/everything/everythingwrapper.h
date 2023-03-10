@@ -1,4 +1,4 @@
-#ifndef EVERYTHINGWRAPPER_H
+﻿#ifndef EVERYTHINGWRAPPER_H
 #define EVERYTHINGWRAPPER_H
 
 #include <functional>
@@ -8,6 +8,6 @@
 bool    isEverythingRunning();
 void    launchEverything(const QString &everythingFilePath);
 QString GetEverythingPath();
-bool QuickGetFilesByFileName(bool regexpEnabled, const QString &fileName, QStringList &results, std::function<bool(bool)> checker, const int count);
+bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QStringList &results, const std::function<bool(bool)> &pfChecker, int count);
 
 #endif // EVERYTHINGWRAPPER_H

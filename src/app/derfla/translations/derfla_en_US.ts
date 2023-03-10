@@ -76,11 +76,6 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="302"/>
-        <source>Derfla - Run appliation/script as you want!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../derflaapp.cpp" line="255"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
@@ -128,6 +123,11 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
     <message>
         <location filename="../derflaapp.cpp" line="281"/>
         <source>Via WeChat Pay...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../derflaapp.cpp" line="302"/>
+        <source>Derfla - Run appliation/script as you want!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
