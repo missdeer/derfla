@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include <QIcon>
 
@@ -7,9 +7,9 @@
 
 void output(QCryptographicHash::Algorithm algo, const QByteArray &data, const QByteArray &res)
 {
-    QJsonDocument d = QJsonDocument::fromJson("[]");
-    Q_ASSERT(d.isArray());
-    QJsonArray arr = d.array();
+    QJsonDocument jsonDoc = QJsonDocument::fromJson("[]");
+    Q_ASSERT(jsonDoc.isArray());
+    QJsonArray arr = jsonDoc.array();
 
     QMap<QCryptographicHash::Algorithm, QString> algoIcon = {
         {QCryptographicHash::Md4, ":/rc/images/md4.png"},
@@ -46,36 +46,36 @@ void output(QCryptographicHash::Algorithm algo, const QByteArray &data, const QB
         {QCryptographicHash::Keccak_384, "KECCAK384"},
         {QCryptographicHash::Keccak_512, "KECCAK512"},
     };
-    QVariantMap m;
-    m.insert("title", res);
+    QVariantMap varMap;
+    varMap.insert("title", res);
     if (QFile::exists(QString(data)))
     {
-        QFileInfo f((QString(data)));
-        m.insert("description", QString(QObject::tr("%1 result of file %2")).arg(algoName[algo]).arg(f.fileName()));
+        QFileInfo fileInfo((QString(data)));
+        varMap.insert("description", QObject::tr("%1 result of file %2").arg(algoName[algo]).arg(fileInfo.fileName()));
     }
     else
     {
-        m.insert("description", QString(QObject::tr("%1 result of string \"%2\"")).arg(algoName[algo]).arg(QString(data.left(64))));
+        varMap.insert("description", QObject::tr("%1 result of string \"%2\"").arg(algoName[algo]).arg(QString(data.left(64))));
     }
-    m.insert("target", res);
-    m.insert("actionType", "copyText");
+    varMap.insert("target", res);
+    varMap.insert("actionType", "copyText");
     QFile icon(algoIcon[algo]);
     if (icon.open(QIODevice::ReadOnly))
     {
         auto bytes = icon.readAll();
         icon.close();
-        m.insert("iconData", bytes.toBase64());
+        varMap.insert("iconData", bytes.toBase64());
     }
-    arr.append(QJsonObject::fromVariantMap(m));
+    arr.append(QJsonObject::fromVariantMap(varMap));
 
-    d.setArray(arr);
-    QTextStream ts(stdout);
+    jsonDoc.setArray(arr);
+    QTextStream stdoutTs(stdout);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    ts.setCodec("UTF-8");
+    stdoutTs.setCodec("UTF-8");
 #else
-    ts.setEncoding(QStringConverter::Utf8);
+    stdoutTs.setEncoding(QStringConverter::Utf8);
 #endif
-    ts << QString(d.toJson(QJsonDocument::Compact));
+    stdoutTs << QString(jsonDoc.toJson(QJsonDocument::Compact));
 }
 
 bool hashString(QCryptographicHash::Algorithm algo, const QByteArray &data)
@@ -87,27 +87,27 @@ bool hashString(QCryptographicHash::Algorithm algo, const QByteArray &data)
 
 bool hashFile(QCryptographicHash::Algorithm algo, const QString &filePath)
 {
-    QFile f(filePath);
-    if (!f.open(QIODevice::ReadOnly))
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly))
     {
         return false;
     }
 
-    QCryptographicHash h(algo);
+    QCryptographicHash hash(algo);
     const qint64       mapSize = 1024 * 1024;
-    qint64             size    = f.size();
+    qint64             size    = file.size();
     qint64             offset  = 0;
     while (offset < size)
     {
         qint64 length = qMin(mapSize, size - offset);
-        auto   pos    = f.map(offset, length);
-        h.addData((const char *)pos, length);
-        f.unmap(pos);
+        auto  *pos    = file.map(offset, length);
+        hash.addData((const char *)pos, length);
+        file.unmap(pos);
         offset += length;
     }
 
-    f.close();
-    auto res = h.result();
+    file.close();
+    auto res = hash.result();
     output(algo, filePath.toUtf8(), res.toHex());
     return true;
 }
@@ -122,22 +122,22 @@ int main(int argc, char *argv[])
     rl.rlim_cur = qMin(rl.rlim_cur, rl.rlim_max);
     setrlimit(RLIMIT_NOFILE, &rl);
 #endif
-    SharedTools::QtSingleApplication a("HashDigest", argc, argv);
+    QApplication app(argc, argv);
 
-    a.setApplicationName("HashDigest");
-    a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("ismisv.com");
-    a.setOrganizationName("Derfla");
+    QCoreApplication::setApplicationName("HashDigest");
+    QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setOrganizationDomain("ismisv.com");
+    QCoreApplication::setOrganizationName("Derfla");
 
-    QTextStream ts(stdout);
+    QTextStream stdoutTs(stdout);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    ts.setCodec("UTF-8");
+    stdoutTs.setCodec("UTF-8");
 #else
-    ts.setEncoding(QStringConverter::Utf8);
+    stdoutTs.setEncoding(QStringConverter::Utf8);
 #endif
     if (argc != 3 && argc != 4)
     {
-        ts << "invalid arguments";
+        stdoutTs << "invalid arguments";
         return 1;
     }
 
@@ -148,11 +148,11 @@ int main(int argc, char *argv[])
 
     // main application and dynamic linked library locale
 #if defined(Q_OS_MAC)
-    QString rootDirPath   = QApplication::applicationDirPath() + "/../../Resources/translations";
-    QString localeDirPath = QApplication::applicationDirPath() + "/translations";
+    QString rootDirPath   = QCoreApplication::applicationDirPath() + "/../../Resources/translations";
+    QString localeDirPath = QCoreApplication::applicationDirPath() + "/translations";
 #else
-    QString rootDirPath   = QApplication::applicationDirPath() + "/../../translations";
-    QString localeDirPath = QApplication::applicationDirPath() + "/translations";
+    QString rootDirPath   = QCoreApplication::applicationDirPath() + "/../../translations";
+    QString localeDirPath = QCoreApplication::applicationDirPath() + "/translations";
 #endif
 
     if (!translator.load("hashdigest_" + locale, localeDirPath))
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
-        if (!a.installTranslator(&translator))
+        if (!QCoreApplication::installTranslator(&translator))
         {
             qDebug() << "installing translator failed ";
         }
@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << rootDirPath << " success";
-        if (!a.installTranslator(&qtTranslator))
+        if (!QCoreApplication::installTranslator(&qtTranslator))
         {
             qDebug() << "installing qt translator failed ";
         }
@@ -206,14 +206,15 @@ int main(int argc, char *argv[])
     LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
 #endif
 
-    auto it = algo.find(QString(argv[1]));
-    if (algo.end() == it)
+    auto iter = algo.find(QString(argv[1]));
+    if (algo.end() == iter)
     {
-        ts << "unsupported algorithm";
+        stdoutTs << "unsupported algorithm";
         return 2;
     }
 
-    QString option, data;
+    QString option;
+    QString data;
 
     if (argc == 3)
     {
@@ -224,7 +225,9 @@ int main(int argc, char *argv[])
         data   = argv[2];
 #endif
         if (QFile::exists(data))
+        {
             option = "f";
+        }
     }
 
     if (argc == 4)
@@ -238,14 +241,20 @@ int main(int argc, char *argv[])
         data   = argv[3];
 #endif
         if (option.toLower() != "f" || !QFile::exists(data))
+        {
             option.clear();
+        }
     }
 
     bool success = true;
     if (option.toLower() == "f")
-        success = hashFile(it.value(), data);
+    {
+        success = hashFile(iter.value(), data);
+    }
     else
-        success = hashString(it.value(), data.toUtf8());
+    {
+        success = hashString(iter.value(), data.toUtf8());
+    }
 
     return success ? 0 : 3;
 }
