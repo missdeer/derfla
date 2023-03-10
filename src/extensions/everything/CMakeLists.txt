@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+﻿cmake_minimum_required(VERSION 3.21)
 project(everything VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -83,8 +83,6 @@ ELSE()
 ENDIF()
 
 target_link_libraries(${PROJECT_NAME}  PRIVATE
-        qtsingleapplication
-        qtlockedfile
         DerflaUtil
         Qt${QT_VERSION_MAJOR}::Xml
         Qt${QT_VERSION_MAJOR}::Concurrent

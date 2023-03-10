@@ -1,8 +1,8 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
+#include <QApplication>
 #include <QIcon>
 
-#include "qtsingleapplication.h"
 #include "util.h"
 #if defined(Q_OS_WIN)
 #    include "everythingwrapper.h"
@@ -14,173 +14,173 @@ static const int maxCount = 25;
 
 bool handleFile(const QString &pattern, bool regexpEnabled)
 {
-    QTextStream ts(stdout);
+    QTextStream stdoutTs(stdout);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    ts.setCodec("UTF-8");
+    stdoutTs.setCodec("UTF-8");
 #else
-    ts.setEncoding(QStringConverter::Utf8);
+    stdoutTs.setEncoding(QStringConverter::Utf8);
 #endif
     QStringList res;
     if (!QuickGetFilesByFileName(
             regexpEnabled, pattern, res, [](bool isDir) { return !isDir; }, maxCount))
     {
-        ts << "searching " << pattern << "by everything failed.";
+        stdoutTs << "searching " << pattern << "by everything failed.";
         return false;
     }
 
-    QJsonDocument d = QJsonDocument::fromJson("[]");
-    Q_ASSERT(d.isArray());
-    QJsonArray arr = d.array();
-    for (const auto &f : qAsConst(res))
+    QJsonDocument jsonDoc = QJsonDocument::fromJson("[]");
+    Q_ASSERT(jsonDoc.isArray());
+    QJsonArray arr = jsonDoc.array();
+    for (const auto &filePath : qAsConst(res))
     {
-        QFileInfo fi(f);
+        QFileInfo fileInfo(filePath);
 
-        QVariantMap m;
-        m.insert("title", fi.fileName());
-        m.insert("description", QDir::toNativeSeparators(fi.absolutePath()));
-        m.insert("target", QDir::toNativeSeparators(fi.absoluteFilePath()));
-        m.insert("arguments", "");
-        m.insert("workingDir", "");
-        m.insert("actionType", "revealFile");
-        QByteArray bytes = util::extractPNGIconFromFile(fi);
-        m.insert("iconData", QString(bytes.toBase64()));
-        arr.append(QJsonObject::fromVariantMap(m));
+        QVariantMap varMap;
+        varMap.insert("title", fileInfo.fileName());
+        varMap.insert("description", QDir::toNativeSeparators(fileInfo.absolutePath()));
+        varMap.insert("target", filePath);
+        varMap.insert("arguments", "");
+        varMap.insert("workingDir", "");
+        varMap.insert("actionType", "revealFile");
+        QByteArray bytes = util::extractPNGIconFromFile(fileInfo);
+        varMap.insert("iconData", QString(bytes.toBase64()));
+        arr.append(QJsonObject::fromVariantMap(varMap));
     }
-    d.setArray(arr);
-    ts << QString(d.toJson(QJsonDocument::Compact));
+    jsonDoc.setArray(arr);
+    stdoutTs << QString(jsonDoc.toJson(QJsonDocument::Compact));
     return true;
 }
 
 bool handleDir(const QString &pattern, bool regexpEnabled)
 {
-    QTextStream ts(stdout);
+    QTextStream stdoutTs(stdout);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    ts.setCodec("UTF-8");
+    stdoutTs.setCodec("UTF-8");
 #else
-    ts.setEncoding(QStringConverter::Utf8);
+    stdoutTs.setEncoding(QStringConverter::Utf8);
 #endif
     QStringList res;
     if (!QuickGetFilesByFileName(
             regexpEnabled, pattern, res, [](bool isDir) { return isDir; }, maxCount))
     {
-        ts << "searching " << pattern << "by everything failed.";
+        stdoutTs << "searching " << pattern << "by everything failed.";
         return false;
     }
 
-    QJsonDocument d = QJsonDocument::fromJson("[]");
-    Q_ASSERT(d.isArray());
-    QJsonArray arr = d.array();
-    for (const auto &f : qAsConst(res))
+    QJsonDocument jsonDoc = QJsonDocument::fromJson("[]");
+    Q_ASSERT(jsonDoc.isArray());
+    QJsonArray arr = jsonDoc.array();
+    for (const auto &filePath : qAsConst(res))
     {
-        QFileInfo fi(f);
+        QFileInfo fileInfo(filePath);
 
-        QVariantMap m;
-        m.insert("title", fi.fileName());
-        m.insert("description", QDir::toNativeSeparators(fi.absolutePath()));
-        m.insert("target", QDir::toNativeSeparators(fi.absoluteFilePath()));
-        m.insert("arguments", "");
-        m.insert("workingDir", "");
-        m.insert("actionType", "shellExecute");
-        m.insert("iconPath", QString(QCoreApplication::applicationDirPath() % "/folder.png"));
-        arr.append(QJsonObject::fromVariantMap(m));
+        QVariantMap varMap;
+        varMap.insert("title", fileInfo.fileName());
+        varMap.insert("description", QDir::toNativeSeparators(fileInfo.absolutePath()));
+        varMap.insert("target", filePath);
+        varMap.insert("arguments", "");
+        varMap.insert("workingDir", "");
+        varMap.insert("actionType", "shellExecute");
+        varMap.insert("iconPath", QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("folder.png"));
+        arr.append(QJsonObject::fromVariantMap(varMap));
     }
-    d.setArray(arr);
-    ts << QString(d.toJson(QJsonDocument::Compact));
+    jsonDoc.setArray(arr);
+    stdoutTs << QString(jsonDoc.toJson(QJsonDocument::Compact));
     return true;
 }
 
 bool handleVSOpen(const QString &pattern, bool regexpEnabled)
 {
-    QTextStream ts(stdout);
+    QTextStream stdoutTs(stdout);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    ts.setCodec("UTF-8");
+    stdoutTs.setCodec("UTF-8");
 #else
-    ts.setEncoding(QStringConverter::Utf8);
+    stdoutTs.setEncoding(QStringConverter::Utf8);
 #endif
     QStringList res;
     if (!QuickGetFilesByFileName(
             regexpEnabled, pattern, res, [](bool isDir) { return !isDir; }, maxCount))
     {
-        ts << "searching " << pattern << "by everything failed.";
+        stdoutTs << "searching " << pattern << "by everything failed.";
         return false;
     }
 
-    QFile f(":/open-in-vs.vbs");
-    if (!f.open(QIODevice::ReadOnly))
-        return false;
-    QByteArray c = f.readAll();
-    f.close();
-
-    QJsonDocument d = QJsonDocument::fromJson("[]");
-    Q_ASSERT(d.isArray());
-    QJsonArray arr = d.array();
-    for (const auto &f : qAsConst(res))
+    QFile scriptPath(":/open-in-vs.vbs");
+    if (!scriptPath.open(QIODevice::ReadOnly))
     {
-        QFileInfo fi(f);
-
-        QStringList args;
-        args << QDir::toNativeSeparators(fi.absoluteFilePath()) << "1"
-             << "1";
-        QVariantMap m;
-        m.insert("title", fi.fileName());
-        m.insert("description", QDir::toNativeSeparators(fi.absolutePath()));
-        m.insert("target", QString(c));
-        m.insert("arguments", args.join(QChar(' ')));
-        m.insert("workingDir", QDir::toNativeSeparators(fi.absolutePath()));
-        m.insert("actionType", "script");
-        m.insert("scriptExecutor", "cscript");
-        QByteArray bytes = util::extractPNGIconFromFile(fi);
-        m.insert("iconData", QString(bytes.toBase64()));
-        arr.append(QJsonObject::fromVariantMap(m));
+        return false;
     }
-    d.setArray(arr);
-    ts << QString(d.toJson(QJsonDocument::Compact));
+    QByteArray script = scriptPath.readAll();
+    scriptPath.close();
+
+    QJsonDocument jsonDoc = QJsonDocument::fromJson("[]");
+    Q_ASSERT(jsonDoc.isArray());
+    QJsonArray arr = jsonDoc.array();
+    for (const auto &filePath : qAsConst(res))
+    {
+        QFileInfo fileInfo(filePath);
+
+        QStringList args {QDir::toNativeSeparators(fileInfo.absoluteFilePath()), "1", "1"};
+        QVariantMap varMap;
+        varMap.insert("title", fileInfo.fileName());
+        varMap.insert("description", QDir::toNativeSeparators(fileInfo.absolutePath()));
+        varMap.insert("target", QString(script));
+        varMap.insert("arguments", args.join(QChar(' ')));
+        varMap.insert("workingDir", QDir::toNativeSeparators(fileInfo.absolutePath()));
+        varMap.insert("actionType", "script");
+        varMap.insert("scriptExecutor", "cscript");
+        QByteArray bytes = util::extractPNGIconFromFile(fileInfo);
+        varMap.insert("iconData", QString(bytes.toBase64()));
+        arr.append(QJsonObject::fromVariantMap(varMap));
+    }
+    jsonDoc.setArray(arr);
+    stdoutTs << QString(jsonDoc.toJson(QJsonDocument::Compact));
     return true;
 }
 
 bool handleShellOpen(const QString &pattern, bool regexpEnabled, bool executableOnly)
 {
-    QTextStream ts(stdout);
+    QTextStream stdoutTs(stdout);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    ts.setCodec("UTF-8");
+    stdoutTs.setCodec("UTF-8");
 #else
-    ts.setEncoding(QStringConverter::Utf8);
+    stdoutTs.setEncoding(QStringConverter::Utf8);
 #endif
     QStringList res;
     if (!QuickGetFilesByFileName(
             regexpEnabled, pattern, res, [](bool) { return true; }, maxCount))
     {
-        ts << "searching " << pattern << "by everything failed.";
+        stdoutTs << "searching " << pattern << "by everything failed.";
         return false;
     }
 
-    QJsonDocument d = QJsonDocument::fromJson("[]");
-    Q_ASSERT(d.isArray());
-    QJsonArray arr = d.array();
-    for (const auto &f : qAsConst(res))
+    QJsonDocument jsonDoc = QJsonDocument::fromJson("[]");
+    Q_ASSERT(jsonDoc.isArray());
+    QJsonArray arr = jsonDoc.array();
+    for (const auto &filePath : qAsConst(res))
     {
-        QFileInfo fi(f);
+        QFileInfo fileInfo(filePath);
 
-        QVariantMap m;
-        m.insert("title", fi.fileName());
-        m.insert("description", QDir::toNativeSeparators(fi.absolutePath()));
-        m.insert("target", QDir::toNativeSeparators(fi.absoluteFilePath()));
-        m.insert("arguments", "");
-        m.insert("workingDir", QDir::toNativeSeparators(fi.absolutePath()));
-        m.insert("actionType", "shellExecute");
-        if (fi.isDir())
+        QVariantMap varMap;
+        varMap.insert("title", fileInfo.fileName());
+        varMap.insert("description", QDir::toNativeSeparators(fileInfo.absolutePath()));
+        varMap.insert("target", filePath);
+        varMap.insert("arguments", "");
+        varMap.insert("workingDir", QDir::toNativeSeparators(fileInfo.absolutePath()));
+        varMap.insert("actionType", "shellExecute");
+        if (fileInfo.isDir())
         {
-            m.insert("iconPath", QString(QCoreApplication::applicationDirPath() % "/folder.png"));
+            varMap.insert("iconPath", QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("folder.png"));
         }
         else
         {
-            QByteArray bytes = util::extractPNGIconFromFile(fi);
-            m.insert("iconData", QString(bytes.toBase64()));
+            QByteArray bytes = util::extractPNGIconFromFile(fileInfo);
+            varMap.insert("iconData", QString(bytes.toBase64()));
         }
-        arr.append(QJsonObject::fromVariantMap(m));
+        arr.append(QJsonObject::fromVariantMap(varMap));
     }
-    d.setArray(arr);
-    ts << QString(d.toJson(QJsonDocument::Compact));
+    jsonDoc.setArray(arr);
+    stdoutTs << QString(jsonDoc.toJson(QJsonDocument::Compact));
     return true;
 }
 
@@ -194,12 +194,12 @@ int main(int argc, char *argv[])
     rl.rlim_cur = qMin(rl.rlim_cur, rl.rlim_max);
     setrlimit(RLIMIT_NOFILE, &rl);
 #endif
-    SharedTools::QtSingleApplication a("Everything", argc, argv);
+    QApplication app(argc, argv);
 
-    a.setApplicationName("Everything");
-    a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("ismisv.com");
-    a.setOrganizationName("Derfla");
+    QCoreApplication::setApplicationName("Everything");
+    QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setOrganizationDomain("ismisv.com");
+    QCoreApplication::setOrganizationName("Derfla");
 
     auto        uiLanguages = QLocale().uiLanguages();
     auto       &locale      = uiLanguages[0];
@@ -208,11 +208,11 @@ int main(int argc, char *argv[])
 
     // main application and dynamic linked library locale
 #if defined(Q_OS_MAC)
-    QString rootDirPath   = QApplication::applicationDirPath() + "/../../Resources/translations";
-    QString localeDirPath = QApplication::applicationDirPath() + "/translations";
+    QString rootDirPath   = QCoreApplication::applicationDirPath() + "/../../Resources/translations";
+    QString localeDirPath = QCoreApplication::applicationDirPath() + "/translations";
 #else
-    QString rootDirPath   = QApplication::applicationDirPath() + "/../../translations";
-    QString localeDirPath = QApplication::applicationDirPath() + "/translations";
+    QString rootDirPath   = QCoreApplication::applicationDirPath() + "/../../translations";
+    QString localeDirPath = QCoreApplication::applicationDirPath() + "/translations";
 #endif
 
     if (!translator.load("everything_" + locale, localeDirPath))
@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
-        if (!a.installTranslator(&translator))
+        if (!QCoreApplication::installTranslator(&translator))
         {
             qDebug() << "installing translator failed ";
         }
@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << rootDirPath << " success";
-        if (!a.installTranslator(&qtTranslator))
+        if (!QCoreApplication::installTranslator(&qtTranslator))
         {
             qDebug() << "installing qt translator failed ";
         }
@@ -244,11 +244,11 @@ int main(int argc, char *argv[])
 
     if (argc == 3 || argc == 4)
     {
-        QTextStream ts(stdout);
+        QTextStream stdoutTs(stdout);
 #if defined(Q_OS_WIN)
         if (!isEverythingRunning())
         {
-            ts << "everything util is not running.";
+            stdoutTs << "everything util is not running.";
             return 1;
         }
 
@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
 #endif
         if (pattern.size() < 2)
         {
-            ts << "[]";
+            stdoutTs << "[]";
             return 0;
         }
 
@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
 #endif
         }
 
-        QMap<QString, std::function<bool(const QString &)>> m = {
+        QMap<QString, std::function<bool(const QString &)>> cmdHandlerMap = {
             {"f", [](auto &&cmd) { return handleFile(std::forward<decltype(cmd)>(cmd), false); }},
             {"d", [](auto &&cmd) { return handleDir(std::forward<decltype(cmd)>(cmd), false); }},
             {"vs", [](auto &&cmd) { return handleVSOpen(std::forward<decltype(cmd)>(cmd), false); }},
@@ -293,16 +293,16 @@ int main(int argc, char *argv[])
             {"ro", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), true, false); }},
         };
         QString cmd(argv[1]);
-        auto    it = m.find(cmd);
-        if (m.end() == it)
+        auto    iter = cmdHandlerMap.find(cmd);
+        if (cmdHandlerMap.end() == iter)
         {
-            ts << "unsupported query action";
+            stdoutTs << "unsupported query action";
             return 3;
         }
-        auto f = m[cmd];
-        if (!f(pattern))
+        auto cmdHandler = cmdHandlerMap[cmd];
+        if (!cmdHandler(pattern))
         {
-            ts << "handler failed";
+            stdoutTs << "handler failed";
             return 4;
         }
     }
