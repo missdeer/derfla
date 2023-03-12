@@ -34,5 +34,7 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/${ARCH}") # .exe
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/${ARCH}") # .dll .dylib .so
 
+set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+
 add_subdirectory(3rdparty)
 add_subdirectory(src)
