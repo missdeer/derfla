@@ -134,6 +134,7 @@ IF(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
                 ${qrcs}
                 ${QM_FILES}
                 ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.rc
+                ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.icns
                 )
 ELSE()
         qt5_create_translation(QM_FILES 
@@ -147,6 +148,7 @@ ELSE()
                 ${qrcs}
                 ${QM_FILES}
                 ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.rc
+                ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.icns
                 )
 ENDIF()
 
@@ -190,7 +192,6 @@ IF(APPLE)
                 MACOSX_BUNDLE_INFO_STRING "Derfla"    
                 MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/osxInfo.plist"
         )
-        file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/derfla.icns" DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Contents/Resources)
         file(COPY ${SKINs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Contents/Resources/skins)
         file(COPY ${THEMEs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Contents/Resources/themes)
 ELSE(APPLE)
