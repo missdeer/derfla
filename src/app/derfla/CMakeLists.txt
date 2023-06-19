@@ -111,34 +111,34 @@ endif(APPLE)
 qt_add_resources(qrcs ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.qrc)
 
 set(TS_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_zh_CN.ts
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_en_US.ts
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_zh_TW.ts
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_zh_HK.ts
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_da.ts # 丹麦语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_fi.ts # 芬兰语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_el.ts # 希腊语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_he.ts # 希伯来语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_hu.ts # 匈牙利语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_is.ts # 冰岛语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_nb.ts # 挪威语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_es.ts # 西班牙语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_pt.ts # 葡萄牙语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_ro.ts # 罗马尼亚语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_sk.ts # 斯洛伐克语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_uk.ts # 乌克兰语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_ja.ts # 日语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_ko.ts # 韩语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_fr.ts # 法语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_de.ts # 德语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_it.ts # 意大利
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_ru.ts # 俄语
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_nl.ts # 荷兰
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_sv.ts # 瑞典
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_th.ts # 泰国
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_tr.ts # 土耳其
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_pl.ts # 波兰
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Derfla_cs.ts # 捷克
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_zh_CN.ts
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_en_US.ts
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_zh_TW.ts
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_zh_HK.ts
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_da.ts # 丹麦语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_fi.ts # 芬兰语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_el.ts # 希腊语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_he.ts # 希伯来语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_hu.ts # 匈牙利语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_is.ts # 冰岛语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_nb.ts # 挪威语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_es.ts # 西班牙语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_pt.ts # 葡萄牙语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_ro.ts # 罗马尼亚语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_sk.ts # 斯洛伐克语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_uk.ts # 乌克兰语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_ja.ts # 日语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_ko.ts # 韩语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_fr.ts # 法语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_de.ts # 德语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_it.ts # 意大利
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_ru.ts # 俄语
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_nl.ts # 荷兰
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_sv.ts # 瑞典
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_th.ts # 泰国
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_tr.ts # 土耳其
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_pl.ts # 波兰
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/derfla_cs.ts # 捷克
 )
 
 if(APPLE)
