@@ -1,7 +1,11 @@
-cmake_minimum_required(VERSION 3.15)
+﻿cmake_minimum_required(VERSION 3.15)
 project(DerflaProject VERSION 1.0.0)
 
-set(CMAKE_EXPORT_COMPILECOMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+if(NOT DEFINED CMAKE_OSX_ARCHITECTURES)
+  set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+endif()
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
   set(BUILD_TYPE Debug)
@@ -37,6 +41,56 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/${ARCH}"
 )# .dll .dylib .so
 
 set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+
+option(AVX2 "Target CPU does support AVX2")
+option(MACOMP "Enables OpenMP on macOS")
+option(QT5 "Build with Qt5")
+option(QT6 "Build with Qt6")
+
+set(CURRENT_COMPILER_ID "${CMAKE_CXX_COMPILER_ID}")
+message("Compiler ID is: ${CURRENT_COMPILER_ID}")
+
+if(APPLE)
+    if ("${CURRENT_COMPILER_ID}"  STREQUAL "AppleClang")
+        message(FATAL_ERROR "AppleClang doesn't support OpenMP, please use a custom built LLVM/Clang.")
+    endif()
+endif()
+
+set(CURRENT_SIMULATE_ID "${CMAKE_CXX_SIMULATE_ID}")
+message("Simulate ID is: ${CURRENT_SIMULATE_ID}")
+
+if(NOT CMAKE_BUILD_TYPE MATCHES Debug)
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "amd64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        if(NOT "${CURRENT_COMPILER_ID}"  STREQUAL "MSVC")
+            message("not MSVC")
+            add_compile_options("-mpopcnt" "-mbmi" "-mbmi2" "-mlzcnt" "-mmovbe" "-mfma")
+        endif()
+        if(AVX2)
+            if("${CURRENT_COMPILER_ID}" STREQUAL "IntelLLVM")
+                message("Intel oneAPI enables AVX2")
+                add_compile_options("/QxCORE-AVX2" "-mavx2")
+            elseif ("${CURRENT_COMPILER_ID}" STREQUAL "MSVC" OR "${CURRENT_SIMULATE_ID}" STREQUAL "MSVC")
+                message("MSVC or Clang-Cl enables AVX2")
+                add_compile_options("/Ot" "/fp:fast" "/arch:AVX2")
+            else()
+                message("Others eg GCC/Clang... enables AVX2")
+                add_compile_options("-mavx2")
+            endif()
+        endif()
+    endif()
+endif()
+
+if(WIN32)
+    add_compile_definitions(STRSAFE_NO_DEPRECATE UNICODE)
+endif()
+
+if (MSVC)
+    if("${CURRENT_COMPILER_ID}" STREQUAL "IntelLLVM")
+        add_compile_options(/EHsc)
+    else()
+        add_compile_options(/utf-8)
+    endif()
+endif()
 
 add_subdirectory(3rdparty)
 add_subdirectory(src)

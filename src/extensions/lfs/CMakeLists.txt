@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+﻿cmake_minimum_required(VERSION 3.21)
 project(lfs VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -14,17 +14,19 @@ endif(APPLE)
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/extension.derflaext"
      DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
+if(NOT QT5 AND NOT QT6)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core LinguistTools)
-find_package(
-  Qt${QT_VERSION_MAJOR}
-  COMPONENTS Widgets Network Xml LinguistTools
-  REQUIRED)
-if(Qt6_FOUND)
-  find_package(
-    Qt6
-    COMPONENTS Core5Compat
-    REQUIRED)
-endif(Qt6_FOUND)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Xml Network LinguistTools REQUIRED)
+elseif(QT5)
+find_package(QT NAMES Qt5 REQUIRED COMPONENTS Core LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Xml Network LinguistTools REQUIRED)
+elseif(QT6)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Xml Network LinguistTools REQUIRED)
+endif()
+IF (Qt6_FOUND)
+        find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+ENDIF(Qt6_FOUND)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
@@ -105,8 +107,12 @@ else()
                                  ${CMAKE_CURRENT_SOURCE_DIR}/lfs.rc)
 endif()
 
-target_link_libraries(
-  ${PROJECT_NAME} PRIVATE qtsingleapplication qtlockedfile qtplist DerflaUtil
-                          Qt${QT_VERSION_MAJOR}::Xml)
+target_link_libraries(${PROJECT_NAME}  PRIVATE
+        qtsingleapplication
+        qtlockedfile
+        qtplist
+        DerflaUtil
+        Qt${QT_VERSION_MAJOR}::Xml
+        )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE stdafx.h)

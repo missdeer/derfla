@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+﻿cmake_minimum_required(VERSION 3.21)
 project(DerflaUtil VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -9,17 +9,22 @@ if(APPLE)
       "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Derfla.app/Contents/Libs")
 endif(APPLE)
 
+if(NOT QT5 AND NOT QT6)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core LinguistTools)
-find_package(
-  Qt${QT_VERSION_MAJOR}
-  COMPONENTS Widgets LinguistTools
-  REQUIRED)
-if(Qt6_FOUND)
-  find_package(
-    Qt6
-    COMPONENTS Core5Compat
-    REQUIRED)
-endif(Qt6_FOUND)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
+elseif(QT5)
+find_package(QT NAMES Qt5 REQUIRED COMPONENTS Core LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
+elseif(QT6)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
+endif()
+IF (Qt6_FOUND)
+        find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+ENDIF(Qt6_FOUND)
+
+find_package(OpenMP)
+find_package(TBB REQUIRED)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
@@ -141,6 +146,14 @@ else()
                                      ${qrcs} ${QM_FILES})
 endif()
 
+target_link_libraries(${PROJECT_NAME} 
+        lua
+        sqlite3
+        OpenMP::OpenMP_CXX
+        TBB::tbb
+        Qt${QT_VERSION_MAJOR}::Widgets
+        )
+
 target_link_libraries(${PROJECT_NAME} lua sqlite3
                       Qt${QT_VERSION_MAJOR}::Widgets)
 
@@ -155,20 +168,19 @@ if(WIN32)
   set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
   target_link_libraries(
     ${PROJECT_NAME}
-    Version.lib
-    Comctl32.lib
-    user32.lib
-    Ole32.lib
-    Gdi32.lib
-    Shell32.lib
-    uuid.lib
-    advapi32.lib
-    winmm.lib)
+    Version
+    Comctl32
+    user32
+    Ole32
+    Gdi32
+    Shell32
+    uuid
+    advapi32
+    winmm)
 else(WIN32)
   if(APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework AppKit")
   else(APPLE)
-
   endif(APPLE)
 endif(WIN32)
 
