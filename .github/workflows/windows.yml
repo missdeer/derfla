@@ -84,6 +84,11 @@ jobs:
           cache-key-prefix: 'install-qt-action-${{ matrix.qt_arch }}-${{ matrix.qt_ver }}'
           aqtversion: '==3.0.1'
 
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          submodules: true
+
       - name: vcpkg build
         uses: johnwason/vcpkg-action@v5
         id: vcpkg
@@ -125,11 +130,6 @@ jobs:
           git clone --depth=1 https://github.com/oneapi-src/oneapi-ci.git oneapi-ci
           cd oneapi-ci
           scripts/restore_registry.bat ${{ env.COMPILER_VERSION }}
-
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          submodules: true
 
       - name: build-msvc
         shell: cmd
