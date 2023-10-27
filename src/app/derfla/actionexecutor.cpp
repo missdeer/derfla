@@ -8,7 +8,7 @@ ActionExecutor::ActionExecutor(QObject *parent) : QObject(parent) {}
 
 bool ActionExecutor::operator()(const DerflaActionPtr &action)
 {
-    static QMap<QString, std::function<bool(DerflaActionPtr)>> actionExecutorMap = {
+    static const QMap<QString, std::function<bool(DerflaActionPtr)>> actionExecutorMap = {
         {"script", [](const DerflaActionPtr &action) { return runScript(action); }},
         {"runAsAdministrator", [](const DerflaActionPtr &action) { return runAsAdministrator(action); }},
         {"shellExecute", [](const DerflaActionPtr &action) { return shellExecute(action); }},
@@ -21,7 +21,7 @@ bool ActionExecutor::operator()(const DerflaActionPtr &action)
         {"viewText", [](const DerflaActionPtr &action) { return viewText(action); }},
         {"copyText", [](const DerflaActionPtr &action) { return copyText(action); }},
     };
-    auto iter = actionExecutorMap.find(action->actionType());
+    const auto iter = actionExecutorMap.find(action->actionType());
     if (actionExecutorMap.end() == iter)
     {
         return false;
@@ -33,7 +33,7 @@ bool ActionExecutor::operator()(const DerflaActionPtr &action)
 
 bool ActionExecutor::runScript(const DerflaActionPtr &action)
 {
-    static QMap<QString, QString> runnerMap = {
+    static const QMap<QString, QString> runnerMap = {
         {"bash", "-c"},
         {"php", "-r"},
         {"ruby", "-e"},
@@ -50,35 +50,33 @@ bool ActionExecutor::runScript(const DerflaActionPtr &action)
 #endif
     };
 
-    auto iter = runnerMap.find(action->scriptExecutor());
-    if (runnerMap.end() != iter)
+    const auto iter = runnerMap.find(action->scriptExecutor());
+    if (iter == runnerMap.end())
     {
-        auto       option   = runnerMap[action->scriptExecutor()];
-        QSettings &settings = derflaApp->settings();
-        auto       exe      = settings.value(action->scriptExecutor()).toString();
-        if (!QFile::exists(exe))
-        {
-            exe = QStandardPaths::findExecutable(action->scriptExecutor());
-        }
-        if (!QFile::exists(exe))
-        {
-            return false;
-        }
-        auto *process = new QProcess;
-
-        connect(process, &QProcess::errorOccurred, [] {});
-        connect(process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [process](int, QProcess::ExitStatus) {
-            process->deleteLater();
-        });
-
-        process->start(exe, QStringList() << option << action->target() << action->arguments().split(QChar(' ')));
+        return false;
     }
+
+    const auto &option   = iter.value();
+    QSettings  &settings = derflaApp->settings();
+    auto        exe      = settings.value(action->scriptExecutor()).toString();
+    if (!QFile::exists(exe))
+    {
+        exe = QStandardPaths::findExecutable(action->scriptExecutor());
+    }
+    if (!QFile::exists(exe))
+    {
+        return false;
+    }
+    auto *process = new QProcess;
+
+    connect(process, &QProcess::finished, process, &QObject::deleteLater);
+    process->start(exe, QStringList() << option << action->target() << action->arguments().split(QChar(' ')));
 
 #if defined(Q_OS_WIN)
     if (action->scriptExecutor() == "cscript" || action->scriptExecutor() == "wscript")
     {
         // extract resource file
-        QString localPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) % "/derfla-temp.vbs";
+        QString localPath = QDir::tempPath() + "/derfla-temp.vbs";
         QFile   file(localPath);
         if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
         {
