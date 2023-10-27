@@ -45,7 +45,7 @@ jobs:
           brew install ninja llvm gsed tbb
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ ..
           cmake --build . --parallel --verbose
           cd ..
 
