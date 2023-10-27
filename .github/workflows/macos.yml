@@ -1,4 +1,4 @@
-name: MacOS
+﻿name: MacOS
 on: 
   push:
     paths-ignore:
@@ -18,7 +18,7 @@ jobs:
           - qt_ver: 5.15.2
             qt_arch: clang_64
             qt_modules: ""
-          - qt_ver: 6.4.2
+          - qt_ver: 6.6.0
             qt_arch: clang_64
             qt_modules: "qt5compat qtimageformats"
     env:
@@ -42,9 +42,10 @@ jobs:
           
       - name: build macos
         run: |
+          brew install ninja llvm gsed tbb
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -G "Unix Makefiles" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
-          make -j `sysctl -n hw.logicalcpu`
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+          cmake --build . --parallel --verbose
           cd ..
 
