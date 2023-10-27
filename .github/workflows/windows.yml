@@ -127,24 +127,6 @@ jobs:
             mkspec: win32-clang-g++
             qt_build: qt6
             output_dir: x86_64
-          - qt_arch: mingw32_qt6-gcc
-            mingw_arch: MINGW32
-            mingw_prefix: mingw-w64-i686
-            toolchains: gcc
-            c: gcc
-            cxx: g++
-            mkspec: win32-g++
-            qt_build: qt6
-            output_dir: x86
-          - qt_arch: clang32_qt6-clang
-            mingw_arch: CLANG32
-            mingw_prefix: mingw-w64-clang-i686
-            toolchains: clang
-            c: clang
-            cxx: clang++
-            mkspec: win32-clang-g++
-            qt_build: qt6
-            output_dir: x86
     steps:
       - uses: msys2/setup-msys2@v2
         with:
