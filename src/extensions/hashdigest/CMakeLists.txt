@@ -34,13 +34,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON) # if you have any .ui files
 set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
-if(MSVC)
-  add_compile_options(/utf-8)
-endif()
-if(WIN32)
-  add_compile_definitions(UNICODE)
-endif(WIN32)
-
 add_compile_definitions(UTIL_LIBRARY STATIC_LINKED)
 if(APPLE)
   add_compile_definitions(LUA_USE_MACOSX)

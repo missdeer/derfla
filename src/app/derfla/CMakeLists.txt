@@ -20,7 +20,6 @@ IF (Qt6_FOUND)
 ENDIF(Qt6_FOUND)
 
 find_package(OpenMP)
-find_package(TBB REQUIRED)
 
 find_package(Boost 1.79.0)
 if(Boost_FOUND)
@@ -39,13 +38,6 @@ endif(Boost_FOUND)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON) # if you have any .ui files
 set(CMAKE_AUTORCC OFF) # if you have any .qrc files
-
-if(MSVC)
-  add_compile_options(/utf-8)
-endif()
-if(WIN32)
-  add_compile_definitions(UNICODE)
-endif(WIN32)
 
 add_compile_definitions(UTIL_LIBRARY STATIC_LINKED)
 if(APPLE)
@@ -202,7 +194,6 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE
         qtlockedfile
         DerflaUtil
         OpenMP::OpenMP_CXX
-        TBB::tbb
         Qt${QT_VERSION_MAJOR}::Xml
         )
 

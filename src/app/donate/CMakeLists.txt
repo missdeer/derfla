@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+﻿cmake_minimum_required(VERSION 3.21)
 project(donate VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -26,13 +26,6 @@ endif(Qt6_FOUND)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON) # if you have any .ui files
 set(CMAKE_AUTORCC OFF) # if you have any .qrc files
-
-if(MSVC)
-  add_compile_options(/utf-8)
-endif()
-if(WIN32)
-  add_compile_definitions(UNICODE)
-endif(WIN32)
 
 add_compile_definitions(UTIL_LIBRARY STATIC_LINKED)
 if(APPLE)

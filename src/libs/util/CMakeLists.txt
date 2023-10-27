@@ -24,23 +24,15 @@ IF (Qt6_FOUND)
 ENDIF(Qt6_FOUND)
 
 find_package(OpenMP)
-find_package(TBB REQUIRED)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON) # if you have any .ui files
 set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
-if(MSVC)
-  add_compile_options(/utf-8)
-endif()
 if(WIN32)
-  add_compile_definitions(UNICODE)
   if(Qt5_FOUND)
-    find_package(
-      Qt5
-      COMPONENTS WinExtras
-      REQUIRED)
+    find_package(Qt5 COMPONENTS WinExtras REQUIRED)
   endif(Qt5_FOUND)
 endif(WIN32)
 
@@ -150,12 +142,9 @@ target_link_libraries(${PROJECT_NAME}
         lua
         sqlite3
         OpenMP::OpenMP_CXX
-        TBB::tbb
         Qt${QT_VERSION_MAJOR}::Widgets
         )
 
-target_link_libraries(${PROJECT_NAME} lua sqlite3
-                      Qt${QT_VERSION_MAJOR}::Widgets)
 
 if(Qt6_FOUND)
   target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Core5Compat)

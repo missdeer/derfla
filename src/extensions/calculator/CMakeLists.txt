@@ -34,13 +34,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON) # if you have any .ui files
 set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
-if(MSVC)
-  add_compile_options(/utf-8)
-endif()
-if(WIN32)
-  add_compile_definitions(UNICODE STRSAFE_NO_DEPRECATE)
-endif(WIN32)
-
 add_compile_definitions(UTIL_LIBRARY STATIC_LINKED _USE_MATH_DEFINES
                         SPEEDCRUNCH_VERSION="master" QT_USE_QSTRINGBUILDER)
 if(APPLE)

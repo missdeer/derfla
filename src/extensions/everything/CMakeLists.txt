@@ -28,18 +28,11 @@ endif()
 IF (Qt6_FOUND)
         find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 ENDIF(Qt6_FOUND)
-IF(WIN32)
-    add_compile_definitions(UNICODE)
-ENDIF(WIN32)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON) # if you have any .ui files
 set(CMAKE_AUTORCC OFF) # if you have any .qrc files
-
-if(MSVC)
-  add_compile_options(/utf-8)
-endif()
 
 add_compile_definitions(UTIL_LIBRARY STATIC_LINKED)
 if(APPLE)
