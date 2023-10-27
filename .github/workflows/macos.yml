@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: macos-latest
+    runs-on: macos-11
     strategy:
       matrix:
         include:
@@ -42,10 +42,10 @@ jobs:
           
       - name: build macos
         run: |
-          brew install ninja llvm gsed tbb
+          brew install ninja llvm gsed
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ ..
+          cmake -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ ..
           cmake --build . --parallel --verbose
           cd ..
 
