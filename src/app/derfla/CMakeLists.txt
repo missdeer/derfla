@@ -196,6 +196,8 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE
         OpenMP::OpenMP_CXX
         Qt${QT_VERSION_MAJOR}::Xml
         )
+set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON
+                                                 MACOSX_BUNDLE ON)
 
 if(Boost_FOUND)
   # dont use include_directories, use target_include_directories instead to let lupdate skip boost directories
