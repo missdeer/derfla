@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "actionexecutor.h"
 #include "derflaapp.h"
@@ -69,7 +69,7 @@ bool ActionExecutor::runScript(const DerflaActionPtr &action)
     }
     auto *process = new QProcess;
 
-    connect(process, &QProcess::finished, process, &QObject::deleteLater);
+    connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), process, &QObject::deleteLater);
     process->start(exe, QStringList() << option << action->target() << action->arguments().split(QChar(' ')));
 
 #if defined(Q_OS_WIN)
