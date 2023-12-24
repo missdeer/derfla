@@ -1,0 +1,7 @@
+﻿<RCC>
+    <qresource prefix="/">
+        <file>rc/images/azure.png</file>
+        <file>rc/images/openai.png</file>
+        <file>rc/images/geminipro.png</file>
+    </qresource>
+</RCC>

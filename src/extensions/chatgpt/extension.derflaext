@@ -1,0 +1,15 @@
+﻿id= "com.derfla.chatgpt"
+author= "missdeer"
+name= "ChatGPT"
+if derfla.os.name == "windows" then
+	executable= "chatgpt.exe"
+else
+	executable= "chatgpt"
+end
+
+description= "ChatGPT interact extension"
+prefix={"setkey", "setapi", "apikey", "set", "setendpoint", "clearendpoint","clrendpoint","endpoint","clrkey","clrapi", "clr", "clear","ask","translate", "trans"}
+waitIconPath= ""
+waitTitle= "Wait a second..."
+waitDescription= "GPT is thinking..."
+

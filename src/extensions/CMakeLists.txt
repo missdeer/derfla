@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.15)
+﻿cmake_minimum_required(VERSION 3.15)
 project(DerflaSrc VERSION 1.0.0)
 
 add_subdirectory(calculator)
 add_subdirectory(hashdigest)
 add_subdirectory(lfs)
+add_subdirectory(chatgpt)
 #add_subdirectory(translator)
 add_subdirectory(weather)
 add_subdirectory(webdict)
