@@ -18,7 +18,7 @@ env:
   COMPILER_VERSION: 2023.2.0
   TBB_VERSION: 2021.10.0
   VS_VER: vs2022
-  clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.3/LLVM-17.0.3-win64.exe
+  clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/LLVM-17.0.6-win64.exe
   ninja_link: https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip
 
 jobs:
@@ -213,6 +213,24 @@ jobs:
             c: clang
             cxx: clang++
             mkspec: win32-clang-g++
+            qt_build: qt6
+            output_dir: x86_64
+          - qt_arch: ucrt64_qt5-gcc
+            mingw_arch: CLANG64
+            mingw_prefix: mingw-w64-ucrt64-x86_64
+            toolchains: gcc
+            c: gcc
+            cxx: g++
+            mkspec: win32-g++
+            qt_build: qt5
+            output_dir: x86_64
+          - qt_arch: ucrt64_qt6-gcc
+            mingw_arch: UCRT64
+            mingw_prefix: mingw-w64-ucrt64-x86_64
+            toolchains: gcc
+            c: gcc
+            cxx: g++
+            mkspec: win32-g++
             qt_build: qt6
             output_dir: x86_64
     steps:
