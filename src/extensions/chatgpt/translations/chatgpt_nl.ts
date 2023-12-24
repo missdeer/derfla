@@ -4,150 +4,150 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../main.cpp" line="45"/>
-        <location filename="../main.cpp" line="57"/>
-        <location filename="../main.cpp" line="83"/>
+        <location filename="../main.cpp" line="48"/>
+        <location filename="../main.cpp" line="76"/>
+        <location filename="../main.cpp" line="140"/>
         <source>Set OpenAI GPT3.5 API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="46"/>
-        <location filename="../main.cpp" line="58"/>
-        <location filename="../main.cpp" line="84"/>
+        <location filename="../main.cpp" line="52"/>
+        <location filename="../main.cpp" line="80"/>
+        <location filename="../main.cpp" line="144"/>
         <source>Set OpenAI GPT4 API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="47"/>
-        <location filename="../main.cpp" line="59"/>
-        <location filename="../main.cpp" line="85"/>
+        <location filename="../main.cpp" line="56"/>
+        <location filename="../main.cpp" line="84"/>
+        <location filename="../main.cpp" line="148"/>
         <source>Set Azure OpenAI GPT3.5 API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="48"/>
         <location filename="../main.cpp" line="60"/>
-        <location filename="../main.cpp" line="86"/>
+        <location filename="../main.cpp" line="88"/>
+        <location filename="../main.cpp" line="152"/>
         <source>Set Azure OpenAI GPT4 API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="49"/>
-        <location filename="../main.cpp" line="61"/>
-        <location filename="../main.cpp" line="87"/>
+        <location filename="../main.cpp" line="64"/>
+        <location filename="../main.cpp" line="92"/>
+        <location filename="../main.cpp" line="156"/>
         <source>Set Gemini Pro API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="62"/>
-        <location filename="../main.cpp" line="97"/>
-        <location filename="../main.cpp" line="129"/>
+        <location filename="../main.cpp" line="96"/>
+        <location filename="../main.cpp" line="176"/>
+        <location filename="../main.cpp" line="244"/>
         <source>Clear OpenAI GPT3.5 API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="63"/>
-        <location filename="../main.cpp" line="98"/>
-        <location filename="../main.cpp" line="130"/>
+        <location filename="../main.cpp" line="100"/>
+        <location filename="../main.cpp" line="180"/>
+        <location filename="../main.cpp" line="248"/>
         <source>Clear OpenAI GPT4 API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="64"/>
-        <location filename="../main.cpp" line="99"/>
-        <location filename="../main.cpp" line="131"/>
+        <location filename="../main.cpp" line="104"/>
+        <location filename="../main.cpp" line="184"/>
+        <location filename="../main.cpp" line="252"/>
         <source>Clear Azure OpenAI GPT3.5 API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="65"/>
-        <location filename="../main.cpp" line="100"/>
-        <location filename="../main.cpp" line="132"/>
+        <location filename="../main.cpp" line="108"/>
+        <location filename="../main.cpp" line="188"/>
+        <location filename="../main.cpp" line="256"/>
         <source>Clear Azure OpenAI GPT4 API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="66"/>
-        <location filename="../main.cpp" line="101"/>
-        <location filename="../main.cpp" line="133"/>
+        <location filename="../main.cpp" line="112"/>
+        <location filename="../main.cpp" line="192"/>
+        <location filename="../main.cpp" line="260"/>
         <source>Clear Gemini Pro API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="74"/>
-        <location filename="../main.cpp" line="88"/>
-        <location filename="../main.cpp" line="118"/>
+        <location filename="../main.cpp" line="124"/>
+        <location filename="../main.cpp" line="160"/>
+        <location filename="../main.cpp" line="220"/>
         <source>Set Azure OpenAI GPT3.5 API Endpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="75"/>
-        <location filename="../main.cpp" line="89"/>
-        <location filename="../main.cpp" line="119"/>
+        <location filename="../main.cpp" line="128"/>
+        <location filename="../main.cpp" line="164"/>
+        <location filename="../main.cpp" line="224"/>
         <source>Set Azure OpenAI GPT4 API Endpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="109"/>
-        <location filename="../main.cpp" line="120"/>
-        <location filename="../main.cpp" line="134"/>
+        <location filename="../main.cpp" line="204"/>
+        <location filename="../main.cpp" line="228"/>
+        <location filename="../main.cpp" line="264"/>
         <source>Clear Azure OpenAI GPT3.5 API Endpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="110"/>
-        <location filename="../main.cpp" line="121"/>
-        <location filename="../main.cpp" line="135"/>
+        <location filename="../main.cpp" line="208"/>
+        <location filename="../main.cpp" line="232"/>
+        <location filename="../main.cpp" line="268"/>
         <source>Clear Azure OpenAI GPT4 API Endpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="143"/>
+        <location filename="../main.cpp" line="280"/>
         <source>Ask OpenAI GPT3.5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="144"/>
+        <location filename="../main.cpp" line="281"/>
         <source>Ask OpenAI GPT4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="145"/>
+        <location filename="../main.cpp" line="282"/>
         <source>Ask Azure OpenAI GPT3.5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="146"/>
+        <location filename="../main.cpp" line="286"/>
         <source>Ask Azure OpenAI GPT4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="147"/>
+        <location filename="../main.cpp" line="290"/>
         <source>Ask Gemini Pro</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="155"/>
+        <location filename="../main.cpp" line="302"/>
         <source>Translate by OpenAI GPT3.5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="156"/>
+        <location filename="../main.cpp" line="306"/>
         <source>Translate by OpenAI GPT4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="157"/>
+        <location filename="../main.cpp" line="310"/>
         <source>Translate by Azure OpenAI GPT3.5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="158"/>
+        <location filename="../main.cpp" line="314"/>
         <source>Translate by Azure OpenAI GPT4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="159"/>
+        <location filename="../main.cpp" line="318"/>
         <source>Translate by Gemini Pro</source>
         <translation type="unfinished"></translation>
     </message>

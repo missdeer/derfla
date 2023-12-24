@@ -5,7 +5,8 @@
 #include "qtsingleapplication.h"
 #include "util.h"
 
-using GPTActionItem = std::tuple<QString, QString, QString>;
+// title, target, arguments, icon file
+using GPTActionItem = std::tuple<QString, QString, QString, QString>;
 
 bool output(const std::vector<GPTActionItem> &items)
 {
@@ -17,8 +18,8 @@ bool output(const std::vector<GPTActionItem> &items)
         QVariantMap varMap;
         varMap.insert("title", std::get<0>(item));
         varMap.insert("target", std::get<1>(item));
-        varMap.insert("actionType", "openUrl");
-        QFile icon(std::get<2>(item));
+        varMap.insert("actionType", "shellExecute");
+        QFile icon(std::get<3>(item));
         if (icon.open(QIODevice::ReadOnly))
         {
             auto bytes = icon.readAll();
@@ -41,122 +42,283 @@ bool output(const std::vector<GPTActionItem> &items)
 
 bool setAPIKeyHandler(const QString &keyword)
 {
+    auto executablePath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+
     std::vector<GPTActionItem> items = {
-        {QObject::tr("Set OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Set OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Set Azure OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Set Azure OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Set Gemini Pro API Key"), "", QStringLiteral(":/rc/images/geminipro.png")},
+        {QObject::tr("Set OpenAI GPT3.5 API Key"),
+         executablePath,
+         QStringLiteral("-gpt35key %1").arg(keyword),
+         QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Set OpenAI GPT4 API Key"),
+         executablePath,
+         QStringLiteral("-gpt4key %1").arg(keyword),
+         QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Set Azure OpenAI GPT3.5 API Key"),
+         executablePath,
+         QStringLiteral("-azure35key %1").arg(keyword),
+         QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Set Azure OpenAI GPT4 API Key"),
+         executablePath,
+         QStringLiteral("-azure4key %1").arg(keyword),
+         QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Set Gemini Pro API Key"),
+         executablePath,
+         QStringLiteral("-geminiprokey %1").arg(keyword),
+         QStringLiteral(":/rc/images/geminipro.png")},
     };
     return output(items);
 }
 
 bool clearSetAPIKeyHandler(const QString &keyword)
 {
-    std::vector<GPTActionItem> items = {
-        {QObject::tr("Set OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Set OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Set Azure OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/geminipro.png")},
-        {QObject::tr("Set Azure OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/geminipro.png")},
-        {QObject::tr("Set Gemini Pro API Key"), "", QStringLiteral(":/rc/images/geminipro.png")},
-        {QObject::tr("Clear OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Clear OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Clear Azure OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Clear Azure OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Clear Gemini Pro API Key"), "", QStringLiteral(":/rc/images/geminipro.png")},
+    auto                       executablePath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    std::vector<GPTActionItem> items          = {
+        {QObject::tr("Set OpenAI GPT3.5 API Key"),
+                  executablePath,
+                  QStringLiteral("-gpt35key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Set OpenAI GPT4 API Key"),
+                  executablePath,
+                  QStringLiteral("-gpt4key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Set Azure OpenAI GPT3.5 API Key"),
+                  executablePath,
+                  QStringLiteral("-azure35key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Set Azure OpenAI GPT4 API Key"),
+                  executablePath,
+                  QStringLiteral("-azure4key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Set Gemini Pro API Key"),
+                  executablePath,
+                  QStringLiteral("-geminiprokey %1").arg(keyword),
+                  QStringLiteral(":/rc/images/geminipro.png")},
+        {QObject::tr("Clear OpenAI GPT3.5 API Key"),
+                  executablePath,
+                  QStringLiteral("-cleargpt35key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Clear OpenAI GPT4 API Key"),
+                  executablePath,
+                  QStringLiteral("-cleargpt4key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Clear Azure OpenAI GPT3.5 API Key"),
+                  executablePath,
+                  QStringLiteral("-clearauzre35key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Clear Azure OpenAI GPT4 API Key"),
+                  executablePath,
+                  QStringLiteral("-clearazure4key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Clear Gemini Pro API Key"),
+                  executablePath,
+                  QStringLiteral("-cleargeminiprokey %1").arg(keyword),
+                  QStringLiteral(":/rc/images/geminipro.png")},
     };
     return output(items);
 }
 
 bool setAPIEndpointHandler(const QString &keyword)
 {
-    std::vector<GPTActionItem> items = {
-        {QObject::tr("Set Azure OpenAI GPT3.5 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Set Azure OpenAI GPT4 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
+    auto                       executablePath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    std::vector<GPTActionItem> items          = {
+        {QObject::tr("Set Azure OpenAI GPT3.5 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-azure35ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Set Azure OpenAI GPT4 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-auzre4ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
     };
     return output(items);
 }
 
 bool setAPIKeyEndpointHandler(const QString &keyword)
 {
-    std::vector<GPTActionItem> items = {
-        {QObject::tr("Set OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Set OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Set Azure OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Set Azure OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Set Gemini Pro API Key"), "", QStringLiteral(":/rc/images/geminipro.png")},
-        {QObject::tr("Set Azure OpenAI GPT3.5 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Set Azure OpenAI GPT4 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
+    auto                       executablePath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    std::vector<GPTActionItem> items          = {
+        {QObject::tr("Set OpenAI GPT3.5 API Key"),
+                  executablePath,
+                  QStringLiteral("-gpt35key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Set OpenAI GPT4 API Key"),
+                  executablePath,
+                  QStringLiteral("-gpt4key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Set Azure OpenAI GPT3.5 API Key"),
+                  executablePath,
+                  QStringLiteral("-azure35key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Set Azure OpenAI GPT4 API Key"),
+                  executablePath,
+                  QStringLiteral("-azure4key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Set Gemini Pro API Key"),
+                  executablePath,
+                  QStringLiteral("-geminiprokey %1").arg(keyword),
+                  QStringLiteral(":/rc/images/geminipro.png")},
+        {QObject::tr("Set Azure OpenAI GPT3.5 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-azure35ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Set Azure OpenAI GPT4 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-auzre4ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
     };
     return output(items);
 }
 
 bool clearAPIKeyHandler(const QString &keyword)
 {
-    std::vector<GPTActionItem> items = {
-        {QObject::tr("Clear OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Clear OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Clear Azure OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Clear Azure OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Clear Gemini Pro API Key"), "", QStringLiteral(":/rc/images/geminipro.png")},
+    auto                       executablePath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    std::vector<GPTActionItem> items          = {
+        {QObject::tr("Clear OpenAI GPT3.5 API Key"),
+                  executablePath,
+                  QStringLiteral("-cleargpt35key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Clear OpenAI GPT4 API Key"),
+                  executablePath,
+                  QStringLiteral("-cleargpt4key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Clear Azure OpenAI GPT3.5 API Key"),
+                  executablePath,
+                  QStringLiteral("-clearauzre35key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Clear Azure OpenAI GPT4 API Key"),
+                  executablePath,
+                  QStringLiteral("-clearazure4key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Clear Gemini Pro API Key"),
+                  executablePath,
+                  QStringLiteral("-cleargeminiprokey %1").arg(keyword),
+                  QStringLiteral(":/rc/images/geminipro.png")},
     };
     return output(items);
 }
 
 bool clearAPIEndpointHandler(const QString &keyword)
 {
-    std::vector<GPTActionItem> items = {
-        {QObject::tr("Clear Azure OpenAI GPT3.5 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Clear Azure OpenAI GPT4 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
+    auto                       executablePath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    std::vector<GPTActionItem> items          = {
+        {QObject::tr("Clear Azure OpenAI GPT3.5 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-clearazure35ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Clear Azure OpenAI GPT4 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-clearazure4ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
     };
     return output(items);
 }
 
 bool clearSetAPIEndpointHandler(const QString &keyword)
 {
-    std::vector<GPTActionItem> items = {
-        {QObject::tr("Set Azure OpenAI GPT3.5 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Set Azure OpenAI GPT4 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Clear Azure OpenAI GPT3.5 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Clear Azure OpenAI GPT4 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
+    auto                       executablePath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    std::vector<GPTActionItem> items          = {
+        {QObject::tr("Set Azure OpenAI GPT3.5 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-azure35ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Set Azure OpenAI GPT4 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-auzre4ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Clear Azure OpenAI GPT3.5 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-clearazure35ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Clear Azure OpenAI GPT4 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-clearazure4ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
     };
     return output(items);
 }
 
 bool clearAPIKeyEndpointHandler(const QString &keyword)
 {
-    std::vector<GPTActionItem> items = {
-        {QObject::tr("Clear OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Clear OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Clear Azure OpenAI GPT3.5 API Key"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Clear Azure OpenAI GPT4 API Key"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Clear Gemini Pro API Key"), "", QStringLiteral(":/rc/images/geminipro.png")},
-        {QObject::tr("Clear Azure OpenAI GPT3.5 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Clear Azure OpenAI GPT4 API Endpoint"), "", QStringLiteral(":/rc/images/azure.png")},
+    auto                       executablePath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    std::vector<GPTActionItem> items          = {
+        {QObject::tr("Clear OpenAI GPT3.5 API Key"),
+                  executablePath,
+                  QStringLiteral("-cleargpt35key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Clear OpenAI GPT4 API Key"),
+                  executablePath,
+                  QStringLiteral("-cleargpt4key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Clear Azure OpenAI GPT3.5 API Key"),
+                  executablePath,
+                  QStringLiteral("-clearauzre35key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Clear Azure OpenAI GPT4 API Key"),
+                  executablePath,
+                  QStringLiteral("-clearazure4key %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Clear Gemini Pro API Key"),
+                  executablePath,
+                  QStringLiteral("-cleargeminiprokey %1").arg(keyword),
+                  QStringLiteral(":/rc/images/geminipro.png")},
+        {QObject::tr("Clear Azure OpenAI GPT3.5 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-clearazure35ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Clear Azure OpenAI GPT4 API Endpoint"),
+                  executablePath,
+                  QStringLiteral("-clearazure4ep %1").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
     };
     return output(items);
 }
 
 bool askHandler(const QString &keyword)
 {
-    std::vector<GPTActionItem> items = {
-        {QObject::tr("Ask OpenAI GPT3.5"), keyword, QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Ask OpenAI GPT4"), keyword, QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Ask Azure OpenAI GPT3.5"), keyword, QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Ask Azure OpenAI GPT4"), keyword, QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Ask Gemini Pro"), keyword, QStringLiteral(":/rc/images/geminipro.png")},
+    auto                       executablePath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    std::vector<GPTActionItem> items          = {
+        {QObject::tr("Ask OpenAI GPT3.5"), executablePath, QStringLiteral("-askgpt35 \"%1\"").arg(keyword), QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Ask OpenAI GPT4"), executablePath, QStringLiteral("-askgpt4 \"%1\"").arg(keyword), QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Ask Azure OpenAI GPT3.5"),
+                  executablePath,
+                  QStringLiteral("-askazure35 \"%1\"").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Ask Azure OpenAI GPT4"),
+                  executablePath,
+                  QStringLiteral("-askazure4 \"%1\"").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Ask Gemini Pro"),
+                  executablePath,
+                  QStringLiteral("-askgeminipro \"%1\"").arg(keyword),
+                  QStringLiteral(":/rc/images/geminipro.png")},
     };
     return output(items);
 }
 
 bool translateHandler(const QString &keyword)
 {
-    std::vector<GPTActionItem> items = {
-        {QObject::tr("Translate by OpenAI GPT3.5"), keyword, QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Translate by OpenAI GPT4"), keyword, QStringLiteral(":/rc/images/openai.png")},
-        {QObject::tr("Translate by Azure OpenAI GPT3.5"), keyword, QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Translate by Azure OpenAI GPT4"), keyword, QStringLiteral(":/rc/images/azure.png")},
-        {QObject::tr("Translate by Gemini Pro"), keyword, QStringLiteral(":/rc/images/geminipro.png")},
+    auto                       executablePath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    std::vector<GPTActionItem> items          = {
+        {QObject::tr("Translate by OpenAI GPT3.5"),
+                  executablePath,
+                  QStringLiteral("-transgpt35 \"%1\"").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Translate by OpenAI GPT4"),
+                  executablePath,
+                  QStringLiteral("-transgpt4 \"%1\"").arg(keyword),
+                  QStringLiteral(":/rc/images/openai.png")},
+        {QObject::tr("Translate by Azure OpenAI GPT3.5"),
+                  executablePath,
+                  QStringLiteral("-transazure4 \"%1\"").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Translate by Azure OpenAI GPT4"),
+                  executablePath,
+                  QStringLiteral("-transazure4 \"%1\"").arg(keyword),
+                  QStringLiteral(":/rc/images/azure.png")},
+        {QObject::tr("Translate by Gemini Pro"),
+                  executablePath,
+                  QStringLiteral("-transgeminipro \"%1\"").arg(keyword),
+                  QStringLiteral(":/rc/images/geminipro.png")},
     };
     return output(items);
 }
