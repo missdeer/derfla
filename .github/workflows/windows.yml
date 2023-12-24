@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         toolset: [cl, clang-cl, icx]
-        qt_ver: [5.15.2, 6.6.0]
+        qt_ver: [5.15.2, 6.6.1]
         include:
           - toolset: icx
             qt_arch: win64_msvc2019_64
@@ -37,7 +37,7 @@ jobs:
             output_dir: x86_64
           - toolset: icx
             qt_arch: win64_msvc2019_64
-            qt_ver: 6.6.0
+            qt_ver: 6.6.1
             qt_modules: "qt5compat qtimageformats"
             msvc_arch: x64
             output_dir: x86_64
@@ -49,7 +49,7 @@ jobs:
             output_dir: x86_64
           - toolset: clang-cl
             qt_arch: win64_msvc2019_64
-            qt_ver: 6.6.0
+            qt_ver: 6.6.1
             qt_modules: "qt5compat qtimageformats"
             msvc_arch: x64
             output_dir: x86_64
@@ -61,7 +61,7 @@ jobs:
             output_dir: x86_64
           - toolset: cl
             qt_arch: win64_msvc2019_64
-            qt_ver: 6.6.0
+            qt_ver: 6.6.1
             qt_modules: "qt5compat qtimageformats"
             msvc_arch: x64
             output_dir: x86_64
