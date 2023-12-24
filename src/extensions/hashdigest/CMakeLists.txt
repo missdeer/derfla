@@ -81,13 +81,19 @@ set_source_files_properties(
                          "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations")
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-  qt_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES}
-                        OPTIONS -no-obsolete)
+  if (NOT MINGW)
+    qt_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES}
+                          OPTIONS -no-obsolete)
+    list(APPEND hashdigest_src ${QM_FILES})
+  endif()
   qt_add_executable(
     ${PROJECT_NAME} ${hashdigest_headers} ${hashdigest_src} ${qrcs} ${QM_FILES}
     ${CMAKE_CURRENT_SOURCE_DIR}/hashdigest.rc)
 else()
-  qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
+  if (NOT MINGW)
+    qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
+    list(APPEND hashdigest_src ${QM_FILES})
+  endif()
   add_executable(
     ${PROJECT_NAME} ${hashdigest_headers} ${hashdigest_src} ${qrcs} ${QM_FILES}
                     ${CMAKE_CURRENT_SOURCE_DIR}/hashdigest.rc)

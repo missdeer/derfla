@@ -127,13 +127,18 @@ else(APPLE)
 endif(APPLE)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-  qt_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES}
-                        OPTIONS -no-obsolete)
+  if (NOT MINGW)
+    qt_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES}
+                          OPTIONS -no-obsolete)
+    list(APPEND DerflaUtil_src ${QM_FILES})
+  endif()
   qt_add_library(${PROJECT_NAME} SHARED ${DerflaUtil_headers} ${DerflaUtil_src}
                  ${qrcs} ${QM_FILES})
 else()
-  qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
-
+  if (NOT MINGW)
+    qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
+    list(APPEND DerflaUtil_src ${QM_FILES})
+  endif()
   add_library(${PROJECT_NAME} SHARED ${DerflaUtil_headers} ${DerflaUtil_src}
                                      ${qrcs} ${QM_FILES})
 endif()
