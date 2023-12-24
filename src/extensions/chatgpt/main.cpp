@@ -103,7 +103,7 @@ bool clearSetAPIKeyHandler(const QString &keyword)
                   QStringLiteral(":/rc/images/openai.png")},
         {QObject::tr("Clear Azure OpenAI GPT3.5 API Key"),
                   executablePath,
-                  QStringLiteral("-clearauzre35key %1").arg(keyword),
+                  QStringLiteral("-clearazure35key %1").arg(keyword),
                   QStringLiteral(":/rc/images/azure.png")},
         {QObject::tr("Clear Azure OpenAI GPT4 API Key"),
                   executablePath,
@@ -127,7 +127,7 @@ bool setAPIEndpointHandler(const QString &keyword)
                   QStringLiteral(":/rc/images/azure.png")},
         {QObject::tr("Set Azure OpenAI GPT4 API Endpoint"),
                   executablePath,
-                  QStringLiteral("-auzre4ep %1").arg(keyword),
+                  QStringLiteral("-azure4ep %1").arg(keyword),
                   QStringLiteral(":/rc/images/azure.png")},
     };
     return output(items);
@@ -163,7 +163,7 @@ bool setAPIKeyEndpointHandler(const QString &keyword)
                   QStringLiteral(":/rc/images/azure.png")},
         {QObject::tr("Set Azure OpenAI GPT4 API Endpoint"),
                   executablePath,
-                  QStringLiteral("-auzre4ep %1").arg(keyword),
+                  QStringLiteral("-azure4ep %1").arg(keyword),
                   QStringLiteral(":/rc/images/azure.png")},
     };
     return output(items);
@@ -183,7 +183,7 @@ bool clearAPIKeyHandler(const QString &keyword)
                   QStringLiteral(":/rc/images/openai.png")},
         {QObject::tr("Clear Azure OpenAI GPT3.5 API Key"),
                   executablePath,
-                  QStringLiteral("-clearauzre35key %1").arg(keyword),
+                  QStringLiteral("-clearazure35key %1").arg(keyword),
                   QStringLiteral(":/rc/images/azure.png")},
         {QObject::tr("Clear Azure OpenAI GPT4 API Key"),
                   executablePath,
@@ -223,7 +223,7 @@ bool clearSetAPIEndpointHandler(const QString &keyword)
                   QStringLiteral(":/rc/images/azure.png")},
         {QObject::tr("Set Azure OpenAI GPT4 API Endpoint"),
                   executablePath,
-                  QStringLiteral("-auzre4ep %1").arg(keyword),
+                  QStringLiteral("-azure4ep %1").arg(keyword),
                   QStringLiteral(":/rc/images/azure.png")},
         {QObject::tr("Clear Azure OpenAI GPT3.5 API Endpoint"),
                   executablePath,
@@ -251,7 +251,7 @@ bool clearAPIKeyEndpointHandler(const QString &keyword)
                   QStringLiteral(":/rc/images/openai.png")},
         {QObject::tr("Clear Azure OpenAI GPT3.5 API Key"),
                   executablePath,
-                  QStringLiteral("-clearauzre35key %1").arg(keyword),
+                  QStringLiteral("-clearazure35key %1").arg(keyword),
                   QStringLiteral(":/rc/images/azure.png")},
         {QObject::tr("Clear Azure OpenAI GPT4 API Key"),
                   executablePath,
@@ -323,6 +323,104 @@ bool translateHandler(const QString &keyword)
     return output(items);
 }
 
+// ---------------------------
+bool askAzureGPT35Handler(const QString &keyword)
+{
+    return true;
+}
+bool askAzureGPT4Handler(const QString &keyword)
+{
+    return true;
+}
+bool askGeminiProHandler(const QString &keyword)
+{
+    return true;
+}
+bool askOpenAIGPT35Handler(const QString &keyword)
+{
+    return true;
+}
+bool askOpenAIGPT4Handler(const QString &keyword)
+{
+    return true;
+}
+bool setAzure4EndpointHandler(const QString &keyword)
+{
+    return true;
+}
+bool setAzure35EndpointHandler(const QString &keyword)
+{
+    return true;
+}
+bool setAzure35APIKeyHandler(const QString &keyword)
+{
+    return true;
+}
+bool setAzure4APIKeyHandler(const QString &keyword)
+{
+    return true;
+}
+bool clearAzure35APIKeyHandler(const QString &keyword)
+{
+    return true;
+}
+bool clearAzure35EndpointHandler(const QString &keyword)
+{
+    return true;
+}
+bool clearAzure4EndpointHandler(const QString &keyword)
+{
+    return true;
+}
+bool clearAzure4APIKeyHandler(const QString &keyword)
+{
+    return true;
+}
+bool clearGeminiProAPIKeyHandler(const QString &keyword)
+{
+    return true;
+}
+bool clearOpenAIGPT35APIKeyHandler(const QString &keyword)
+{
+    return true;
+}
+bool clearOpenAIGPT4APIKeyHandler(const QString &keyword)
+{
+    return true;
+}
+bool setGeminiProAPIKeyHandler(const QString &keyword)
+{
+    return true;
+}
+bool setOpenAIGPT35APIKeyHandler(const QString &keyword)
+{
+    return true;
+}
+bool setOpenAIGPT4APIKeyHandler(const QString &keyword)
+{
+    return true;
+}
+bool translateAzureGPT35Handler(const QString &keyword)
+{
+    return true;
+}
+bool translateAzureGPT4Handler(const QString &keyword)
+{
+    return true;
+}
+bool translateGeminiProHandler(const QString &keyword)
+{
+    return true;
+}
+bool translateOpenAIGPT35Handler(const QString &keyword)
+{
+    return true;
+}
+bool translateOpenAIGPT4Handler(const QString &keyword)
+{
+    return true;
+}
+// ---------------------------
 int main(int argc, char *argv[])
 {
 #if !defined(Q_OS_WIN)
@@ -394,8 +492,8 @@ int main(int argc, char *argv[])
         }
     }
 
-    QString                                             cmd(argv[1]);
-    QMap<QString, std::function<bool(const QString &)>> cmdMap = {
+    QString                                             option(argv[1]);
+    QMap<QString, std::function<bool(const QString &)>> optionsMap = {
         {QStringLiteral("setkey"), std::bind(&setAPIKeyHandler, std::placeholders::_1)},
         {QStringLiteral("setapi"), std::bind(&setAPIKeyHandler, std::placeholders::_1)},
         {QStringLiteral("apikey"), std::bind(&clearSetAPIKeyHandler, std::placeholders::_1)},
@@ -412,33 +510,33 @@ int main(int argc, char *argv[])
         {QStringLiteral("translate"), std::bind(&translateHandler, std::placeholders::_1)},
         {QStringLiteral("trans"), std::bind(&translateHandler, std::placeholders::_1)},
 
-        {QStringLiteral("-askazure35"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-askazure4"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-askgeminipro"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-askgpt35"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-askgpt4"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-auzre4ep"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-azure35ep"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-azure35key"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-azure4key"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-clearauzre35key"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-clearazure35ep"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-clearazure4ep"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-clearazure4key"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-cleargeminiprokey"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-cleargpt35key"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-cleargpt4key"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-geminiprokey"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-gpt35key"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-gpt4key"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-transazure35"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-transazure4"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-transgeminipro"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-transgpt35"), std::bind(&translateHandler, std::placeholders::_1)},
-        {QStringLiteral("-transgpt4"), std::bind(&translateHandler, std::placeholders::_1)},
+        {QStringLiteral("-askazure35"), std::bind(&askAzureGPT35Handler, std::placeholders::_1)},
+        {QStringLiteral("-askazure4"), std::bind(&askAzureGPT4Handler, std::placeholders::_1)},
+        {QStringLiteral("-askgeminipro"), std::bind(&askGeminiProHandler, std::placeholders::_1)},
+        {QStringLiteral("-askgpt35"), std::bind(&askOpenAIGPT35Handler, std::placeholders::_1)},
+        {QStringLiteral("-askgpt4"), std::bind(&askOpenAIGPT4Handler, std::placeholders::_1)},
+        {QStringLiteral("-azure4ep"), std::bind(&setAzure4EndpointHandler, std::placeholders::_1)},
+        {QStringLiteral("-azure35ep"), std::bind(&setAzure35EndpointHandler, std::placeholders::_1)},
+        {QStringLiteral("-azure35key"), std::bind(&setAzure35APIKeyHandler, std::placeholders::_1)},
+        {QStringLiteral("-azure4key"), std::bind(&setAzure4APIKeyHandler, std::placeholders::_1)},
+        {QStringLiteral("-clearazure35key"), std::bind(&clearAzure35APIKeyHandler, std::placeholders::_1)},
+        {QStringLiteral("-clearazure35ep"), std::bind(&clearAzure35EndpointHandler, std::placeholders::_1)},
+        {QStringLiteral("-clearazure4ep"), std::bind(&clearAzure4EndpointHandler, std::placeholders::_1)},
+        {QStringLiteral("-clearazure4key"), std::bind(&clearAzure4APIKeyHandler, std::placeholders::_1)},
+        {QStringLiteral("-cleargeminiprokey"), std::bind(&clearGeminiProAPIKeyHandler, std::placeholders::_1)},
+        {QStringLiteral("-cleargpt35key"), std::bind(&clearOpenAIGPT35APIKeyHandler, std::placeholders::_1)},
+        {QStringLiteral("-cleargpt4key"), std::bind(&clearOpenAIGPT4APIKeyHandler, std::placeholders::_1)},
+        {QStringLiteral("-geminiprokey"), std::bind(&setGeminiProAPIKeyHandler, std::placeholders::_1)},
+        {QStringLiteral("-gpt35key"), std::bind(&setOpenAIGPT35APIKeyHandler, std::placeholders::_1)},
+        {QStringLiteral("-gpt4key"), std::bind(&setOpenAIGPT4APIKeyHandler, std::placeholders::_1)},
+        {QStringLiteral("-transazure35"), std::bind(&translateAzureGPT35Handler, std::placeholders::_1)},
+        {QStringLiteral("-transazure4"), std::bind(&translateAzureGPT4Handler, std::placeholders::_1)},
+        {QStringLiteral("-transgeminipro"), std::bind(&translateGeminiProHandler, std::placeholders::_1)},
+        {QStringLiteral("-transgpt35"), std::bind(&translateOpenAIGPT35Handler, std::placeholders::_1)},
+        {QStringLiteral("-transgpt4"), std::bind(&translateOpenAIGPT4Handler, std::placeholders::_1)},
     };
-    auto iter = cmdMap.find(cmd);
-    if (cmdMap.end() != iter)
+    auto iter = optionsMap.find(option);
+    if (optionsMap.end() != iter)
     {
         auto    func = iter.value();
         QString keyword;
