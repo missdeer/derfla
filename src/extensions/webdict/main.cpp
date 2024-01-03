@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
-        if (!app.installTranslator(&translator))
+        if (!QCoreApplication::installTranslator(&translator))
         {
             qDebug() << "installing translator failed ";
         }

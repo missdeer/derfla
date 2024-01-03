@@ -86,12 +86,12 @@ int main(int argc, char *argv[])
     rl.rlim_cur = qMin(rl.rlim_cur, rl.rlim_max);
     setrlimit(RLIMIT_NOFILE, &rl);
 #endif
-    SharedTools::QtSingleApplication a("Calculator", argc, argv);
+    SharedTools::QtSingleApplication app("Calculator", argc, argv);
 
-    a.setApplicationName("Calculator");
-    a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("ismisv.com");
-    a.setOrganizationName("Derfla");
+    QCoreApplication::setApplicationName("Calculator");
+    QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setOrganizationDomain("ismisv.com");
+    QCoreApplication::setOrganizationName("Derfla");
 
     if (argc < 3)
     {
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
-        if (!a.installTranslator(&translator))
+        if (!QCoreApplication::installTranslator(&translator))
         {
             qDebug() << "installing translator failed ";
         }
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << rootDirPath << " success";
-        if (!a.installTranslator(&qtTranslator))
+        if (!QCoreApplication::installTranslator(&qtTranslator))
         {
             qDebug() << "installing qt translator failed ";
         }
@@ -148,10 +148,14 @@ int main(int argc, char *argv[])
 
     QString expression;
     for (int i = 2; i < argc; i++)
+    {
         expression.append(argv[i]);
+    }
 
     if (!calculate(expression))
+    {
         return 1;
+    }
 
     return 0;
 }

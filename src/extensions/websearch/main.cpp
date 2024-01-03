@@ -111,12 +111,12 @@ int main(int argc, char *argv[])
     rl.rlim_cur = qMin(rl.rlim_cur, rl.rlim_max);
     setrlimit(RLIMIT_NOFILE, &rl);
 #endif
-    SharedTools::QtSingleApplication a("WebSearch", argc, argv);
+    SharedTools::QtSingleApplication app("WebSearch", argc, argv);
 
-    a.setApplicationName("WebSearch");
-    a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("ismisv.com");
-    a.setOrganizationName("Derfla");
+    QCoreApplication::setApplicationName("WebSearch");
+    QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setOrganizationDomain("ismisv.com");
+    QCoreApplication::setOrganizationName("Derfla");
 
     if (argc <= 2)
     {
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
-        if (!a.installTranslator(&translator))
+        if (!QCoreApplication::installTranslator(&translator))
         {
             qDebug() << "installing translator failed ";
         }
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << rootDirPath << " success";
-        if (!a.installTranslator(&qtTranslator))
+        if (!QCoreApplication::installTranslator(&qtTranslator))
         {
             qDebug() << "installing qt translator failed ";
         }
