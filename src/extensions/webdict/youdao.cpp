@@ -85,6 +85,10 @@ void Youdao::onFinished()
     {
         auto        explainObj = explain.toObject();
         auto        explainStr = explainObj["explain"].toString();
+        if (explainStr.isEmpty())
+        {
+            continue;
+        }
         auto        entryStr   = explainObj["entry"].toString();
         QVariantMap varMap;
         varMap.insert("title", explainStr);

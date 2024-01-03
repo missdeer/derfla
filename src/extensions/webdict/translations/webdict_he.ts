@@ -4,7 +4,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../youdao.cpp" line="92"/>
+        <location filename="../youdao.cpp" line="96"/>
         <source>[Explain] %1 [Entry] %2</source>
         <translation type="unfinished"></translation>
     </message>
