@@ -17,7 +17,7 @@ BEGIN
             VALUE "FileDescription", "Donate Derfla"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "Donate Derfla"
-            VALUE "LegalCopyright", "Copyright (C) 2016 - 2022 missdeer@gmail.com. All rights reserved."
+            VALUE "LegalCopyright", "Copyright (C) 2016 - 2024 missdeer@gmail.com. All rights reserved."
             VALUE "OriginalFilename", "donate.exe"
             VALUE "ProductName", "Donate Derfla"
             VALUE "ProductVersion", "1.0.0.1"

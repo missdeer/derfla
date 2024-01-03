@@ -17,7 +17,7 @@ BEGIN
             VALUE "FileDescription", "DerflaUtil"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "DerflaUtil"
-            VALUE "LegalCopyright", "Copyright (C) 2016 - 2022 missdeer@gmail.com. All rights reserved."
+            VALUE "LegalCopyright", "Copyright (C) 2016 - 2024 missdeer@gmail.com. All rights reserved."
             VALUE "OriginalFilename", "DerflaUtil.dll"
             VALUE "ProductName", "DerflaUtil"
             VALUE "ProductVersion", "1.0.0.1"

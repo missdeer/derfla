@@ -17,7 +17,7 @@ BEGIN
             VALUE "FileDescription", "WebSearch - Derfla extension"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "WebSearch"
-            VALUE "LegalCopyright", "Copyright (C) 2018 - 2022 missdeer@gmail.com. All rights reserved."
+            VALUE "LegalCopyright", "Copyright (C) 2018 - 2024 missdeer@gmail.com. All rights reserved."
             VALUE "OriginalFilename", "WebSearch.exe"
             VALUE "ProductName", "WebSearch"
             VALUE "ProductVersion", "1.0.0.1"

@@ -17,7 +17,7 @@ BEGIN
             VALUE "FileDescription", "Derfla - Run application/script as you want!"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "Derfla"
-            VALUE "LegalCopyright", "Copyright (C) 2016 - 2022 missdeer@gmail.com. All rights reserved."
+            VALUE "LegalCopyright", "Copyright (C) 2016 - 2024 missdeer@gmail.com. All rights reserved."
             VALUE "OriginalFilename", "Derfla.exe"
             VALUE "ProductName", "Derfla"
             VALUE "ProductVersion", "1.0.0.1"

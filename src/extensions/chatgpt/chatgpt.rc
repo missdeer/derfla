@@ -17,7 +17,7 @@ BEGIN
             VALUE "FileDescription", "ChatGPT - Derfla extension"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "ChatGPT"
-            VALUE "LegalCopyright", "Copyright (C) 2023 - 2024 missdeer@gmail.com. All rights reserved."
+            VALUE "LegalCopyright", "Copyright (C) 2024 - 2024 missdeer@gmail.com. All rights reserved."
             VALUE "OriginalFilename", "ChatGPT.exe"
             VALUE "ProductName", "ChatGPT"
             VALUE "ProductVersion", "1.0.0.1"

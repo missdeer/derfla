@@ -17,7 +17,7 @@ BEGIN
             VALUE "FileDescription", "WebDict - Derfla extension"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "WebDict"
-            VALUE "LegalCopyright", "Copyright (C) 2018 - 2022 missdeer@gmail.com. All rights reserved."
+            VALUE "LegalCopyright", "Copyright (C) 2018 - 2024 missdeer@gmail.com. All rights reserved."
             VALUE "OriginalFilename", "WebDict.exe"
             VALUE "ProductName", "WebDict"
             VALUE "ProductVersion", "1.0.0.1"
