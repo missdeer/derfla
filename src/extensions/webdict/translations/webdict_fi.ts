@@ -4,18 +4,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../youdao.cpp" line="88"/>
-        <source>[Translation] </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../youdao.cpp" line="101"/>
-        <source>[Explain] </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../youdao.cpp" line="122"/>
-        <source>[Web] </source>
+        <location filename="../youdao.cpp" line="92"/>
+        <source>[Explain] %1 [Entry] %2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
