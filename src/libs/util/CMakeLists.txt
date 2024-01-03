@@ -23,7 +23,7 @@ IF (Qt6_FOUND)
         find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 ENDIF(Qt6_FOUND)
 
-find_package(OpenMP)
+find_package(OpenMP REQUIRED)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
@@ -146,9 +146,14 @@ endif()
 target_link_libraries(${PROJECT_NAME} 
         lua
         sqlite3
-        OpenMP::OpenMP_CXX
         Qt${QT_VERSION_MAJOR}::Widgets
         )
+
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} omp)
+else()
+    target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
+endif()
 
 
 if(Qt6_FOUND)

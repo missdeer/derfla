@@ -19,7 +19,7 @@ IF (Qt6_FOUND)
         find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 ENDIF(Qt6_FOUND)
 
-find_package(OpenMP)
+find_package(OpenMP REQUIRED)
 
 find_package(Boost 1.79.0)
 if(Boost_FOUND)
@@ -197,9 +197,15 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE
         qtsingleapplication
         qtlockedfile
         DerflaUtil
-        OpenMP::OpenMP_CXX
         Qt${QT_VERSION_MAJOR}::Xml
         )
+
+if (APPLE)
+  target_link_libraries(${PROJECT_NAME} PRIVATE omp)
+else()
+  target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
+endif()
+
 set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON
                                                  MACOSX_BUNDLE ON)
 

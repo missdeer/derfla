@@ -40,8 +40,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/${ARCH}"
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/${ARCH}"
 )# .dll .dylib .so
 
-set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-
 option(AVX2 "Target CPU does support AVX2")
 option(MACOMP "Enables OpenMP on macOS")
 option(QT5 "Build with Qt5")
@@ -53,6 +51,18 @@ message("Compiler ID is: ${CURRENT_COMPILER_ID}")
 if(APPLE)
     if ("${CURRENT_COMPILER_ID}"  STREQUAL "AppleClang")
         message(FATAL_ERROR "AppleClang doesn't support OpenMP, please use a custom built LLVM/Clang.")
+    endif()
+    if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+        set(OpenMP_C "${CMAKE_C_COMPILER}")
+        set(OpenMP_C_FLAGS "-fopenmp=libomp -Wno-unused-command-line-argument")
+        set(OpenMP_C_LIB_NAMES "libomp")
+        set(OpenMP_libomp_LIBRARY ${OpenMP_C_LIB_NAMES})
+    endif()
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+      set(OpenMP_CXX "${CMAKE_CXX_COMPILER}")
+      set(OpenMP_CXX_FLAGS "-fopenmp=libomp -Wno-unused-command-line-argument")
+      set(OpenMP_CXX_LIB_NAMES "libomp")
+      set(OpenMP_libomp_LIBRARY ${OpenMP_CXX_LIB_NAMES})
     endif()
 endif()
 
