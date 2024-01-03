@@ -54,7 +54,7 @@ static const char* DefaultColorScheme = "Terminal";
 QString Settings::getConfigPath()
 {
 #ifdef SPEEDCRUNCH_PORTABLE
-    return QApplication::applicationDirPath();
+    return QCoreApplication::applicationDirPath();
 #elif defined(Q_OS_WIN)
     // On Windows, use AppData/Roaming/SpeedCrunch, the same path as getDataPath.
     return getDataPath();
@@ -70,7 +70,7 @@ QString Settings::getConfigPath()
 QString Settings::getDataPath()
 {
 #ifdef SPEEDCRUNCH_PORTABLE
-    return QApplication::applicationDirPath();
+    return QCoreApplication::applicationDirPath();
 #elif QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 #elif defined(Q_OS_WIN)
@@ -100,7 +100,7 @@ QString Settings::getDataPath()
 QString Settings::getCachePath()
 {
 #ifdef SPEEDCRUNCH_PORTABLE
-    return QApplication::applicationDirPath();
+    return QCoreApplication::applicationDirPath();
 #else
     return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 #endif

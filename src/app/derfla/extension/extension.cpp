@@ -302,11 +302,11 @@ QProcessEnvironment Extension::getProcessEnvironment()
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
 #if defined(Q_OS_WIN)
-    auto pathEnv = QDir::toNativeSeparators(QApplication::applicationDirPath()) + ";" + qgetenv("PATH");
+    auto pathEnv = QDir::toNativeSeparators(QCoreApplication::applicationDirPath()) + ";" + qgetenv("PATH");
     env.insert("PATH", pathEnv.toUtf8()); // so that extensions can use Derfla main executable's Qt binaries
-    env.insert("QT_PLUGIN_PATH", QDir::toNativeSeparators(QApplication::applicationDirPath()).toUtf8());
+    env.insert("QT_PLUGIN_PATH", QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).toUtf8());
 #elif defined(Q_OS_MAC)
-    QDir dir(QApplication::applicationDirPath());
+    QDir dir(QCoreApplication::applicationDirPath());
     dir.cdUp();
     dir.cd("Libs");
     auto pathEnv = dir.absolutePath() + ":" + qgetenv("DYLD_LIBRARY_PATH");

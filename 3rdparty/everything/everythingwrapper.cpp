@@ -142,7 +142,7 @@ bool QuickGetFilesByFileName(bool regexpEnabled, const QString &pattern, QString
                                   QObject::tr("Notice"),
                                   QObject::tr("Everything is not running, do you want to launch the Everything application?")) == QMessageBox::Yes)
         {
-            QString everythingFilePath = QApplication::applicationDirPath() % "/Everything.exe";
+            QString everythingFilePath = QCoreApplication::applicationDirPath() % "/Everything.exe";
             if (!QFile::exists(everythingFilePath))
             {
                 QMessageBox::warning(nullptr,
