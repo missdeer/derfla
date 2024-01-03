@@ -170,15 +170,6 @@ jobs:
             mkspec: win32-g++
             qt_build: qt5
             output_dir: x86_64
-          - qt_arch: mingw32_qt5-gcc
-            mingw_arch: MINGW32
-            mingw_prefix: mingw-w64-i686
-            toolchains: gcc
-            c: gcc
-            cxx: g++
-            mkspec: win32-g++
-            qt_build: qt5
-            output_dir: x86
           - qt_arch: clang64_qt5-clang
             mingw_arch: CLANG64 
             mingw_prefix: mingw-w64-clang-x86_64
@@ -188,15 +179,6 @@ jobs:
             mkspec: win32-clang-g++
             qt_build: qt5
             output_dir: x86_64
-          - qt_arch: clang32_qt5-clang
-            mingw_arch: CLANG32
-            mingw_prefix: mingw-w64-clang-i686
-            toolchains: clang
-            c: clang
-            cxx: clang++
-            mkspec: win32-clang-g++
-            qt_build: qt5
-            output_dir: x86
           - qt_arch: mingw64_qt6-gcc
             mingw_arch: MINGW64 
             mingw_prefix: mingw-w64-x86_64
@@ -265,7 +247,7 @@ jobs:
           mkdir build
           cd build
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja ..
-          ninja
+          env PATH=$PATH:/${{ matrix.mingw_arch }}/bin cmake --build . --parallel --verbose
           cd ../bin/${{ matrix.output_dir }}
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe Derfla.exe
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe DerflaUtil.dll
