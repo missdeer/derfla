@@ -18,7 +18,7 @@ jobs:
           - qt_ver: 5.15.2
             qt_arch: clang_64
             qt_modules: ""
-          - qt_ver: 6.6.0
+          - qt_ver: 6.6.1
             qt_arch: clang_64
             qt_modules: "qt5compat qtimageformats"
     env:
@@ -42,7 +42,7 @@ jobs:
           
       - name: build macos
         run: |
-          brew install ninja llvm gsed
+          brew install ninja llvm gsed libomp
           mkdir build
           cd build
           cmake -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ ..
