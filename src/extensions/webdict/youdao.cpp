@@ -12,7 +12,6 @@ Youdao::Youdao(QObject *parent) : QObject(parent) {}
 
 void Youdao::query(const QString &keyword)
 {
-    // http://fanyi.youdao.com/openapi.do?keyfrom=f2ec-org&key=1787962561&type=data&doctype=json&version=1.1&q=
     // https://dict.youdao.com/suggest?num=5&ver=3.0&doctype=json&cache=false&le=en&q=
     QUrl      url("https://dict.youdao.com/suggest");
     QUrlQuery query;
@@ -42,7 +41,7 @@ void Youdao::query(const QString &keyword)
 
 void Youdao::onFinished()
 {
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    auto *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT(reply);
     reply->deleteLater();
     m_content.append(reply->readAll());

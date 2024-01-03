@@ -7,7 +7,7 @@ else
 	executable= "webdict"
 end
 description= "Query web dictionary"
-prefix={"dict", "yd", "youdao"}
+prefix={"dict", "yd", "youdao", "dl", "deepl"}
 waitIconPath= ""
 waitTitle= "Querying..."
 waitDescription= "Querying on web dictionary..."

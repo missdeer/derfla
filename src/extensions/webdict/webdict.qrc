@@ -3,5 +3,6 @@
         <file>rc/images/youdao.png</file>
         <file>rc/images/bing.png</file>
         <file>rc/images/iciba.png</file>
+        <file>rc/images/deepl.png</file>
     </qresource>
 </RCC>

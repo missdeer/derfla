@@ -4,8 +4,13 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../youdao.cpp" line="96"/>
+        <location filename="../youdao.cpp" line="95"/>
         <source>[Explain] %1 [Entry] %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../deepl.cpp" line="157"/>
+        <source>[Explain] %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

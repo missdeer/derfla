@@ -5,6 +5,7 @@
 #include "qtsingleapplication.h"
 #include "util.h"
 #include "youdao.h"
+#include "deepl.h"
 
 int main(int argc, char *argv[])
 {
@@ -99,6 +100,12 @@ int main(int argc, char *argv[])
     {
         Youdao yd;
         yd.query(input.join(' '));
+        return QCoreApplication::exec();
+    }
+    else if (cmd == "dl" || cmd == "deepl")
+    {
+        DeepL dl;
+        dl.query(input.join(' '));
         return QCoreApplication::exec();
     }
 

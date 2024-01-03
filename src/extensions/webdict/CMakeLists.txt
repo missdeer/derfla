@@ -38,15 +38,16 @@ add_compile_definitions(UTIL_LIBRARY STATIC_LINKED)
 if(APPLE)
   add_compile_definitions(LUA_USE_MACOSX)
 endif(APPLE)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-set(webdict_headers ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
-                    ${CMAKE_CURRENT_SOURCE_DIR}/youdao.h)
+set(webdict_headers stdafx.h
+                    youdao.h
+                    deepl.h)
 
-set(webdict_src ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/youdao.cpp)
+set(webdict_src main.cpp
+                youdao.cpp
+                deepl.cpp)
 
-qt_add_resources(qrcs ${CMAKE_CURRENT_SOURCE_DIR}/webdict.qrc)
+qt_add_resources(qrcs webdict.qrc)
 
 set(TS_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/translations/webdict_zh_CN.ts
