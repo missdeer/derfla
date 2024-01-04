@@ -2,10 +2,11 @@
 
 #include <QIcon>
 
+#include "bingdict.h"
+#include "deepl.h"
 #include "qtsingleapplication.h"
 #include "util.h"
 #include "youdao.h"
-#include "deepl.h"
 
 int main(int argc, char *argv[])
 {
@@ -106,6 +107,12 @@ int main(int argc, char *argv[])
     {
         DeepL dl;
         dl.query(input.join(' '));
+        return QCoreApplication::exec();
+    }
+    else if (cmd == "bing" || cmd == "bingdict" || cmd == "bd")
+    {
+        BingDict bing;
+        bing.query(input.join(' '));
         return QCoreApplication::exec();
     }
 
