@@ -5,6 +5,7 @@
 #include "bingdict.h"
 #include "deepl.h"
 #include "qtsingleapplication.h"
+#include "responser.h"
 #include "util.h"
 #include "youdao.h"
 
@@ -48,7 +49,7 @@ int main(int argc, char *argv[])
     QString rootDirPath   = QCoreApplication::applicationDirPath() + "/../../Resources/translations";
     QString localeDirPath = QCoreApplication::applicationDirPath() + "/translations";
 #else
-    QString rootDirPath = QCoreApplication::applicationDirPath() + "/../../translations";
+    QString rootDirPath   = QCoreApplication::applicationDirPath() + "/../../translations";
     QString localeDirPath = QCoreApplication::applicationDirPath() + "/translations";
 #endif
 
@@ -97,24 +98,37 @@ int main(int argc, char *argv[])
         input.append(QString(argv[i]));
     }
 #endif
+    Responser             resp;
+    QNetworkAccessManager nam;
+    Youdao                yd(&nam);
     if (cmd == "dict" || cmd == "yd" || cmd == "youdao")
     {
-        Youdao yd;
+        resp.increaseService();
+        Responser::connect(&yd, &Youdao::receivedExplain, &resp, &Responser::receivedExplain);
+        Responser::connect(&yd, &Youdao::emptyExplain, &resp, &Responser::emptyExplain);
         yd.query(input.join(' '));
-        return QCoreApplication::exec();
     }
-    else if (cmd == "dl" || cmd == "deepl")
+    DeepL dl(&nam);
+    if (cmd == "dict" || cmd == "dl" || cmd == "deepl")
     {
-        DeepL dl;
+        resp.increaseService();
+        Responser::connect(&dl, &DeepL::receivedExplain, &resp, &Responser::receivedExplain);
+        Responser::connect(&dl, &DeepL::emptyExplain, &resp, &Responser::emptyExplain);
         dl.query(input.join(' '));
-        return QCoreApplication::exec();
     }
-    else if (cmd == "bing" || cmd == "bingdict" || cmd == "bd")
+    BingDict bing(&nam);
+    if (cmd == "dict" || cmd == "bing" || cmd == "bingdict" || cmd == "bd")
     {
-        BingDict bing;
+        resp.increaseService();
+        Responser::connect(&bing, &BingDict::receivedExplain, &resp, &Responser::receivedExplain);
+        Responser::connect(&bing, &BingDict::emptyExplain, &resp, &Responser::emptyExplain);
         bing.query(input.join(' '));
-        return QCoreApplication::exec();
     }
 
-    return -1;
+    if (!resp.hasService())
+    {
+        return -1;
+    }
+
+    return QCoreApplication::exec();
 }

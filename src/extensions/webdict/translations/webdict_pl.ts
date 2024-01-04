@@ -4,14 +4,14 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../youdao.cpp" line="95"/>
+        <location filename="../youdao.cpp" line="94"/>
         <source>[Explain] %1 [Entry] %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../bingdict.cpp" line="87"/>
-        <location filename="../bingdict.cpp" line="102"/>
-        <location filename="../deepl.cpp" line="204"/>
+        <location filename="../bingdict.cpp" line="86"/>
+        <location filename="../bingdict.cpp" line="101"/>
+        <location filename="../deepl.cpp" line="206"/>
         <source>[Explain] %1</source>
         <translation type="unfinished"></translation>
     </message>

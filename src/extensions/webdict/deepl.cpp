@@ -43,7 +43,7 @@ qint64 get_timestamp(int iCount)
     return ts;
 }
 
-DeepL::DeepL(QObject *parent) : QObject(parent) {}
+DeepL::DeepL(QNetworkAccessManager *nam, QObject *parent) : QObject(parent), m_nam(nam) {}
 
 void DeepL::query(const QString &keyword)
 {
@@ -92,7 +92,7 @@ void DeepL::query(const QString &keyword)
     // SK: Slovakian
     // SL: Slovenian
     // SV: Swedish
-    QUrl      url("https://www2.deepl.com/jsonrpc");
+    QUrl            url("https://www2.deepl.com/jsonrpc");
     QNetworkRequest req(url);
     req.setAttribute(QNetworkRequest::Http2AllowedAttribute, true);
 
@@ -110,7 +110,7 @@ void DeepL::query(const QString &keyword)
     params.insert("texts", textsArray);
     params.insert("timestamp", get_timestamp(get_i_count(keyword)));
 
-    auto id = generateNextId();
+    auto        id = generateNextId();
     QJsonObject json;
     json.insert("jsonrpc", "2.0");
     json.insert("method", "LMT_handle_texts");
@@ -140,11 +140,11 @@ void DeepL::query(const QString &keyword)
     req.setRawHeader("x-app-build", "510265");
     req.setRawHeader("x-app-version", "2.9.1");
     req.setRawHeader("Connection", "keep-alive");
-    QNetworkReply *reply = m_nam.post(req, postData);
+    QNetworkReply *reply = m_nam->post(req, postData);
 
     connect(reply, SIGNAL(finished()), this, SLOT(onFinished()));
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     connect(reply, &QNetworkReply::errorOccurred, this, &DeepL::onError);
 #else
@@ -162,7 +162,7 @@ void DeepL::onFinished()
     QJsonDocument doc = QJsonDocument::fromJson(m_content);
     if (!doc.isObject())
     {
-        QCoreApplication::exit(1);
+        emit emptyExplain();
         return;
     }
 
@@ -183,8 +183,10 @@ void DeepL::onFinished()
     }
 
     auto texts = resultObj["texts"].toArray();
-    if (texts.isEmpty()) {
-        QCoreApplication::exit(-1);
+    if (texts.isEmpty())
+    {
+        emit emptyExplain();
+        return;
     }
     auto textsZero         = texts.at(0);
     auto textObj           = textsZero.toObject();
@@ -210,15 +212,7 @@ void DeepL::onFinished()
         arr.append(QJsonObject::fromVariantMap(varMap));
     }
 
-    docResp.setArray(arr);
-    QTextStream ts(stdout);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    ts.setCodec("UTF-8");
-#else
-    ts.setEncoding(QStringConverter::Utf8);
-#endif
-    ts << QString(docResp.toJson(QJsonDocument::Compact));
-    QCoreApplication::exit(0);
+    emit receivedExplain(arr);
 }
 
 void DeepL::onError(QNetworkReply::NetworkError e)
@@ -226,7 +220,6 @@ void DeepL::onError(QNetworkReply::NetworkError e)
     auto *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT(reply);
     qDebug() << e << reply->errorString();
-    QCoreApplication::exit(1);
 }
 
 void DeepL::onReadyRead()

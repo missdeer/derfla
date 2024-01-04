@@ -42,12 +42,14 @@ endif(APPLE)
 set(webdict_headers stdafx.h
                     youdao.h
                     deepl.h
-                    bingdict.h)
+                    bingdict.h
+                    responser.h)
 
 set(webdict_src main.cpp
                 youdao.cpp
                 deepl.cpp
-                bingdict.cpp)
+                bingdict.cpp
+                responser.cpp)
 
 qt_add_resources(qrcs webdict.qrc)
 

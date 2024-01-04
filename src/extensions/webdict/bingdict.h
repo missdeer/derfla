@@ -9,9 +9,11 @@ class BingDict : public QObject
 {
     Q_OBJECT
 public:
-    explicit BingDict(QObject *parent = nullptr);
+    explicit BingDict(QNetworkAccessManager* nam, QObject *parent = nullptr);
     void query(const QString &keyword);
 signals:
+    void receivedExplain(QJsonArray );
+    void emptyExplain();
 
 private slots:
     void onFinished();
@@ -19,7 +21,7 @@ private slots:
     void onReadyRead();
 
 private:
-    QNetworkAccessManager m_nam;
+    QNetworkAccessManager *m_nam;
     QByteArray            m_content;
 };
 

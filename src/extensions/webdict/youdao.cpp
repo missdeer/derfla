@@ -7,8 +7,7 @@
 
 #include "youdao.h"
 
-
-Youdao::Youdao(QObject *parent) : QObject(parent) {}
+Youdao::Youdao(QNetworkAccessManager *nam, QObject *parent) : QObject(parent), m_nam(nam) {}
 
 void Youdao::query(const QString &keyword)
 {
@@ -27,11 +26,11 @@ void Youdao::query(const QString &keyword)
     QNetworkRequest req(url);
     req.setAttribute(QNetworkRequest::Http2AllowedAttribute, true);
 
-    QNetworkReply *reply = m_nam.get(req);
+    QNetworkReply *reply = m_nam->get(req);
 
     connect(reply, SIGNAL(finished()), this, SLOT(onFinished()));
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     connect(reply, &QNetworkReply::errorOccurred, this, &Youdao::onError);
 #else
@@ -49,7 +48,7 @@ void Youdao::onFinished()
     QJsonDocument doc = QJsonDocument::fromJson(m_content);
     if (!doc.isObject())
     {
-        QCoreApplication::exit(1);
+        emit emptyExplain();
         return;
     }
 
@@ -58,7 +57,7 @@ void Youdao::onFinished()
     auto errorCode = resultObj["code"].toInt();
     if (errorCode != 200)
     {
-        QCoreApplication::exit(errorCode);
+        emit emptyExplain();
         return;
     }
 
@@ -82,13 +81,13 @@ void Youdao::onFinished()
     auto explains = dataObj["entries"].toArray();
     for (auto explain : explains)
     {
-        auto        explainObj = explain.toObject();
-        auto        explainStr = explainObj["explain"].toString();
+        auto explainObj = explain.toObject();
+        auto explainStr = explainObj["explain"].toString();
         if (explainStr.isEmpty())
         {
             continue;
         }
-        auto        entryStr   = explainObj["entry"].toString();
+        auto        entryStr = explainObj["entry"].toString();
         QVariantMap varMap;
         varMap.insert("title", explainStr);
         varMap.insert("target", explainStr);
@@ -100,16 +99,7 @@ void Youdao::onFinished()
         }
         arr.append(QJsonObject::fromVariantMap(varMap));
     }
-
-    docResp.setArray(arr);
-    QTextStream ts(stdout);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    ts.setCodec("UTF-8");
-#else
-    ts.setEncoding(QStringConverter::Utf8);
-#endif
-    ts << QString(docResp.toJson(QJsonDocument::Compact));
-    QCoreApplication::exit(0);
+    emit receivedExplain(arr);
 }
 
 void Youdao::onError(QNetworkReply::NetworkError e)
@@ -117,7 +107,6 @@ void Youdao::onError(QNetworkReply::NetworkError e)
     auto *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT(reply);
     qDebug() << e << reply->errorString();
-    QCoreApplication::exit(1);
 }
 
 void Youdao::onReadyRead()

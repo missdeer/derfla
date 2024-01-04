@@ -7,8 +7,7 @@
 
 #include "bingdict.h"
 
-
-BingDict::BingDict(QObject *parent) : QObject(parent) {}
+BingDict::BingDict(QNetworkAccessManager *nam, QObject *parent) : QObject(parent), m_nam(nam) {}
 
 void BingDict::query(const QString &keyword)
 {
@@ -22,11 +21,11 @@ void BingDict::query(const QString &keyword)
     QNetworkRequest req(url);
     req.setAttribute(QNetworkRequest::Http2AllowedAttribute, true);
 
-    QNetworkReply *reply = m_nam.get(req);
+    QNetworkReply *reply = m_nam->get(req);
 
     connect(reply, SIGNAL(finished()), this, SLOT(onFinished()));
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     connect(reply, &QNetworkReply::errorOccurred, this, &BingDict::onError);
 #else
@@ -69,13 +68,13 @@ void BingDict::onFinished()
         int                nLastIndex = 0;
         QRegularExpression regex(R"(((美|英)\[[^\]]+\])，)");
         auto               iter = regex.globalMatch(definition);
-        QStringList pronouces;
+        QStringList        pronouces;
         while (iter.hasNext())
         {
             auto    match      = iter.next();
             QString definition = match.captured(1);
             pronouces.push_back(definition);
-            nLastIndex         = match.capturedEnd(0);
+            nLastIndex = match.capturedEnd(0);
         }
         definition.remove(0, nLastIndex);
 
@@ -107,17 +106,11 @@ void BingDict::onFinished()
             }
             arr.append(QJsonObject::fromVariantMap(varMap));
         }
-        docResp.setArray(arr);
-        QTextStream ts(stdout);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        ts.setCodec("UTF-8");
-#else
-        ts.setEncoding(QStringConverter::Utf8);
-#endif
-        ts << QString(docResp.toJson(QJsonDocument::Compact));
+        emit receivedExplain(arr);
+        return;
     }
 
-    QCoreApplication::exit(0);
+    emit emptyExplain();
 }
 
 void BingDict::onError(QNetworkReply::NetworkError e)
@@ -125,7 +118,6 @@ void BingDict::onError(QNetworkReply::NetworkError e)
     auto *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT(reply);
     qDebug() << e << reply->errorString();
-    QCoreApplication::exit(1);
 }
 
 void BingDict::onReadyRead()
