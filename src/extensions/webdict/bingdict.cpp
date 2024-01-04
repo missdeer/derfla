@@ -41,11 +41,12 @@ void BingDict::onFinished()
     reply->deleteLater();
     m_content.append(reply->readAll());
 
-    QRegularExpression      regex("<meta name=\"description\" content=\"必应词典为您提供.+的释义，(.+)\" ?/>");
+    QRegularExpression      regex("<meta name=\"description\" content=\"必应词典为您提供(.+)的释义，(.+)\" ?/>");
     QRegularExpressionMatch match = regex.match(m_content);
     if (match.hasMatch())
     {
-        QString definition = match.captured(1);
+        QString keyword    = match.captured(1);
+        QString definition = match.captured(2);
         int     index      = definition.indexOf(QRegularExpression(" *\\\" */>"));
         if (index > 0)
         {
@@ -83,7 +84,7 @@ void BingDict::onFinished()
             QVariantMap varMap;
             varMap.insert("title", pronouces.join(QStringLiteral(", ")));
             varMap.insert("target", pronouces.join(QStringLiteral(", ")));
-            // varMap.insert("description", QObject::tr("[Explain] %1 [Entry] %2").arg(query, entryStr));
+            varMap.insert("description", QObject::tr("[Explain] %1").arg(keyword));
             varMap.insert("actionType", "copyText");
             if (!iconData.isEmpty())
             {
@@ -93,13 +94,12 @@ void BingDict::onFinished()
         }
         QStringList definitions = definition.split("； ");
 
-
         for (const auto &definition : definitions)
         {
             QVariantMap varMap;
             varMap.insert("title", definition);
             varMap.insert("target", definition);
-            // varMap.insert("description", QObject::tr("[Explain] %1 [Entry] %2").arg(query, entryStr));
+            varMap.insert("description", QObject::tr("[Explain] %1").arg(keyword));
             varMap.insert("actionType", "copyText");
             if (!iconData.isEmpty())
             {

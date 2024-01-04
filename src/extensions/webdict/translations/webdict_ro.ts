@@ -9,6 +9,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../bingdict.cpp" line="87"/>
+        <location filename="../bingdict.cpp" line="102"/>
         <location filename="../deepl.cpp" line="204"/>
         <source>[Explain] %1</source>
         <translation type="unfinished"></translation>
