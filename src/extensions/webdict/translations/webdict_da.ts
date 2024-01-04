@@ -9,7 +9,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../deepl.cpp" line="157"/>
+        <location filename="../deepl.cpp" line="204"/>
         <source>[Explain] %1</source>
         <translation type="unfinished"></translation>
     </message>

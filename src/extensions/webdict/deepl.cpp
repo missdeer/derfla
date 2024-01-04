@@ -1,5 +1,10 @@
 #include "stdafx.h"
 
+#include <chrono>
+#include <cmath>
+#include <random>
+
+#include <QDateTime>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QUrl>
@@ -7,17 +12,23 @@
 
 #include "deepl.h"
 
-#include <QDateTime>
-#include <QRandomGenerator>
+int64_t generateNextId()
+{
+    auto            seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::mt19937_64 randProvider(seed);
+
+    int64_t randomNumber = randProvider();
+
+    int64_t sqrtValue = static_cast<int64_t>(std::sqrt(10000));
+
+    int64_t nextId = sqrtValue * randomNumber;
+
+    return nextId;
+}
 
 int get_i_count(const QString &translateText)
 {
     return translateText.count('i');
-}
-
-int getRandomNumber()
-{
-    return QRandomGenerator::global()->bounded(100000, 109999) * 1000;
 }
 
 qint64 get_timestamp(int iCount)
@@ -25,7 +36,7 @@ qint64 get_timestamp(int iCount)
     qint64 ts = QDateTime::currentMSecsSinceEpoch();
     if (iCount != 0)
     {
-        iCount += 1;
+        iCount++;
         return ts - ts % iCount + iCount;
     }
 
@@ -56,10 +67,34 @@ void DeepL::query(const QString &keyword)
     //         }
     //     }'
 
+    // Translate request data. support lang code using deepL api
+    // DE: German
+    // EN: English
+    // ES: Spanish
+    // FR: French
+    // IT: Italian
+    // JA: Japanese
+    // NL: Dutch
+    // PL: Polish
+    // PT: Portuguese
+    // RU: Russian
+    // ZH: Chinese
+    // BG: Bulgarian
+    // CS: Czech
+    // DA: Danish
+    // EL: Greek
+    // ET: Estonian
+    // FI: Finnish
+    // HU: Hungarian
+    // LT: Lithuanian
+    // LV: Latvian
+    // RO: Romanian
+    // SK: Slovakian
+    // SL: Slovenian
+    // SV: Swedish
     QUrl      url("https://www2.deepl.com/jsonrpc");
     QNetworkRequest req(url);
     req.setAttribute(QNetworkRequest::Http2AllowedAttribute, true);
-    req.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     QJsonObject params;
     params.insert("splitting", "newlines");
@@ -75,7 +110,7 @@ void DeepL::query(const QString &keyword)
     params.insert("texts", textsArray);
     params.insert("timestamp", get_timestamp(get_i_count(keyword)));
 
-    auto id = getRandomNumber();
+    auto id = generateNextId();
     QJsonObject json;
     json.insert("jsonrpc", "2.0");
     json.insert("method", "LMT_handle_texts");
@@ -93,6 +128,18 @@ void DeepL::query(const QString &keyword)
         postData = postData.replace(R"("method":")", R"("method": ")");
     }
 
+    req.setHeader(QNetworkRequest::ContentLengthHeader, postData.length());
+    req.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    req.setRawHeader("Referer", "https://www.deepl.com");
+    req.setRawHeader("Accept", "*/*");
+    req.setRawHeader("x-app-os-name", "iOS");
+    req.setRawHeader("x-app-os-version", "16.3.0");
+    req.setRawHeader("Accept-Language", "en-US,en;q=0.9");
+    req.setRawHeader("x-app-device", "iPhone13,2");
+    req.setRawHeader("User-Agent", "DeepL-iOS/2.9.1 iOS 16.3.0 (iPhone13,2)");
+    req.setRawHeader("x-app-build", "510265");
+    req.setRawHeader("x-app-version", "2.9.1");
+    req.setRawHeader("Connection", "keep-alive");
     QNetworkReply *reply = m_nam.post(req, postData);
 
     connect(reply, SIGNAL(finished()), this, SLOT(onFinished()));
