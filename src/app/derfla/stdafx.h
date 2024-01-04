@@ -76,7 +76,7 @@
 #    if defined(Q_OS_WIN)
 #        define globalDefaultFontFamily "Microsoft YaHei"
 #    elif defined(Q_OS_MAC)
-#        define globalDefaultFontFamily "PingFang CS"
+#        define globalDefaultFontFamily "PingFang SC"
 #    else
 #        define globalDefaultFontFamily "DejaVu Sans"
 #    endif
