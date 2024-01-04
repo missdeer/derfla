@@ -8,8 +8,8 @@ class ThemeManager
 {
 public:
     ThemeManager();
-    AlfredTheme *applyTheme(const QString &theme);
     ~ThemeManager();
+    AlfredTheme *loadThemeFromFile(const QString &theme);
 
 private:
     AlfredTheme *m_theme = nullptr;

@@ -26,7 +26,7 @@
 #include "ui_alfredwidget.h"
 
 #if defined(Q_OS_MAC)
-#include "darkmode.h"
+#    include "darkmode.h"
 #endif
 
 static const int rowSize  = 51;
@@ -38,59 +38,59 @@ AlfredWidget::AlfredWidget(QWidget *parent) : CommonWidget(parent), ui(new Ui::W
 
     setUpTheme();
 
-    plainTextEdit = new PlainText(ui->groupBox);
-    plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
+    m_plainTextEdit = new PlainText(ui->groupBox);
+    m_plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
 
     QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Fixed);
     sizePolicy1.setHorizontalStretch(0);
     sizePolicy1.setVerticalStretch(0);
-    sizePolicy1.setHeightForWidth(plainTextEdit->sizePolicy().hasHeightForWidth());
+    sizePolicy1.setHeightForWidth(m_plainTextEdit->sizePolicy().hasHeightForWidth());
 
-    plainTextEdit->setSizePolicy(sizePolicy1);
-    plainTextEdit->setMinimumSize(theme->dimensions());
-    plainTextEdit->setMaximumSize(QSize(2048, theme->dimensions().height())); // custom theme dimensions
+    m_plainTextEdit->setSizePolicy(sizePolicy1);
+    m_plainTextEdit->setMinimumSize(m_theme->dimensions());
+    m_plainTextEdit->setMaximumSize(QSize(2048, m_theme->dimensions().height())); // custom theme dimensions
 
     QFont fontInput;
     fontInput.setFamily(globalDefaultFontFamily);
-    fontInput.setPointSize(theme->fontSize()); // custom theme font size
+    fontInput.setPointSize(m_theme->fontSize()); // custom theme font size
 
-    plainTextEdit->setFont(fontInput);
-    plainTextEdit->setFocusPolicy(Qt::StrongFocus);
-    plainTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    plainTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    plainTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    plainTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_plainTextEdit->setFont(fontInput);
+    m_plainTextEdit->setFocusPolicy(Qt::StrongFocus);
+    m_plainTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_plainTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_plainTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_plainTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    ui->formLayout->setWidget(0, QFormLayout::SpanningRole, plainTextEdit);
+    ui->formLayout->setWidget(0, QFormLayout::SpanningRole, m_plainTextEdit);
 
-    listWidget                = new AlfredListWidget(ui->groupBox);
-    plainTextEdit->listWidget = listWidget;
-    listWidget->setObjectName(QStringLiteral("listWidget"));
+    m_listWidget                = new AlfredListWidget(ui->groupBox);
+    m_plainTextEdit->listWidget = m_listWidget;
+    m_listWidget->setObjectName(QStringLiteral("listWidget"));
 
     QFont fontCandidate;
     fontCandidate.setPointSize(20);
 
-    listWidget->setFont(fontCandidate);
-    listWidget->setFocusPolicy(Qt::NoFocus);
+    m_listWidget->setFont(fontCandidate);
+    m_listWidget->setFocusPolicy(Qt::NoFocus);
 
-    ui->formLayout->setWidget(1, QFormLayout::SpanningRole, listWidget);
+    ui->formLayout->setWidget(1, QFormLayout::SpanningRole, m_listWidget);
 
-    listWidget->setStyleSheet(theme->listWidgetStylesheet()); // custom theme list widget
-    listWidget->setIconSize(QSize(iconSize, iconSize));
-    listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    listWidget->setMinimumHeight(1);
-    listWidget->hide();
+    m_listWidget->setStyleSheet(m_theme->listWidgetStylesheet()); // custom theme list widget
+    m_listWidget->setIconSize(QSize(iconSize, iconSize));
+    m_listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_listWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_listWidget->setMinimumHeight(1);
+    m_listWidget->hide();
 
-    ui->groupBox->setStyleSheet(theme->groupBoxStylesheet()); // custom theme group box
+    ui->groupBox->setStyleSheet(m_theme->groupBoxStylesheet()); // custom theme group box
 
     auto *wndShadow = new QGraphicsDropShadowEffect;
-    wndShadow->setBlurRadius(theme->blurRadius());
-    wndShadow->setColor(theme->shadowColor());
-    wndShadow->setOffset(theme->shadowOffset()); // custom theme shadow
+    wndShadow->setBlurRadius(m_theme->blurRadius());
+    wndShadow->setColor(m_theme->shadowColor());
+    wndShadow->setOffset(m_theme->shadowOffset()); // custom theme shadow
     ui->groupBox->setGraphicsEffect(wndShadow);
 
-    plainTextEdit->setStyleSheet(theme->plainTextEditStylesheet()); // custom theme text edit
+    m_plainTextEdit->setStyleSheet(m_theme->plainTextEditStylesheet()); // custom theme text edit
 
     setAttribute(Qt::WA_TranslucentBackground, true);
 #if defined(Q_OS_WIN)
@@ -98,21 +98,21 @@ AlfredWidget::AlfredWidget(QWidget *parent) : CommonWidget(parent), ui(new Ui::W
 #else
     setWindowFlags(Qt::FramelessWindowHint);
 #endif
-    plainTextEdit->setFocus();
-    connect(plainTextEdit, &QPlainTextEdit::textChanged, this, &AlfredWidget::onTextChanged);
-    connect(plainTextEdit, &PlainText::enterItem, this, &AlfredWidget::onEnterItem);
-    connect(plainTextEdit, &PlainText::escape, this, &AlfredWidget::onEscape);
-    connect(listWidget, &QListWidget::currentRowChanged, this, &AlfredWidget::setOne);
-    connect(listWidget, &QListWidget::itemPressed, this, &AlfredWidget::enterCurItem);
-    plainTextEdit->setFocus();
+    m_plainTextEdit->setFocus();
+    connect(m_plainTextEdit, &QPlainTextEdit::textChanged, this, &AlfredWidget::onTextChanged);
+    connect(m_plainTextEdit, &PlainText::enterItem, this, &AlfredWidget::onEnterItem);
+    connect(m_plainTextEdit, &PlainText::escape, this, &AlfredWidget::onEscape);
+    connect(m_listWidget, &QListWidget::currentRowChanged, this, &AlfredWidget::setOne);
+    connect(m_listWidget, &QListWidget::itemPressed, this, &AlfredWidget::enterCurItem);
+    m_plainTextEdit->setFocus();
 
     connect(derflaApp, &DerflaApp::actionUpdated, this, &AlfredWidget::onActionUpdated);
     connect(derflaApp, &DerflaApp::emptyAction, this, &AlfredWidget::onEmptyAction);
     connect(this, &AlfredWidget::done, this, &AlfredWidget::onDone);
 
-    setMaximumHeight(theme->beginHeight() - 6);
-    setMinimumHeight(theme->beginHeight() - 6);
-    setGeometry(x(), y(), width(), theme->beginHeight());
+    setMaximumHeight(m_theme->beginHeight() - 6);
+    setMinimumHeight(m_theme->beginHeight() - 6);
+    setGeometry(x(), y(), width(), m_theme->beginHeight());
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &QWidget::customContextMenuRequested, this, &AlfredWidget::onCustomContextMenuRequested);
@@ -121,20 +121,22 @@ AlfredWidget::AlfredWidget(QWidget *parent) : CommonWidget(parent), ui(new Ui::W
 void AlfredWidget::onCustomContextMenuRequested(const QPoint &pos)
 {
     Q_ASSERT(derflaApp && derflaApp->trayIcon_);
-    auto menu = derflaApp->trayIcon_->contextMenu();
+    auto *menu = derflaApp->trayIcon_->contextMenu();
     Q_ASSERT(menu);
     menu->exec(mapToGlobal(pos));
 }
 
 void AlfredWidget::setOne()
 {
-    if (listWidget->currentRow() == -1)
-        listWidget->setCurrentRow(0);
+    if (m_listWidget->currentRow() == -1)
+    {
+        m_listWidget->setCurrentRow(0);
+    }
 }
 
 void AlfredWidget::enterCurItem()
 {
-    onEnterItem(listWidget->currentRow());
+    onEnterItem(m_listWidget->currentRow());
 }
 
 void AlfredWidget::setUpTheme()
@@ -152,9 +154,9 @@ void AlfredWidget::setUpTheme()
             themePath = ":/themes/classic.derflatheme";
     }
 
-    theme = themeManager.applyTheme(themePath);
+    m_theme = m_themeManager.loadThemeFromFile(themePath);
 
-    if (!theme)
+    if (!m_theme)
     {
 #if defined(Q_OS_MAC)
         if (isDarkMode())
@@ -162,23 +164,23 @@ void AlfredWidget::setUpTheme()
         else
 #endif
             themePath = ":/themes/classic.derflatheme";
-        theme = themeManager.applyTheme(themePath);
+        m_theme = m_themeManager.loadThemeFromFile(themePath);
     }
 
-    Q_ASSERT(theme);
+    Q_ASSERT(m_theme);
 }
 
 void AlfredWidget::hideCandidateList()
 {
-    listWidget->clear();
-    listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), 0);
-    setMinimumHeight(theme->beginHeight() - 6);
-    setGeometry(x(), y(), width(), theme->beginHeight());
+    m_listWidget->clear();
+    m_listWidget->setGeometry(m_listWidget->x(), m_theme->listWidgetY(), m_listWidget->width(), 0);
+    setMinimumHeight(m_theme->beginHeight() - 6);
+    setGeometry(x(), y(), width(), m_theme->beginHeight());
 }
 
 void AlfredWidget::onTextChanged()
 {
-    QString text = plainTextEdit->toPlainText();
+    QString text = m_plainTextEdit->toPlainText();
     derflaApp->clearDerflaAction();
     if (text.isEmpty())
     {
@@ -190,43 +192,49 @@ void AlfredWidget::onTextChanged()
 
 void AlfredWidget::populateList()
 {
-    listWidget->clear();
+    m_listWidget->clear();
     DerflaActionList &dal = derflaApp->derflaActions();
     if (dal.empty())
     {
-        setMaximumHeight(theme->beginHeight() - 6);
-        setMinimumHeight(theme->beginHeight() - 6);
-        setGeometry(x(), y(), width(), theme->beginHeight());
+        setMaximumHeight(m_theme->beginHeight() - 6);
+        setMinimumHeight(m_theme->beginHeight() - 6);
+        setGeometry(x(), y(), width(), m_theme->beginHeight());
         return;
     }
     int     size      = dal.size();
     int     printsize = std::min(int(dal.size()), 9);
-    QString text      = plainTextEdit->toPlainText();
+    QString text      = m_plainTextEdit->toPlainText();
     if (text.isEmpty())
+    {
         return;
-    listWidget->show();
-    listWidget->setMaximumHeight(rowSize * printsize);
-    listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowSize * printsize);
+    }
+    m_listWidget->show();
+    m_listWidget->setMaximumHeight(rowSize * printsize);
+    m_listWidget->setGeometry(m_listWidget->x(), m_theme->listWidgetY(), m_listWidget->width(), rowSize * printsize);
 
-    setMaximumHeight(printsize * rowSize + theme->beginHeight());
-    setMinimumHeight(printsize * rowSize + theme->beginHeight());
-    setGeometry(x(), y(), width(), printsize * rowSize + theme->beginHeight());
+    setMaximumHeight(printsize * rowSize + m_theme->beginHeight());
+    setMinimumHeight(printsize * rowSize + m_theme->beginHeight());
+    setGeometry(x(), y(), width(), printsize * rowSize + m_theme->beginHeight());
 
     for (int i = 0; i < size; i++)
     {
-        const DerflaActionPtr &da = dal.at(i);
-        QWidget               *l  = nullptr;
-        if (da->description().isEmpty())
-            l = new ListItem(da->icon(), da->title(), (i < 9 ? "Alt+" : "") + QString::number(i + 1));
+        const DerflaActionPtr &action = dal.at(i);
+        QWidget               *widget = nullptr;
+        if (action->description().isEmpty())
+        {
+            widget = new ListItem(action->icon(), action->title(), (i < 9 ? "Alt+" : "") + QString::number(i + 1));
+        }
         else
-            l = new DoubleListItem(da->icon(), da->title(), da->description(), (i < 9 ? "Alt+" : "") + QString::number(i + 1));
-        auto *item = new QListWidgetItem(listWidget);
-        item->setSizeHint(QSize(l->width(), l->height()));
-        listWidget->addItem(item);
-        listWidget->setItemWidget(item, l);
+        {
+            widget = new DoubleListItem(action->icon(), action->title(), action->description(), (i < 9 ? "Alt+" : "") + QString::number(i + 1));
+        }
+        auto *item = new QListWidgetItem(m_listWidget);
+        item->setSizeHint(QSize(widget->width(), widget->height()));
+        m_listWidget->addItem(item);
+        m_listWidget->setItemWidget(item, widget);
     }
-    listWidget->setCurrentRow(0);
-    listWidget->setGeometry(listWidget->x(), theme->listWidgetY(), listWidget->width(), rowSize * printsize);
+    m_listWidget->setCurrentRow(0);
+    m_listWidget->setGeometry(m_listWidget->x(), m_theme->listWidgetY(), m_listWidget->width(), rowSize * printsize);
 }
 
 AlfredWidget::~AlfredWidget()
@@ -246,12 +254,12 @@ void AlfredWidget::onEmptyAction()
 
 void AlfredWidget::onEnterItem(int index)
 {
-    if (index < listWidget->count() && index >= 0)
+    if (index < m_listWidget->count() && index >= 0)
     {
-        DerflaActionPtr da = derflaApp->derflaAction(index);
-        if (!da->disabled())
+        DerflaActionPtr action = derflaApp->derflaAction(index);
+        if (!action->disabled())
         {
-            derflaApp->executeAction(da);
+            derflaApp->executeAction(action);
             emit done();
         }
     }
@@ -259,16 +267,16 @@ void AlfredWidget::onEnterItem(int index)
 
 void AlfredWidget::onEscape()
 {
-    if (listWidget->count())
+    if (m_listWidget->count())
     {
         derflaApp->clearDerflaAction();
         populateList();
         return;
     }
 
-    if (!plainTextEdit->toPlainText().isEmpty())
+    if (!m_plainTextEdit->toPlainText().isEmpty())
     {
-        plainTextEdit->clear();
+        m_plainTextEdit->clear();
         return;
     }
 
@@ -278,7 +286,7 @@ void AlfredWidget::onEscape()
 void AlfredWidget::onDone()
 {
     derflaApp->clearDerflaAction();
-    plainTextEdit->clear();
+    m_plainTextEdit->clear();
     populateList();
 }
 
@@ -289,34 +297,46 @@ void AlfredWidget::onStayOnTop() {}
 void AlfredWidget::onSelectFile()
 {
     if (!isVisible())
+    {
         return;
+    }
     hideCandidateList();
     QString fileName = QFileDialog::getOpenFileName(this);
     if (fileName.isEmpty())
+    {
         return;
+    }
 
-    QString text = plainTextEdit->toPlainText();
+    QString text = m_plainTextEdit->toPlainText();
     if (!text.isEmpty() && !text.endsWith(" "))
+    {
         text.append(" ");
+    }
     text.append(QDir::toNativeSeparators(fileName));
-    plainTextEdit->setPlainText(text);
+    m_plainTextEdit->setPlainText(text);
 }
 
 void AlfredWidget::onSelectFolder()
 {
     if (!isVisible())
+    {
         return;
+    }
 
     hideCandidateList();
     QString fileName = QFileDialog::getExistingDirectory(this);
     if (fileName.isEmpty())
+    {
         return;
+    }
 
-    QString text = plainTextEdit->toPlainText();
+    QString text = m_plainTextEdit->toPlainText();
     if (!text.isEmpty() && !text.endsWith(" "))
+    {
         text.append(" ");
+    }
     text.append(QDir::toNativeSeparators(fileName));
-    plainTextEdit->setPlainText(text);
+    m_plainTextEdit->setPlainText(text);
 }
 
 bool AlfredWidget::onPreference()

@@ -6,17 +6,17 @@
 
 ThemeManager::ThemeManager() : m_lua(new LuaVM) {}
 
-AlfredTheme *ThemeManager::applyTheme(const QString &theme)
+AlfredTheme *ThemeManager::loadThemeFromFile(const QString &themeFilePath)
 {
-    if (!QFile::exists(theme))
+    if (!QFile::exists(themeFilePath))
     {
         return nullptr;
     }
 
     Q_ASSERT(m_lua);
-    if (theme.startsWith(":/"))
+    if (themeFilePath.startsWith(":/"))
     {
-        QFile file(theme);
+        QFile file(themeFilePath);
         if (!file.open(QIODevice::ReadOnly))
         {
             return nullptr;
@@ -31,7 +31,7 @@ AlfredTheme *ThemeManager::applyTheme(const QString &theme)
     }
     else
     {
-        if (!m_lua->doFile(theme))
+        if (!m_lua->doFile(themeFilePath))
         {
             return nullptr;
         }

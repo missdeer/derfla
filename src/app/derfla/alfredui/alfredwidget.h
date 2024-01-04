@@ -45,10 +45,10 @@ private slots:
 
 private:
     Ui::Widget  *ui;
-    PlainText   *plainTextEdit;
-    QListWidget *listWidget;
-    AlfredTheme *theme;
-    ThemeManager themeManager;
+    PlainText   *m_plainTextEdit;
+    QListWidget *m_listWidget;
+    AlfredTheme *m_theme;
+    ThemeManager m_themeManager;
     void         setUpTheme();
     void         hideCandidateList() override;
 
