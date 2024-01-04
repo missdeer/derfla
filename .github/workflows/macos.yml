@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: macos-11
+    runs-on: macos-latest
     strategy:
       matrix:
         include:
@@ -46,7 +46,7 @@ jobs:
           brew link --force libomp
           mkdir build
           cd build
-          cmake -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ ..
+          env "LDFLAGS=-L/usr/local/opt/llvm/lib" cmake -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ ..
           cmake --build . --parallel --verbose
           cd ..
 
