@@ -126,6 +126,17 @@ jobs:
           windeployqt.exe DerflaUtil.dll
           cd ..\..
 
+      - name: copy oneAPI redist files
+        if: matrix.toolset == 'icx'
+        shell: cmd
+        run: |
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\windows\redist\intel64_win\compiler\libmmd.dll" bin\${{ env.output_dir }}\
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\windows\redist\intel64_win\compiler\libiomp5md.dll" bin\${{ env.output_dir }}\
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\windows\redist\intel64_win\compiler\libiompstubs5md.dll" bin\${{ env.output_dir }}\
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\tbb\${{ env.TBB_VERSION }}\redist\intel64\vc_mt\tbb12.dll" bin\${{ env.output_dir }}\
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\tbb\${{ env.TBB_VERSION }}\redist\intel64\vc_mt\tbbmalloc.dll" bin\${{ env.output_dir }}\
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\tbb\${{ env.TBB_VERSION }}\redist\intel64\vc_mt\tbbmalloc_proxy.dll" bin\${{ env.output_dir }}\
+
       - name: upload executable artifact
         uses: actions/upload-artifact@v1
         with:
