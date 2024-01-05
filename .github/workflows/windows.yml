@@ -143,16 +143,13 @@ jobs:
         shell: cmd
         run: |
             dir "${{ github.workspace }}"
-            dir "${{ github.workspace }}\vcpkg_cache"
-            dir "${{ github.workspace }}\vcpkg_cache\installed"
-            dir "${{ github.workspace }}\vcpkg_cache\installed\x64-windows"
-            dir "${{ github.workspace }}\vcpkg_cache\installed\x64-windows\bin"
-            if exists "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbb12.dll" copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbb12.dll" bin\${{ env.output_dir }}\
-            if exists "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbbmalloc.dll copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbbmalloc.dll" bin\${{ env.output_dir }}\
-            if exists "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbbmalloc_proxy.dll" copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbbmalloc_proxy.dll" bin\${{ env.output_dir }}\
-            if exists "${{ github.workspace }}\vcpkg_cache\installed\x64-windows\bin\tbb12.dll" copy /y "${{ github.workspace }}\vcpkg_cache\installed\x64-windows\bin\tbb12.dll" bin\${{ env.output_dir }}\
-            if exists "${{ github.workspace }}\vcpkg_cache\installed\x64-windows\bin\tbbmalloc.dll copy /y "${{ github.workspace }}\vcpkg_cache\installed\x64-windows\bin\tbbmalloc.dll" bin\${{ env.output_dir }}\
-            if exists "${{ github.workspace }}\vcpkg_cache\installed\x64-windows\bin\tbbmalloc_proxy.dll" copy /y "${{ github.workspace }}\vcpkg_cache\installed\x64-windows\bin\tbbmalloc_proxy.dll" bin\${{ env.output_dir }}\
+            dir "${{ github.workspace }}\vcpkg"
+            dir "${{ github.workspace }}\vcpkg\installed"
+            dir "${{ github.workspace }}\vcpkg\installed\x64-windows-release"
+            dir "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin"
+            if exists "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbb12.dll" copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbb12.dll" bin\${{ env.output_dir }}\
+            if exists "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbbmalloc.dll copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbbmalloc.dll" bin\${{ env.output_dir }}\
+            if exists "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbbmalloc_proxy.dll" copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbbmalloc_proxy.dll" bin\${{ env.output_dir }}\
 
       - name: upload executable artifact
         uses: actions/upload-artifact@v1
