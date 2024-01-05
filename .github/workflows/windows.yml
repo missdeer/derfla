@@ -110,30 +110,34 @@ jobs:
         run:  |
           git clone --depth=1 https://github.com/oneapi-src/oneapi-ci.git oneapi-ci
           cd oneapi-ci
-          scripts/restore_registry.bat ${{ env.COMPILER_VERSION }}
+          scripts/restore_registry.bat ${{ env.COMPILER_VERSION }} ${{ env.TBB_VERSION }}
 
       - name: build-msvc
         shell: cmd
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ env.vc_arch }}
-          call "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\env\vars.bat"
-          set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\bin\";%CD%\llvm\bin;%CD%\jom;%PATH%
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja "-DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-release -DVCPKG_MANIFEST_MODE=OFF ..
-          cmake --build . --parallel --verbose
-          cd ..\bin\${{ env.output_dir }}
-          windeployqt.exe Derfla.exe
-          windeployqt.exe DerflaUtil.dll
-          cd ..\..
+            call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ env.vc_arch }}
+            for /f "tokens=* usebackq" %%f in (`dir /b "C:\Program Files (x86)\Intel\oneAPI\compiler\" ^| findstr /V latest ^| sort`) do @set "LATEST_VERSION=%%f"
+            echo %LATEST_VERSION%
+            call "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\env\vars.bat"
+            set PATH="C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\";%CD%\llvm\bin;%CD%\jom;%PATH%
+            mkdir build
+            cd build
+            cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja "-DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-release -DVCPKG_MANIFEST_MODE=OFF ..
+            cmake --build . --parallel --verbose
+            cd ..\bin\${{ env.output_dir }}
+            windeployqt.exe Derfla.exe
+            windeployqt.exe DerflaUtil.dll
+            cd ..\..
 
       - name: copy oneAPI redist files
         if: matrix.toolset == 'icx'
         shell: cmd
         run: |
-            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\bin\libmmd.dll" bin\${{ env.output_dir }}\
-            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\bin\libiomp5md.dll" bin\${{ env.output_dir }}\
-            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\bin\libiompstubs5md.dll" bin\${{ env.output_dir }}\
+            for /f "tokens=* usebackq" %%f in (`dir /b "C:\Program Files (x86)\Intel\oneAPI\compiler\" ^| findstr /V latest ^| sort`) do @set "LATEST_VERSION=%%f"
+            echo %LATEST_VERSION%
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\libmmd.dll" bin\${{ env.output_dir }}\
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\libiomp5md.dll" bin\${{ env.output_dir }}\
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\libiompstubs5md.dll" bin\${{ env.output_dir }}\
 
       - name: copy vcpkg redist files
         shell: cmd
