@@ -143,9 +143,7 @@ jobs:
         shell: cmd
         run: |
             dir "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin"
-            if exists "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbb12.dll" copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbb12.dll" bin\${{ env.output_dir }}\
-            if exists "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbbmalloc.dll copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbbmalloc.dll" bin\${{ env.output_dir }}\
-            if exists "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbbmalloc_proxy.dll" copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbbmalloc_proxy.dll" bin\${{ env.output_dir }}\
+            copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbb*.dll" bin\${{ env.output_dir }}\
 
       - name: upload executable artifact
         uses: actions/upload-artifact@v1
