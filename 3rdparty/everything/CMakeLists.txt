@@ -16,14 +16,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON) # if you have any .ui files
 set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
-if (MSVC)
-    add_compile_options(/utf-8)
-endif()
-IF(WIN32)
-    add_compile_definitions(UNICODE)
-ENDIF(WIN32)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/sdk/include 
         ${CMAKE_CURRENT_SOURCE_DIR}/sdk/ipc
         )

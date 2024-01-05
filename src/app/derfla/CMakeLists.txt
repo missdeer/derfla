@@ -44,9 +44,7 @@ if(APPLE)
   add_compile_definitions(LUA_USE_MACOSX)
 endif(APPLE)
 
-include_directories(${Qt${QT_VERSION_MAJOR}Gui_PRIVATE_INCLUDE_DIRS})
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}
+include_directories(${Qt${QT_VERSION_MAJOR}Gui_PRIVATE_INCLUDE_DIRS}
   ${CMAKE_CURRENT_SOURCE_DIR}/alfredui
   ${CMAKE_CURRENT_SOURCE_DIR}/commonui
   ${CMAKE_CURRENT_SOURCE_DIR}/derflaui

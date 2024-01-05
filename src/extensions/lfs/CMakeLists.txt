@@ -37,7 +37,6 @@ add_compile_definitions(UTIL_LIBRARY STATIC_LINKED)
 if(APPLE)
   add_compile_definitions(LUA_USE_MACOSX)
 endif(APPLE)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(lfs_headers
     ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h

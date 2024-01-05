@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+﻿cmake_minimum_required(VERSION 3.21)
 project(qtsingleapplication VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -16,14 +16,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON) # if you have any .ui files
 set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
-if (MSVC)
-    add_compile_options(/utf-8)
-endif()
-IF(WIN32)
-    add_compile_definitions(UNICODE)
-ENDIF(WIN32)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(qtsingleapplication_headers
         ${CMAKE_CURRENT_SOURCE_DIR}/qtlocalpeer.h
