@@ -133,9 +133,10 @@ jobs:
             copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\windows\redist\intel64_win\compiler\libmmd.dll" bin\${{ env.output_dir }}\
             copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\windows\redist\intel64_win\compiler\libiomp5md.dll" bin\${{ env.output_dir }}\
             copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\${{ env.COMPILER_VERSION }}\windows\redist\intel64_win\compiler\libiompstubs5md.dll" bin\${{ env.output_dir }}\
-            copy /y "C:\Program Files (x86)\Intel\oneAPI\tbb\${{ env.TBB_VERSION }}\redist\intel64\vc_mt\tbb12.dll" bin\${{ env.output_dir }}\
-            copy /y "C:\Program Files (x86)\Intel\oneAPI\tbb\${{ env.TBB_VERSION }}\redist\intel64\vc_mt\tbbmalloc.dll" bin\${{ env.output_dir }}\
-            copy /y "C:\Program Files (x86)\Intel\oneAPI\tbb\${{ env.TBB_VERSION }}\redist\intel64\vc_mt\tbbmalloc_proxy.dll" bin\${{ env.output_dir }}\
+            dir "C:\Program Files (x86)\Intel\oneAPI\tbb"
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\tbb\latest\redist\intel64\vc_mt\tbb12.dll" bin\${{ env.output_dir }}\
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\tbb\latest\redist\intel64\vc_mt\tbbmalloc.dll" bin\${{ env.output_dir }}\
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\tbb\latest\redist\intel64\vc_mt\tbbmalloc_proxy.dll" bin\${{ env.output_dir }}\
 
       - name: copy vcpkg redist files
         if: matrix.toolset != 'icx'
