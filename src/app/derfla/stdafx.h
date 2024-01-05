@@ -1,4 +1,4 @@
-#ifndef STDAFX_H
+﻿#ifndef STDAFX_H
 #define STDAFX_H
 
 #if defined(_WIN32)
@@ -81,6 +81,15 @@
 #        define globalDefaultFontFamily "DejaVu Sans"
 #    endif
 
+#    ifndef Q_MOC_RUN
+#        if defined(emit)
+#            undef emit
+#            include <oneapi/tbb.h>
+#            define emit // restore the macro definition of "emit", as it was defined in gtmetamacros.h
+#        else
+#            include <oneapi/tbb.h>
+#        endif // defined(emit)
+#    endif     // Q_MOC_RUN
 #endif
 
 #endif // STDAFX_H

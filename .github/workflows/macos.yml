@@ -42,7 +42,7 @@ jobs:
           
       - name: build macos
         run: |
-          brew install ninja llvm gsed libomp
+          brew install ninja llvm gsed libomp tbb
           brew link --force libomp
           mkdir build
           cd build

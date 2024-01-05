@@ -20,7 +20,7 @@ IF (Qt6_FOUND)
 ENDIF(Qt6_FOUND)
 
 find_package(OpenMP REQUIRED)
-
+find_package(TBB CONFIG REQUIRED)
 find_package(Boost 1.79.0)
 if(Boost_FOUND)
     #include_directories(${Boost_INCLUDE_DIRS})
@@ -197,6 +197,7 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE
         qtsingleapplication
         qtlockedfile
         DerflaUtil
+        TBB::tbb TBB::tbbmalloc TBB::tbbmalloc_proxy
         Qt${QT_VERSION_MAJOR}::Xml
         )
 

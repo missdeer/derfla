@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include <private/qzipreader_p.h>
 
@@ -139,11 +139,23 @@ void ExtensionManager::query(const QString &input)
     }
     else
     {
-        bool handled = false;
-        for (const auto &extension : extensions_)
-        {
-            handled |= extension->query(input);
-        }
+        // bool handled = false;
+        // for (const auto &extension : extensions_)
+        // {
+        //     handled |= extension->query(input);
+        // }
+
+        bool handled = tbb::parallel_reduce(
+            tbb::blocked_range<size_t>(0, extensions_.size()),
+            false,
+            [this, input](const tbb::blocked_range<size_t> &range, bool init) {
+                for (size_t index = range.begin(); index != range.end(); ++index)
+                {
+                    init |= extensions_[index]->query(input);
+                }
+                return init;
+            },
+            std::logical_or<bool>());
         if (!handled)
         {
             emit emptyAction();
