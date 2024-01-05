@@ -16,28 +16,28 @@ public:
         return id_ == da.id_;
     }
 
-    const QIcon &icon() const;
-    void         setIcon(const QIcon &icon);
+    [[nodiscard]] const QIcon &icon() const;
+    void                       setIcon(const QIcon &icon);
 
-    const QString &title() const;
-    void           setTitle(const QString &title);
+    [[nodiscard]] const QString &title() const;
+    void                         setTitle(const QString &title);
 
-    const QString &description() const;
-    void           setDescription(const QString &description);
+    [[nodiscard]] const QString &description() const;
+    void                         setDescription(const QString &description);
 
-    const QString &target() const;
-    void           setTarget(const QString &target);
+    [[nodiscard]] const QString &target() const;
+    void                         setTarget(const QString &target);
 
-    const QString &arguments() const;
-    void           setArguments(const QString &arguments);
+    [[nodiscard]] const QString &arguments() const;
+    void                         setArguments(const QString &arguments);
 
-    const QString &workingDirectory() const;
-    void           setWorkingDirectory(const QString &workingDirectory);
+    [[nodiscard]] const QString &workingDirectory() const;
+    void                         setWorkingDirectory(const QString &workingDirectory);
 
-    const QString &actionType() const;
-    void           setActionType(const QString &actionType);
+    [[nodiscard]] const QString &actionType() const;
+    void                         setActionType(const QString &actionType);
 
-    bool disabled() const
+    [[nodiscard]] bool disabled() const
     {
         return disabled_;
     }
@@ -46,8 +46,8 @@ public:
         disabled_ = val;
     }
 
-    const QString &scriptExecutor() const;
-    void           setScriptExecutor(const QString &scriptExecutor);
+    [[nodiscard]] const QString &scriptExecutor() const;
+    void                         setScriptExecutor(const QString &scriptExecutor);
 
 private:
     QIcon   icon_;
@@ -63,7 +63,7 @@ private:
     QUuid id_;
 };
 
-typedef QSharedPointer<DerflaAction> DerflaActionPtr;
-typedef QList<DerflaActionPtr>       DerflaActionList;
+using DerflaActionPtr  = std::shared_ptr<DerflaAction>;
+using DerflaActionList = std::vector<DerflaActionPtr>;
 
 #endif // DERFLAACTION_H

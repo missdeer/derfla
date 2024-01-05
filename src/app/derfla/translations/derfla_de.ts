@@ -46,87 +46,87 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="240"/>
+        <location filename="../derflaapp.cpp" line="242"/>
         <source>Select File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="241"/>
+        <location filename="../derflaapp.cpp" line="243"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="244"/>
+        <location filename="../derflaapp.cpp" line="246"/>
         <source>Select Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="245"/>
+        <location filename="../derflaapp.cpp" line="247"/>
         <source>Ctrl+D</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="248"/>
+        <location filename="../derflaapp.cpp" line="250"/>
         <source>Load &amp;Skin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="251"/>
+        <location filename="../derflaapp.cpp" line="253"/>
         <source>Stay On Top</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="255"/>
+        <location filename="../derflaapp.cpp" line="257"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="256"/>
+        <location filename="../derflaapp.cpp" line="258"/>
         <source>Ctrl+Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="259"/>
+        <location filename="../derflaapp.cpp" line="261"/>
         <source>Show</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="262"/>
+        <location filename="../derflaapp.cpp" line="264"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="265"/>
+        <location filename="../derflaapp.cpp" line="267"/>
         <source>Homepage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="268"/>
+        <location filename="../derflaapp.cpp" line="270"/>
         <source>Preference...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="272"/>
+        <location filename="../derflaapp.cpp" line="274"/>
         <source>Donate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="273"/>
+        <location filename="../derflaapp.cpp" line="275"/>
         <source>Via Paypal...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="277"/>
+        <location filename="../derflaapp.cpp" line="279"/>
         <source>Via Alipay...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="281"/>
+        <location filename="../derflaapp.cpp" line="283"/>
         <source>Via WeChat Pay...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaapp.cpp" line="302"/>
+        <location filename="../derflaapp.cpp" line="304"/>
         <source>Derfla - Run appliation/script as you want!</source>
         <translation type="unfinished"></translation>
     </message>

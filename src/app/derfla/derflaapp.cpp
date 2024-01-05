@@ -91,14 +91,14 @@ QSettings &DerflaApp::settings()
 
 DerflaActionPtr DerflaApp::derflaAction(int index)
 {
-    if (index >= 0 && index < dal_.length())
+    if (index >= 0 && index < dal_.size())
     {
         return dal_.at(index);
     }
 
-    if (index < dal_.length() + dalDonate_.length())
+    if (index < dal_.size() + dalDonate_.size())
     {
-        return dalDonate_.at(index - dal_.length());
+        return dalDonate_.at(index - dal_.size());
     }
     return {};
 }
@@ -177,7 +177,7 @@ void DerflaApp::donateViaWeChatPay()
 
 void DerflaApp::onActionUpdated(DerflaActionList &dal)
 {
-    dal_.append(dal);
+    std::copy(dal.begin(), dal.end(), std::back_inserter(dal_));
     emit actionUpdated();
 }
 
@@ -221,7 +221,9 @@ void DerflaApp::createDonateDerflaActions()
     daWeChatPay->setTarget(target);
     daWeChatPay->setArguments("--wechat");
     daWeChatPay->setWorkingDirectory(QCoreApplication::applicationDirPath());
-    dalDonate_ << daPaypal << daAlipay << daWeChatPay;
+    dalDonate_.push_back(daPaypal);
+    dalDonate_.push_back(daAlipay);
+    dalDonate_.push_back(daWeChatPay);
 }
 
 void DerflaApp::centerToScreen(QWidget *widget)
@@ -304,11 +306,11 @@ void DerflaApp::createCommonActions()
 }
 qsizetype DerflaApp::derflaActionCount() const
 {
-    return dal_.length();
+    return dal_.size();
 }
 bool DerflaApp::isEmptyDerflaAction() const
 {
-    return dal_.isEmpty();
+    return dal_.empty();
 }
 void DerflaApp::clearDerflaAction()
 {

@@ -77,6 +77,6 @@ private:
     void                              parseActionConfig(QJsonObject &eleObj, DerflaActionPtr &action);
 };
 
-using ExtensionPtr = QSharedPointer<Extension>;
+using ExtensionPtr = std::shared_ptr<Extension>;
 
 #endif // Extension_H

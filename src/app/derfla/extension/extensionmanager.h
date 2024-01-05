@@ -11,11 +11,11 @@ class ExtensionManager : public QObject
     Q_OBJECT
 public:
     explicit ExtensionManager(QObject *parent = nullptr);
-    ~ExtensionManager();
+    ~ExtensionManager() override;
 
-    bool                       loadAllFromLocal();
-    void                       query(const QString &input);
-    const QList<ExtensionPtr> &extensions() const;
+    bool                                           loadAllFromLocal();
+    void                                           query(const QString &input);
+    [[nodiscard]] const std::vector<ExtensionPtr> &extensions() const;
 
 signals:
     void emptyAction();
@@ -24,7 +24,7 @@ public slots:
     void extensionQueried(DerflaActionList &dal);
 
 private:
-    QList<ExtensionPtr>              extensions_;
+    std::vector<ExtensionPtr>        extensions_;
     QMultiMap<QString, ExtensionPtr> prefixExtensionMap_;
 };
 

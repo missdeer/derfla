@@ -97,8 +97,8 @@ bool ExtensionManager::loadAllFromLocal()
                 extension->setDaemon(true);
                 extension->runDaemon();
             }
-            extensions_.append(extension);
-            connect(extension.data(), &Extension::queried, this, &ExtensionManager::extensionQueried);
+            extensions_.push_back(extension);
+            connect(extension.get(), &Extension::queried, this, &ExtensionManager::extensionQueried);
         }
     }
 
@@ -110,7 +110,7 @@ void ExtensionManager::extensionQueried(DerflaActionList &dal)
     emit actionUpdated(dal);
 }
 
-const QList<ExtensionPtr> &ExtensionManager::extensions() const
+const std::vector<ExtensionPtr> &ExtensionManager::extensions() const
 {
     return extensions_;
 }

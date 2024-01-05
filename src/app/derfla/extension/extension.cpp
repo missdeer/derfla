@@ -235,11 +235,11 @@ void Extension::parseActionConfig(QJsonObject &eleObj, DerflaActionPtr &action)
 }
 void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
-    auto *p = qobject_cast<QProcess *>(sender());
+    auto *process = qobject_cast<QProcess *>(sender());
 
-    p->deleteLater();
+    process->deleteLater();
 
-    if (p != subProcess_)
+    if (process != subProcess_)
     {
         return;
     }
@@ -253,7 +253,7 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
         return;
     }
 
-    auto output = p->readAllStandardOutput();
+    auto output = process->readAllStandardOutput();
     // convert json output to action list
     QJsonParseError error;
     auto            doc = QJsonDocument::fromJson(output, &error);
@@ -270,7 +270,7 @@ void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
             QJsonObject     eleObj = arrEle.toObject();
             DerflaActionPtr action(new DerflaAction);
             parseActionConfig(eleObj, action);
-            derflaActions_.append(action);
+            derflaActions_.push_back(action);
         }
     }
 
