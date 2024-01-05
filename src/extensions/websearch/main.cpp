@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include <QIcon>
 
@@ -12,13 +12,14 @@ bool output(const std::vector<SearchItem> &items)
     QJsonDocument d = QJsonDocument::fromJson("[]");
     Q_ASSERT(d.isArray());
     QJsonArray arr = d.array();
-    for (auto &i : items)
+    for (auto &[title,  target,  iconPath] : items)
     {
-        QVariantMap m;
-        m.insert("title", std::get<0>(i));
-        m.insert("target", std::get<1>(i));
-        m.insert("actionType", "openUrl");
-        QFile icon(std::get<2>(i));
+        QVariantMap m = {
+            {QStringLiteral("title"),  title},
+            {QStringLiteral("target"),  target},
+            {QStringLiteral("actionType"),  "openUrl"},
+        };
+        QFile icon(iconPath);
         if (icon.open(QIODevice::ReadOnly))
         {
             auto bytes = icon.readAll();
