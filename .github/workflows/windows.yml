@@ -142,6 +142,11 @@ jobs:
         if: matrix.toolset != 'icx'
         shell: cmd
         run: |
+            dir "${{ github.workspace }}"
+            dir "${{ github.workspace }}\vcpkg"
+            dir "${{ github.workspace }}\vcpkg\installed"
+            dir "${{ github.workspace }}\vcpkg\installed\x64-windows"
+            dir "${{ github.workspace }}\vcpkg\installed\x64-windows\bin"
             copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbb12.dll" bin\${{ env.output_dir }}\
             copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbbmalloc.dll" bin\${{ env.output_dir }}\
             copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows\bin\tbbmalloc_proxy.dll" bin\${{ env.output_dir }}\
