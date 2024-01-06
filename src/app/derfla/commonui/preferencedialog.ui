@@ -77,7 +77,7 @@
          <string>General</string>
         </property>
         <property name="icon">
-         <iconset resource="../Derfla.qrc">
+         <iconset resource="../derfla.qrc">
           <normaloff>:/rc/images/general.png</normaloff>:/rc/images/general.png</iconset>
         </property>
        </item>
@@ -86,7 +86,7 @@
          <string>Extension</string>
         </property>
         <property name="icon">
-         <iconset resource="../Derfla.qrc">
+         <iconset resource="../derfla.qrc">
           <normaloff>:/rc/images/extension.png</normaloff>:/rc/images/extension.png</iconset>
         </property>
        </item>
@@ -95,7 +95,7 @@
          <string>Plugin</string>
         </property>
         <property name="icon">
-         <iconset resource="../Derfla.qrc">
+         <iconset resource="../derfla.qrc">
           <normaloff>:/rc/images/plugin.png</normaloff>:/rc/images/plugin.png</iconset>
         </property>
        </item>
@@ -104,7 +104,7 @@
          <string>Skin</string>
         </property>
         <property name="icon">
-         <iconset resource="../Derfla.qrc">
+         <iconset resource="../derfla.qrc">
           <normaloff>:/rc/images/skin.png</normaloff>:/rc/images/skin.png</iconset>
         </property>
        </item>
@@ -113,7 +113,7 @@
          <string>Interpretor</string>
         </property>
         <property name="icon">
-         <iconset resource="../Derfla.qrc">
+         <iconset resource="../derfla.qrc">
           <normaloff>:/rc/images/interpretor.png</normaloff>:/rc/images/interpretor.png</iconset>
         </property>
        </item>
@@ -130,15 +130,6 @@
        <widget class="QWidget" name="skinPage"/>
        <widget class="QWidget" name="interpretorPage">
         <layout class="QFormLayout" name="formLayout">
-         <property name="sizeConstraint">
-          <enum>QLayout::SetMaximumSize</enum>
-         </property>
-         <property name="fieldGrowthPolicy">
-          <enum>QFormLayout::ExpandingFieldsGrow</enum>
-         </property>
-         <property name="verticalSpacing">
-          <number>0</number>
-         </property>
          <item row="0" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
@@ -160,7 +151,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -174,7 +165,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -202,7 +193,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -216,7 +207,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -244,7 +235,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -258,7 +249,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -286,7 +277,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -300,7 +291,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -328,7 +319,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -342,7 +333,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -370,7 +361,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -384,7 +375,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -412,7 +403,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -426,7 +417,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -454,7 +445,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -468,7 +459,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -496,7 +487,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -510,7 +501,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -527,7 +518,7 @@
          <item row="9" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <property name="spacing">
-            <number>-1</number>
+            <number>6</number>
            </property>
            <item>
             <widget class="QLineEdit" name="edtLuaPath"/>
@@ -541,7 +532,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -555,7 +546,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -583,7 +574,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -597,7 +588,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -625,7 +616,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -639,7 +630,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -667,7 +658,7 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
              </property>
             </widget>
@@ -681,7 +672,49 @@
               <string/>
              </property>
              <property name="icon">
-              <iconset resource="../Derfla.qrc">
+              <iconset resource="../derfla.qrc">
+               <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="13" column="0">
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>PowerShell</string>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_15">
+           <item>
+            <widget class="QLineEdit" name="edtPowerShellPath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnBrowsePowerShell">
+             <property name="toolTip">
+              <string>Browse</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../derfla.qrc">
+               <normaloff>:/rc/images/find.png</normaloff>:/rc/images/find.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnDetectPowerShell">
+             <property name="toolTip">
+              <string>Auto detect path</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../derfla.qrc">
                <normaloff>:/rc/images/refresh.png</normaloff>:/rc/images/refresh.png</iconset>
              </property>
             </widget>
@@ -714,7 +747,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../Derfla.qrc"/>
+  <include location="../derfla.qrc"/>
  </resources>
  <connections>
   <connection>

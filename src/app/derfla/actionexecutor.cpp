@@ -48,6 +48,9 @@ bool ActionExecutor::runScript(const DerflaActionPtr &action)
         {"applescript(as)", "-c"},
         {"applescript(js)", "-c"},
 #endif
+#if defined(Q_OS_WIN)
+        {"powershell", "-Command"},
+#endif
     };
 
     const auto iter = runnerMap.find(action->scriptExecutor());

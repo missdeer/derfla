@@ -1,4 +1,4 @@
-#ifndef PREFERENCEDIALOG_H
+﻿#ifndef PREFERENCEDIALOG_H
 #define PREFERENCEDIALOG_H
 
 #include <QDialog>
@@ -81,6 +81,10 @@ private slots:
     void on_btnBrowseWScript_clicked();
 
     void on_btnDetectWScript_clicked();
+
+    void on_btnBrowsePowerShell_clicked();
+
+    void on_btnDetectPowerShell_clicked();
 
 private:
     Ui::PreferenceDialog *ui;

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "preferencedialog.h"
 #include "booleaneditor.h"
@@ -102,10 +102,13 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     ui->edtAppleScriptPath->setText(settings.value("applescript(as)").toString());
     ui->edtWScriptPath->setEnabled(false);
     ui->edtCScriptPath->setEnabled(false);
+    ui->edtPowerShellPath->setEnabled(false);
     ui->btnBrowseWScript->setEnabled(false);
     ui->btnBrowseCScript->setEnabled(false);
+    ui->btnBrowsePowerShell->setEnabled(false);
     ui->btnDetectWScript->setEnabled(false);
     ui->btnDetectCScript->setEnabled(false);
+    ui->btnDetectPowerShell->setEnabled(false);
 #endif
 #if defined(Q_OS_WIN)
     ui->edtAppleScriptPath->setEnabled(false);
@@ -113,6 +116,7 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     ui->btnDetectAppleScript->setEnabled(false);
     ui->edtWScriptPath->setText(settings.value("wscript").toString());
     ui->edtCScriptPath->setText(settings.value("cscript").toString());
+    ui->edtPowerShellPath->setText(settings.value("powershell").toString());
 #endif
     ui->stackedWidget->setCurrentIndex(0);
 }
@@ -174,6 +178,7 @@ void PreferenceDialog::on_buttonBox_accepted()
 #if defined(Q_OS_WIN)
     settings.setValue("wscript", ui->edtWScriptPath->text());
     settings.setValue("cscript", ui->edtCScriptPath->text());
+    settings.setValue("powershell", ui->edtPowerShellPath->text());
 #endif
     settings.sync();
     QDialog::accept();
@@ -210,7 +215,7 @@ void PreferenceDialog::loadThemes()
     QDir    dir(QCoreApplication::applicationDirPath() % "/../Resources/themes/");
     QString skinPath = settings.value("theme", isDarkMode() ? ":/themes/dark.derflatheme" : ":/themes/classic.derflatheme").toString();
 #else
-    QDir dir(QCoreApplication::applicationDirPath() % "/themes");
+    QDir    dir(QCoreApplication::applicationDirPath() % "/themes");
     QString skinPath = settings.value("theme", ":/themes/classic.derflatheme").toString();
 #endif
     auto eil = dir.entryInfoList(QStringList() << "*.derflatheme", QDir::Files);
@@ -598,4 +603,24 @@ void PreferenceDialog::on_btnDetectWScript_clicked()
         return;
     }
     ui->edtWScriptPath->setText(QDir::toNativeSeparators(fileName));
+}
+
+void PreferenceDialog::on_btnBrowsePowerShell_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Find PowerShell"), "", tr("PowerShell interpretor (powershell.exe);;All files (*.*)"));
+    if (!QFile::exists(fileName))
+    {
+        return;
+    }
+    ui->edtPowerShellPath->setText(QDir::toNativeSeparators(fileName));
+}
+
+void PreferenceDialog::on_btnDetectPowerShell_clicked()
+{
+    auto fileName = QStandardPaths::findExecutable(QStringLiteral("powershell"));
+    if (!QFile::exists(fileName))
+    {
+        return;
+    }
+    ui->edtPowerShellPath->setText(QDir::toNativeSeparators(fileName));
 }
