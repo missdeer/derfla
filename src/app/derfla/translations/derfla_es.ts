@@ -246,108 +246,108 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="136"/>
+        <location filename="../commonui/preferencedialog.ui" line="139"/>
         <source>Bash</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="148"/>
-        <location filename="../commonui/preferencedialog.ui" line="190"/>
-        <location filename="../commonui/preferencedialog.ui" line="232"/>
-        <location filename="../commonui/preferencedialog.ui" line="274"/>
-        <location filename="../commonui/preferencedialog.ui" line="316"/>
-        <location filename="../commonui/preferencedialog.ui" line="358"/>
-        <location filename="../commonui/preferencedialog.ui" line="400"/>
-        <location filename="../commonui/preferencedialog.ui" line="442"/>
-        <location filename="../commonui/preferencedialog.ui" line="484"/>
-        <location filename="../commonui/preferencedialog.ui" line="529"/>
-        <location filename="../commonui/preferencedialog.ui" line="571"/>
-        <location filename="../commonui/preferencedialog.ui" line="613"/>
-        <location filename="../commonui/preferencedialog.ui" line="655"/>
-        <location filename="../commonui/preferencedialog.ui" line="697"/>
+        <location filename="../commonui/preferencedialog.ui" line="151"/>
+        <location filename="../commonui/preferencedialog.ui" line="193"/>
+        <location filename="../commonui/preferencedialog.ui" line="235"/>
+        <location filename="../commonui/preferencedialog.ui" line="277"/>
+        <location filename="../commonui/preferencedialog.ui" line="319"/>
+        <location filename="../commonui/preferencedialog.ui" line="361"/>
+        <location filename="../commonui/preferencedialog.ui" line="403"/>
+        <location filename="../commonui/preferencedialog.ui" line="445"/>
+        <location filename="../commonui/preferencedialog.ui" line="487"/>
+        <location filename="../commonui/preferencedialog.ui" line="532"/>
+        <location filename="../commonui/preferencedialog.ui" line="574"/>
+        <location filename="../commonui/preferencedialog.ui" line="616"/>
+        <location filename="../commonui/preferencedialog.ui" line="658"/>
+        <location filename="../commonui/preferencedialog.ui" line="700"/>
         <source>Browse</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="162"/>
-        <location filename="../commonui/preferencedialog.ui" line="204"/>
-        <location filename="../commonui/preferencedialog.ui" line="246"/>
-        <location filename="../commonui/preferencedialog.ui" line="288"/>
-        <location filename="../commonui/preferencedialog.ui" line="330"/>
-        <location filename="../commonui/preferencedialog.ui" line="372"/>
-        <location filename="../commonui/preferencedialog.ui" line="414"/>
-        <location filename="../commonui/preferencedialog.ui" line="456"/>
-        <location filename="../commonui/preferencedialog.ui" line="498"/>
-        <location filename="../commonui/preferencedialog.ui" line="543"/>
-        <location filename="../commonui/preferencedialog.ui" line="585"/>
-        <location filename="../commonui/preferencedialog.ui" line="627"/>
-        <location filename="../commonui/preferencedialog.ui" line="669"/>
-        <location filename="../commonui/preferencedialog.ui" line="711"/>
+        <location filename="../commonui/preferencedialog.ui" line="165"/>
+        <location filename="../commonui/preferencedialog.ui" line="207"/>
+        <location filename="../commonui/preferencedialog.ui" line="249"/>
+        <location filename="../commonui/preferencedialog.ui" line="291"/>
+        <location filename="../commonui/preferencedialog.ui" line="333"/>
+        <location filename="../commonui/preferencedialog.ui" line="375"/>
+        <location filename="../commonui/preferencedialog.ui" line="417"/>
+        <location filename="../commonui/preferencedialog.ui" line="459"/>
+        <location filename="../commonui/preferencedialog.ui" line="501"/>
+        <location filename="../commonui/preferencedialog.ui" line="546"/>
+        <location filename="../commonui/preferencedialog.ui" line="588"/>
+        <location filename="../commonui/preferencedialog.ui" line="630"/>
+        <location filename="../commonui/preferencedialog.ui" line="672"/>
+        <location filename="../commonui/preferencedialog.ui" line="714"/>
         <source>Auto detect path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="178"/>
+        <location filename="../commonui/preferencedialog.ui" line="181"/>
         <source>Sh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="220"/>
+        <location filename="../commonui/preferencedialog.ui" line="223"/>
         <source>Node</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="262"/>
+        <location filename="../commonui/preferencedialog.ui" line="265"/>
         <source>TCL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="304"/>
+        <location filename="../commonui/preferencedialog.ui" line="307"/>
         <source>PHP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="346"/>
+        <location filename="../commonui/preferencedialog.ui" line="349"/>
         <source>Ruby</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="388"/>
+        <location filename="../commonui/preferencedialog.ui" line="391"/>
         <source>Python</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="430"/>
+        <location filename="../commonui/preferencedialog.ui" line="433"/>
         <source>Perl</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="472"/>
+        <location filename="../commonui/preferencedialog.ui" line="475"/>
         <source>Zsh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="514"/>
+        <location filename="../commonui/preferencedialog.ui" line="517"/>
         <source>Lua</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="559"/>
+        <location filename="../commonui/preferencedialog.ui" line="562"/>
         <source>AppleScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="601"/>
+        <location filename="../commonui/preferencedialog.ui" line="604"/>
         <source>CScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="643"/>
+        <location filename="../commonui/preferencedialog.ui" line="646"/>
         <source>WScript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../commonui/preferencedialog.ui" line="685"/>
+        <location filename="../commonui/preferencedialog.ui" line="688"/>
         <source>PowerShell</source>
         <translation type="unfinished"></translation>
     </message>
