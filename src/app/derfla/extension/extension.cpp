@@ -191,47 +191,29 @@ void Extension::setWaitIconData(const QString &waitIconData)
 
 void Extension::parseActionConfig(QJsonObject &eleObj, DerflaActionPtr &action)
 {
-    if (eleObj["title"].isString())
-    {
-        action->setTitle(eleObj["title"].toString());
-    }
-    if (eleObj["description"].isString())
-    {
-        action->setDescription(eleObj["description"].toString());
-    }
-    if (eleObj["target"].isString())
-    {
-        action->setTarget(eleObj["target"].toString());
-    }
-    if (eleObj["arguments"].isString())
-    {
-        action->setArguments(eleObj["arguments"].toString());
-    }
-    if (eleObj["workingDir"].isString())
-    {
-        action->setWorkingDirectory(eleObj["workingDir"].toString());
-    }
-    if (eleObj["actionType"].isString())
-    {
-        action->setActionType(eleObj["actionType"].toString());
-    }
-    if (eleObj["scriptExecutor"].isString())
-    {
-        action->setScriptExecutor(eleObj["scriptExecutor"].toString());
-    }
-    if (eleObj["iconPath"].isString())
-    {
-        action->setIcon(QIcon(eleObj["iconPath"].toString()));
-    }
-    if (eleObj["iconData"].isString())
-    {
-        auto    iconData = QByteArray::fromBase64(eleObj["iconData"].toString().toUtf8());
+    auto setObjectValue = [&eleObj](const QString &key, const std::function<void(const QString &)> &setter) {
+        if (eleObj.contains(key) && eleObj[key].isString())
+        {
+            setter(eleObj[key].toString());
+        }
+    };
+
+    setObjectValue(QStringLiteral("title"), [&action](const QString &value) { action->setTitle(value); });
+    setObjectValue(QStringLiteral("description"), [&action](const QString &value) { action->setDescription(value); });
+    setObjectValue(QStringLiteral("target"), [&action](const QString &value) { action->setTarget(value); });
+    setObjectValue(QStringLiteral("arguments"), [&action](const QString &value) { action->setArguments(value); });
+    setObjectValue(QStringLiteral("workingDir"), [&action](const QString &value) { action->setWorkingDirectory(value); });
+    setObjectValue(QStringLiteral("actionType"), [&action](const QString &value) { action->setActionType(value); });
+    setObjectValue(QStringLiteral("scriptExecutor"), [&action](const QString &value) { action->setScriptExecutor(value); });
+    setObjectValue(QStringLiteral("iconPath"), [&action](const QString &value) { action->setIcon(QIcon(value)); });
+    setObjectValue(QStringLiteral("iconData"), [&action](const QString &value) {
+        auto    iconData = QByteArray::fromBase64(value.toUtf8());
         QPixmap pixmap;
         if (pixmap.loadFromData(iconData))
         {
             action->setIcon(QIcon(pixmap));
         }
-    }
+    });
 }
 void Extension::finished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
