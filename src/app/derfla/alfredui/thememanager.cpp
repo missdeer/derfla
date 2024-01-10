@@ -44,9 +44,9 @@ AlfredTheme *ThemeManager::loadThemeFromFile(const QString &themeFilePath)
     m_theme->setBeginHeight(m_lua->getInt("beginHeight"));
     m_theme->setListWidgetY(m_lua->getInt("listWidgetY"));
     m_theme->setDimensions(QSize(m_lua->getInt("dimensions", "width"), m_lua->getInt("dimensions", "height")));
-    m_theme->setGroupBoxStylesheet(m_lua->getString("groupBoxStylesheet"));
-    m_theme->setPlainTextEditStylesheet(m_lua->getString("plainTextEditStylesheet"));
-    m_theme->setListWidgetStylesheet(m_lua->getString("listWidgetStylesheet"));
+    m_theme->setGroupBoxStylesheet(m_lua->getQString("groupBoxStylesheet"));
+    m_theme->setPlainTextEditStylesheet(m_lua->getQString("plainTextEditStylesheet"));
+    m_theme->setListWidgetStylesheet(m_lua->getQString("listWidgetStylesheet"));
     m_theme->setFontSize(m_lua->getInt("fontSize"));
     m_theme->setBlurRadius(m_lua->getDouble("blurRadius"));
     m_theme->setShadowColor(QColor(

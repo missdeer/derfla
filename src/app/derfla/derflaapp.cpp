@@ -193,7 +193,7 @@ void DerflaApp::createDonateDerflaActions()
     daPaypal->setDescription(tr("Donate via Paypal"));
     daPaypal->setIcon(QIcon(":rc/paypal.png"));
     daPaypal->setActionType("openUrl");
-    daPaypal->setTarget("https://www.paypal.me/dfordsoft");
+    daPaypal->setTarget("https://www.paypal.me/usdfordsoft");
 
 #if defined(Q_OS_MAC)
     QDir dir(QCoreApplication::applicationDirPath());

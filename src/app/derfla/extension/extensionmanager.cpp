@@ -54,10 +54,10 @@ bool ExtensionManager::loadAllFromLocal()
             continue;
         }
         ExtensionPtr extension(new Extension);
-        extension->setId(luaVM.getString("id"));
-        extension->setAuthor(luaVM.getString("author"));
-        extension->setName(luaVM.getString("name"));
-        QString executable = luaVM.getString("executable");
+        extension->setId(luaVM.getQString("id"));
+        extension->setAuthor(luaVM.getQString("author"));
+        extension->setName(luaVM.getQString("name"));
+        QString executable = luaVM.getQString("executable");
         if (!executable.isEmpty())
         {
             extension->setExecutable(dir.absoluteFilePath(executable));
@@ -66,17 +66,17 @@ bool ExtensionManager::loadAllFromLocal()
                 continue;
             }
         }
-        extension->setDescription(luaVM.getString("description"));
-        extension->setExecutor(luaVM.getString("executor"));
-        if (!luaVM.getString("prefix").isEmpty())
+        extension->setDescription(luaVM.getQString("description"));
+        extension->setExecutor(luaVM.getQString("executor"));
+        if (!luaVM.getQString("prefix").isEmpty())
         {
-            extension->setPrefix(QStringList() << luaVM.getString("prefix"));
-            prefixExtensionMap_.insert(luaVM.getString("prefix"), extension);
+            extension->setPrefix(QStringList() << luaVM.getQString("prefix"));
+            prefixExtensionMap_.insert(luaVM.getQString("prefix"), extension);
         }
         else
         {
             QStringList prefixes;
-            if (luaVM.getStringArray("prefix", prefixes))
+            if (luaVM.getQStringArray("prefix", prefixes))
             {
                 for (const auto &prefix : prefixes)
                 {
@@ -90,10 +90,10 @@ bool ExtensionManager::loadAllFromLocal()
                 prefixExtensionMap_.insert("", extension);
             }
         }
-        extension->setWaitIconPath(dir.absoluteFilePath(luaVM.getString("waitIconPath")));
-        extension->setWaitIconData(luaVM.getString("waitIconData"));
-        extension->setWaitTitle(luaVM.getString("waitTitle"));
-        extension->setWaitDescription(luaVM.getString("waitDescription"));
+        extension->setWaitIconPath(dir.absoluteFilePath(luaVM.getQString("waitIconPath")));
+        extension->setWaitIconData(luaVM.getQString("waitIconData"));
+        extension->setWaitTitle(luaVM.getQString("waitTitle"));
+        extension->setWaitDescription(luaVM.getQString("waitDescription"));
         if (luaVM.getBool("daemon"))
         {
             extension->setDaemon(true);

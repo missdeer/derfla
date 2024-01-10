@@ -37,6 +37,16 @@ void LuaVM::shutdown()
 
 bool LuaVM::doFile(const QString &file)
 {
+    return doFile(file.toStdString().c_str());
+}
+
+bool LuaVM::doFile(const std::string &file)
+{
+    return doFile(file.c_str());
+}
+
+bool LuaVM::doFile(const char *file)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
@@ -44,7 +54,7 @@ bool LuaVM::doFile(const QString &file)
     }
 
     qDebug() << "parsing " << file;
-    int status = luaL_loadfile(m_L, file.toStdString().c_str());
+    int status = luaL_loadfile(m_L, file);
     if (status)
     {
         qCritical() << "Couldn't load file:" << lua_tostring(m_L, -1);
@@ -64,6 +74,16 @@ bool LuaVM::doFile(const QString &file)
 
 bool LuaVM::doScript(const QString &script)
 {
+    return doScript(script.toStdString().c_str(), script.size());
+}
+
+bool LuaVM::doScript(const std::string &script)
+{
+    return doScript(script.c_str(), script.size());
+}
+
+bool LuaVM::doScript(const char *script, size_t len)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
@@ -71,7 +91,7 @@ bool LuaVM::doScript(const QString &script)
     }
 
     qDebug() << "evaluating script:" << script;
-    int status = luaL_loadbuffer(m_L, script.toStdString().c_str(), script.toStdString().size(), "theme");
+    int status = luaL_loadbuffer(m_L, script, len, "theme");
     if (status)
     {
         qCritical() << "Couldn't load script:" << lua_tostring(m_L, -1);
@@ -89,7 +109,15 @@ bool LuaVM::doScript(const QString &script)
     return true;
 }
 
-bool LuaVM::getStringArray(const QString &name, QStringList &array)
+bool LuaVM::getQStringArray(const QString &name, QStringList &array)
+{
+    return getQStringArray(name.toStdString().c_str(), array);
+}
+bool LuaVM::getQStringArray(const std::string &name, QStringList &array)
+{
+    return getQStringArray(name.c_str(), array);
+}
+bool LuaVM::getQStringArray(const char *name, QStringList &array)
 {
     if (!m_L)
     {
@@ -97,7 +125,7 @@ bool LuaVM::getStringArray(const QString &name, QStringList &array)
         return false;
     }
 
-    lua_getglobal(m_L, name.toStdString().c_str());
+    lua_getglobal(m_L, name);
 
     if (!lua_istable(m_L, -1))
     {
@@ -113,7 +141,7 @@ bool LuaVM::getStringArray(const QString &name, QStringList &array)
 
         size_t      resultLen = 0;
         const char *result    = lua_tolstring(m_L, -1, &resultLen);
-        QString     str       = QString::fromLatin1(result, (int)resultLen);
+        QString     str       = QString::fromLatin1(result, static_cast<int>(resultLen));
         lua_pop(m_L, 1);
         array.append(str);
     }
@@ -123,13 +151,21 @@ bool LuaVM::getStringArray(const QString &name, QStringList &array)
 
 double LuaVM::getDouble(const QString &name)
 {
+    return getDouble(name.toStdString().c_str());
+}
+double LuaVM::getDouble(const std::string &name)
+{
+    return getDouble(name.c_str());
+}
+double LuaVM::getDouble(const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0.0;
     }
 
-    lua_getglobal(m_L, name.toStdString().c_str());
+    lua_getglobal(m_L, name);
 
     if (!lua_isnumber(m_L, -1))
     {
@@ -145,13 +181,21 @@ double LuaVM::getDouble(const QString &name)
 
 float LuaVM::getFloat(const QString &name)
 {
+    return getFloat(name.toStdString().c_str());
+}
+float LuaVM::getFloat(const std::string &name)
+{
+    return getFloat(name.c_str());
+}
+float LuaVM::getFloat(const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0.0;
     }
 
-    lua_getglobal(m_L, name.toStdString().c_str());
+    lua_getglobal(m_L, name);
 
     if (!lua_isnumber(m_L, -1))
     {
@@ -167,13 +211,21 @@ float LuaVM::getFloat(const QString &name)
 
 int LuaVM::getInt(const QString &name)
 {
+    return getInt(name.toStdString().c_str());
+}
+int LuaVM::getInt(const std::string &name)
+{
+    return getInt(name.c_str());
+}
+int LuaVM::getInt(const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0;
     }
 
-    lua_getglobal(m_L, name.toStdString().c_str());
+    lua_getglobal(m_L, name);
 
     if (!lua_isinteger(m_L, -1))
     {
@@ -189,13 +241,21 @@ int LuaVM::getInt(const QString &name)
 
 long long LuaVM::getLongLong(const QString &name)
 {
+    return getLongLong(name.toStdString().c_str());
+}
+long long LuaVM::getLongLong(const std::string &name)
+{
+    return getLongLong(name.c_str());
+}
+long long LuaVM::getLongLong(const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0;
     }
 
-    lua_getglobal(m_L, name.toStdString().c_str());
+    lua_getglobal(m_L, name);
 
     if (!lua_isinteger(m_L, -1))
     {
@@ -211,13 +271,21 @@ long long LuaVM::getLongLong(const QString &name)
 
 bool LuaVM::getBool(const QString &name)
 {
+    return getBool(name.toStdString().c_str());
+}
+bool LuaVM::getBool(const std::string &name)
+{
+    return getBool(name.c_str());
+}
+bool LuaVM::getBool(const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return false;
     }
 
-    lua_getglobal(m_L, name.toStdString().c_str());
+    lua_getglobal(m_L, name);
 
     if (!lua_isboolean(m_L, -1))
     {
@@ -231,7 +299,26 @@ bool LuaVM::getBool(const QString &name)
     return !!result;
 }
 
-QString LuaVM::getString(const QString &name)
+QString LuaVM::getQString(const QString &name)
+{
+    return getQString(name.toStdString().c_str());
+}
+
+QString LuaVM::getQString(const std::string &name)
+{
+    return getQString(name.c_str());
+}
+
+QString LuaVM::getQString(const char *name)
+{
+    return QString::fromStdString(getString(name));
+}
+
+std::string LuaVM::getString(const std::string &name)
+{
+    return getString(name.c_str());
+}
+std::string LuaVM::getString(const char *name)
 {
     if (!m_L)
     {
@@ -239,7 +326,7 @@ QString LuaVM::getString(const QString &name)
         return {};
     }
 
-    lua_getglobal(m_L, name.toStdString().c_str());
+    lua_getglobal(m_L, name);
 
     if (!lua_isstring(m_L, -1))
     {
@@ -249,7 +336,7 @@ QString LuaVM::getString(const QString &name)
 
     size_t      resultLen = 0;
     const char *result    = lua_tolstring(m_L, -1, &resultLen);
-    QString     str       = QString::fromLatin1(result, (int)resultLen);
+    std::string str       = std::string(result, static_cast<int>(resultLen));
     lua_pop(m_L, 1);
 
     return str;
@@ -257,13 +344,21 @@ QString LuaVM::getString(const QString &name)
 
 double LuaVM::getDouble(const QString &table, const QString &name)
 {
+    return getDouble(table.toStdString().c_str(), name.toStdString().c_str());
+}
+double LuaVM::getDouble(const std::string &table, const std::string &name)
+{
+    return getDouble(table.c_str(), name.c_str());
+}
+double LuaVM::getDouble(const char *table, const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0.0;
     }
 
-    lua_getglobal(m_L, table.toStdString().c_str());
+    lua_getglobal(m_L, table);
 
     if (!lua_istable(m_L, -1))
     {
@@ -271,7 +366,7 @@ double LuaVM::getDouble(const QString &table, const QString &name)
         return 0.0;
     }
 
-    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_pushstring(m_L, name);
     lua_gettable(m_L, -2); /* get table[name] */
 
     if (!lua_isnumber(m_L, -1))
@@ -289,13 +384,21 @@ double LuaVM::getDouble(const QString &table, const QString &name)
 
 double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &name)
 {
+    return getDouble(t1.toStdString().c_str(), t2.toStdString().c_str(), name.toStdString().c_str());
+}
+double LuaVM::getDouble(const std::string &t1, const std::string &t2, const std::string &name)
+{
+    return getDouble(t1.c_str(), t2.c_str(), name.c_str());
+}
+double LuaVM::getDouble(const char *t1, const char *t2, const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0.0;
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -303,7 +406,7 @@ double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &nam
         return 0.0;
     }
 
-    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_pushstring(m_L, t2);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -312,7 +415,7 @@ double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &nam
         return 0.0;
     }
 
-    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_pushstring(m_L, name);
     lua_gettable(m_L, -2); /* get t2[name] */
 
     if (!lua_isnumber(m_L, -1))
@@ -331,13 +434,21 @@ double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &nam
 
 double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &t3, const QString &name)
 {
+    return getDouble(t1.toStdString().c_str(), t2.toStdString().c_str(), t3.toStdString().c_str(), name.toStdString().c_str());
+}
+double LuaVM::getDouble(const std::string &t1, const std::string &t2, const std::string &t3, const std::string &name)
+{
+    return getDouble(t1.c_str(), t2.c_str(), t3.c_str(), name.c_str());
+}
+double LuaVM::getDouble(const char *t1, const char *t2, const char *t3, const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0.0;
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -345,7 +456,7 @@ double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &t3,
         return 0.0;
     }
 
-    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_pushstring(m_L, t2);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -354,7 +465,7 @@ double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &t3,
         return 0.0;
     }
 
-    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_pushstring(m_L, t3);
     lua_gettable(m_L, -2); /* get t2[t3] */
 
     if (!lua_istable(m_L, -1))
@@ -363,7 +474,7 @@ double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &t3,
         return 0.0;
     }
 
-    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_pushstring(m_L, name);
     lua_gettable(m_L, -2); /* get t3[name] */
 
     if (!lua_isnumber(m_L, -1))
@@ -383,13 +494,21 @@ double LuaVM::getDouble(const QString &t1, const QString &t2, const QString &t3,
 
 float LuaVM::getFloat(const QString &table, const QString &name)
 {
+    return getFloat(table.toStdString().c_str(), name.toStdString().c_str());
+}
+float LuaVM::getFloat(const std::string &table, const std::string &name)
+{
+    return getFloat(table.c_str(), name.c_str());
+}
+float LuaVM::getFloat(const char *table, const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0.0;
     }
 
-    lua_getglobal(m_L, table.toStdString().c_str());
+    lua_getglobal(m_L, table);
 
     if (!lua_istable(m_L, -1))
     {
@@ -397,7 +516,7 @@ float LuaVM::getFloat(const QString &table, const QString &name)
         return 0.0;
     }
 
-    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_pushstring(m_L, name);
     lua_gettable(m_L, -2); /* get table[name] */
 
     if (!lua_isnumber(m_L, -1))
@@ -415,13 +534,21 @@ float LuaVM::getFloat(const QString &table, const QString &name)
 
 float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &name)
 {
+    return getFloat(t1.toStdString().c_str(), t2.toStdString().c_str(), name.toStdString().c_str());
+}
+float LuaVM::getFloat(const std::string &t1, const std::string &t2, const std::string &name)
+{
+    return getFloat(t1.c_str(), t2.c_str(), name.c_str());
+}
+float LuaVM::getFloat(const char *t1, const char *t2, const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0.0;
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -429,7 +556,7 @@ float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &name)
         return 0.0;
     }
 
-    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_pushstring(m_L, t2);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -438,7 +565,7 @@ float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &name)
         return 0.0;
     }
 
-    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_pushstring(m_L, name);
     lua_gettable(m_L, -2); /* get t2[name] */
 
     if (!lua_isnumber(m_L, -1))
@@ -457,13 +584,21 @@ float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &name)
 
 float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &t3, const QString &name)
 {
+    return getFloat(t1.toStdString().c_str(), t2.toStdString().c_str(), t3.toStdString().c_str(), name.toStdString().c_str());
+}
+float LuaVM::getFloat(const std::string &t1, const std::string &t2, const std::string &t3, const std::string &name)
+{
+    return getFloat(t1.c_str(), t2.c_str(), t3.c_str(), name.c_str());
+}
+float LuaVM::getFloat(const char *t1, const char *t2, const char *t3, const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0.0;
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -471,7 +606,7 @@ float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &t3, c
         return 0.0;
     }
 
-    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_pushstring(m_L, t2);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -480,7 +615,7 @@ float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &t3, c
         return 0.0;
     }
 
-    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_pushstring(m_L, t3);
     lua_gettable(m_L, -2); /* get t2[t3] */
 
     if (!lua_istable(m_L, -1))
@@ -489,7 +624,7 @@ float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &t3, c
         return 0.0;
     }
 
-    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_pushstring(m_L, name);
     lua_gettable(m_L, -2); /* get t3[name] */
 
     if (!lua_isnumber(m_L, -1))
@@ -509,13 +644,21 @@ float LuaVM::getFloat(const QString &t1, const QString &t2, const QString &t3, c
 
 int LuaVM::getInt(const QString &table, const QString &name)
 {
+    return getInt(table.toStdString().c_str(), name.toStdString().c_str());
+}
+int LuaVM::getInt(const std::string &table, const std::string &name)
+{
+    return getInt(table.c_str(), name.c_str());
+}
+int LuaVM::getInt(const char *table, const char *name)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return 0;
     }
 
-    lua_getglobal(m_L, table.toStdString().c_str());
+    lua_getglobal(m_L, table);
 
     if (!lua_istable(m_L, -1))
     {
@@ -523,7 +666,7 @@ int LuaVM::getInt(const QString &table, const QString &name)
         return 0;
     }
 
-    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_pushstring(m_L, name);
     lua_gettable(m_L, -2); /* get table[name] */
 
     if (!lua_isinteger(m_L, -1))
@@ -884,7 +1027,24 @@ bool LuaVM::getBool(const QString &t1, const QString &t2, const QString &t3, con
     return !!result;
 }
 
-QString LuaVM::getString(const QString &table, const QString &name)
+QString LuaVM::getQString(const QString &table, const QString &name)
+{
+    return getQString(table.toStdString().c_str(), name.toStdString().c_str());
+}
+QString LuaVM::getQString(const std::string &table, const std::string &name)
+{
+    return getQString(table.c_str(), name.c_str());
+}
+QString LuaVM::getQString(const char *table, const char *name)
+{
+    return QString::fromStdString(getString(table, name));
+}
+std::string LuaVM::getString(const std::string &table, const std::string &name)
+{
+    return getString(table.c_str(), name.c_str());
+}
+
+std::string LuaVM::getString(const char *table, const char *name)
 {
     if (!m_L)
     {
@@ -892,7 +1052,7 @@ QString LuaVM::getString(const QString &table, const QString &name)
         return {};
     }
 
-    lua_getglobal(m_L, table.toStdString().c_str());
+    lua_getglobal(m_L, table);
 
     if (!lua_istable(m_L, -1))
     {
@@ -900,7 +1060,7 @@ QString LuaVM::getString(const QString &table, const QString &name)
         return {};
     }
 
-    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_pushstring(m_L, name);
     lua_gettable(m_L, -2); /* get table[name] */
 
     if (!lua_isstring(m_L, -1))
@@ -911,14 +1071,30 @@ QString LuaVM::getString(const QString &table, const QString &name)
 
     size_t      resultLen = 0;
     const char *result    = lua_tolstring(m_L, -1, &resultLen);
-    QString     str       = QString::fromLatin1(result, (int)resultLen);
+    std::string str       = std::string(result, static_cast<int>(resultLen));
     lua_pop(m_L, 1); // remove the result
     lua_pop(m_L, 1); // remove table
 
     return str;
 }
 
-QString LuaVM::getString(const QString &t1, const QString &t2, const QString &name)
+QString LuaVM::getQString(const QString &t1, const QString &t2, const QString &name)
+{
+    return getQString(t1.toStdString().c_str(), t2.toStdString().c_str(), name.toStdString().c_str());
+}
+QString LuaVM::getQString(const std::string &t1, const std::string &t2, const std::string &name)
+{
+    return getQString(t1.c_str(), t2.c_str(), name.c_str());
+}
+QString LuaVM::getQString(const char *t1, const char *t2, const char *name)
+{
+    return QString::fromStdString(getString(t1, t2, name));
+}
+std::string LuaVM::getString(const std::string &t1, const std::string &t2, const std::string &name)
+{
+    return getString(t1.c_str(), t2.c_str(), name.c_str());
+}
+std::string LuaVM::getString(const char *t1, const char *t2, const char *name)
 {
     if (!m_L)
     {
@@ -926,7 +1102,7 @@ QString LuaVM::getString(const QString &t1, const QString &t2, const QString &na
         return {};
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -934,7 +1110,7 @@ QString LuaVM::getString(const QString &t1, const QString &t2, const QString &na
         return {};
     }
 
-    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_pushstring(m_L, t2);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -943,7 +1119,7 @@ QString LuaVM::getString(const QString &t1, const QString &t2, const QString &na
         return {};
     }
 
-    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_pushstring(m_L, name);
     lua_gettable(m_L, -2); /* get t2[name] */
 
     if (!lua_isstring(m_L, -1))
@@ -954,7 +1130,7 @@ QString LuaVM::getString(const QString &t1, const QString &t2, const QString &na
 
     size_t      resultLen = 0;
     const char *result    = lua_tolstring(m_L, -1, &resultLen);
-    auto        str       = QString::fromLatin1(result, (int)resultLen);
+    auto        str       = std::string(result, static_cast<int>(resultLen));
     lua_pop(m_L, 1); // remove the result
     lua_pop(m_L, 1); // remove t2
     lua_pop(m_L, 1); // remove t1
@@ -962,7 +1138,23 @@ QString LuaVM::getString(const QString &t1, const QString &t2, const QString &na
     return str;
 }
 
-QString LuaVM::getString(const QString &t1, const QString &t2, const QString &t3, const QString &name)
+QString LuaVM::getQString(const QString &t1, const QString &t2, const QString &t3, const QString &name)
+{
+    return getQString(t1.toStdString().c_str(), t2.toStdString().c_str(), t3.toStdString().c_str(), name.toStdString().c_str());
+}
+QString LuaVM::getQString(const std::string &t1, const std::string &t2, const std::string &t3, const std::string &name)
+{
+    return getQString(t1.c_str(), t2.c_str(), t3.c_str(), name.c_str());
+}
+QString LuaVM::getQString(const char *t1, const char *t2, const char *t3, const char *name)
+{
+    return QString::fromStdString(getString(t1, t2, t3, name));
+}
+std::string LuaVM::getString(const std::string &t1, const std::string &t2, const std::string &t3, const std::string &name)
+{
+    return getString(t1.c_str(), t2.c_str(), t3.c_str(), name.c_str());
+}
+std::string LuaVM::getString(const char *t1, const char *t2, const char *t3, const char *name)
 {
     if (!m_L)
     {
@@ -970,7 +1162,7 @@ QString LuaVM::getString(const QString &t1, const QString &t2, const QString &t3
         return {};
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -978,7 +1170,7 @@ QString LuaVM::getString(const QString &t1, const QString &t2, const QString &t3
         return {};
     }
 
-    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_pushstring(m_L, t2);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -987,7 +1179,7 @@ QString LuaVM::getString(const QString &t1, const QString &t2, const QString &t3
         return {};
     }
 
-    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_pushstring(m_L, t3);
     lua_gettable(m_L, -2); /* get t2[t3] */
 
     if (!lua_isstring(m_L, -1))
@@ -996,7 +1188,7 @@ QString LuaVM::getString(const QString &t1, const QString &t2, const QString &t3
         return {};
     }
 
-    lua_pushstring(m_L, name.toStdString().c_str());
+    lua_pushstring(m_L, name);
     lua_gettable(m_L, -2); /* get t3[name] */
 
     if (!lua_isstring(m_L, -1))
@@ -1007,7 +1199,7 @@ QString LuaVM::getString(const QString &t1, const QString &t2, const QString &t3
 
     size_t      resultLen = 0;
     const char *result    = lua_tolstring(m_L, -1, &resultLen);
-    auto        str       = QString::fromLatin1(result, (int)resultLen);
+    auto        str       = std::string(result, static_cast<int>(resultLen));
     lua_pop(m_L, 1); // remove the result
     lua_pop(m_L, 1); // remove t3
     lua_pop(m_L, 1); // remove t2
@@ -1138,22 +1330,22 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
 
 bool LuaVM::set(const QString &name, float value)
 {
-    return set(name, (double)value);
+    return set(name, static_cast<double>(value));
 }
 
 bool LuaVM::set(const QString &t1, const QString &name, float value)
 {
-    return set(t1, name, (double)value);
+    return set(t1, name, static_cast<double>(value));
 }
 
 bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, float value)
 {
-    return set(t1, t2, name, (double)value);
+    return set(t1, t2, name, static_cast<double>(value));
 }
 
 bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const QString &name, float value)
 {
-    return set(t1, t2, t3, name, (double)value);
+    return set(t1, t2, t3, name, static_cast<double>(value));
 }
 
 bool LuaVM::set(const QString &name, int value)
@@ -1398,13 +1590,21 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
 
 bool LuaVM::set(const QString &name, bool value)
 {
+    return set(name.toStdString().c_str(), value);
+}
+bool LuaVM::set(const std::string &name, bool value)
+{
+    return set(name.c_str(), value);
+}
+bool LuaVM::set(const char *name, bool value)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return false;
     }
 
-    lua_getglobal(m_L, name.toStdString().c_str());
+    lua_getglobal(m_L, name);
 
     if (!lua_isboolean(m_L, -1))
     {
@@ -1413,11 +1613,19 @@ bool LuaVM::set(const QString &name, bool value)
     }
 
     lua_pushboolean(m_L, value);
-    lua_setglobal(m_L, name.toStdString().c_str());
+    lua_setglobal(m_L, name);
     return true;
 }
 
 bool LuaVM::set(const QString &t1, const QString &name, bool value)
+{
+    return set(t1.toStdString().c_str(), name.toStdString().c_str(), value);
+}
+bool LuaVM::set(const std::string &t1, const std::string &name, bool value)
+{
+    return set(t1.c_str(), name.c_str(), value);
+}
+bool LuaVM::set(const char *t1, const char *name, bool value)
 {
     if (!m_L)
     {
@@ -1425,7 +1633,7 @@ bool LuaVM::set(const QString &t1, const QString &name, bool value)
         return false;
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -1434,7 +1642,7 @@ bool LuaVM::set(const QString &t1, const QString &name, bool value)
     }
 
     lua_pushboolean(m_L, value);
-    lua_setfield(m_L, -2, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name);
 
     lua_pop(m_L, 1); // remove t1
     return true;
@@ -1442,13 +1650,21 @@ bool LuaVM::set(const QString &t1, const QString &name, bool value)
 
 bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, bool value)
 {
+    return set(t1.toStdString().c_str(), t2.toStdString().c_str(), name.toStdString().c_str(), value);
+}
+bool LuaVM::set(const std::string &t1, const std::string &t2, const std::string &name, bool value)
+{
+    return set(t1.c_str(), t2.c_str(), name.c_str(), value);
+}
+bool LuaVM::set(const char *t1, const char *t2, const char *name, bool value)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return false;
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -1456,7 +1672,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, bool 
         return false;
     }
 
-    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_pushstring(m_L, t2);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -1466,7 +1682,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, bool 
     }
 
     lua_pushboolean(m_L, value);
-    lua_setfield(m_L, -2, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name);
 
     lua_pop(m_L, 1); // remove t2
     lua_pop(m_L, 1); // remove t1
@@ -1475,13 +1691,21 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, bool 
 
 bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const QString &name, bool value)
 {
+    return set(t1.toStdString().c_str(), t2.toStdString().c_str(), t3.toStdString().c_str(), name.toStdString().c_str(), value);
+}
+bool LuaVM::set(const std::string &t1, const std::string &t2, const std::string &t3, const std::string &name, bool value)
+{
+    return set(t1.c_str(), t2.c_str(), t3.c_str(), name.c_str(), value);
+}
+bool LuaVM::set(const char *t1, const char *t2, const char *t3, const char *name, bool value)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return false;
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -1489,7 +1713,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
         return false;
     }
 
-    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_pushstring(m_L, t2);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -1498,7 +1722,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
         return false;
     }
 
-    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_pushstring(m_L, t3);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -1508,7 +1732,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
     }
 
     lua_pushboolean(m_L, value);
-    lua_setfield(m_L, -2, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name);
 
     lua_pop(m_L, 1); // remove t3
     lua_pop(m_L, 1); // remove t2
@@ -1518,13 +1742,21 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
 
 bool LuaVM::set(const QString &name, const char *value)
 {
+    return set(name.toStdString().c_str(), value);
+}
+bool LuaVM::set(const std::string &name, const char *value)
+{
+    return set(name.c_str(), value);
+}
+bool LuaVM::set(const char *name, const char *value)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return false;
     }
 
-    lua_getglobal(m_L, name.toStdString().c_str());
+    lua_getglobal(m_L, name);
 
     if (!lua_isstring(m_L, -1))
     {
@@ -1533,11 +1765,19 @@ bool LuaVM::set(const QString &name, const char *value)
     }
 
     lua_pushstring(m_L, value);
-    lua_setglobal(m_L, name.toStdString().c_str());
+    lua_setglobal(m_L, name);
     return true;
 }
 
 bool LuaVM::set(const QString &t1, const QString &name, const char *value)
+{
+    return set(t1.toStdString().c_str(), name.toStdString().c_str(), value);
+}
+bool LuaVM::set(const std::string &t1, const std::string &name, const char *value)
+{
+    return set(t1.c_str(), name.c_str(), value);
+}
+bool LuaVM::set(const char *t1, const char *name, const char *value)
 {
     if (!m_L)
     {
@@ -1545,7 +1785,7 @@ bool LuaVM::set(const QString &t1, const QString &name, const char *value)
         return false;
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -1554,7 +1794,7 @@ bool LuaVM::set(const QString &t1, const QString &name, const char *value)
     }
 
     lua_pushstring(m_L, value);
-    lua_setfield(m_L, -2, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name);
 
     lua_pop(m_L, 1); // remove t1
     return true;
@@ -1562,13 +1802,21 @@ bool LuaVM::set(const QString &t1, const QString &name, const char *value)
 
 bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, const char *value)
 {
+    return set(t1.toStdString().c_str(), t2.toStdString().c_str(), name.toStdString().c_str(), value);
+}
+bool LuaVM::set(const std::string &t1, const std::string &t2, const std::string &name, const char *value)
+{
+    return set(t1.c_str(), t2.c_str(), name.c_str(), value);
+}
+bool LuaVM::set(const char *t1, const char *t2, const char *name, const char *value)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return false;
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -1576,7 +1824,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, const
         return false;
     }
 
-    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_pushstring(m_L, t2);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -1586,7 +1834,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, const
     }
 
     lua_pushstring(m_L, value);
-    lua_setfield(m_L, -2, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name);
 
     lua_pop(m_L, 1); // remove t2
     lua_pop(m_L, 1); // remove t1
@@ -1595,13 +1843,21 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &name, const
 
 bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const QString &name, const char *value)
 {
+    return set(t1.toStdString().c_str(), t2.toStdString().c_str(), t3.toStdString().c_str(), name.toStdString().c_str(), value);
+}
+bool LuaVM::set(const std::string &t1, const std::string &t2, const std::string &t3, const std::string &name, const char *value)
+{
+    return set(t1.c_str(), t2.c_str(), t3.c_str(), name.c_str(), value);
+}
+bool LuaVM::set(const char *t1, const char *t2, const char *t3, const char *name, const char *value)
+{
     if (!m_L)
     {
         qCritical() << "lua intepreter is not ready";
         return false;
     }
 
-    lua_getglobal(m_L, t1.toStdString().c_str());
+    lua_getglobal(m_L, t1);
 
     if (!lua_istable(m_L, -1))
     {
@@ -1609,7 +1865,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
         return false;
     }
 
-    lua_pushstring(m_L, t2.toStdString().c_str());
+    lua_pushstring(m_L, t2);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -1618,7 +1874,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
         return false;
     }
 
-    lua_pushstring(m_L, t3.toStdString().c_str());
+    lua_pushstring(m_L, t3);
     lua_gettable(m_L, -2); /* get t1[t2] */
 
     if (!lua_istable(m_L, -1))
@@ -1628,7 +1884,7 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
     }
 
     lua_pushstring(m_L, value);
-    lua_setfield(m_L, -2, name.toStdString().c_str());
+    lua_setfield(m_L, -2, name);
 
     lua_pop(m_L, 1); // remove t3
     lua_pop(m_L, 1); // remove t2
@@ -1638,13 +1894,13 @@ bool LuaVM::set(const QString &t1, const QString &t2, const QString &t3, const Q
 
 void LuaVM::loadBuiltinTemplate()
 {
-    QFile file(":/lua/builtin.lua");
+    QFile file(QStringLiteral(":/lua/builtin.lua"));
     if (file.open(QIODevice::ReadOnly))
     {
         QByteArray content = file.readAll();
         file.close();
 
-        doScript(content);
+        doScript(content.constData(), content.length());
     }
 }
 

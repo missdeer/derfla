@@ -53,9 +53,13 @@ void DerflaAction::setWorkingDirectory(const QString &workingDirectory)
 {
     QFileInfo fi(workingDirectory);
     if (fi.isDir())
+    {
         workingDirectory_ = workingDirectory;
+    }
     else
+    {
         workingDirectory_ = fi.absolutePath();
+    }
 }
 
 const QString &DerflaAction::actionType() const

@@ -69,7 +69,7 @@ bool SkinManager::loadDerflaSkinPackage(const QString &skinPath, int &cutTop, in
                 return false;
             }
 
-            QString image = vm.getString("image");
+            QString image = vm.getQString("image");
             if (image.isEmpty())
             {
                 qCritical() << "missing image element in skin configuration file" << configuration;
@@ -84,7 +84,7 @@ bool SkinManager::loadDerflaSkinPackage(const QString &skinPath, int &cutTop, in
             }
             skinSize_ = backgroundImage_.size();
 
-            inputStyle_ = vm.getString("inputstyle");
+            inputStyle_ = vm.getQString("inputstyle");
             if (inputStyle_.isEmpty())
             {
                 qCritical() << "missing inputstyle element in skin configuration file" << configuration;
@@ -110,7 +110,7 @@ bool SkinManager::loadDerflaSkinConfigurationFile(const QString &skinPath, int &
         return false;
     }
 
-    QString image = vm.getString("image");
+    QString image = vm.getQString("image");
     if (image.isEmpty())
     {
         qCritical() << "missing image element in skin configuration file" << skinPath;
@@ -127,7 +127,7 @@ bool SkinManager::loadDerflaSkinConfigurationFile(const QString &skinPath, int &
     }
     skinSize_ = backgroundImage_.size();
 
-    inputStyle_ = vm.getString("inputstyle");
+    inputStyle_ = vm.getQString("inputstyle");
     if (inputStyle_.isEmpty())
     {
         qCritical() << "missing inputstyle element in skin configuration file" << skinPath;
