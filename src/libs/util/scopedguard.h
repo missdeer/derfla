@@ -7,16 +7,24 @@
 
 class UTILSHARED_EXPORT ScopedGuard
 {
-    std::function<void(void)> m_f;
-
 public:
-    ScopedGuard()                               = delete;
-    ScopedGuard(ScopedGuard &&)                 = delete;
-    ScopedGuard(const ScopedGuard &)            = delete;
-    ScopedGuard &operator=(ScopedGuard &&)      = delete;
-    ScopedGuard &operator=(const ScopedGuard &) = delete;
-    ScopedGuard(std::function<void(void)> f);
+    explicit ScopedGuard(std::function<void()> task);
+
+    // Use default move constructor.
+    ScopedGuard(ScopedGuard &&other) noexcept;
+
+    // Deleted copy constructor and assignment.
+    ScopedGuard(const ScopedGuard&) = delete;
+    ScopedGuard& operator=(const ScopedGuard&) = delete;
+
     ~ScopedGuard();
+
+    void deactivate();
+
+private:
+    std::function<void()> onExitTask;
+    bool isActive;
 };
+
 
 #endif // ScopedGuard_H
