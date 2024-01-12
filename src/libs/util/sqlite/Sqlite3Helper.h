@@ -15,7 +15,7 @@ struct sqlite3_value;
 class UTILSHARED_EXPORT Sqlite3Helper
 {
 public:
-    Sqlite3Helper(sqlite3 *&db);
+    explicit Sqlite3Helper(sqlite3 *&db);
 
     Sqlite3StatementPtr compile(const char *szSQL);
     Sqlite3StatementPtr compile(const std::string &sql);

@@ -91,47 +91,47 @@ void Sqlite3Statement::bindNull(const std::string &szParam)
 
 int Sqlite3Statement::bindParameterIndex(const QString &szParam)
 {
-    return bindParameterIndex((const char *)szParam.toStdString().c_str());
+    return bindParameterIndex(szParam.toStdString().c_str());
 }
 
 void Sqlite3Statement::bind(const QString &szParam, const QString &value)
 {
-    bind((const char *)szParam.toStdString().c_str(), (const char *)value.toStdString().c_str());
+    bind(szParam.toStdString().c_str(), value.toStdString().c_str());
 }
 
 void Sqlite3Statement::bind(const QString &szParam, const std::string &szValue)
 {
-    bind((const char *)szParam.toStdString().c_str(), szValue.c_str());
+    bind(szParam.toStdString().c_str(), szValue.c_str());
 }
 
 void Sqlite3Statement::bind(const QString &szParam, const std::string_view &szValue)
 {
-    bind((const char *)szParam.toStdString().c_str(), szValue);
+    bind(szParam.toStdString().c_str(), szValue);
 }
 
 void Sqlite3Statement::bind(const QString &szParam, int nValue)
 {
-    bind((const char *)szParam.toStdString().c_str(), nValue);
+    bind(szParam.toStdString().c_str(), nValue);
 }
 
 void Sqlite3Statement::bind(const QString &szParam, int64_t nValue)
 {
-    bind((const char *)szParam.toStdString().c_str(), nValue);
+    bind(szParam.toStdString().c_str(), nValue);
 }
 
 void Sqlite3Statement::bind(const QString &szParam, double dwValue)
 {
-    bind((const char *)szParam.toStdString().c_str(), dwValue);
+    bind(szParam.toStdString().c_str(), dwValue);
 }
 
 void Sqlite3Statement::bind(const QString &szParam, const unsigned char *blobValue, int nLen)
 {
-    bind((const char *)szParam.toStdString().c_str(), blobValue, nLen);
+    bind(szParam.toStdString().c_str(), blobValue, nLen);
 }
 
 void Sqlite3Statement::bindNull(const QString &szParam)
 {
-    bindNull((const char *)szParam.toStdString().c_str());
+    bindNull(szParam.toStdString().c_str());
 }
 
 void Sqlite3Statement::bind(int nParam, const char *szValue, int nLen /*= -1*/)
@@ -283,7 +283,7 @@ int Sqlite3Statement::bindParameterIndex(const char *szParam)
 
 void Sqlite3Statement::bind(const char *szParam, const QString &value)
 {
-    bind(szParam, (const char *)value.toStdString().c_str());
+    bind(szParam, value.toStdString().c_str());
 }
 
 int Sqlite3Statement::bindParameterIndex(const std::string &szParam)
@@ -293,7 +293,7 @@ int Sqlite3Statement::bindParameterIndex(const std::string &szParam)
 
 void Sqlite3Statement::bind(const std::string &szParam, const QString &value)
 {
-    bind(szParam.c_str(), (const char *)value.toStdString().c_str());
+    bind(szParam.c_str(), value.toStdString().c_str());
 }
 
 int Sqlite3Statement::execDML()
@@ -315,18 +315,17 @@ int Sqlite3Statement::execDML()
 
         if (sqlite3_finalize(m_pVM) != SQLITE_OK)
         {
-            const char *szError = (const char *)sqlite3_errmsg(m_db);
+            const char *szError = sqlite3_errmsg(m_db);
             qCritical() << szError;
             return -1;
         }
         return nRowsChanged;
     }
-    else
-    {
-        sqlite3_finalize(m_pVM);
-        const char *szError = (const char *)sqlite3_errmsg(m_db);
-        qCritical() << szError;
-    }
+
+    sqlite3_finalize(m_pVM);
+    const char *szError = sqlite3_errmsg(m_db);
+    qCritical() << szError;
+
     return -1;
 }
 
@@ -341,7 +340,8 @@ int Sqlite3Statement::execQuery(bool &eof)
         eof = true;
         return nRet;
     }
-    else if (nRet == SQLITE_ROW)
+
+    if (nRet == SQLITE_ROW)
     {
         // at least 1 row
         eof = false;
@@ -350,9 +350,11 @@ int Sqlite3Statement::execQuery(bool &eof)
     nRet = sqlite3_finalize(m_pVM);
 
     if (nRet == SQLITE_SCHEMA)
+    {
         return nRet;
+    }
 
-    const char *szError = (const char *)sqlite3_errmsg(m_db);
+    const char *szError = sqlite3_errmsg(m_db);
     qCritical() << szError;
     return -1;
 }
@@ -375,7 +377,7 @@ int Sqlite3Statement::nextRow(bool &eof)
     else
     {
         nRet                = sqlite3_finalize(m_pVM);
-        const char *szError = (const char *)sqlite3_errmsg(m_db);
+        const char *szError = sqlite3_errmsg(m_db);
         qCritical() << szError;
         return nRet;
     }
@@ -387,7 +389,7 @@ int Sqlite3Statement::endQuery()
     int nRet = sqlite3_finalize(m_pVM);
     if (nRet != SQLITE_OK && nRet != SQLITE_DONE)
     {
-        const char *szError = (const char *)sqlite3_errmsg(m_db);
+        const char *szError = sqlite3_errmsg(m_db);
         qCritical() << szError;
     }
     return nRet;
@@ -450,7 +452,7 @@ std::string Sqlite3Statement::getString(int column)
         qCritical() << "VM null pointer";
         return {};
     }
-    return {(const char *)sqlite3_column_text(m_pVM, column), (std::string::size_type)sqlite3_column_bytes(m_pVM, column)};
+    return {(const char *)sqlite3_column_text(m_pVM, column), static_cast<std::string::size_type>(sqlite3_column_bytes(m_pVM, column))};
 }
 
 QString Sqlite3Statement::getQString(int column)
@@ -506,7 +508,7 @@ QByteArray Sqlite3Statement::getBlob(int column)
         return {};
     }
 
-    return {(const char *)sqlite3_column_blob(m_pVM, column), sqlite3_column_bytes(m_pVM, column)};
+    return {static_cast<const char *>(sqlite3_column_blob(m_pVM, column)), sqlite3_column_bytes(m_pVM, column)};
 }
 void Sqlite3Statement::bind(int nParam, const QByteArray &blobValue)
 {

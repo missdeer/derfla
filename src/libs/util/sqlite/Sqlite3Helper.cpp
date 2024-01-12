@@ -176,9 +176,9 @@ int Sqlite3Helper::checkExists(const QString &field, const QString &name)
 
 bool Sqlite3Helper::createTablesAndIndexes(std::map<std::string, const char *> &tablesMap, std::map<std::string, const char *> &indexesMap)
 {
-    for (auto &kv : tablesMap)
+    for (auto &[name, sql] : tablesMap)
     {
-        int res = checkExists("table", kv.first);
+        int res = checkExists("table", name);
         if (res < 0)
         {
             // do repair database file
@@ -187,17 +187,17 @@ bool Sqlite3Helper::createTablesAndIndexes(std::map<std::string, const char *> &
 
         if (!res)
         {
-            if (execDML(kv.second) != SQLITE_OK)
+            if (execDML(sql) != SQLITE_OK)
             {
-                const char *szError = (const char *)sqlite3_errmsg(m_db);
+                const char *szError = sqlite3_errmsg(m_db);
                 return false;
             }
         }
     }
 
-    for (auto &kv : indexesMap)
+    for (auto &[name, sql] : indexesMap)
     {
-        int res = checkExists("index", kv.first);
+        int res = checkExists("index", name);
         if (res < 0)
         {
             // do repair database file
@@ -206,9 +206,9 @@ bool Sqlite3Helper::createTablesAndIndexes(std::map<std::string, const char *> &
 
         if (!res)
         {
-            if (execDML(kv.second) != SQLITE_OK)
+            if (execDML(sql) != SQLITE_OK)
             {
-                const char *szError = (const char *)sqlite3_errmsg(m_db);
+                const char *szError = sqlite3_errmsg(m_db);
                 return false;
             }
         }
