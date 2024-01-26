@@ -11,7 +11,7 @@
     <message>
         <location filename="../bingdict.cpp" line="86"/>
         <location filename="../bingdict.cpp" line="101"/>
-        <location filename="../deepl.cpp" line="206"/>
+        <location filename="../deepl.cpp" line="109"/>
         <source>[Explain] %1</source>
         <translation type="unfinished"></translation>
     </message>
