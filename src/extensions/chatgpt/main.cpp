@@ -539,24 +539,11 @@ int main(int argc, char *argv[])
     if (optionsMap.end() != iter)
     {
         auto    func = iter.value();
-        QString keyword;
-#if defined(Q_OS_WIN)
-        int nArgs = 0;
-
-        LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-        for (int i = 2; i < argc; i++)
-        {
-            keyword.append(QString::fromWCharArray(szArglist[i]));
-            keyword.append(' ');
-        }
-        LocalFree(szArglist);
-#else
-        for (int i = 2; i < argc; i++)
-        {
-            keyword.append(argv[i]);
-            keyword.append(' ');
-        }
-#endif
+        auto args = SharedTools::QtSingleApplication::arguments();
+        args.removeFirst();
+        args.removeFirst();
+        QString keyword = args.join(' ');
+                
         if (!func(keyword.trimmed()))
         {
             return 1;

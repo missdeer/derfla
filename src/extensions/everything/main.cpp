@@ -242,6 +242,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    auto args = QCoreApplication::arguments();
     if (argc == 3 || argc == 4)
     {
         QTextStream stdoutTs(stdout);
@@ -251,15 +252,8 @@ int main(int argc, char *argv[])
             stdoutTs << "everything util is not running.";
             return 1;
         }
-
-        int nArgs = 0;
-
-        LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-        QString pattern   = QString::fromWCharArray(argc == 3 ? szArglist[2] : szArglist[3]);
-        LocalFree(szArglist);
-#else
-        QString pattern(argc == 3 ? argv[2] : argv[3]);
 #endif
+        QString pattern   = argc == 3 ? args[2] : args[3];
         if (pattern.size() < 2)
         {
             stdoutTs << "[]";
@@ -268,7 +262,7 @@ int main(int argc, char *argv[])
 
         if (argc == 4)
         {
-            QString options(argv[2]);
+            QString options(args[2]);
 #if defined(Q_OS_WIN)
             Everything_SetMatchWholeWord(options.contains(QChar('w'), Qt::CaseInsensitive));
             Everything_SetMatchCase(options.contains(QChar('c'), Qt::CaseInsensitive));
@@ -292,7 +286,7 @@ int main(int argc, char *argv[])
             {"rr", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), true, true); }},
             {"ro", [](auto &&cmd) { return handleShellOpen(std::forward<decltype(cmd)>(cmd), true, false); }},
         };
-        QString cmd(argv[1]);
+        QString cmd(args[1]);
         auto    iter = cmdHandlerMap.find(cmd);
         if (cmdHandlerMap.end() == iter)
         {

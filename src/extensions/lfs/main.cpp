@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
 
     if (argc == 2)
     {
-        if (QString(argv[1]).compare("/exit", Qt::CaseInsensitive) == 0 && app.isRunning())
+        auto args = QCoreApplication::arguments();
+        if (args[1].compare("/exit", Qt::CaseInsensitive) == 0 && app.isRunning())
         {
             app.sendMessage("/exit");
             return 0;
@@ -53,16 +54,7 @@ int main(int argc, char *argv[])
         QTimer::singleShot(1500, [] { QCoreApplication::quit(); });
         LocalSocket localSocket(stream, nullptr);
         localSocket.connectToServer(lfsLocalPipe);
-#if defined(Q_OS_WIN)
-        int nArgs = 0;
-
-        LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-        auto    args      = QString::fromWCharArray(szArglist[1]).toUtf8();
-        LocalFree(szArglist);
-        localSocket.write(args);
-#else
-        localSocket.write(argv[1]);
-#endif
+        localSocket.write(args[1].toUtf8());
 
         return QCoreApplication::exec();
     }

@@ -16,12 +16,12 @@ int main(int argc, char *argv[])
     rl.rlim_cur = qMin(rl.rlim_cur, rl.rlim_max);
     setrlimit(RLIMIT_NOFILE, &rl);
 #endif
-    SharedTools::QtSingleApplication a("Weather", argc, argv);
+    SharedTools::QtSingleApplication app("Weather", argc, argv);
 
-    a.setApplicationName("Weather");
-    a.setApplicationVersion("1.0");
-    a.setOrganizationDomain("ismisv.com");
-    a.setOrganizationName("Derfla");
+    SharedTools::QtSingleApplication::setApplicationName("Weather");
+    SharedTools::QtSingleApplication::setApplicationVersion("1.0");
+    SharedTools::QtSingleApplication::setOrganizationDomain("ismisv.com");
+    SharedTools::QtSingleApplication::setOrganizationName("Derfla");
 
     if (argc != 3)
     {
@@ -36,7 +36,8 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    QString cmd(argv[1]);
+    auto args = QCoreApplication::arguments();
+    QString cmd(args[1]);
     if (cmd != "w" && cmd != "weather")
     {
         QTextStream ts(stdout);
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << localeDirPath << " success";
-        if (!a.installTranslator(&translator))
+        if (!SharedTools::QtSingleApplication::installTranslator(&translator))
         {
             qDebug() << "installing translator failed ";
         }
@@ -85,21 +86,14 @@ int main(int argc, char *argv[])
     else
     {
         qDebug() << "loading " << locale << " from " << rootDirPath << " success";
-        if (!a.installTranslator(&qtTranslator))
+        if (!SharedTools::QtSingleApplication::installTranslator(&qtTranslator))
         {
             qDebug() << "installing qt translator failed ";
         }
     }
 
-#if defined(Q_OS_WIN)
-    int nArgs = 0;
-
-    LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-    QString location(QString::fromWCharArray(szArglist[2]));
-    LocalFree(szArglist);
-#else
-    QString location(argv[2]);
-#endif
+    QString location(args[2]);
+    
     Heweather he;
     he.forecast(location);
     return QCoreApplication::exec();

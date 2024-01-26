@@ -172,8 +172,8 @@ int main(int argc, char *argv[])
             qDebug() << "installing qt translator failed ";
         }
     }
-
-    QString                                             se(argv[1]);
+    auto args = QCoreApplication::arguments();
+    QString                                             se(args[1]);
     QMap<QString, std::function<bool(const QString &)>> m = {
         {"s", std::bind(&allHandler, std::placeholders::_1)},
         {"se", std::bind(&allHandler, std::placeholders::_1)},
@@ -192,29 +192,15 @@ int main(int argc, char *argv[])
         {"wiki", std::bind(&wikipediaHandler, std::placeholders::_1)},
         {"wikipedia", std::bind(&wikipediaHandler, std::placeholders::_1)},
     };
-    auto it = m.find(se);
-    if (m.end() != it)
+    auto iter = m.find(se);
+    if (m.end() != iter)
     {
-        auto    f = it.value();
-        QString keyword;
-#if defined(Q_OS_WIN)
-        int nArgs = 0;
-
-        LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-        for (int i = 2; i < argc; i++)
-        {
-            keyword.append(QString::fromWCharArray(szArglist[i]));
-            keyword.append(' ');
-        }
-        LocalFree(szArglist);
-#else
-        for (int i = 2; i < argc; i++)
-        {
-            keyword.append(argv[i]);
-            keyword.append(' ');
-        }
-#endif
-        if (!f(keyword.trimmed()))
+        auto    handler = iter.value();
+        args.removeFirst();
+        args.removeFirst();
+        QString keyword = args.join(' ');
+        
+        if (!handler(keyword.trimmed()))
         {
             return 1;
         }

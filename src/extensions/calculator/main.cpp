@@ -147,9 +147,10 @@ int main(int argc, char *argv[])
     }
 
     QString expression;
+    auto args = SharedTools::QtSingleApplication::arguments();
     for (int i = 2; i < argc; i++)
     {
-        expression.append(argv[i]);
+        expression.append(args[i]);
     }
 
     if (!calculate(expression))

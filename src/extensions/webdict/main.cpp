@@ -80,24 +80,12 @@ int main(int argc, char *argv[])
         }
     }
 
-    QString     cmd(argv[1]);
-    QStringList input;
-
-#if defined(Q_OS_WIN)
-    int nArgs = 0;
-
-    LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-    for (int i = 2; i < argc; i++)
-    {
-        input.append(QString::fromWCharArray(szArglist[i]));
-    }
-    LocalFree(szArglist);
-#else
-    for (int i = 2; i < argc; i++)
-    {
-        input.append(QString(argv[i]));
-    }
-#endif
+    auto args = QCoreApplication::arguments();
+    QString     cmd(args[1]);
+    QStringList input = args;
+    input.removeFirst();
+    input.removeFirst();
+    
     Responser             resp;
     QNetworkAccessManager nam;
     Youdao                yd(&nam);

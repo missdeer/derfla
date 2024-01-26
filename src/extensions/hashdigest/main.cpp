@@ -200,13 +200,9 @@ int main(int argc, char *argv[])
         {"keccak512", QCryptographicHash::Keccak_512},
     };
 
-#if defined(Q_OS_WIN)
-    int nArgs = 0;
+    auto args = SharedTools::QtSingleApplication::arguments();
 
-    LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-#endif
-
-    auto iter = algo.find(QString(argv[1]));
+    auto iter = algo.find(QString(args[1]));
     if (algo.end() == iter)
     {
         stdoutTs << "unsupported algorithm";
@@ -218,12 +214,8 @@ int main(int argc, char *argv[])
 
     if (argc == 3)
     {
-#if defined(Q_OS_WIN)
-        data = QString::fromWCharArray(szArglist[2]);
-        LocalFree(szArglist);
-#else
-        data   = argv[2];
-#endif
+        data   = args[2];
+        
         if (QFile::exists(data))
         {
             option = "f";
@@ -232,14 +224,8 @@ int main(int argc, char *argv[])
 
     if (argc == 4)
     {
-#if defined(Q_OS_WIN)
-        option = QString::fromWCharArray(szArglist[2]);
-        data   = QString::fromWCharArray(szArglist[3]);
-        LocalFree(szArglist);
-#else
-        option = argv[2];
-        data   = argv[3];
-#endif
+        option = args[2];
+        data   = args[3];
         if (option.toLower() != "f" || !QFile::exists(data))
         {
             option.clear();
