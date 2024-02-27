@@ -30,25 +30,25 @@ jobs:
     strategy:
       matrix:
         toolset: [cl, clang-cl, icx]
-        qt_ver: [5.15.2, 6.6.1]
+        qt_ver: [5.15.2, 6.6.2]
         include:
           - toolset: icx
             qt_ver: 5.15.2
             qt_modules: ""
           - toolset: icx
-            qt_ver: 6.6.1
+            qt_ver: 6.6.2
             qt_modules: "qt5compat qtimageformats"
           - toolset: clang-cl
             qt_ver: 5.15.2
             qt_modules: ""
           - toolset: clang-cl
-            qt_ver: 6.6.1
+            qt_ver: 6.6.2
             qt_modules: "qt5compat qtimageformats"
           - toolset: cl
             qt_ver: 5.15.2
             qt_modules: ""
           - toolset: cl
-            qt_ver: 6.6.1
+            qt_ver: 6.6.2
             qt_modules: "qt5compat qtimageformats"
     env:
       qt_target: desktop
