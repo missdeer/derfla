@@ -163,30 +163,26 @@ else(APPLE)
 endif(APPLE)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-  if (NOT MINGW)
-    qt_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES}
-                          OPTIONS -no-obsolete)
-    list(APPEND Derfla_src ${QM_FILES})
-  endif()
+  qt_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES}
+                        OPTIONS -no-obsolete)
   qt_add_executable(
     ${PROJECT_NAME}
     ${Derfla_headers}
     ${Derfla_src}
     ${Derfla_ui}
     ${qrcs}
+    ${QM_FILES}
     ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.rc
     ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.icns)
 else()
-  if (NOT MINGW)
-    qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
-    list(APPEND Derfla_src ${QM_FILES})
-  endif()
+  qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
   add_executable(
     ${PROJECT_NAME}
     ${Derfla_headers}
     ${Derfla_src}
     ${Derfla_ui}
     ${qrcs}
+    ${QM_FILES}
     ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.rc
     ${CMAKE_CURRENT_SOURCE_DIR}/Derfla.icns)
 endif()

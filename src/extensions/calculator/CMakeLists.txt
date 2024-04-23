@@ -161,18 +161,12 @@ set_source_files_properties(
                          "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations")
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-  if (NOT MINGW)
-    qt_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES}
-                          OPTIONS -no-obsolete)
-    list(APPEND calculator_src ${QM_FILES})
-  endif()
+  qt_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES}
+                        OPTIONS -no-obsolete)
   qt_add_executable(${PROJECT_NAME} ${calculator_headers} ${calculator_src}
                     ${qrcs} ${CMAKE_CURRENT_SOURCE_DIR}/calculator.rc)
 else()
-  if (NOT MINGW)
-    qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
-    list(APPEND calculator_src ${QM_FILES})
-  endif()
+  qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
   add_executable(
     ${PROJECT_NAME} ${calculator_headers} ${calculator_src} ${qrcs}
                     ${CMAKE_CURRENT_SOURCE_DIR}/calculator.rc)
