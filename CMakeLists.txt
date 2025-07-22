@@ -1,4 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.15)
+
+cmake_policy(SET CMP0167 NEW)
 project(DerflaProject VERSION 1.0.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -83,3 +85,7 @@ endif()
 
 add_subdirectory(3rdparty)
 add_subdirectory(src)
+
+if(QT_VERSION_MAJOR EQUAL 6)
+qt_finalize_project()
+endif()
