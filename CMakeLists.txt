@@ -23,7 +23,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
 )# .dll .dylib .so
 
-option(AVX2 "Target CPU does support AVX2")
 option(MACOMP "Enables OpenMP on macOS")
 
 set(CURRENT_COMPILER_ID "${CMAKE_CXX_COMPILER_ID}")
@@ -50,26 +49,7 @@ endif()
 set(CURRENT_SIMULATE_ID "${CMAKE_CXX_SIMULATE_ID}")
 message("Simulate ID is: ${CURRENT_SIMULATE_ID}")
 
-if(NOT CMAKE_BUILD_TYPE MATCHES Debug)
-    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "amd64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-        if(NOT "${CURRENT_COMPILER_ID}"  STREQUAL "MSVC")
-            message("not MSVC")
-            add_compile_options("-mpopcnt" "-mbmi" "-mbmi2" "-mlzcnt" "-mmovbe" "-mfma")
-        endif()
-        if(AVX2)
-            if("${CURRENT_COMPILER_ID}" STREQUAL "IntelLLVM")
-                message("Intel oneAPI enables AVX2")
-                add_compile_options("/QxCORE-AVX2" "-mavx2")
-            elseif ("${CURRENT_COMPILER_ID}" STREQUAL "MSVC" OR "${CURRENT_SIMULATE_ID}" STREQUAL "MSVC")
-                message("MSVC or Clang-Cl enables AVX2")
-                add_compile_options("/Ot" "/fp:fast" "/arch:AVX2")
-            else()
-                message("Others eg GCC/Clang... enables AVX2")
-                add_compile_options("-mavx2")
-            endif()
-        endif()
-    endif()
-endif()
+include(cmake/avx.cmake)
 
 if(WIN32)
     add_compile_definitions(STRSAFE_NO_DEPRECATE UNICODE)
