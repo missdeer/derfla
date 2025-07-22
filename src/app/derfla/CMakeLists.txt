@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.21)
 project(Derfla VERSION 1.0.0)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -206,6 +206,9 @@ IF(WIN32)
 ELSE(WIN32)
     target_link_libraries(${PROJECT_NAME}  PRIVATE
         UGlobalHotkey 
+    )
+    IF(APPLE)
+    target_link_libraries(${PROJECT_NAME}  PRIVATE
         qtplist
         "-framework AppKit" 
         "-framework Carbon" 
@@ -214,6 +217,7 @@ ELSE(WIN32)
         "-framework CoreServices"
         objc
         )
+    ENDIF()
 ENDIF(WIN32)
 
 file(GLOB SKINs ${CMAKE_CURRENT_SOURCE_DIR}/skins/*.zip)
