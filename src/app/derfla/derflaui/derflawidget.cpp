@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <private/qzipreader_p.h>
-
 #include "derflawidget.h"
 #include "candidatelist.h"
 #include "charlineedit.h"

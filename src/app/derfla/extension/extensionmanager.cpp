@@ -1,7 +1,5 @@
 ﻿#include "stdafx.h"
 
-#include <private/qzipreader_p.h>
-
 #include "extensionmanager.h"
 #include "luavm.h"
 
