@@ -13,6 +13,7 @@ IF (Qt6_FOUND)
         find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 ENDIF(Qt6_FOUND)
 
+find_package(LibArchive REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(TBB CONFIG REQUIRED)
 find_package(Boost 1.79.0)
@@ -38,8 +39,7 @@ if(APPLE)
   add_compile_definitions(LUA_USE_MACOSX)
 endif(APPLE)
 
-include_directories(${Qt${QT_VERSION_MAJOR}Gui_PRIVATE_INCLUDE_DIRS}
-  ${CMAKE_CURRENT_SOURCE_DIR}/alfredui
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/alfredui
   ${CMAKE_CURRENT_SOURCE_DIR}/commonui
   ${CMAKE_CURRENT_SOURCE_DIR}/derflaui
   ${CMAKE_CURRENT_SOURCE_DIR}/extension
@@ -186,6 +186,7 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE
         qtsingleapplication
         qtlockedfile
         DerflaUtil
+        LibArchive::LibArchive
         TBB::tbb TBB::tbbmalloc TBB::tbbmalloc_proxy
         Qt${QT_VERSION_MAJOR}::Xml
         )
