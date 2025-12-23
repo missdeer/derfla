@@ -134,12 +134,12 @@ Contact me at https://minidump.info/derfla/ if you have any problem about this t
 <context>
     <name>DerflaWidget</name>
     <message>
-        <location filename="../derflaui/derflawidget.cpp" line="255"/>
+        <location filename="../derflaui/derflawidget.cpp" line="253"/>
         <source>Load Derfla Skin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../derflaui/derflawidget.cpp" line="257"/>
+        <location filename="../derflaui/derflawidget.cpp" line="255"/>
         <source>Derfla Skin Package (*.zip);;Derfla Skin Configuration (*.derflaskin);;All Supported Files (*.derflaskin *.zip);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
