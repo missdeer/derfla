@@ -31,7 +31,7 @@ bool handleFile(const QString &pattern, bool regexpEnabled)
     QJsonDocument jsonDoc = QJsonDocument::fromJson("[]");
     Q_ASSERT(jsonDoc.isArray());
     QJsonArray arr = jsonDoc.array();
-    for (const auto &filePath : qAsConst(res))
+    for (const auto &filePath : std::as_const(res))
     {
         QFileInfo fileInfo(filePath);
 
@@ -70,7 +70,7 @@ bool handleDir(const QString &pattern, bool regexpEnabled)
     QJsonDocument jsonDoc = QJsonDocument::fromJson("[]");
     Q_ASSERT(jsonDoc.isArray());
     QJsonArray arr = jsonDoc.array();
-    for (const auto &filePath : qAsConst(res))
+    for (const auto &filePath : std::as_const(res))
     {
         QFileInfo fileInfo(filePath);
 
@@ -116,7 +116,7 @@ bool handleVSOpen(const QString &pattern, bool regexpEnabled)
     QJsonDocument jsonDoc = QJsonDocument::fromJson("[]");
     Q_ASSERT(jsonDoc.isArray());
     QJsonArray arr = jsonDoc.array();
-    for (const auto &filePath : qAsConst(res))
+    for (const auto &filePath : std::as_const(res))
     {
         QFileInfo fileInfo(filePath);
 
@@ -157,7 +157,7 @@ bool handleShellOpen(const QString &pattern, bool regexpEnabled, bool executable
     QJsonDocument jsonDoc = QJsonDocument::fromJson("[]");
     Q_ASSERT(jsonDoc.isArray());
     QJsonArray arr = jsonDoc.array();
-    for (const auto &filePath : qAsConst(res))
+    for (const auto &filePath : std::as_const(res))
     {
         QFileInfo fileInfo(filePath);
 
