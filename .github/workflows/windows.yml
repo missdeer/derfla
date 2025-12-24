@@ -23,7 +23,6 @@ env:
   clang_link: https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.8/LLVM-21.1.8-win64.exe
   ninja_link: https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-win.zip
   vc_arch: "x64"
-  output_dir: "x86_64"
 
 jobs:
   Windows-MSVC:
@@ -111,7 +110,7 @@ jobs:
             cd build
             cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.toolset }} -DCMAKE_CXX_COMPILER=${{ matrix.toolset }} -G Ninja "-DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-release -DVCPKG_MANIFEST_MODE=OFF ..
             cmake --build . --parallel --verbose
-            cd ..\bin\${{ env.output_dir }}
+            cd bin
             windeployqt.exe Derfla.exe
             windeployqt.exe DerflaUtil.dll
             cd ..\..
@@ -122,20 +121,18 @@ jobs:
         run: |
             for /f "tokens=* usebackq" %%f in (`dir /b "C:\Program Files (x86)\Intel\oneAPI\compiler\" ^| findstr /V latest ^| sort`) do @set "LATEST_VERSION=%%f"
             echo %LATEST_VERSION%
-            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\libmmd.dll" bin\${{ env.output_dir }}\
-            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\libiomp5md.dll" bin\${{ env.output_dir }}\
-            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\libiompstubs5md.dll" bin\${{ env.output_dir }}\
+            copy /y "C:\Program Files (x86)\Intel\oneAPI\compiler\%LATEST_VERSION%\bin\libmmd.dll" build\bin\
 
       - name: copy vcpkg redist files
         shell: cmd
         run: |
             dir "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin"
-            copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbb*.dll" bin\${{ env.output_dir }}\
+            copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbb*.dll" build\bin\
 
       - name: upload executable artifact
         uses: actions/upload-artifact@v6
         with:
-          path: bin/${{ env.output_dir }}
+          path: build\bin
           name: Derfla-win64-${{ matrix.qt_ver }}-${{ matrix.toolset }}
 
           
@@ -219,7 +216,7 @@ jobs:
           cd build
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja ..
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin cmake --build . --parallel --verbose
-          cd ../bin/${{ env.output_dir }}
+          cd bin
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe Derfla.exe
           env PATH=$PATH:/${{ matrix.mingw_arch }}/bin /${{ matrix.mingw_arch }}/bin/mingwdeployqt.exe DerflaUtil.dll
           cd ../..          
@@ -227,5 +224,5 @@ jobs:
       - name: upload executable artifact
         uses: actions/upload-artifact@v6
         with:
-          path: bin/${{ env.output_dir }}
+          path: build/bin
           name: Derfla-${{ matrix.qt_arch }}
