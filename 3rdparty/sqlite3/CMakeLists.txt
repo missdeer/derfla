@@ -8,5 +8,6 @@ set(sqlite3_src
         )
 
 add_library(sqlite3 STATIC ${sqlite3_src})
+add_library(SQLite::SQLite3 ALIAS sqlite3)
 
-target_include_directories (sqlite3 PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(sqlite3 PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})

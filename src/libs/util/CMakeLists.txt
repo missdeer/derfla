@@ -14,6 +14,7 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
 IF (Qt6_FOUND)
         find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 ENDIF(Qt6_FOUND)
+find_package(sqlite3)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
@@ -129,7 +130,7 @@ endif()
 
 target_link_libraries(${PROJECT_NAME} 
         lua
-        sqlite3
+        SQLite::SQLite3 
         Qt${QT_VERSION_MAJOR}::Widgets
         )
 

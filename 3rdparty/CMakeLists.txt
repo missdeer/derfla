@@ -5,7 +5,11 @@ add_subdirectory(lua)
 add_subdirectory(qtlockedfile)
 add_subdirectory(qtplist)
 add_subdirectory(qtsingleapplication)
-add_subdirectory(sqlite3)
+
+find_package(sqlite3)
+if (NOT SQLite3_FOUND)
+    add_subdirectory(sqlite3)
+endif()
 
 IF(WIN32)
     add_subdirectory(everything)
