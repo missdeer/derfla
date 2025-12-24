@@ -16,7 +16,7 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/extension.derflaext"
      DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Xml Network LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Xml Network Help LinguistTools REQUIRED)
 IF (Qt6_FOUND)
         find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
 ENDIF(Qt6_FOUND)
@@ -26,10 +26,19 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON) # if you have any .ui files
 set(CMAKE_AUTORCC OFF) # if you have any .qrc files
 
+if (MSVC)
+    add_definitions(-D_USE_MATH_DEFINES)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
+else()
+    add_compile_options(-Wno-shift-negative-value)
+endif()
+add_compile_options(-Wall -pedantic)
+
 add_compile_definitions(UTIL_LIBRARY STATIC_LINKED _USE_MATH_DEFINES
                         SPEEDCRUNCH_VERSION="master" QT_USE_QSTRINGBUILDER)
 if(APPLE)
   add_compile_definitions(LUA_USE_MACOSX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 endif(APPLE)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core
   ${CMAKE_CURRENT_SOURCE_DIR}/math)
@@ -164,7 +173,10 @@ else()
                     ${CMAKE_CURRENT_SOURCE_DIR}/calculator.rc)
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE qtsingleapplication qtlockedfile
-                                              DerflaUtil)
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+                      qtsingleapplication 
+                      qtlockedfile 
+                      Qt${QT_VERSION_MAJOR}::Help
+                      DerflaUtil)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE stdafx.h)

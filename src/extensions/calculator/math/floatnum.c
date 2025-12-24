@@ -842,7 +842,9 @@ float_setscientific(
     switch(*expptr)
     {
     case '-':
-      expsign = -1; /* and fall through */
+      expsign = -1;
+      // C++17: [[fallthrough]];
+      // fall through
     case '+':
       ++expptr;
     }
@@ -1267,9 +1269,9 @@ _sub_checkborrow(
   int result;
   int borrow;
   int scale1, scale2;
-  char save;
-  char* v1;
-  char* v2;
+  char save = 0;
+  char* v1 = NULL;
+  char* v2 = NULL;
 
 /* Cancellation occurs, when the operands are of type
    p.000...yyy - q.999...xxx, p-q == 1, because a borrow
@@ -1329,9 +1331,9 @@ _sub_checkborrow(
   /* restore the modified digits */
   if (borrow > 0)
   {
-    if (summand1 != dest)
+    if (summand1 != dest && v1 != NULL)
       *v1 = save;
-    if (summand2 != dest)
+    if (summand2 != dest && v1 != NULL)
       *v2 = 9;
   }
   return result;

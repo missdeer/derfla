@@ -1,5 +1,6 @@
 // This file is part of the SpeedCrunch project
 // Copyright (C) 2016 Pol Welter <polwelter@gmail.com>
+// Copyright (C) 2021 @heldercorreia
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -23,6 +24,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QLocale>
 #include <QFile>
+#include <QtHelp/QHelpEngineCore>
+#include <QtHelp/QHelpLink>
 #include <QString>
 #include <QMap>
 #include <QEvent>
@@ -84,24 +87,54 @@ bool ManualServer::isSupportedLanguage(const QString& lang) {
 
 void ManualServer::setupHelpEngine()
 {
+    QString collectionFile = deployDocs() ;
+
+    m_helpEngine = new QHelpEngineCore(collectionFile, this);
+
+    QStringList filters = m_helpEngine->customFilters();
+    if (!filters.isEmpty())
+        m_helpEngine->setCurrentFilter(filters.first());
 }
 
 ManualServer *ManualServer::instance()
 {
-    if(!s_instance)
+    if (!s_instance)
         s_instance = new ManualServer();
     return s_instance;
 }
 
-bool ManualServer::URLforKeyword(const QString id, QUrl &result)
+QUrl ManualServer::homePage()
 {
-    return 1;
+    ensureCorrectLanguage();
+    if (!m_helpEngine)
+        return QUrl();
+    auto docs = m_helpEngine->documentsForKeyword("SpeedCrunch");
+    if (!docs.isEmpty()) {
+        return docs[0].url;
+    }
+    return QUrl();
+}
+
+QUrl ManualServer::urlForKeyword(const QString& keyword)
+{
+    ensureCorrectLanguage();
+    if (!m_helpEngine)
+        return QUrl();
+    auto constants = m_helpEngine->documentsForIdentifier(QString("constant.%1").arg(keyword));
+    if (!constants.isEmpty()) {
+        return constants[0].url;
+    }
+    auto functions = m_helpEngine->documentsForIdentifier(QString("function.%1").arg(keyword));
+    if (!functions.isEmpty()) {
+        return functions[0].url;
+    }
+    return QUrl();
 }
 
 QByteArray ManualServer::fileData(const QUrl &url)
 {
     ensureCorrectLanguage();
-    return QByteArray();
+    return m_helpEngine->fileData(url);
 }
 
 void ManualServer::languageChanged()
@@ -111,10 +144,11 @@ void ManualServer::languageChanged()
 
 void ManualServer::ensureCorrectLanguage()
 {
-    if(Settings::instance()->language != m_deployedLanguage)
+    if (Settings::instance()->language != m_deployedLanguage)
         languageChanged();
 }
 
 ManualServer::ManualServer()
 {
+    m_helpEngine = nullptr;
 }

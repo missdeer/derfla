@@ -54,7 +54,7 @@ static const char* DefaultColorScheme = "Terminal";
 QString Settings::getConfigPath()
 {
 #ifdef SPEEDCRUNCH_PORTABLE
-    return QCoreApplication::applicationDirPath();
+    return QApplication::applicationDirPath();
 #elif defined(Q_OS_WIN)
     // On Windows, use AppData/Roaming/SpeedCrunch, the same path as getDataPath.
     return getDataPath();
@@ -70,7 +70,7 @@ QString Settings::getConfigPath()
 QString Settings::getDataPath()
 {
 #ifdef SPEEDCRUNCH_PORTABLE
-    return QCoreApplication::applicationDirPath();
+    return QApplication::applicationDirPath();
 #elif QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 #elif defined(Q_OS_WIN)
@@ -100,7 +100,7 @@ QString Settings::getDataPath()
 QString Settings::getCachePath()
 {
 #ifdef SPEEDCRUNCH_PORTABLE
-    return QCoreApplication::applicationDirPath();
+    return QApplication::applicationDirPath();
 #else
     return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 #endif
@@ -171,16 +171,15 @@ void Settings::load()
     key = KEY + QLatin1String("/Format/");
 
     // Format special case.
-    QString format;
-    format = settings->value(key + QLatin1String("Type"), 'f').toString();
-    if (format != "g" && format != "f" && format != "e" && format != "n"&& format != "h" && format != "o" && format != "b")
+    QString format = settings->value(key + QLatin1String("Type"), 'f').toString();
+    if (format != "g" && format != "f" && format != "e" && format != "n"&& format != "h"
+        && format != "o" && format != "b" && format != "s")
         resultFormat = 'f';
     else
         resultFormat = format.at(0).toLatin1();
 
     // Complex format special case.
-    QString cmplxFormat;
-    cmplxFormat = settings->value(key + QLatin1String("ComplexForm"), 'c').toString();
+    QString cmplxFormat = settings->value(key + QLatin1String("ComplexForm"), 'c').toString();
     if (cmplxFormat != "c" && cmplxFormat != "p")
         resultFormatComplex = 'c';
     else
@@ -278,12 +277,16 @@ void Settings::save()
 
 char Settings::radixCharacter() const
 {
-    if (isRadixCharacterAuto() || isRadixCharacterBoth())
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        return QLocale().decimalPoint().toLatin1();
-#else
-        return QLocale().decimalPoint().at(0).toLatin1();
-#endif
+    if (isRadixCharacterAuto() || isRadixCharacterBoth()) {
+        #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            // In Qt 6, decimalPoint returns a QString
+            QChar decimalPoint = QLocale().decimalPoint().at(0);
+        #else
+            // In Qt 5, decimalPoint returns a QChar
+            QChar decimalPoint = QLocale().decimalPoint();
+        #endif
+        return decimalPoint.toLatin1();
+    }
 
     return s_radixCharacter;
 }

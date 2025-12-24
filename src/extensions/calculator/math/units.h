@@ -26,28 +26,27 @@
 #include "math/quantity.h"
 class Rational;
 
-struct Unit {
-    QString name;
+struct Unit
+{
+    QString  name;
     Quantity value;
-    Unit(QString name, Quantity value)
-        : name(name)
-        , value(value)
-    { }
-    Unit()
-        : name("")
-        , value(1)
-    { }
+    Unit(QString name, Quantity value) : name(name), value(value) {}
+    Unit() : name(""), value(1) {}
 };
 
-class Units {
-    static void pushUnit(Quantity q, QString name);
+class Units
+{
+    static void                                 pushUnit(Quantity q, QString name);
     static QHash<QMap<QString, Rational>, Unit> m_matchLookup;
-    static QMap<QString, Quantity> m_cache;
-    static void initTable();
+    static QMap<QString, Quantity>              m_cache;
+    static void                                 initTable();
 
 public:
-    static void findUnit(Quantity& q);
-    static void clearCache() { m_cache.clear(); }
+    static void findUnit(Quantity &q);
+    static void clearCache()
+    {
+        m_cache.clear();
+    }
     static const QList<Unit> getList();
 
     // Base SI units.
@@ -132,7 +131,6 @@ public:
     static const Quantity atomic_mass_unit();
     static const Quantity carat();
 
-
     // Distance/length.
     static const Quantity micron();
     static const Quantity angstrom();
@@ -195,12 +193,10 @@ public:
     static const Quantity calorie();
     static const Quantity british_thermal_unit();
 
-
     // Information.
     static const Quantity nat();
     static const Quantity hartley();
     static const Quantity byte();
-
 
     // Cooking.
     // Note: these again differ from US to UK, Australia, Japan, ...

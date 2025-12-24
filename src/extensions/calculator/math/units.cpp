@@ -1,4 +1,4 @@
-﻿// This file is part of the SpeedCrunch project
+// This file is part of the SpeedCrunch project
 // Copyright (C) 2015 Pol Welter <polwelter@gmail.com>
 // Copyright (C) 2016 @heldercorreia
 //
@@ -452,7 +452,7 @@ UNIT_CACHE(are, HNumber(100) * sqmeter())
 UNIT_CACHE(hectare, HNumber(100) * are())
 UNIT_CACHE(acre, mile() * mile() / HNumber(640))
 
-UNIT_CACHE(US_gallon, HNumber("3.785") * liter())
+UNIT_CACHE(US_gallon, HNumber("3.785411784") * liter())
 UNIT_CACHE(UK_gallon, HNumber("4.54609") * liter())
 UNIT_CACHE(US_quart, US_gallon() / HNumber(4))
 UNIT_CACHE(UK_quart, UK_gallon() / HNumber(4))

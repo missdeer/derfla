@@ -22,6 +22,8 @@
 #include <QObject>
 #include <QMap>
 
+class QHelpEngineCore;
+
 class QCloseEvent;
 class QUrl;
 class QString;
@@ -36,7 +38,8 @@ private:
 
 public:
     static ManualServer* instance();
-    bool URLforKeyword(const QString id, QUrl &result);
+    QUrl homePage();
+    QUrl urlForKeyword(const QString& keyword);
     QByteArray fileData(const QUrl &url);
     bool isSupportedLanguage(const QString&);
 
@@ -49,6 +52,7 @@ private:
 
     void languageChanged();
 
+    QHelpEngineCore *m_helpEngine;
     static ManualServer* s_instance;
     QString m_deployedLanguage;
 };
