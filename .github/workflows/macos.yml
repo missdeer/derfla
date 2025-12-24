@@ -39,11 +39,10 @@ jobs:
           
       - name: build macos
         run: |
-          brew install ninja llvm gsed libomp tbb
-          brew link --force libomp
+          brew install ninja gsed tbb
           mkdir build
           cd build
-          env "LDFLAGS=-L/usr/local/opt/llvm/lib" cmake -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ ..
+          cmake -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
           cmake --build . --parallel --verbose
           cd ..
 
