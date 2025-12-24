@@ -66,4 +66,13 @@ public:
     double toDouble() const;
 };
 
+
+#if QT_VERSION_MAJOR >= 6
+#include <QtCore/QHashFunctions>
+inline size_t qHash(const Rational &r, size_t seed = 0) noexcept
+{
+    return qHashMulti(seed, r.numerator(), r.denominator());
+}
+#endif
+
 #endif // RATIONAL_H
