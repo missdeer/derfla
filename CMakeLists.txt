@@ -23,29 +23,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
 )# .dll .dylib .so
 
-option(MACOMP "Enables OpenMP on macOS")
-
 set(CURRENT_COMPILER_ID "${CMAKE_CXX_COMPILER_ID}")
 message("Compiler ID is: ${CURRENT_COMPILER_ID}")
-
-if(APPLE)
-    if ("${CURRENT_COMPILER_ID}"  STREQUAL "AppleClang")
-        message(FATAL_ERROR "AppleClang doesn't support OpenMP, please use a custom built LLVM/Clang.")
-    endif()
-    if(CMAKE_C_COMPILER_ID MATCHES "Clang")
-        set(OpenMP_C "${CMAKE_C_COMPILER}")
-        set(OpenMP_C_FLAGS "-fopenmp=libomp -Wno-unused-command-line-argument")
-        set(OpenMP_C_LIB_NAMES "libomp")
-        set(OpenMP_libomp_LIBRARY ${OpenMP_C_LIB_NAMES})
-    endif()
-    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-      set(OpenMP_CXX "${CMAKE_CXX_COMPILER}")
-      set(OpenMP_CXX_FLAGS "-fopenmp=libomp -Wno-unused-command-line-argument")
-      set(OpenMP_CXX_LIB_NAMES "libomp")
-      set(OpenMP_libomp_LIBRARY ${OpenMP_CXX_LIB_NAMES})
-    endif()
-endif()
-
 set(CURRENT_SIMULATE_ID "${CMAKE_CXX_SIMULATE_ID}")
 message("Simulate ID is: ${CURRENT_SIMULATE_ID}")
 

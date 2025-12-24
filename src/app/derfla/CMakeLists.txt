@@ -14,7 +14,6 @@ IF (Qt6_FOUND)
 ENDIF(Qt6_FOUND)
 
 find_package(LibArchive REQUIRED)
-find_package(OpenMP REQUIRED)
 find_package(TBB CONFIG REQUIRED)
 find_package(Boost 1.79.0)
 if(Boost_FOUND)
