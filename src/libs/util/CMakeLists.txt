@@ -135,13 +135,6 @@ target_link_libraries(${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::Widgets
         )
 
-if (APPLE)
-    target_link_libraries(${PROJECT_NAME} omp)
-else()
-    target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
-endif()
-
-
 if(Qt6_FOUND)
   target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Core5Compat)
 endif(Qt6_FOUND)

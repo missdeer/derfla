@@ -191,12 +191,6 @@ target_link_libraries(${PROJECT_NAME}  PRIVATE
         Qt${QT_VERSION_MAJOR}::Xml
         )
 
-if (APPLE)
-  target_link_libraries(${PROJECT_NAME} PRIVATE omp)
-else()
-  target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
-endif()
-
 set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON
                                                  MACOSX_BUNDLE ON)
 
