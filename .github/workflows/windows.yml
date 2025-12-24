@@ -147,7 +147,7 @@ jobs:
             copy /y "${{ github.workspace }}\vcpkg\installed\x64-windows-release\bin\tbb*.dll" bin\${{ env.output_dir }}\
 
       - name: upload executable artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v6
         with:
           path: bin/${{ env.output_dir }}
           name: Derfla-win64-${{ matrix.qt_ver }}-${{ matrix.toolset }}
@@ -239,7 +239,7 @@ jobs:
           cd ../..          
 
       - name: upload executable artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v6
         with:
           path: bin/${{ env.output_dir }}
           name: Derfla-${{ matrix.qt_arch }}
